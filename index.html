@@ -81,7 +81,7 @@
         function IndexCtrl($scope, $http, $q, $timeout) {
             var generateData = function(page, count) {
                 var data = [];
-                for (var i = 0; i < 10; i++) {
+                for (var i = 0; i < count; i++) {
                     var id = i + (page - 1) * count;
                     data.push({
                         'id': id,
@@ -96,10 +96,11 @@
             }
 
             $scope.update = function(params) {
+                var total = 300;
                 $scope.params = params;
                 $scope.pager = {
                     current: params.page,
-                    count: 30,
+                    count: Math.floor(total / params.count),
                     countPerPage: params.count
                 }
                 $scope.articles = generateData(params.page, params.count);
