@@ -29,6 +29,8 @@ Table + Angular JS
 </table>
 ```
 
+Header row with titles and filters automatic generated on compilation step.
+
 # Sorting
 
 Just add `sorting` attribute.
