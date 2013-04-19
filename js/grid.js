@@ -20,11 +20,11 @@ angular.module('ngTable', [])
                         </thead>';
     var pager = '<ul class="pagination ng-cloak" ng-show="pager && pager.count > 1"> \
                       <li ng-class="{\'disabled\':pager.current == 1}"><a ng-click="goToPage(pager.current-1)" href="javascript:;">&laquo;</a></li> \
-                      <li ng-show="pager.current > 3"><a ng-click="goToPage(1)" href="javascript:;">1</a></li> \
-                      <li class="disabled" ng-show="pager.current > 4"><span>...</span></li> \
+                      <li ng-show="pager.current > 4"><a ng-click="goToPage(1)" href="javascript:;">1</a></li> \
+                      <li class="disabled" ng-show="pager.current > 4 && pager.count > 6"><span>...</span></li> \
                       <li ng-repeat="page in pager.pages" ng-class="{\'disabled\':pager.current == page}"><a href="javascript:;" ng-click="goToPage(page)">{[page]}</a></li> \
-                      <li class="disabled" ng-show="pager.current + 3 < pager.count"><span>...</span></li> \
-                      <li ng-show="pager.current + 2 < pager.count"><span><a ng-click="goToPage(pager.count)" href="javascript:;">{[pager.count]}</a></span></li> \
+                      <li class="disabled" ng-show="pager.current + 3 < pager.count && pager.count > 6"><span>...</span></li> \
+                      <li ng-show="pager.current + 2 < pager.count && pager.count > 5"><span><a ng-click="goToPage(pager.count)" href="javascript:;">{[pager.count]}</a></span></li> \
                       <li ng-class="{\'disabled\':pager.current == pager.count}"><a ng-click="goToPage(pager.current+1)" href="javascript:;">&raquo;</a></li> \
                     </ul> \
                     <div class="btn-group pull-right"> \
