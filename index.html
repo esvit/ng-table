@@ -41,26 +41,28 @@
             </div>
 
             <button class="btn" ng-class="{ 'active': filter.active }" ng-click="filter.active = !filter.active">Show filter</button>
+            
+            {[params|json]}
 
             <table grid="update" pager="data.pager" class="table-striped table-condensed table-hover">
                 <tr ng-repeat="article in articles.data">
                     <td width="20">
                         <input type="checkbox" ng-model="article.checked" />
                     </td>
-                    <td sortable="title" filter="{ 'title': 'text' }" title="Заголовок">
-                        <a href="#!/news/edit{[article.id]}">{[article.title]}</a>
+                    <td sortable="title" filter="{ 'title': 'text' }" title="Title">
+                        <a href="#!/article/edit{[article.id]}">{[article.title]}</a>
                     </td>
                     <td filter="{ 'user_id': 'select' }" filter-data="users" sortable="user_id" width="140" title="Автор">
                         {[article.user]}
                     </td>
-                    <td filter="{ 'created_at': 'date' }" sortable="created_at" width="140" title="Дата створення" class="text-center">
+                    <td filter="{ 'created_at': 'date' }" sortable="created_at" width="140" title="Date of creation" class="text-center">
                         {[article.created_at|date:'yyyy-MM-dd']}<br/>
                         {[article.created_at|date:'HH:mm:ss']}
                     </td>
-                    <td sortable="publish" width="130" title="Опубликовано">
+                    <td sortable="publish" width="130" title="Published">
                         <input type="checkbox" ng-model="article.publish">
                     </td>
-                    <td filter="{ 'action': 'button' }" width="95" title="Дії" class="text-center">
+                    <td filter="{ 'action': 'button' }" width="95" title="Actions" class="text-center">
                         <div class="btn-group">
                             <button ng-click="delete(column)" class="btn btn-danger"><span class="glyphicon glyphicon-trash glyphicon glyphicon-white"></span></button>
                         </div>
@@ -77,11 +79,29 @@
             });
 
         function IndexCtrl($scope, $http, $q, $timeout) {
-            /*$http.get({ url: 'data.json' }, function(data) {
+            var data = {
+                'data': [],
+                'pager': {
+                    'current': 1,
+                    'count': 5,
+                    'countPerPage': 10
+                }
+            };
+            for (var i = 0; i < 10; i++) {
+                data.data.push({
+                    'id': i,
+                    'title': 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit',
+                    'created_at': 1358416700000,
+                    'publish': true,
+                    'user_id': 1,
+                    'user': 'Ivan Fakov'
+                });
+            }
+            $timeout(function() {
                 $scope.articles = data;
-            });*/
+            });
             $scope.update = function(params) {
-                console.info(params);
+                $scope.params = params;
             }
             $scope.users = function() {
                 var data = [
@@ -94,22 +114,6 @@
                 }, 0);
                 return q.promise;
             }
-            $scope.articles = {
-                data: [
-                    {
-                        id: 1,
-                        title: 'Test article',
-                        user: 'Vasya',
-                        user_id: 1,
-                        publish: true
-                    }
-                ],
-                pager: {
-                    current: 1,
-                    count: 1,
-                    countPerPage: 10
-                }
-            };
         }
         </script>
 
