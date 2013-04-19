@@ -17,35 +17,59 @@
         <script src="js/grid.js"></script>
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
+        <div class="navbar">
+          <div class="fill">
+            <div class="container">
+              <a href="/preview/twitter" class="navbar-brand">ngTable</a>
+              <ul class="nav">
+                <li><a href="https://github.com/esvit/ng-table">GitHub project</a></li>
+              </ul>
 
-        <button class="btn" ng-class="{ 'active': filter.active }" ng-click="filter.active = !filter.active">Show filter</button>
+              <div class="pull-right" style="padding: 12px 0;">
+                <iframe width="100px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=watch&amp;count=true" class="github-btn"></iframe>
+                <iframe width="102px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=fork&amp;count=true" class="github-btn"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <table grid="update" pager="data.pager" class="table-striped table-condensed table-hover">
-            <tr ng-repeat="article in articles.data">
-                <td width="20">
-                    <input type="checkbox" ng-model="article.checked" />
-                </td>
-                <td sortable="title" filter="{ 'title': 'text' }" title="Заголовок">
-                    <a href="#!/news/edit{[article.id]}">{[article.title]}</a>
-                </td>
-                <td filter="{ 'user_id': 'select' }" filter-data="users" sortable="user_id" width="140" title="Автор">
-                    {[article.user]}
-                </td>
-                <td filter="{ 'created_at': 'date' }" sortable="created_at" width="140" title="Дата створення" class="text-center">
-                    {[article.created_at|date:'yyyy-MM-dd']}<br/>
-                    {[article.created_at|date:'HH:mm:ss']}
-                </td>
-                <td sortable="publish" width="130" title="Опубликовано">
-                    <input type="checkbox" ng-model="article.publish">
-                </td>
-                <td filter="{ 'action': 'button' }" width="95" title="Дії" class="text-center">
-                    <div class="btn-group">
-                        <button ng-click="delete(column)" class="btn btn-danger"><span class="glyphicon glyphicon-trash glyphicon glyphicon-white"></span></button>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        
+    
+        <div class="container">
+            
+            <div class="page-header">
+                <h1>Example</h1>
+            </div>
+
+            <button class="btn" ng-class="{ 'active': filter.active }" ng-click="filter.active = !filter.active">Show filter</button>
+
+            <table grid="update" pager="data.pager" class="table-striped table-condensed table-hover">
+                <tr ng-repeat="article in articles.data">
+                    <td width="20">
+                        <input type="checkbox" ng-model="article.checked" />
+                    </td>
+                    <td sortable="title" filter="{ 'title': 'text' }" title="Заголовок">
+                        <a href="#!/news/edit{[article.id]}">{[article.title]}</a>
+                    </td>
+                    <td filter="{ 'user_id': 'select' }" filter-data="users" sortable="user_id" width="140" title="Автор">
+                        {[article.user]}
+                    </td>
+                    <td filter="{ 'created_at': 'date' }" sortable="created_at" width="140" title="Дата створення" class="text-center">
+                        {[article.created_at|date:'yyyy-MM-dd']}<br/>
+                        {[article.created_at|date:'HH:mm:ss']}
+                    </td>
+                    <td sortable="publish" width="130" title="Опубликовано">
+                        <input type="checkbox" ng-model="article.publish">
+                    </td>
+                    <td filter="{ 'action': 'button' }" width="95" title="Дії" class="text-center">
+                        <div class="btn-group">
+                            <button ng-click="delete(column)" class="btn btn-danger"><span class="glyphicon glyphicon-trash glyphicon glyphicon-white"></span></button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
         <script>
         var app = angular.module('app', ['ngTable']).
             config(function($interpolateProvider){
