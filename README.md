@@ -28,3 +28,21 @@ Table + Angular JS
     </tr>
 </table>
 ```
+
+# Sorting
+
+Just add `sorting` attribute.
+```html
+<td sortable="title"></td>
+```
+
+# Filtering
+
+```html
+<td filter="{ 'title': 'text' }" filter-data="users"></td>
+```
+
+* `text` - Show text input for filtering
+* `select` - Show selectbox for filtering, required `filter-data` attribute with name of function. This function must return `promise` for resolving data in select box
+* `date` - simple date range
+* `button` - show "Filter" button
