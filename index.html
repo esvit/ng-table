@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="css/table.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
-        <script src="js/grid.js"></script>
+        <script src="https://raw.github.com/esvit/ng-table/master/js/grid.js"></script>
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
         <div class="navbar">
@@ -44,8 +44,8 @@
             
             {[params|json]}
 
-            <table grid="update" pager="data.pager" class="table-striped table-condensed table-hover">
-                <tr ng-repeat="article in articles.data">
+            <table grid="update" pager="pager" class="table-striped table-condensed table-hover">
+                <tr ng-repeat="article in articles">
                     <td width="20">
                         <input type="checkbox" ng-model="article.checked" />
                     </td>
@@ -75,33 +75,34 @@
         <script>
         var app = angular.module('app', ['ngTable']).
             config(function($interpolateProvider){
-                $interpolateProvider.startSymbol('{[').endSymbol(']}');
+                $interpolateProvider.startSymbol('{[').endSymbol(']}'); // Twig noConflict
             });
 
         function IndexCtrl($scope, $http, $q, $timeout) {
-            var data = {
-                'data': [],
-                'pager': {
-                    'current': 1,
-                    'count': 5,
-                    'countPerPage': 10
+            var generateData = function(page, count) {
+                var data = [];
+                for (var i = 0; i < 10; i++) {
+                    var id = i + (page - 1) * count;
+                    data.push({
+                        'id': id,
+                        'title': id + ') Lorem ipsum dolor sit amet, consectetuer adipiscing elit',
+                        'created_at': 1358416700000,
+                        'publish': true,
+                        'user_id': 1,
+                        'user': 'Ivan Fakov'
+                    });
                 }
-            };
-            for (var i = 0; i < 10; i++) {
-                data.data.push({
-                    'id': i,
-                    'title': 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit',
-                    'created_at': 1358416700000,
-                    'publish': true,
-                    'user_id': 1,
-                    'user': 'Ivan Fakov'
-                });
+                return data;
             }
-            $timeout(function() {
-                $scope.articles = data;
-            });
+
             $scope.update = function(params) {
                 $scope.params = params;
+                $scope.pager = {
+                    current: params.page,
+                    count: 6,
+                    countPerPage: params.count
+                }
+                $scope.articles = generateData(params.page, params.count);
             }
             $scope.users = function() {
                 var data = [
@@ -114,6 +115,10 @@
                 }, 0);
                 return q.promise;
             }
+            $scope.update({
+                page: 1,
+                count: 10
+            });
         }
         </script>
 
