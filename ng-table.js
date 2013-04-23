@@ -1,5 +1,5 @@
 angular.module('ngTable', [])
-    .directive('grid', function($compile, $parse) {
+    .directive('ngTable', function($compile, $parse) {
     var template = '<thead> \
                         <tr> \
                             <th class="header" \

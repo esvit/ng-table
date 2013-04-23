@@ -14,13 +14,13 @@
         <link rel="stylesheet" href="css/table.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
-        <script src="js/grid.js"></script>
+        <script src="js/ng-table.js"></script>
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
 
         <button class="btn" ng-class="{ 'active': filter.active }" ng-click="filter.active = !filter.active">Show filter</button>
 
-        <table grid="update" pager="data.pager" class="table-striped table-condensed table-hover">
+        <table ng-table="update" pager="data.pager" class="table-striped table-condensed table-hover">
             <tr ng-repeat="article in articles.data">
                 <td width="20">
                     <input type="checkbox" ng-model="article.checked" />
