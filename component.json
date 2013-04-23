@@ -2,7 +2,11 @@
   "name": "ng-table",
   "version": "0.0.1",
   "main": "ng-table.js",
+  "ignore": [
+    "examples/*"
+  ],
   "dependencies": {
+    "jquery": "~1.9.1",
     "angular": "~1.0.6"
   }
 }
