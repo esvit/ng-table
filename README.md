@@ -1,7 +1,7 @@
 Table + Angular JS
 ======
 
-[Demo](http://jsfiddle.net/esvit/aL324/embedded/result/)
+[Demo](http://jsfiddle.net/esvit/aL324/3/embedded/result/)
 
 # Installing via Bower
 ```
