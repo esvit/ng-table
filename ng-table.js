@@ -18,7 +18,8 @@ angular.module('ngTable', [])
                             </th> \
                         </tr> \
                         </thead>';
-    var pager = '<ul class="pagination ng-cloak" ng-show="pager && pager.count > 1"> \
+    var pager = '<div class="pagination">\
+                    <ul class="pagination ng-cloak" ng-show="pager && pager.count > 1"> \
                       <li ng-class="{\'disabled\':pager.current == 1}"><a ng-click="goToPage(pager.current-1)" href="javascript:;">&laquo;</a></li> \
                       <li ng-show="pager.current > 4"><a ng-click="goToPage(1)" href="javascript:;">1</a></li> \
                       <li class="disabled" ng-show="pager.current > 4 && pager.count > 6"><span>...</span></li> \
@@ -32,7 +33,8 @@ angular.module('ngTable', [])
                         <button type="button" ng-class="{\'active\':grid.count == 25}" ng-click="goToPage(pager.current, 25)" class="btn btn-mini">25</button> \
                         <button type="button" ng-class="{\'active\':grid.count == 50}" ng-click="goToPage(pager.current, 50)" class="btn btn-mini">50</button> \
                         <button type="button" ng-class="{\'active\':grid.count == 100}" ng-click="goToPage(pager.current, 100)" class="btn btn-mini">100</button> \
-                    </div>';
+                    </div>\
+                </div>';
     return {
         restrict: 'A',
         priority: 1001,
