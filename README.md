@@ -1,6 +1,8 @@
 Table + Angular JS
 ======
 
+[Demo](http://jsfiddle.net/esvit/aL324/embedded/result/)
+
 ```html
 <table grid="update" pager="articles.pager">
     <tr ng-repeat="article in articles.data">
