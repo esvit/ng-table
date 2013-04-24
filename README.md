@@ -1,12 +1,17 @@
 Table + Angular JS
 ======
 
-[Demo](http://jsfiddle.net/esvit/aL324/3/embedded/result/)
+# Demos
+
+* [Twitter Bootstrap 2 Theme](http://jsfiddle.net/esvit/4jVDD/embedded/result/)
+* [Twitter Bootstrap 3 Theme](http://jsfiddle.net/esvit/aL324/embedded/result/)
 
 # Installing via Bower
 ```
 bower install https://github.com/esvit/ng-table.git
 ```
+
+# Usage
 
 ```html
 <table ng-table="update" pager="articles.pager">
