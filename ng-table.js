@@ -92,7 +92,7 @@ angular.module('ngTable', [])
                 });
             });
             return function(scope, element, attrs) {
-                scope.callback = scope[attrs.grid];
+                scope.callback = scope[attrs.ngTable];
                 scope.columns = columns;
 
                 var getInterval = function(page, numPages) {

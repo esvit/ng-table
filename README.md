@@ -3,8 +3,13 @@ Table + Angular JS
 
 [Demo](http://jsfiddle.net/esvit/aL324/embedded/result/)
 
+# Installing via Bower
+```
+bower install https://github.com/esvit/ng-table.git
+```
+
 ```html
-<table grid="update" pager="articles.pager">
+<table ng-table="update" pager="articles.pager">
     <tr ng-repeat="article in articles.data">
         <td width="20">
             <input type="checkbox" ng-model="article.checked" />
