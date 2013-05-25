@@ -44,6 +44,17 @@
                 </td>
             </tr>
         </table>
+        <script type="text/ng-template" id="ng-table/pager">
+            {[ pages|json ]}
+            <ul class="pager ng-cloak">
+              <li ng-repeat="page in pages"
+                    ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
+                    ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type">
+                <a ng-switch-when="prev" ng-click="goToPage(page.number)" href="">&laquo; Previous</a>
+                <a ng-switch-when="next" ng-click="goToPage(page.number)" href="">Next &raquo;</a>
+              </li>
+            </ul>
+        </script>
 
         <script>
         var app = angular.module('app', ['ngTable']).
@@ -52,6 +63,9 @@
             });
 
         function IndexCtrl($scope, $http, $q, $timeout) {
+            /*$http.get({ url: 'data.json' }, function(data) {
+                $scope.articles = data;
+            });*/
             $scope.users = function() {
                 var data = [
                     { id: 1, title: 'Vasya' },
