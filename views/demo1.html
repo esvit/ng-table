@@ -1,3 +1,29 @@
 <h1>Demo #1: Simple table</h1>
 
-...
+<pre class="prettyprint nocode">
+&lt;table <code class="nocode">ng-table="params"</code> show-filter="show_filter" class="table table-striped table-condensed table-hover">
+    &lt;tr ng-repeat="article in articles">
+        &lt;td width="20">
+            &lt;input type="checkbox" ng-model="article.checked" />
+        &lt;/td>
+        &lt;td sortable="title" filter="{ 'title': 'text' }" title="Title">
+            &lt;a href="#!/news/edit{[article.id]}">{[article.title]}&lt;/a>
+        &lt;/td>
+        &lt;td filter="{ 'user_id': 'select' }" filter-data="users" sortable="user_id" width="140" title="Author">
+            {[article.user]}
+        &lt;/td>
+        &lt;td filter="{ 'created_at': 'date' }" sortable="created_at" width="140" title="Date of creation" class="text-center">
+            {[article.created_at|date:'yyyy-MM-dd']}&lt;br/>
+            {[article.created_at|date:'HH:mm:ss']}
+        &lt;/td>
+        &lt;td sortable="publish" width="130" title="Published">
+            &lt;input type="checkbox" ng-model="article.publish">
+        &lt;/td>
+        &lt;td filter="{ 'action': 'button' }" width="95" title="Actions" class="text-center">
+            &lt;div class="btn-group">
+                &lt;button ng-click="delete(column)" class="btn btn-danger">&lt;span class="glyphicon glyphicon-trash glyphicon glyphicon-white">&lt;/span>&lt;/button>
+            &lt;/div>
+        &lt;/td>
+    &lt;/tr>
+&lt;/table>
+</pre>

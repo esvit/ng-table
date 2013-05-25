@@ -11,10 +11,12 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/prettify.css">
         <link rel="stylesheet" href="css/table.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="js/ng-table.js"></script>
+        <script src="js/google-code-prettify/prettify.js"></script>
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
         <div class="navbar">
@@ -36,8 +38,9 @@
     
         <div class="row">
             <div class="col-span-3">
-                <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#!/demo1">Demo #1: Simple table</a></li>
+                <ul style="margin-top: 15px" class="nav nav-pills nav-stacked">
+                    <li ng-class="{'active': demo == 1}"><a href="/">Demo #1: Simple table</a></li>
+                    <li ng-class="{'active': demo == 2}"><a href="/demo2">Demo #2: Custom templates</a></li>
                 </ul>
             </div>
             <div class="col-span-9" data-ng-view></div>
@@ -45,10 +48,74 @@
 
         <script>
         var app = angular.module('app', ['ngTable']).
-            config(function($interpolateProvider, $routeProvider){
+            config(function($interpolateProvider, $routeProvider, $locationProvider, $provide){
                 $interpolateProvider.startSymbol('{[').endSymbol(']}'); // Twig noConflict
 
-                $routeProvider.when('/demo:id', { templateUrl: '/views/demo1.html' });
+                $locationProvider.html5Mode(true).hashPrefix('!');
+                $routeProvider
+                    .when('/',      { demo: 1, templateUrl: '/views/demo1.html' })
+                    .when('/demo2', { demo: 2, templateUrl: '/views/demo2.html' })
+                    .otherwise({ redirectTo: '/' })
+                ;
+
+                var pulseElements = $(),
+                    pulseColor = {r:0xE6, g:0xF0, b: 0xFF},
+                    baseColor = {r:0x99, g:0xc2, b: 0xFF},
+                    pulseDuration = 1000,
+                    pulseDelay = 15000;
+
+                function hex(number) {
+                  return ('0' + Number(number).toString(16)).slice(-2);
+                }
+
+                jQuery.fn.pulse = function () {
+                  pulseElements = pulseElements.add(this);
+                };
+                var lastPulse;
+
+                function tick() {
+                  var duration = new Date().getTime() - lastPulse,
+                      index = duration * Math.PI / pulseDuration ,
+                      level = Math.pow(Math.sin(index), 10),
+                      color = {
+                        r: Math.round(pulseColor.r * level + baseColor.r * (1 - level)),
+                        g: Math.round(pulseColor.g * level + baseColor.g * (1 - level)),
+                        b: Math.round(pulseColor.b * level + baseColor.b * (1 - level))
+                      },
+                      style = '#' + hex(color.r) + hex(color.g) + hex(color.b);
+
+                  pulseElements.css('backgroundColor', style);
+                  if (duration > pulseDuration) {
+                    setTimeout(function() {
+                      lastPulse = new Date().getTime();
+                      tick();
+                    }, pulseDelay);
+                  } else {
+                    setTimeout(tick, 50);
+                  }
+                }
+
+                $provide.value('startPulse', function() {
+                   setTimeout(function() {
+                     lastPulse = new Date().getTime();
+                     tick();
+                   }, 2000);
+                });
+            })
+            .directive('prettyprint', function() {
+                return {restrict: 'C', link: function(scope, element) {
+                    var code = prettyPrintOne(element.html(), undefined, true);
+                    element.html(code);
+                    element.find('code').pulse();
+                }};
+            })
+            .controller('IndexCtrl', function($scope, $route, startPulse) {
+                $scope.$on('$routeChangeSuccess', function () {
+                    if ($route.current.$$route) {
+                        $scope.demo = $route.current.$$route.demo;
+                    }
+                });
+                startPulse();
             });
         </script>
     </body>
