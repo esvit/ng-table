@@ -14,13 +14,13 @@
         <link rel="stylesheet" href="css/table.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
-        <script src="js/ng-table.js"></script>
+        <script src="../ng-table.js"></script>
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
 
         <button class="btn" ng-class="{ 'active': filter.active }" ng-click="filter.active = !filter.active">Show filter</button>
 
-        <table ng-table="update" pager="data.pager" class="table-striped table-condensed table-hover">
+        <table ng-table="update($params)" pager="articles.pager" class="table-striped table-condensed table-hover">
             <tr ng-repeat="article in articles.data">
                 <td width="20">
                     <input type="checkbox" ng-model="article.checked" />
@@ -57,6 +57,7 @@
                 $scope.articles = data;
             });*/
             $scope.update = function(params) {
+                //$scope.articles.pager = params;
                 console.info(params);
             }
             $scope.users = function() {
@@ -81,9 +82,9 @@
                     }
                 ],
                 pager: {
-                    current: 1,
-                    count: 1,
-                    countPerPage: 10
+                    page: 1,
+                    total: 120,
+                    count: 10
                 }
             };
         }

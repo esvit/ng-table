@@ -20,25 +20,31 @@ angular.module('ngTable', [])
                         </thead>';
     var pager = '<div class="pagination">\
                     <ul class="pagination ng-cloak" ng-show="pager && pager.count > 1"> \
-                      <li ng-class="{\'disabled\':pager.current == 1}"><a ng-click="goToPage(pager.current-1)" href="javascript:;">&laquo;</a></li> \
-                      <li ng-show="pager.current > 4"><a ng-click="goToPage(1)" href="javascript:;">1</a></li> \
-                      <li class="disabled" ng-show="pager.current > 4 && pager.count > 6"><span>...</span></li> \
-                      <li ng-repeat="page in pager.pages" ng-class="{\'disabled\':pager.current == page}"><a href="javascript:;" ng-click="goToPage(page)">{[page]}</a></li> \
-                      <li class="disabled" ng-show="pager.current + 3 < pager.count && pager.count > 6"><span>...</span></li> \
-                      <li ng-show="pager.current + 2 < pager.count && pager.count > 5"><span><a ng-click="goToPage(pager.count)" href="javascript:;">{[pager.count]}</a></span></li> \
-                      <li ng-class="{\'disabled\':pager.current == pager.count}"><a ng-click="goToPage(pager.current+1)" href="javascript:;">&raquo;</a></li> \
+                      <li ng-class="{\'disabled\': !page.active}" ng-repeat="page in pager.pages" ng-switch="page.type"> \
+                        <a ng-switch-when="prev" ng-click="goToPage(page.number)" href="">&laquo;</a> \
+                        <a ng-switch-when="first" ng-click="goToPage(page.number)" href="">{[page.number]}</a> \
+                        <a ng-switch-when="page" ng-click="goToPage(page.number)" href="">{[page.number]}</a> \
+                        <a ng-switch-when="more" ng-click="goToPage(page.number)" href="">&hellip;</a> \
+                        <a ng-switch-when="last" ng-click="goToPage(page.number)" href="">{[page.number]}</a> \
+                        <a ng-switch-when="next" ng-click="goToPage(page.number)" href="">&raquo;</a> \
+                      </li> \
                     </ul> \
                     <div class="btn-group pull-right"> \
-                        <button type="button" ng-class="{\'active\':grid.count == 10}" ng-click="goToPage(pager.current, 10)" class="btn btn-mini">10</button> \
-                        <button type="button" ng-class="{\'active\':grid.count == 25}" ng-click="goToPage(pager.current, 25)" class="btn btn-mini">25</button> \
-                        <button type="button" ng-class="{\'active\':grid.count == 50}" ng-click="goToPage(pager.current, 50)" class="btn btn-mini">50</button> \
-                        <button type="button" ng-class="{\'active\':grid.count == 100}" ng-click="goToPage(pager.current, 100)" class="btn btn-mini">100</button> \
+                        <button type="button" ng-class="{\'active\':grid.count == 10}" ng-click="goToPage(pager.page, 10)" class="btn btn-mini">10</button> \
+                        <button type="button" ng-class="{\'active\':grid.count == 25}" ng-click="goToPage(pager.page, 25)" class="btn btn-mini">25</button> \
+                        <button type="button" ng-class="{\'active\':grid.count == 50}" ng-click="goToPage(pager.page, 50)" class="btn btn-mini">50</button> \
+                        <button type="button" ng-class="{\'active\':grid.count == 100}" ng-click="goToPage(pager.page, 100)" class="btn btn-mini">100</button> \
                     </div>\
                 </div>';
     return {
         restrict: 'A',
         priority: 1001,
+        scope: {
+            'onUpdate': '&ngTable'
+        },
         controller: function($scope, $timeout) {
+            $scope.onUpdate({'$params': [ '1']});
+                
             $scope.goToPage = function(page, count) {
                 var data = $scope.grid;
                 if (((page > 0 && data.page != page && $scope.pager.count >= page) || angular.isDefined(count)) && $scope.callback) {
@@ -57,6 +63,7 @@ angular.module('ngTable', [])
             $scope.grid = {
                 page: 1,
                 count: 10,
+                total: 0,
                 filter: {},
                 sorting: [],
                 sortingDirection: []
@@ -97,38 +104,56 @@ angular.module('ngTable', [])
                 scope.callback = scope[attrs.ngTable];
                 scope.columns = columns;
 
-                var getInterval = function(page, numPages) {
-                    var midRange = 5;
-                    var neHalf, upperLimit, start, end;
-                    neHalf = Math.ceil(midRange / 2);
-                    upperLimit = numPages - midRange;
-                    start = page > neHalf ? Math.max(Math.min(page - neHalf, upperLimit), 0) : 0;
-                    end = page > neHalf ?
-                        Math.min(page + neHalf - (midRange % 2 > 0 ? 1 : 0), numPages) :
-                        Math.min(midRange, numPages);
-                    return {start: start,end: end};
+                // generate array of pages
+                var generatePages = function(currentPage, totalItems, pageSize) {
+                    var maxBlocks = 11;  // specify the max <li> elements you want rendered
+                    var pages = [],
+                        numPages = Math.ceil(totalItems / pageSize);
+
+                    if (numPages > 1) {
+                        pages.push({ type: 'prev', number: Math.max(1, currentPage - 1), active: currentPage > 1 });
+                        pages.push({ type: 'first', number: 1 });
+
+                        var maxPivotPages = Math.round((maxBlocks - 5) / 2),
+                            minPage = Math.max(2, currentPage - maxPivotPages),
+                            maxPage = Math.min(numPages - 1, currentPage + maxPivotPages * 2 - (currentPage - minPage));
+
+                        minPage = Math.max(2, minPage - (maxPivotPages * 2 - (maxPage - minPage)));
+
+                        for (var i = minPage; i <= maxPage; i++) {
+                            if ((i == minPage && i != 2) || (i == maxPage && i != numPages - 1)) {
+                                pages.push({ type: 'more' });
+                            } else {
+                                pages.push({ type: 'page', number: i, active: currentPage != i });
+                            }
+                        }
+
+                        pages.push({ type: 'last', number: numPages });
+                        pages.push({ type: 'next', number: Math.min(numPages, currentPage + 1), active: currentPage < numPages });
+                    }
+                    return pages;
                 };
 
                 scope.$watch(attrs.pager, function(value) {
                     if (angular.isUndefined(value)) {
                         return;
                     }
-                    var interval = getInterval(value.current, value.count);
-                    value.pages = [];
-                    for (var i = interval.start + 1; i < interval.end + 1; i++) {
-                        value.pages.push(i);
-                    }
+                    value.pages = generatePages(value.page, value.total, value.count);
                     scope.pager = value;
-                    scope.grid.count = value.countPerPage;
+                    console.info(value);
+                    scope.grid.count = value.count;
                 });
 
                 angular.forEach(columns, function(column) {
                     if (!column.filterData) {
                         return;
                     }
-                    var promise = scope[column.filterData](column);
+                    var promise = scope.$parent[column.filterData];
+                    if (!promise) {
+                        throw new Error('Function ' + column.filterData + ' not found in scope');
+                    }
                     delete column['filterData'];
-                    promise.then(function(data) {
+                    promise(column).then(function(data) {
                         if (!angular.isArray(data)) {
                             data = [];
                         }
