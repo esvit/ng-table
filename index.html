@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="css/table.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
-        <script src="https://raw.github.com/esvit/ng-table/master/js/grid.js"></script>
+        <script src="js/ng-table.js"></script>
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
         <div class="navbar">
@@ -34,95 +34,22 @@
         </div>
 
     
-        <div class="container">
-            
-            <div class="page-header">
-                <h1>Example</h1>
+        <div class="row">
+            <div class="col-span-3">
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#!/demo1">Demo #1: Simple table</a></li>
+                </ul>
             </div>
-
-            <button class="btn" ng-class="{ 'active': filter.active }" ng-click="filter.active = !filter.active">Show filter</button>
-            
-            {[params|json]}
-
-            <table grid="update" pager="pager" class="table-striped table-condensed table-hover">
-                <tr ng-repeat="article in articles">
-                    <td width="20">
-                        <input type="checkbox" ng-model="article.checked" />
-                    </td>
-                    <td sortable="title" filter="{ 'title': 'text' }" title="Title">
-                        <a href="#!/article/edit{[article.id]}">{[article.title]}</a>
-                    </td>
-                    <td filter="{ 'user_id': 'select' }" filter-data="users" sortable="user_id" width="140" title="Author">
-                        {[article.user]}
-                    </td>
-                    <td filter="{ 'created_at': 'date' }" sortable="created_at" width="140" title="Date of creation" class="text-center">
-                        {[article.created_at|date:'yyyy-MM-dd']}<br/>
-                        {[article.created_at|date:'HH:mm:ss']}
-                    </td>
-                    <td sortable="publish" width="130" title="Published">
-                        <input type="checkbox" ng-model="article.publish">
-                    </td>
-                    <td filter="{ 'action': 'button' }" width="95" title="Actions" class="text-center">
-                        <div class="btn-group">
-                            <button ng-click="delete(column)" class="btn btn-danger"><span class="glyphicon glyphicon-trash glyphicon glyphicon-white"></span></button>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-
+            <div class="col-span-9" data-ng-view></div>
         </div>
 
         <script>
         var app = angular.module('app', ['ngTable']).
-            config(function($interpolateProvider){
+            config(function($interpolateProvider, $routeProvider){
                 $interpolateProvider.startSymbol('{[').endSymbol(']}'); // Twig noConflict
-            });
 
-        function IndexCtrl($scope, $http, $q, $timeout) {
-            var generateData = function(page, count) {
-                var data = [];
-                for (var i = 0; i < count; i++) {
-                    var id = i + (page - 1) * count;
-                    data.push({
-                        'id': id,
-                        'title': id + ') Lorem ipsum dolor sit amet, consectetuer adipiscing elit',
-                        'created_at': 1358416700000,
-                        'publish': true,
-                        'user_id': 1,
-                        'user': 'Ivan Fakov'
-                    });
-                }
-                return data;
-            }
-
-            $scope.update = function(params) {
-                var total = 300;
-                $scope.params = params;
-                $scope.pager = {
-                    current: params.page,
-                    count: Math.floor(total / params.count),
-                    countPerPage: params.count
-                }
-                $scope.articles = generateData(params.page, params.count);
-            }
-            $scope.users = function() {
-                var data = [
-                    { id: 1, title: 'Vasya' },
-                    { id: 2, title: 'Petya' }
-                ];
-                var q = $q.defer();
-                $timeout(function() {
-                    q.resolve(data);
-                }, 0);
-                return q.promise;
-            }
-            $scope.update({
-                page: 1,
-                count: 10
+                $routeProvider.when('/demo:id', { templateUrl: '/views/demo1.html' });
             });
-        }
         </script>
-
-    
     </body>
 </html>
