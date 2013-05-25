@@ -16,10 +16,8 @@
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
 
-        <button class="btn" ng-class="{ 'active': filter.active }" ng-click="filter.active = !filter.active">Show filter</button>
-
         {[ params|json ]}
-        <table ng-table="params" class="table table-striped table-condensed table-hover">
+        <table ng-table="params" show-filter="show_filter" class="table table-striped table-condensed table-hover">
             <tr ng-repeat="article in articles">
                 <td width="20">
                     <input type="checkbox" ng-model="article.checked" />
@@ -47,11 +45,12 @@
 
         <script>
         var app = angular.module('app', ['ngTable']).
-            config(function($interpolateProvider){
+            config(function($interpolateProvider, $routeProvider){
                 $interpolateProvider.startSymbol('{[').endSymbol(']}');
+
             });
 
-        function IndexCtrl($scope, $http, $q, $timeout) {
+        function IndexCtrl($scope, $http, $q, $timeout, $location, ngTableParams) {
             $scope.users = function() {
                 var data = [
                     { id: 1, title: 'Vasya' },
@@ -63,13 +62,19 @@
                 }, 0);
                 return q.promise;
             }
-            $scope.params = {
+
+            var sParams = $location.search();
+            $scope.params = new ngTableParams(angular.extend({
                 page: 1,
                 total: 120,
                 count: 10
-            };
-
+            }, sParams));
+            
             $scope.$watch('params', function(params) {
+                $location.search(params.url());
+                if (params.filter) {
+                    $scope.show_filter = true;
+                }
 
                 $scope.articles = [
                     {
@@ -80,7 +85,7 @@
                         publish: true
                     }
                 ];
-            });
+            }, true);
         }
         </script>
 

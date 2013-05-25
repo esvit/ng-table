@@ -22,11 +22,11 @@ angular.module('ngTable', [])
         $templateCache.put(ngTableHeaderTemplate,
             '<tr> \
                 <th class="header" \
-                    ng-class="{\'sortable\': column.sortable,\'sort-down\': column.sort==\'down\', \'sort-up\': column.sort==\'up\'}" \
+                    ng-class="{\'sortable\': column.sortable,\'sort-asc\': params.sorting[column.sortable]==\'asc\', \'sort-desc\': params.sorting[column.sortable]==\'desc\'}" \
                     ng-click="sortBy(column)" \
                     ng-repeat="column in columns"><div>{[column.title]}</div></th> \
             </tr> \
-            <tr ng-show="filter.active"> \
+            <tr ng-show="show_filter"> \
                 <th class="filter" ng-repeat="column in columns"> \
                     <div ng-repeat="(name, filter) in column.filter">\
                         <input type="text" ng-model="params.filter[name]" class="input-filter" ng-show="filter == \'text\'" /> \
@@ -38,7 +38,7 @@ angular.module('ngTable', [])
             </tr>');
 
         $templateCache.put(ngTablePaginationTemplate,
-            '<div class="pagination">\
+            '<div>\
                 <ul class="pagination ng-cloak"> \
                   <li ng-class="{\'disabled\': !page.active}" ng-repeat="page in pages" ng-switch="page.type"> \
                     <a ng-switch-when="prev" ng-click="goToPage(page.number)" href="">&laquo;</a> \
@@ -57,8 +57,8 @@ angular.module('ngTable', [])
                 </div>\
             </div>');
     }])
-    .directive('ngTable', ['$compile', '$parse', '$http', 'ngTableHeaderTemplate', 'ngTablePaginationTemplate', 
-                   function($compile,   $parse,   $http,   ngTableHeaderTemplate,   ngTablePaginationTemplate) {
+    .directive('ngTable', ['$compile', '$parse', '$http', 'ngTableHeaderTemplate', 'ngTablePaginationTemplate', 'ngTableParams',
+                   function($compile,   $parse,   $http,   ngTableHeaderTemplate,   ngTablePaginationTemplate,   ngTableParams) {
         return {
             restrict: 'A',
             priority: 1001,
@@ -71,7 +71,7 @@ angular.module('ngTable', [])
                     newParams = angular.extend($scope.params, newParams);
 
                     // assign params in both scopes
-                    $scope.paramsModel.assign($scope.$parent, angular.copy(newParams));
+                    $scope.paramsModel.assign($scope.$parent, new ngTableParams(newParams));
                     $scope.paramsModel.assign($scope, angular.copy(newParams));
                 };
 
@@ -92,18 +92,11 @@ angular.module('ngTable', [])
                     if (!column.sortable) {
                         return;
                     }
-                    var sorting = $scope.params.sorting && ($scope.params.sorting[0] == column.sortable) && $scope.params.sortingDirection[0];
-                    var sortingParams = {
-                        sorting: [column.sortable],
-                        sortingDirection: [!sorting]
-                    };
+                    var sorting = $scope.params.sorting && $scope.params.sorting[column.sortable] && ($scope.params.sorting[column.sortable] == 'desc');
+                    var sortingParams = {};
+                    sortingParams[column.sortable] = sorting ? 'asc' : 'desc';
 
-                    angular.forEach($scope.columns, function(column) {
-                        column.sort = false;
-                    });
-                    column.sort = sorting ? 'up' : 'down';
-
-                    updateParams(sortingParams);
+                    updateParams({ 'sorting': sortingParams });
                 }
             },
             compile: function(element, attrs) {
@@ -152,13 +145,18 @@ angular.module('ngTable', [])
                     };
 
                     // update pagination where parameters changes
-                    scope.$watch(attrs.ngTable, function(params) {
+                    scope.$parent.$watch(attrs.ngTable, function(params) {
                         if (angular.isUndefined(params)) {
                             return;
                         }
                         scope.paramsModel = $parse(attrs.ngTable);
                         scope.pages = generatePages(params.page, params.total, params.count);
-                        scope.params = params;
+                        scope.params = angular.copy(params);
+                    });
+
+                    // show/hide filter row
+                    scope.$parent.$watch(attrs.showFilter, function(value) {
+                        scope.show_filter = value;
                     });
 
                     // get data from columns
@@ -197,4 +195,63 @@ angular.module('ngTable', [])
                 };
             }
         };
-    }]);
+    }])
+    .factory('ngTableParams', function() {
+        function isNumber(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+        }
+        var ngTableParams = function (data) {
+            var ignoreFields = ['total'];
+
+            // parse url params
+            for (var key in data) {
+                if (key.indexOf('[') >= 0) {
+                    var params = key.split(/\[(.*)\]/), value = data[key], lastKey = '';
+
+                    angular.forEach(params.reverse(), function(name) {
+                        if (name != '') {
+                            var v = value;
+                            value = {};
+                            value[lastKey = name] = isNumber(v) ? parseFloat(v) : v;
+                        }
+                    });
+                    this[lastKey] = angular.extend(this[lastKey] || {}, value[lastKey]);
+                } else {
+                    this[key] = isNumber(data[key]) ? parseFloat(data[key]) : data[key];
+                }
+            }
+            this.url = function(asString) {
+                asString = asString || false;
+                var pairs = asString ? [] : {};
+                for (var key in this) {
+                    if (this.hasOwnProperty(key)) {
+                        if (ignoreFields.indexOf(key) >= 0) {
+                            continue;
+                        }
+                        var item = this[key],
+                            name = encodeURIComponent(key);
+                        if (typeof item == 'object') {
+                            for (var subkey in item) {
+                                if (!angular.isUndefined(item[subkey]) && item[subkey] != '') {
+                                    var pname = name + '[' + encodeURIComponent(subkey) + ']';
+                                    if (asString) {
+                                        pairs.push(pname + '=' + encodeURIComponent(item[subkey]));
+                                    } else {
+                                        pairs[pname] = encodeURIComponent(item[subkey]);
+                                    }
+                                }
+                            }
+                        } else if (!angular.isFunction(item) && !angular.isUndefined(item) && item != '') {
+                            if (asString) {
+                                pairs.push(name + '=' + encodeURIComponent(item));
+                            } else {
+                                pairs[name] = encodeURIComponent(item);
+                            }
+                        }
+                    }
+                }
+                return pairs;
+            };
+        };
+        return ngTableParams;
+    });
