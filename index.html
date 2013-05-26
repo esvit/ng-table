@@ -98,9 +98,9 @@
 
                 $locationProvider.html5Mode(false).hashPrefix('!');
                 $routeProvider
-                    .when('/',      { templateUrl: '/views/get_started.html' })
-                    .when('/demo1', { demo: 1, templateUrl: '/views/demo1.html' })
-                    .when('/demo2', { demo: 2, templateUrl: '/views/demo2.html' })
+                    .when('/',      { templateUrl: 'views/get_started.html' })
+                    .when('/demo1', { demo: 1, templateUrl: 'views/demo1.html' })
+                    .when('/demo2', { demo: 2, templateUrl: 'views/demo2.html' })
                     .otherwise({ redirectTo: '/' })
                 ;
 
