@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/table.css">
+        <script src="js/jquery-1.9.1.min.js"></script>
+        <script src="js/angular.min.js"></script>
+        <script src="../ng-table.js"></script>
+    </head>
+    <body ng-app="app" ng-controller="IndexCtrl">
+
+        {[ params|json ]}
+        <table ng-table="params" show-filter="show_filter" class="table table-striped table-condensed table-hover">
+            <tr ng-repeat="article in articles">
+                <td width="20">
+                    <input type="checkbox" ng-model="article.checked" />
+                </td>
+                <td sortable="title" filter="{ 'title': 'text' }" title="Title">
+                    <a href="#!/news/edit{[article.id]}">{[article.title]}</a>
+                </td>
+                <td filter="{ 'user_id': 'select' }" filter-data="users" sortable="user_id" width="140" title="Author">
+                    {[article.user]}
+                </td>
+                <td filter="{ 'created_at': 'date' }" sortable="created_at" width="140" title="Date of creation" class="text-center">
+                    {[article.created_at|date:'yyyy-MM-dd']}<br/>
+                    {[article.created_at|date:'HH:mm:ss']}
+                </td>
+                <td sortable="publish" width="130" title="Published">
+                    <input type="checkbox" ng-model="article.publish">
+                </td>
+                <td filter="{ 'action': 'button' }" width="95" title="Actions" class="text-center">
+                    <div class="btn-group">
+                        <button ng-click="delete(column)" class="btn btn-danger"><span class="glyphicon glyphicon-trash glyphicon glyphicon-white"></span></button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <script>
+        var app = angular.module('app', ['ngTable']).
+            config(function($interpolateProvider, $routeProvider){
+                $interpolateProvider.startSymbol('{[').endSymbol(']}');
+
+            });
+
+        function IndexCtrl($scope, $http, $q, $timeout, $location, ngTableParams) {
+            $scope.users = function() {
+                var data = [
+                    { id: 1, title: 'Vasya' },
+                    { id: 2, title: 'Petya' }
+                ];
+                var q = $q.defer();
+                $timeout(function() {
+                    q.resolve(data);
+                }, 0);
+                return q.promise;
+            }
+
+            var sParams = $location.search();
+            $scope.params = new ngTableParams(angular.extend({
+                page: 1,
+                total: 120,
+                count: 10
+            }, sParams));
+            
+            $scope.$watch('params', function(params) {
+                $location.search(params.url());
+                if (params.filter) {
+                    $scope.show_filter = true;
+                }
+
+                $scope.articles = [
+                    {
+                        id: 1,
+                        title: 'Article on ' + params.page + ' page',
+                        user: 'Vasya',
+                        user_id: 1,
+                        publish: true
+                    }
+                ];
+            }, true);
+        }
+        </script>
+
+    
+    </body>
+</html>

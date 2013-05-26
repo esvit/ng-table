@@ -16,7 +16,8 @@
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
 
-        <table ng-table="tableParams">
+        {[ params|json ]}
+        <table ng-table="tableParams" class="table">
             <tr ng-repeat="user in users">
                 <td title="Name">
                     {[user.name]}
@@ -35,11 +36,34 @@
             });
 
         function IndexCtrl($scope, $http, $q, $timeout, $location, ngTableParams) {
-            $scope.users = [{name: "Moroni", age: 50},
-                            {name: "Tiancum", age: 43},
-                            {name: "Jacob", age: 27},
-                            {name: "Nephi", age: 29},
-                            {name: "Enos", age: 34}];
+            var data = [{name: "Moroni", age: 50},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34}];
+
+            $scope.tableParams = new ngTableParams({
+                page: 1,
+                total: data.length,
+                count: 10
+            });
+            
+            $scope.$watch('tableParams', function(params) {
+
+                $scope.users = data.slice((params.page - 1) * params.count, params.page * params.count);
+            }, true);
         }
         </script>
 
