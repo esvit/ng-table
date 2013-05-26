@@ -1,0 +1,100 @@
+<h1>Table with filters</h1>
+
+<div class="row">
+<div class="col-span-6" ng-controller="DemoCtrl">
+
+        <p>Type something in filter and press <strong>Enter</strong> or <strong>Filter</strong> button</p>
+        <p><strong>Filter:</strong> {[tableParams.filter|json]}
+
+        <table ng-table="tableParams" show-filter="true" class="table">
+            <tr ng-repeat="user in users">
+                <td title="Name" filter="{ 'name': 'text' }">
+                    {[user.name]}
+                </td>
+                <td title="Age" filter="{ 'action': 'button' }">
+                    {[user.age]}
+                </td>
+            </tr>
+        </table>
+
+        <script>
+        function DemoCtrl($scope, $filter, ngTableParams) {
+            var data = [{name: "Moroni", age: 50},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34}];
+
+            $scope.tableParams = new ngTableParams({
+                page: 1,            // show first page
+                total: data.length, // length of data
+                count: 10           // count per page
+            });
+            
+            $scope.$watch('tableParams', function(params) {
+                // use build-in angular filter
+                var orderedData = params.filter ? 
+                                    $filter('filter')(data, params.filter) :
+                                    data;
+
+                params.total = orderedData.length; // set total for recalc pagination
+                $scope.users = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+            }, true);
+        }
+        </script>
+
+</div>
+<div class="col-span-6">
+
+<h3>Html</h3>
+<pre class="prettyprint nocode">
+&lt;table ng-table="tableParams" class="table"&gt;
+    &lt;tr ng-repeat="user in users"&gt;
+        &lt;td title="Name"&gt;
+            {[user.name]}
+        &lt;/td&gt;
+        &lt;td title="Age"&gt;
+            {[user.age]}
+        &lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+<h3>Javascript</h3>
+<pre class="prettyprint nocode">
+function DemoCtrl($scope, ngTableParams) {
+    var data = [{name: "Moroni", age: 50},
+                // more data...
+                {name: "Enos", age: 34}];
+
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: data.length, // length of data
+        count: 10           // count per page
+    });
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', function(params) {
+        // slice array data on pages
+        $scope.users = data.slice(
+            (params.page - 1) * params.count,
+            params.page * params.count
+        );
+    }, true);
+}
+</pre>
+
+</div>
+</div>

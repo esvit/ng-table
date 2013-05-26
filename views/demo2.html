@@ -74,7 +74,7 @@
 
 <h3>Html</h3>
 <pre class="prettyprint nocode">
-&lt;table ng-table="tableParams" template-pagination="custom/pager" class="table"&gt;
+&lt;table ng-table="tableParams" <code class="nocode">template-pagination="custom/pager"</code> class="table"&gt;
     &lt;tr ng-repeat="user in users"&gt;
         &lt;td title="Name"&gt;
             {[user.name]}
@@ -85,7 +85,7 @@
     &lt;/tr&gt;
 &lt;/table&gt;
 &lt;!-- Custom template --&gt;
-&lt;script type="text/ng-template" id="custom/pager"&gt;
+&lt;script type="text/ng-template" <code class="nocode">id="custom/pager"</code>&gt;
 &lt;ul class="pager ng-cloak"&gt;
 &lt;li ng-repeat="page in pages"
      ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"

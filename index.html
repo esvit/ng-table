@@ -42,6 +42,8 @@
                     <li><a href="#!/demo2/">Custom templates</a></li>
                     <li class="nav-header">Sorting</li>
                     <li><a href="#!/demo3/">Simple table sorting</a></li>
+                    <li class="nav-header">Filtering</li>
+                    <li><a href="#!/demo4/">Table with filters</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -113,6 +115,7 @@
                     .when('/demo1', { demo: 1, templateUrl: 'views/demo1.html' })
                     .when('/demo2', { demo: 2, templateUrl: 'views/demo2.html' })
                     .when('/demo3', { demo: 3, templateUrl: 'views/demo3.html' })
+                    .when('/demo4', { demo: 4, templateUrl: 'views/demo4.html' })
                     .otherwise({ redirectTo: '/' })
                 ;
 

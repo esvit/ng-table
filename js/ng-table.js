@@ -28,12 +28,16 @@ angular.module('ngTable', [])
             </tr> \
             <tr ng-show="show_filter"> \
                 <th class="filter" ng-repeat="column in columns"> \
+                    <form ng-submit="doFilter()">\
+                    <!-- Hidden submit for ENTER key work --> \
+                    <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/> \
                     <div ng-repeat="(name, filter) in column.filter">\
                         <input type="text" ng-model="params.filter[name]" class="input-filter" ng-show="filter == \'text\'" /> \
                         <select class="filter filter-select" ng-options="data.id as data.title for data in column.data" ng-model="params.filter[name]" ng-show="filter == \'select\'"></select> \
                         <input type="text" date-range ng-model="params.filter[name]" ng-show="filter == \'date\'" /> \
                         <button class="btn btn-primary btn-block" ng-click="doFilter()" ng-show="filter == \'button\'">Filter</button> \
                     </div>\
+                    </form> \
                 </th> \
             </tr>');
 
@@ -65,14 +69,13 @@ angular.module('ngTable', [])
             scope: true,
             controller: function($scope, $timeout) {
                 $scope.params = $scope.params || { page: 1, count: 10 };
-                $scope.params.filter = $scope.params.filter || {};
 
                 var updateParams = function(newParams) {
                     newParams = angular.extend($scope.params, newParams);
 
                     // assign params in both scopes
                     $scope.paramsModel.assign($scope.$parent, new ngTableParams(newParams));
-                    $scope.paramsModel.assign($scope, angular.copy(newParams));
+                    $scope.params = angular.copy(newParams);
                 };
 
                 // goto page
@@ -205,6 +208,12 @@ angular.module('ngTable', [])
         var ngTableParams = function (data) {
             var ignoreFields = ['total'];
 
+            this.page = 1;
+
+            this.count = 1;
+
+            this.filter = {};
+
             // parse url params
             for (var key in data) {
                 if (key.indexOf('[') >= 0) {
@@ -222,6 +231,7 @@ angular.module('ngTable', [])
                     this[key] = isNumber(data[key]) ? parseFloat(data[key]) : data[key];
                 }
             }
+            
             this.orderBy = function() {
                 var sorting = [];
                 angular.forEach(this.sorting, function(direction, column) {
