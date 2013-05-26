@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
+        <title>ngTable: Simple and easy work with table on AngularJS (pagination, sorting, filtering)</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width">
         <script>
@@ -39,6 +40,8 @@
                     <li class="nav-header">Pagination</li>
                     <li><a href="#!/demo1/">Simple table pagination</a></li>
                     <li><a href="#!/demo2/">Custom templates</a></li>
+                    <li class="nav-header">Sorting</li>
+                    <li><a href="#!/demo3/">Simple table sorting</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -66,8 +69,8 @@
             <h1>ngTable</h1>
             <p class="lead">Angular Table directive</p>
             <p>
-                <a href="ngTable.zip" class="btn btn-large" onclick="_gaq.push(['_trackEvent', 'Jumbotron actions', 'Download', 'Download 3.0.0']);">Download ngTable</a>
-                <a target="_blank" href="https://github.com/esvit/ng-table" class="btn btn-large">Project on GitHub</a>
+                <a href="ngTable.zip" class="btn btn-large" onclick="_gaq.push(['_trackEvent', 'Jumbotron actions', 'Download', 'Download']);">Download ngTable</a>
+                <a target="_blank" href="https://github.com/esvit/ng-table" class="btn btn-large">Project GitHub</a>
             </p>
 
         </div>
@@ -109,6 +112,7 @@
                     .when('/',      { templateUrl: 'views/get_started.html' })
                     .when('/demo1', { demo: 1, templateUrl: 'views/demo1.html' })
                     .when('/demo2', { demo: 2, templateUrl: 'views/demo2.html' })
+                    .when('/demo3', { demo: 3, templateUrl: 'views/demo3.html' })
                     .otherwise({ redirectTo: '/' })
                 ;
 
