@@ -77,7 +77,7 @@
 
 <h3>Javascript</h3>
 <pre class="prettyprint nocode">
-function DemoCtrl($scope, ngTableParams) {
+function DemoCtrl($scope, $filter, ngTableParams) {
     var data = [{name: "Moroni", age: 50},
                 // more data...
                 {name: "Enos", age: 34}];
@@ -85,13 +85,21 @@ function DemoCtrl($scope, ngTableParams) {
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
         total: data.length, // length of data
-        count: 10           // count per page
+        count: 10,          // count per page
+        sorting: {
+            name: 'asc'     // initial sorting
+        }
     });
 
     // watch for changes of parameters
     $scope.$watch('tableParams', function(params) {
+        // use build-in angular filter
+        var orderedData = params.sorting ? 
+                            $filter('orderBy')(data, params.orderBy()) :
+                            data;
+
         // slice array data on pages
-        $scope.users = data.slice(
+        $scope.users = orderedData.slice(
             (params.page - 1) * params.count,
             params.page * params.count
         );
