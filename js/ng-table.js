@@ -64,9 +64,9 @@ angular.module('ngTable', [])
             priority: 1001,
             scope: true,
             controller: function($scope, $timeout) {
-                if (!$scope.params.filter) {
-                    $scope.params.filter = {};
-                }
+                $scope.params = $scope.params || { page: 1, count: 10 };
+                $scope.params.filter = $scope.params.filter || {};
+
                 var updateParams = function(newParams) {
                     newParams = angular.extend($scope.params, newParams);
 
@@ -83,7 +83,7 @@ angular.module('ngTable', [])
                 }
                 // change items per page
                 $scope.changeCount = function(count) {
-                    updateParams({ 'count': count });
+                    updateParams({ 'page': 1, 'count': count });
                 }
                 $scope.doFilter = function() {
                     updateParams({ 'page': 1 });
@@ -155,9 +155,11 @@ angular.module('ngTable', [])
                     });
 
                     // show/hide filter row
-                    scope.$parent.$watch(attrs.showFilter, function(value) {
-                        scope.show_filter = value;
-                    });
+                    if (attrs.showFilter) {
+                        scope.$parent.$watch(attrs.showFilter, function(value) {
+                            scope.show_filter = value;
+                        });
+                    }
 
                     // get data from columns
                     angular.forEach(columns, function(column) {
@@ -182,7 +184,7 @@ angular.module('ngTable', [])
                     if (!element.hasClass('ng-table')) {
                         scope.templates = {
                             'header': ngTableHeaderTemplate,
-                            'pagination': ngTablePaginationTemplate
+                            'pagination': attrs.templatePagination ? attrs.templatePagination : ngTablePaginationTemplate
                         };
 
                         var headerTemplate = $compile('<thead ng-include="templates.header"></thead>')(scope),

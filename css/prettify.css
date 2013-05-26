@@ -121,18 +121,27 @@
 }
 /* Style */
 pre.prettyprint {
-  background: white;
+  background: #f7f7f9;
   font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas, monospace;
   font-size: 12px;
   line-height: 1.5;
-  border: 1px solid #cccccc;
+  border: 1px solid #e1e1e8;
   padding: 10px;
+}
+.prettyprint.linenums {
+  -webkit-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+     -moz-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+          box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
 }
 
 /* Specify class=linenums on a pre to get line numbering */
 ol.linenums {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0 0 0 30px; /* IE indents via margin-left */
+} 
+ol.linenums li {
+  padding-left: 12px;
+  color: #bebec5;
+  line-height: 18px;
 }
 
 /* IE indents via margin-left */

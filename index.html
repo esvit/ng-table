@@ -13,39 +13,86 @@
         <link rel="stylesheet" href="css/bootstrap.css">
         <link rel="stylesheet" href="css/prettify.css">
         <link rel="stylesheet" href="css/table.css">
+        <link rel="stylesheet" href="css/docs.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
         <script src="js/ng-table.js"></script>
         <script src="js/google-code-prettify/prettify.js"></script>
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
-        <div class="navbar">
+        <div class="navbar navbar-fixed navbar-fixed-top">
           <div class="fill">
             <div class="container">
               <a href="/preview/twitter" class="navbar-brand">ngTable</a>
               <ul class="nav">
-                <li><a href="https://github.com/esvit/ng-table">GitHub project</a></li>
-              </ul>
+                <li><a href="/">Getting Started</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Examples <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    <li class="nav-header">Pagination</li>
+                    <li><a href="/demo1/">Simple table pagination</a></li>
+                    <li><a href="/demo2/">Custom templates</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                        Need Help?
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="https://github.com/esvit/ng-table/issues?sort=updated&amp;state=open">Want a new feature?</a></li>
+                        <li><a href="https://github.com/esvit/ng-table/issues?labels=bug&amp;sort=updated&amp;state=open">Demo page broken or missing demos?</a></li>
+                    </ul>
+                </li>
+                <li><a target="_blank" href="https://github.com/esvit/ng-table">GitHub project <span class="glyphicon glyphicon-share"></span></a></li>
+            </ul>
 
               <div class="pull-right" style="padding: 12px 0;">
                 <iframe width="100px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=watch&amp;count=true" class="github-btn"></iframe>
                 <iframe width="102px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=fork&amp;count=true" class="github-btn"></iframe>
+                <iframe allowtransparency="true" frameborder="0" scrolling="no" src="https://platform.twitter.com/widgets/tweet_button.1368146021.html#_=1369553836396&amp;count=horizontal&amp;dnt=true&amp;id=twitter-widget-92&amp;lang=ru&amp;original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons%23tweet&amp;size=m&amp;text=ngTable%3A%20Table%20directive%20for%20AngularJS&amp;url=https%3A%2F%2Fgithub.com%2Fesvit%2Fng-table%2F" class="twitter-share-button twitter-count-horizontal" title="Twitter Tweet Button" data-twttr-rendered="true" style="width: 140px; height: 20px;"></iframe>
               </div>
             </div>
           </div>
         </div>
+        <div class="bs-masthead" ng-hide="demo">
 
-    
-        <div class="row">
-            <div class="col-span-3">
-                <ul style="margin-top: 15px" class="nav nav-pills nav-stacked">
-                    <li ng-class="{'active': demo == 1}"><a href="/">Demo #1: Simple table</a></li>
-                    <li ng-class="{'active': demo == 2}"><a href="/demo2">Demo #2: Custom templates</a></li>
-                </ul>
-            </div>
-            <div class="col-span-9" data-ng-view></div>
+            <h1>ngTable</h1>
+            <p class="lead">Angular Table directive</p>
+            <p>
+                <a href="ngTable.zip" class="btn btn-large" onclick="_gaq.push(['_trackEvent', 'Jumbotron actions', 'Download', 'Download 3.0.0']);">Download ngTable</a>
+            </p>
+
+        </div>
+        <div class="container" id="ng-view" data-ng-view></div>
+        <footer class="bs-footer">
+          <div class="bs-social">
+          <ul class="bs-social-buttons">
+            <li>
+                <iframe width="100px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=watch&amp;count=true" class="github-btn"></iframe>
+            </li>
+            <li>
+                <iframe width="102px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=fork&amp;count=true" class="github-btn"></iframe>
+            </li>
+            <li class="tweet-btn">
+                <iframe allowtransparency="true" frameborder="0" scrolling="no" src="https://platform.twitter.com/widgets/tweet_button.1368146021.html#_=1369553836396&amp;count=horizontal&amp;dnt=true&amp;id=twitter-widget-92&amp;lang=ru&amp;original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons%23tweet&amp;size=m&amp;text=ngTable%3A%20Table%20directive%20for%20AngularJS&amp;url=https%3A%2F%2Fgithub.com%2Fesvit%2Fng-table%2F" class="twitter-share-button twitter-count-horizontal" title="Twitter Tweet Button" data-twttr-rendered="true" style="width: 140px; height: 20px;"></iframe>
+            </li>
+          </ul>
         </div>
 
+
+          <p>Made with love in <strong>Ukraine</strong>. On any questions or propositions write me a letter <a href="mailto:esvit666@gmail.com">esvit666@gmail.com</a></p>
+          <p>Code licensed under <a href="http://creativecommons.org/licenses/BSD/" target="_blank">New BSD License</a>.</p>
+
+          <ul class="footer-links">
+            <!--li><a href="http://blog.getbootstrap.com">Blog</a></li>
+            <li class="muted">·</li-->
+            <li><a target="_blank" href="http://github.com/esvit/ng-table">GitHub project</a></li>
+            <li class="muted">·</li>
+            <li><a target="_blank" href="http://github.com/esvit/ng-table/issues?state=open">Issues</a></li>
+          </ul>
+        </footer>
         <script>
         var app = angular.module('app', ['ngTable']).
             config(function($interpolateProvider, $routeProvider, $locationProvider, $provide){
@@ -53,7 +100,8 @@
 
                 $locationProvider.html5Mode(true).hashPrefix('!');
                 $routeProvider
-                    .when('/',      { demo: 1, templateUrl: '/views/demo1.html' })
+                    .when('/',      { templateUrl: '/views/get_started.html' })
+                    .when('/demo1', { demo: 1, templateUrl: '/views/demo1.html' })
                     .when('/demo2', { demo: 2, templateUrl: '/views/demo2.html' })
                     .otherwise({ redirectTo: '/' })
                 ;
@@ -105,11 +153,21 @@
             .directive('prettyprint', function() {
                 return {restrict: 'C', link: function(scope, element) {
                     var code = prettyPrintOne(element.html(), undefined, true);
-                    element.html(code);
-                    element.find('code').pulse();
+                    element.addClass('linenums').html(code);
+                    element.find('code').popover({
+                        html: true,
+                        trigger: 'hover',
+                        placement: 'left'
+                    }).pulse();
                 }};
             })
             .controller('IndexCtrl', function($scope, $route, startPulse) {
+                $scope.users = [{name: "Moroni", age: 50},
+                    {name: "Tiancum", age: 43},
+                    {name: "Jacob", age: 27},
+                    {name: "Nephi", age: 29},
+                    {name: "Enos", age: 34}];
+
                 $scope.$on('$routeChangeSuccess', function () {
                     if ($route.current.$$route) {
                         $scope.demo = $route.current.$$route.demo;

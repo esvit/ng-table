@@ -1,3 +1,144 @@
-<h1>Demo #2: Custom templates</h1>
+<h1>Custom pagination template</h1>
 
-...
+<div class="row">
+<div class="col-span-6" ng-controller="DemoCtrl">
+
+    <p><strong>Page:</strong> {[tableParams.page]}
+    <p><strong>Count per page:</strong> {[tableParams.count]}
+
+
+        <table ng-table="tableParams" template-pagination="custom/pager" class="table">
+            <tr ng-repeat="user in users">
+                <td title="Name">
+                    {[user.name]}
+                </td>
+                <td title="Age">
+                    {[user.age]}
+                </td>
+            </tr>
+        </table>
+        <script type="text/ng-template" id="custom/pager">
+            <ul class="pager ng-cloak">
+              <li ng-repeat="page in pages"
+                    ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
+                    ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type">
+                <a ng-switch-when="prev" ng-click="goToPage(page.number)" href="">&laquo; Previous</a>
+                <a ng-switch-when="next" ng-click="goToPage(page.number)" href="">Next &raquo;</a>
+              </li>
+                <li> 
+                <div class="btn-group">
+                    <button type="button" ng-class="{'active':params.count == 10}" ng-click="changeCount(10)" class="btn">10</button>
+                    <button type="button" ng-class="{'active':params.count == 25}" ng-click="changeCount(25)" class="btn">25</button>
+                    <button type="button" ng-class="{'active':params.count == 50}" ng-click="changeCount(50)" class="btn">50</button>
+                    <button type="button" ng-class="{'active':params.count == 100}" ng-click="changeCount(100)" class="btn">100</button>
+                </div>
+                </li>
+            </ul>
+        </script>
+
+        <script>
+        function DemoCtrl($scope, ngTableParams) {
+            var data = [{name: "Moroni", age: 50},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34}];
+
+            $scope.tableParams = new ngTableParams({
+                page: 1,            // show first page
+                total: data.length, // length of data
+                count: 10           // count per page
+            });
+            
+            $scope.$watch('tableParams', function(params) {
+
+                $scope.users = data.slice((params.page - 1) * params.count, params.page * params.count);
+            }, true);
+        }
+        </script>
+
+</div>
+<div class="col-span-6">
+
+<h3>Html</h3>
+<pre class="prettyprint nocode">
+&lt;table ng-table="tableParams" template-pagination="custom/pager" class="table"&gt;
+    &lt;tr ng-repeat="user in users"&gt;
+        &lt;td title="Name"&gt;
+            {[user.name]}
+        &lt;/td&gt;
+        &lt;td title="Age"&gt;
+            {[user.age]}
+        &lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+&lt;!-- Custom template --&gt;
+&lt;script type="text/ng-template" id="custom/pager"&gt;
+&lt;ul class="pager ng-cloak"&gt;
+&lt;li ng-repeat="page in pages"
+     ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
+     ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type"&gt;
+
+    &lt;a ng-switch-when="prev" ng-click="goToPage(page.number)" href=""&gt;&laquo; Previous&lt;/a&gt;
+
+    &lt;a ng-switch-when="next" ng-click="goToPage(page.number)" href=""&gt;Next &raquo;&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+    &lt;!-- Count per page --&gt;
+    &lt;div class="btn-group"&gt;
+        &lt;button type="button"
+            ng-class="{'active':params.count == 10}"
+            ng-click="changeCount(10)" class="btn"&gt;10&lt;/button&gt;
+        &lt;button type="button"
+            ng-class="{'active':params.count == 25}"
+            ng-click="changeCount(25)" class="btn"&gt;25&lt;/button&gt;
+        &lt;button type="button"
+            ng-class="{'active':params.count == 50}"
+            ng-click="changeCount(50)" class="btn"&gt;50&lt;/button&gt;
+        &lt;button type="button"
+            ng-class="{'active':params.count == 100}"
+            ng-click="changeCount(100)" class="btn"&gt;100&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/script&gt;
+</pre>
+
+<h3>Javascript</h3>
+<pre class="prettyprint nocode">
+function DemoCtrl($scope, ngTableParams) {
+    var data = [{name: "Moroni", age: 50},
+                // more data...
+                {name: "Enos", age: 34}];
+
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: data.length, // length of data
+        count: 10           // count per page
+    });
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', function(params) {
+        // slice array data on pages
+        $scope.users = data.slice(
+            (params.page - 1) * params.count,
+            params.page * params.count
+        );
+    }, true);
+}
+</pre>
+
+</div>
+</div>

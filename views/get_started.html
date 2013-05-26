@@ -1,0 +1,105 @@
+<h1>Getting Started</h1>
+
+<div class="row">
+
+<div class="col-span-6">
+    <div style="margin-top: 20px">
+        <h3>Steps for getting started (example on right)</h3>
+        <ol>
+            <li>Add references to <a href="http://jquery.com/" target="_blank">jQuery</a> and <a href="http://angularjs.org/" target="_blank">AngularJS</a>.</li>
+            <li>Add references to <a href="https://github.com/esvit/ng-table/">ngTable</a>'s javascript and css files.</li>
+            <li>Where you declare your app module, add ngTable:<br>
+                <code>angular.module('myApp',['ngTable']);</code>
+            </li>
+            <li>In your html file within the controller where you plan to use ng-table, add:<br>
+            <code>&lt;table ng-table&gt;...&lt;/table&gt;</code>
+                <br><strong>tableParams</strong> is the variable we are going to bind to where we will initialize our table options.</li>
+            <li>We are going to define a basic style for table in style.css:
+<pre style="margin-top:10px" class="prettyprint">
+.ng-table {
+    border: 1px solid #000;
+}
+</pre>
+            </li>
+            <li>In your javascript file within the controller where you plan to use<br>ng-table, lets add data that our table will use:<br> </li>
+<pre style="margin-top:10px" class="prettyprint">
+$scope.users = [{name: "Moroni", age: 50},
+                {name: "Tiancum", age: 43},
+                {name: "Jacob", age: 27},
+                {name: "Nephi", age: 29},
+                {name: "Enos", age: 34}];
+</pre>
+            <li>Now create your table rows:<br>
+                <code>ng-repeat="user in users"</code>
+            </li>
+            <li style="margin-top: 20px"><strong>Below is the outcome of the table using the example on the right:</strong><br>
+            
+            <table ng-table class="table" style="border: 1px solid #000;">
+            <tr ng-repeat="user in users">
+                <td title="Name">
+                    {[user.name]}
+                </td>
+                <td title="Age">
+                    {[user.age]}
+                </td>
+            </tr>
+            </table>
+            
+        </li></ol>
+    </div>
+</div>
+<div class="col-span-6">
+
+    <h3>HTML</h3>
+<pre class="prettyprint nocode">
+&lt;html ng-app="myApp"&gt;  
+&lt;head lang="en"&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Getting Started With ngTable Example&lt;/title&gt;  
+    &lt;script type="text/javascript" src="jquery-1.9.1.min.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="angular.min.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="ng-table.js"&gt;&lt;/script&gt;
+    &lt;link rel="stylesheet" type="text/css" href="ng-table.css" /&gt;
+    &lt;script type="text/javascript" src="main.js"&gt;&lt;/script&gt;
+    &lt;link rel="stylesheet" type="text/css" href="style.css" /&gt;
+&lt;/head&gt;
+&lt;body ng-controller="MyCtrl"&gt;
+    &lt;table <code class="nocode" rel="popover" data-content="Init ngTable" data-original-title="Step 4">ng-table</code> class="table"&gt;
+    &lt;tr ng-repeat="user in users"&gt;
+        &lt;td title="Name"&gt;
+            {[user.name]}
+        &lt;/td&gt;
+        &lt;td title="Age"&gt;
+            {[user.age]}
+        &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+    <h3>Javascript</h3>
+<pre class="prettyprint nocode">
+// main.js
+var app = angular.module('myApp', ['ngTable']);
+app.controller('MyCtrl', function($scope) {
+    $scope.users = [{name: "Moroni", age: 50},
+                     {name: "Tiancum", age: 43},
+                     {name: "Jacob", age: 27},
+                     {name: "Nephi", age: 29},
+                     {name: "Enos", age: 34}];
+});
+</pre>
+
+
+    <h3>CSS</h3>
+<pre class="prettyprint nocode">
+/*style.css*/
+.ng-table {
+    border: 1px solid #000;
+}
+</pre>
+
+</div>
+
+</div>
