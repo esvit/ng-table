@@ -40,7 +40,10 @@
             $scope.tableParams = new ngTableParams({
                 page: 1,            // show first page
                 total: data.length, // length of data
-                count: 10           // count per page
+                count: 10,          // count per page
+                filter: {
+                    name: 'M'       // initial filter
+                }
             });
             
             $scope.$watch('tableParams', function(params) {
@@ -60,12 +63,12 @@
 
 <h3>Html</h3>
 <pre class="prettyprint nocode">
-&lt;table ng-table="tableParams" class="table"&gt;
+&lt;table ng-table="tableParams" <code class="nocode">show-filter="true"</code> class="table"&gt;
     &lt;tr ng-repeat="user in users"&gt;
-        &lt;td title="Name"&gt;
+        &lt;td title="Name" <code class="nocode">filter="{ 'name': 'text' }"</code>&gt;
             {[user.name]}
         &lt;/td&gt;
-        &lt;td title="Age"&gt;
+        &lt;td title="Age" <code class="nocode">filter="{ 'action': 'button' }"</code>&gt;
             {[user.age]}
         &lt;/td&gt;
     &lt;/tr&gt;
@@ -74,7 +77,7 @@
 
 <h3>Javascript</h3>
 <pre class="prettyprint nocode">
-function DemoCtrl($scope, ngTableParams) {
+function DemoCtrl($scope, $filter, ngTableParams) {
     var data = [{name: "Moroni", age: 50},
                 // more data...
                 {name: "Enos", age: 34}];
@@ -82,11 +85,22 @@ function DemoCtrl($scope, ngTableParams) {
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
         total: data.length, // length of data
-        count: 10           // count per page
+        count: 10,          // count per page
+        filter: {
+            <code class="nocode">name: 'M'</code>       // initial filter
+        }
     });
 
     // watch for changes of parameters
     $scope.$watch('tableParams', function(params) {
+        // use build-in angular filter
+        var orderedData = params.filter ? 
+                            <code class="nocode">$filter('filter')(data, params.filter)</code> :
+                            data;
+
+        // set total for recalc pagination
+        params.total = orderedData.length;
+
         // slice array data on pages
         $scope.users = data.slice(
             (params.page - 1) * params.count,
