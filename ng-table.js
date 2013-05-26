@@ -152,7 +152,7 @@ angular.module('ngTable', [])
                         scope.paramsModel = $parse(attrs.ngTable);
                         scope.pages = generatePages(params.page, params.total, params.count);
                         scope.params = angular.copy(params);
-                    });
+                    }, true);
 
                     // show/hide filter row
                     if (attrs.showFilter) {
@@ -183,7 +183,7 @@ angular.module('ngTable', [])
                     // create table
                     if (!element.hasClass('ng-table')) {
                         scope.templates = {
-                            'header': attrs.templateHeader ? attrs.templateHeader : ngTableHeaderTemplate,
+                            'header': ngTableHeaderTemplate,
                             'pagination': attrs.templatePagination ? attrs.templatePagination : ngTablePaginationTemplate
                         };
 
@@ -222,6 +222,13 @@ angular.module('ngTable', [])
                     this[key] = isNumber(data[key]) ? parseFloat(data[key]) : data[key];
                 }
             }
+            this.orderBy = function() {
+                var sorting = [];
+                angular.forEach(this.sorting, function(direction, column) {
+                    sorting.push( (direction == 'asc' ? '+' : '-') + column );
+                });
+                return sorting;
+            };
             this.url = function(asString) {
                 asString = asString || false;
                 var pairs = asString ? [] : {};
