@@ -77,7 +77,7 @@
 
 <h3>Javascript</h3>
 <pre class="prettyprint nocode">
-function DemoCtrl($scope, $filter, ngTableParams) {
+function DemoCtrl($scope, <code class="nocode">$filter</code>, ngTableParams) {
     var data = [{name: "Moroni", age: 50},
                 // more data...
                 {name: "Enos", age: 34}];
@@ -95,8 +95,8 @@ function DemoCtrl($scope, $filter, ngTableParams) {
     $scope.$watch('tableParams', function(params) {
         // use build-in angular filter
         var orderedData = params.sorting ? 
-                            $filter('orderBy')(data, params.orderBy()) :
-                            data;
+                        <code class="nocode">$filter('orderBy')(data, params.orderBy())</code> :
+                        data;
 
         // slice array data on pages
         $scope.users = orderedData.slice(
