@@ -1,0 +1,13 @@
+tr
+  th.header(ng-class='{sortable: column.sortable,\'sort-asc\': params.sorting[column.sortable]==\'asc\', \'sort-desc\': params.sorting[column.sortable]==\'desc\'}', ng-click='sortBy(column)', ng-repeat='column in columns')
+    div {[column.title]}
+tr(ng-show='show_filter')
+  th.filter(ng-repeat='column in columns')
+    form(ng-submit='doFilter()')
+      // Hidden submit for ENTER key work
+      input(type='submit', style='position: absolute; left: -9999px; width: 1px; height: 1px;')
+      div(ng-repeat='(name, filter) in column.filter')
+        input.input-filter(type='text', ng-model='params.filter[name]', ng-show='filter == \'text\'')
+        select.filter.filter-select(ng-options='data.id as data.title for data in column.data', ng-model='params.filter[name]', ng-show='filter == \'select\'')
+        input(type='text', date-range='date-range', ng-model='params.filter[name]', ng-show='filter == \'date\'')
+        button.btn.btn-primary.btn-block(ng-click='doFilter()', ng-show='filter == \'button\'') Filter
