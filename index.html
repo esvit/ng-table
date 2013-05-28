@@ -23,6 +23,8 @@
         <link rel="stylesheet" href="css/docs.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
+        <script src="js/angular-resource.min.js"></script>
+        <script src="js/angular-mocks.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/ng-table.js"></script>
         <script src="js/google-code-prettify/prettify.js"></script>
@@ -37,6 +39,8 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Examples <b class="caret"></b></a>
                     <ul class="dropdown-menu">
+                    <li><a href="#!/demo5/">Saving params in url</a></li>
+                    <li><a href="#!/demo6/">AJAX Data Loading</a></li>
                     <li class="nav-header">Pagination</li>
                     <li><a href="#!/demo1/">Simple table pagination</a></li>
                     <li><a href="#!/demo2/">Custom templates</a></li>
@@ -66,7 +70,7 @@
             </div>
           </div>
         </div>
-        <div class="bs-masthead" ng-hide="demo">
+        <div class="bs-masthead" ng-show="showHeader">
 
             <h1>ngTable</h1>
             <p class="lead">Angular Table directive</p>
@@ -105,17 +109,85 @@
           </ul>
         </footer>
         <script>
-        var app = angular.module('app', ['ngTable']).
+        function isNumber(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+        }
+        var app = angular.module('app', ['ngTable', 'ngResource', 'ngMockE2E']).
+            run(function($httpBackend, $filter, $log, ngTableParams) {
+                // emulation of api server
+                $httpBackend.whenGET(/data.*/).respond(function(method, url, data, headers) {
+                    var query = url.split('?')[1],
+                        requestParams = {};
+
+                    $log.log('Ajax request: ', url);
+
+                    var vars = query.split('&');
+                    for (var i = 0; i < vars.length; i++) {
+                        var pair = vars[i].split('=');
+                        requestParams[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+                    }
+                    // parse url params
+                    for (var key in requestParams) {
+                        if (key.indexOf('[') >= 0) {
+                            var params = key.split(/\[(.*)\]/), value = requestParams[key], lastKey = '';
+
+                            angular.forEach(params.reverse(), function(name) {
+                                if (name != '') {
+                                    var v = value;
+                                    value = {};
+                                    value[lastKey = name] = isNumber(v) ? parseFloat(v) : v;
+                                }
+                            });
+                            requestParams[lastKey] = angular.extend(requestParams[lastKey] || {}, value[lastKey]);
+                        } else {
+                            requestParams[key] = isNumber(requestParams[key]) ? parseFloat(requestParams[key]) : requestParams[key];
+                        }
+                    }
+
+                    data = [{name: "Moroni", age: 50},
+                            {name: "Tiancum", age: 43},
+                            {name: "Jacob", age: 27},
+                            {name: "Nephi", age: 29},
+                            {name: "Enos", age: 34},
+                            {name: "Tiancum", age: 43},
+                            {name: "Jacob", age: 27},
+                            {name: "Nephi", age: 29},
+                            {name: "Enos", age: 34},
+                            {name: "Tiancum", age: 43},
+                            {name: "Jacob", age: 27},
+                            {name: "Nephi", age: 29},
+                            {name: "Enos", age: 34},
+                            {name: "Tiancum", age: 43},
+                            {name: "Jacob", age: 27},
+                            {name: "Nephi", age: 29},
+                            {name: "Enos", age: 34}];
+
+                    var params = new ngTableParams(requestParams);
+                    data = params.filter ? $filter('filter')(data, params.filter) : data;
+                    data = params.sorting ? $filter('orderBy')(data, params.orderBy()) : data;
+
+                    var total = data.length;
+                    data = data.slice((params.page - 1) * params.count, params.page * params.count);
+
+                    return [200, {
+                        result: data,
+                        total: total
+                    }];
+                });
+                $httpBackend.whenGET(/.*/).passThrough();
+            }).
             config(function($interpolateProvider, $routeProvider, $locationProvider, $provide){
                 $interpolateProvider.startSymbol('{[').endSymbol(']}'); // Twig noConflict
 
                 $locationProvider.html5Mode(false).hashPrefix('!');
                 $routeProvider
-                    .when('/',      { templateUrl: 'views/get_started.html' })
-                    .when('/demo1', { demo: 1, templateUrl: 'views/demo1.html' })
-                    .when('/demo2', { demo: 2, templateUrl: 'views/demo2.html' })
-                    .when('/demo3', { demo: 3, templateUrl: 'views/demo3.html' })
-                    .when('/demo4', { demo: 4, templateUrl: 'views/demo4.html' })
+                    .when('/',      { showHeader: true, templateUrl: 'views/get_started.html' })
+                    .when('/demo1', { templateUrl: 'views/demo1.html' })
+                    .when('/demo2', { templateUrl: 'views/demo2.html' })
+                    .when('/demo3', { templateUrl: 'views/demo3.html' })
+                    .when('/demo4', { templateUrl: 'views/demo4.html' })
+                    .when('/demo5', { templateUrl: 'views/demo5.html' })
+                    .when('/demo6', { templateUrl: 'views/demo6.html' })
                     .otherwise({ redirectTo: '/' })
                 ;
 
@@ -163,6 +235,19 @@
                    }, 2000);
                 });
             })
+            .directive('loadingContainer', function () {
+                return {
+                    restrict: 'A',
+                    scope: false,
+                    link: function(scope, element, attrs) {
+                        var loadingLayer = $('<div class="loading"></div>').appendTo(element);
+                        $(element).addClass('loading-container');
+                        scope.$watch(attrs.loadingContainer, function(value) {
+                            loadingLayer.toggle(value);
+                        });
+                    }
+                };
+            })
             .directive('prettyprint', function() {
                 return {restrict: 'C', link: function(scope, element) {
                     var code = prettyPrintOne(element.html(), undefined, true);
@@ -182,9 +267,7 @@
                     {name: "Enos", age: 34}];
 
                 $scope.$on('$routeChangeSuccess', function () {
-                    if ($route.current.$$route) {
-                        $scope.demo = $route.current.$$route.demo;
-                    }
+                    $scope.showHeader = $route.current.$$route.showHeader;
                 });
                 startPulse();
             });

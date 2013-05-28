@@ -1,0 +1,114 @@
+<h1>Saving params in url</h1>
+
+<div class="row">
+<div class="col-span-6" ng-controller="DemoCtrl">
+
+        <table ng-table="tableParams" class="table">
+            <tr ng-repeat="user in users">
+                <td title="Name" sortable="name">
+                    {[user.name]}
+                </td>
+                <td title="Age" sortable="age">
+                    {[user.age]}
+                </td>
+            </tr>
+        </table>
+
+        <script>
+        function DemoCtrl($scope, $location, $filter, ngTableParams) {
+            var data = [{name: "Moroni", age: 50},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34}];
+
+            $scope.tableParams = new ngTableParams(
+                // merge default params with url
+                angular.extend({
+                    page: 1,            // show first page
+                    total: data.length, // length of data
+                    count: 10,          // count per page
+                    sorting: {
+                        name: 'asc'     // initial sorting
+                    }
+                },
+                $location.search())
+            );
+            
+            $scope.$watch('tableParams', function(params) {
+                $location.search(params.url()); // put params in url
+
+                // use build-in angular filter
+                var orderedData = params.sorting ? 
+                                    $filter('orderBy')(data, params.orderBy()) :
+                                    data;
+ 
+                $scope.users = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+            }, true);
+        }
+        </script>
+
+</div>
+<div class="col-span-6">
+
+<h3>Javascript</h3>
+<pre class="prettyprint nocode">
+function DemoCtrl($scope, <code class="nocode">$location</code>, $filter, ngTableParams) {
+    var data = [{name: "Moroni", age: 50},
+                // more data...
+                {name: "Enos", age: 34}];
+
+    $scope.tableParams = new ngTableParams(
+        // merge default params with url
+        angular.extend({
+            page: 1,            // show first page
+            total: data.length, // length of data
+            count: 10,          // count per page
+            sorting: {
+                name: 'asc'     // initial sorting
+            }
+        },
+        <code class="nocode">$location.search()</code>)
+    );
+    
+    $scope.$watch('tableParams', function(params) {
+        <code class="nocode">$location.search(params.url());</code> // put params in url
+
+        // use build-in angular filter
+        var orderedData = params.sorting ? 
+                            $filter('orderBy')(data, params.orderBy()) :
+                            data;
+
+        $scope.users = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+    }, true);
+}
+</pre>
+
+<h3>Html</h3>
+<pre class="prettyprint nocode">
+&lt;table ng-table="tableParams" class="table"&gt;
+&lt;tr ng-repeat="user in users"&gt;
+    &lt;td title="Name" sortable="name"&gt;
+        {[user.name]}
+    &lt;/td&gt;
+    &lt;td title="Age" sortable="age"&gt;
+        {[user.age]}
+    &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+</div>
+</div>

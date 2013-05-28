@@ -1,0 +1,116 @@
+<h1>AJAX Data Loading</h1>
+
+<div class="row">
+<div class="col-span-6" ng-controller="DemoCtrl">
+
+    <button ng-click="tableParams.sorting = {}" class="btn pull-right">Clear sorting</button>
+    <div class="clearfix"></div>
+
+        <div loading-container="loading">
+            <table ng-table="tableParams" show-filter="true" class="table">
+                <tr ng-repeat="user in users">
+                    <td title="Name" filter="{ 'name': 'text' }" sortable="name">
+                        {[user.name]}
+                    </td>
+                    <td title="Age" filter="{ 'action': 'button' }" sortable="age">
+                        {[user.age]}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <script>
+        function DemoCtrl($scope, $timeout, $resource, ngTableParams) {
+            var Api = $resource('/data');
+
+            $scope.tableParams = new ngTableParams({
+                page: 1,            // show first page
+                total: 0,           // length of data
+                count: 10,          // count per page
+                sorting: {
+                    name: 'asc'     // initial sorting
+                }
+            });
+
+            $scope.$watch('tableParams', function(params) {
+                $scope.loading = true;
+                // ajax request to api
+                Api.get(params.url(), function(data) {
+                    $timeout(function() {
+                    $scope.loading = false;
+                    // set new data
+                    $scope.users = data.result;
+
+                    // update table params
+                    $scope.tableParams.total = data.total;
+                    }, 500);
+                });
+            }, true);
+        }
+        </script>
+
+</div>
+<div class="col-span-6">
+
+<h3>Html</h3>
+<pre class="prettyprint nocode">
+&lt;div <code class="nocode">loading-container="loading"</code>&gt;
+    &lt;table ng-table="tableParams" show-filter="true" class="table"&gt;
+        &lt;tr ng-repeat="user in users"&gt;
+            &lt;td title="Name" filter="{ 'name': 'text' }" sortable="name"&gt;
+                {[user.name]}
+            &lt;/td&gt;
+            &lt;td title="Age" filter="{ 'action': 'button' }" sortable="age"&gt;
+                {[user.age]}
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/div&gt;
+</pre>
+
+<h3>Javascript</h3>
+<pre class="prettyprint nocode">
+function DemoCtrl($scope, $timeout, $resource, ngTableParams) {
+    var Api = <code class="nocode">$resource('/data')</code>;
+
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 10,          // count per page
+        sorting: {
+            name: 'asc'     // initial sorting
+        }
+    });
+
+    $scope.$watch('tableParams', function(params) {
+        $scope.loading = true;
+        // ajax request to api
+        <code class="nocode">Api.get</code>(params.url(), function(data) {
+            $scope.loading = false;
+            // set new data
+            $scope.users = data.result;
+
+            // update table params
+            $scope.tableParams.total = data.total;
+        });
+    }, true);
+}
+
+// directive for loading container
+app.directive('loadingContainer', function () {
+    return {
+        restrict: 'A',
+        scope: false,
+        link: function(scope, element, attrs) {
+            var loadingLayer = $('&lt;div class="loading"&gt;&lt;/div&gt;').appendTo(element);
+            $(element).addClass('loading-container');
+            scope.$watch(attrs.loadingContainer, function(value) {
+                loadingLayer.toggle(value);
+            });
+        }
+    };
+})
+</pre>
+
+</div>
+</div>
