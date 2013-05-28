@@ -19,9 +19,8 @@
         </script>
         <link rel="stylesheet" href="css/bootstrap.css">
         <link rel="stylesheet" href="css/prettify.css">
-        <link rel="stylesheet" href="css/table.css">
+        <link rel="stylesheet" href="css/ng-table.css">
         <link rel="stylesheet" href="css/docs.css">
-        <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="js/angular-resource.min.js"></script>
         <script src="js/angular-mocks.js"></script>
@@ -190,7 +189,7 @@
                     .when('/demo6', { templateUrl: 'views/demo6.html' })
                     .otherwise({ redirectTo: '/' })
                 ;
-
+/*
                 var pulseElements = $(),
                     pulseColor = {r:0xE6, g:0xF0, b: 0xFF},
                     baseColor = {r:0x99, g:0xc2, b: 0xFF},
@@ -227,7 +226,7 @@
                     setTimeout(tick, 50);
                   }
                 }
-
+*/
                 $provide.value('startPulse', function() {
                    setTimeout(function() {
                      lastPulse = new Date().getTime();
