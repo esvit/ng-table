@@ -134,7 +134,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$parse", "$http
       # create table
       unless element.hasClass("ng-table")
         scope.templates =
-          header: "ng-table/header.html"
+          header: (if attrs.templateHeader then attrs.templateHeader else "ng-table/header.html")
           pagination: (if attrs.templatePagination then attrs.templatePagination else "ng-table/pager.html")
 
         headerTemplate = $compile("<thead ng-include=\"templates.header\"></thead>")(scope)

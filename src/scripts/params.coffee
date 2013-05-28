@@ -12,7 +12,7 @@ angular.module("ngTable").factory "ngTableParams", ->
       if key.indexOf("[") >= 0
         params = key.split(/\[(.*)\]/)
         lastKey = ""
-        for name in parms.reverse()
+        for name in params.reverse()
           unless name is ""
             v = value
             value = {}

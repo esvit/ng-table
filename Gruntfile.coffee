@@ -48,6 +48,16 @@ module.exports = (grunt) ->
                 src: ['.temp/scripts/directive.js','.temp/scripts/*.js']
                 dest: 'ng-table.js'
 
+        less:
+            css:
+                files:
+                    'ng-table.css': 'src/styles/ng-table.less'
+
+        cssmin:
+            css:
+                files:
+                    'ng-table.css': 'ng-table.css'
+
         # Compile jade files (.jade) to HTML (.html).
         #
         jade:
@@ -75,6 +85,8 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-contrib-coffee'
     grunt.loadNpmTasks 'grunt-contrib-copy'
     grunt.loadNpmTasks 'grunt-contrib-jade'
+    grunt.loadNpmTasks 'grunt-contrib-less'
+    grunt.loadNpmTasks 'grunt-contrib-cssmin'
     grunt.loadNpmTasks 'grunt-contrib-uglify'
     grunt.loadNpmTasks 'grunt-contrib-concat'
 
@@ -90,6 +102,8 @@ module.exports = (grunt) ->
         'jade'
         'ngTemplateCache'
         'uglify'
+        'less'
+        'cssmin'
         'copy'
     ]
     grunt.registerTask 'dev', [
@@ -98,5 +112,6 @@ module.exports = (grunt) ->
         'jade'
         'ngTemplateCache'
         'concat'
+        'less'
         'copy'
     ]
