@@ -7,6 +7,7 @@ angular.module("ngTable").factory "ngTableParams", ->
     @count = 1
     @counts = [10,25,50,100]
     @filter = {}
+    @sorting = {}
 
     # parse url params
     for key, value of data
@@ -25,7 +26,7 @@ angular.module("ngTable").factory "ngTableParams", ->
 
     @orderBy = ->
       sorting = []
-      for direction, column in @sorting
+      for own column, direction of @sorting
         sorting.push ((if direction is "asc" then "+" else "-")) + column
 
       return sorting
