@@ -2,9 +2,10 @@ angular.module("ngTable").factory "ngTableParams", ->
   isNumber = (n) ->
     not isNaN(parseFloat(n)) and isFinite(n)
   ngTableParams = (data) ->
-    ignoreFields = ["total"]
+    ignoreFields = ["total","counts"]
     @page = 1
     @count = 1
+    @counts = [10,25,50,100]
     @filter = {}
 
     # parse url params

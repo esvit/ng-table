@@ -16,21 +16,21 @@
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
 
-        {[ params|json ]}
+        {{ params|json }}
         <table ng-table="params" show-filter="show_filter" class="table table-striped table-condensed table-hover">
             <tr ng-repeat="article in articles">
                 <td width="20">
                     <input type="checkbox" ng-model="article.checked" />
                 </td>
                 <td sortable="title" filter="{ 'title': 'text' }" title="Title">
-                    <a href="#!/news/edit{[article.id]}">{[article.title]}</a>
+                    <a href="#!/news/edit{{article.id}}">{{article.title}}</a>
                 </td>
                 <td filter="{ 'user_id': 'select' }" filter-data="users" sortable="user_id" width="140" title="Author">
-                    {[article.user]}
+                    {{article.user}}
                 </td>
                 <td filter="{ 'created_at': 'date' }" sortable="created_at" width="140" title="Date of creation" class="text-center">
-                    {[article.created_at|date:'yyyy-MM-dd']}<br/>
-                    {[article.created_at|date:'HH:mm:ss']}
+                    {{article.created_at|date:'yyyy-MM-dd'}}<br/>
+                    {{article.created_at|date:'HH:mm:ss'}}
                 </td>
                 <td sortable="publish" width="130" title="Published">
                     <input type="checkbox" ng-model="article.publish">
@@ -44,11 +44,7 @@
         </table>
 
         <script>
-        var app = angular.module('app', ['ngTable']).
-            config(function($interpolateProvider, $routeProvider){
-                $interpolateProvider.startSymbol('{[').endSymbol(']}');
-
-            });
+        var app = angular.module('app', ['ngTable']);
 
         function IndexCtrl($scope, $http, $q, $timeout, $location, ngTableParams) {
             $scope.users = function() {
@@ -67,7 +63,8 @@
             $scope.params = new ngTableParams(angular.extend({
                 page: 1,
                 total: 120,
-                count: 10
+                count: 10,
+                counts: []
             }, sParams));
             
             $scope.$watch('params', function(params) {
