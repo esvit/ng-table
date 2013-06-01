@@ -2,6 +2,11 @@ body {
     padding-top: 50px;
 }
 
+@media screen and (max-width: 768px) {
+    body{
+        padding-top: 200px;
+    }
+}
 .navbar {
     background-color: #b94a48;
     border-radius: 0;
