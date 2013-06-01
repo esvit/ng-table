@@ -1,18 +1,18 @@
 <h1>Table with filters</h1>
 
 <div class="row">
-<div class="col-span-6" ng-controller="DemoCtrl">
+<div class="col col-lg-6" ng-controller="DemoCtrl">
 
         <p>Type something in filter and press <strong>Enter</strong> or <strong>Filter</strong> button</p>
-        <p><strong>Filter:</strong> {[tableParams.filter|json]}
+        <p><strong>Filter:</strong> {{tableParams.filter|json}}
 
         <table ng-table="tableParams" show-filter="true" class="table">
             <tr ng-repeat="user in users">
                 <td title="Name" filter="{ 'name': 'text' }">
-                    {[user.name]}
+                    {{user.name}}
                 </td>
                 <td title="Age" filter="{ 'action': 'button' }">
-                    {[user.age]}
+                    {{user.age}}
                 </td>
             </tr>
         </table>
@@ -59,17 +59,17 @@
         </script>
 
 </div>
-<div class="col-span-6">
+<div class="col col-lg-6">
 
 <h3>Html</h3>
 <pre class="prettyprint nocode">
 &lt;table ng-table="tableParams" <code class="nocode">show-filter="true"</code> class="table"&gt;
     &lt;tr ng-repeat="user in users"&gt;
         &lt;td title="Name" <code class="nocode">filter="{ 'name': 'text' }"</code>&gt;
-            {[user.name]}
+            {{user.name}}
         &lt;/td&gt;
         &lt;td title="Age" <code class="nocode">filter="{ 'action': 'button' }"</code>&gt;
-            {[user.age]}
+            {{user.age}}
         &lt;/td&gt;
     &lt;/tr&gt;
 &lt;/table&gt;

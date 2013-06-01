@@ -1,0 +1,150 @@
+<h1>Cell Template</h1>
+
+<div class="row">
+<div class="col col-lg-6" ng-controller="DemoCtrl">
+
+    <button ng-click="tableParams.sorting = {}" class="btn btn-default pull-right">Clear sorting</button>
+
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="user in users">
+            <td title="Name">
+                {{user.name}}
+            </td>
+            <td title="Age">
+                {{user.age}}
+            </td>
+            <td title="Money" sortable="money" ng-class="{ 'plus': user.money >= 0,'minus': user.money < 0 }">
+                {{user.money}}
+            </td>
+        </tr>
+    </table>
+
+    <script>
+    function DemoCtrl($scope, $filter, ngTableParams) {
+        var data = [{name: "Moroni", age: 50, money: -10},
+                    {name: "Tiancum", age: 43,money: 120},
+                    {name: "Jacob", age: 27, money: 5.5},
+                    {name: "Nephi", age: 29,money: -54},
+                    {name: "Enos", age: 34,money: 110},
+                    {name: "Tiancum", age: 43, money: 1000},
+                    {name: "Jacob", age: 27,money: -201},
+                    {name: "Nephi", age: 29, money: 100},
+                    {name: "Enos", age: 34, money: -52.5},
+                    {name: "Tiancum", age: 43, money: 52.1},
+                    {name: "Jacob", age: 27, money: 110},
+                    {name: "Nephi", age: 29, money: -55},
+                    {name: "Enos", age: 34, money: 551},
+                    {name: "Tiancum", age: 43, money: -1410},
+                    {name: "Jacob", age: 27, money: 410},
+                    {name: "Nephi", age: 29, money: 100},
+                    {name: "Enos", age: 34, money: -100}];
+
+        $scope.tableParams = new ngTableParams({
+            page: 1,            // show first page
+            total: data.length, // length of data
+            count: 10           // count per page
+        });
+        
+        $scope.$watch('tableParams', function(params) {
+            // use build-in angular filter
+            var orderedData = params.sorting ? 
+                                $filter('orderBy')(data, params.orderBy()) :
+                                data;
+
+            $scope.users = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+        }, true);
+    }
+    </script>
+    <style>
+    .ng-table .plus, .ng-table .minus {
+        font-weight: bold;
+        padding-left: 18px;
+        position: relative;
+    }
+    .ng-table .plus:before, .ng-table .minus:before {
+        content:"";
+        border-width: 4px;
+        border-style:solid;
+        left: 8px;
+        top: 50%;
+        position: absolute;
+        margin-top: -2px;
+    }
+    .ng-table .plus {
+        color: green;
+    }
+    .ng-table .plus:before {
+        border-color: green;
+        border-top:none;
+        border-left:4px solid transparent;
+        border-right:4px solid transparent;
+    }
+    .ng-table .minus {
+        color: red;
+    }
+    .ng-table .minus:before {
+        border-color: red;
+        border-bottom:none;
+        border-left:4px solid transparent;
+        border-right:4px solid transparent;
+    }
+    </style>
+</div>
+<div class="col col-lg-6">
+
+<h3>Html</h3>
+<pre class="prettyprint nocode">
+&lt;table ng-table="tableParams" class="table"&gt;
+&lt;tr ng-repeat="user in users"&gt;
+    &lt;td title="Name"&gt;
+        {{user.name}}
+    &lt;/td&gt;
+    &lt;td title="Age"&gt;
+        {{user.age}}
+    &lt;/td&gt;
+    &lt;td title="Money" sortable="money"
+    <code class="nocode">ng-class="{ 'plus': user.money >= 0,'minus': user.money &lt; 0 }"</code>&gt;
+        {{user.money}}
+    &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+<h3>CSS</h3>
+<pre class="prettyprint">
+.ng-table .plus, .ng-table .minus {
+    font-weight: bold;
+    padding-left: 18px;
+    position: relative;
+}
+.ng-table .plus:before, .ng-table .minus:before {
+    content:"";
+    border-width: 4px;
+    border-style:solid;
+    left: 8px;
+    top: 50%;
+    position: absolute;
+    margin-top: -2px;
+}
+.ng-table .plus {
+    color: green;
+}
+.ng-table .plus:before {
+    border-color: green;
+    border-top:none;
+    border-left:4px solid transparent;
+    border-right:4px solid transparent;
+}
+.ng-table .minus {
+    color: red;
+}
+.ng-table .minus:before {
+    border-color: red;
+    border-bottom:none;
+    border-left:4px solid transparent;
+    border-right:4px solid transparent;
+}
+</pre>
+
+</div>
+</div>

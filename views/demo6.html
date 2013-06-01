@@ -1,19 +1,19 @@
 <h1>AJAX Data Loading</h1>
 
 <div class="row">
-<div class="col-span-6" ng-controller="DemoCtrl">
+<div class="col col-lg-6" ng-controller="DemoCtrl">
 
-    <button ng-click="tableParams.sorting = {}" class="btn pull-right">Clear sorting</button>
+    <button ng-click="tableParams.sorting = {}" class="btn btn-default pull-right">Clear sorting</button>
     <div class="clearfix"></div>
 
         <div loading-container="loading">
             <table ng-table="tableParams" show-filter="true" class="table">
                 <tr ng-repeat="user in users">
                     <td title="Name" filter="{ 'name': 'text' }" sortable="name">
-                        {[user.name]}
+                        {{user.name}}
                     </td>
                     <td title="Age" filter="{ 'action': 'button' }" sortable="age">
-                        {[user.age]}
+                        {{user.age}}
                     </td>
                 </tr>
             </table>
@@ -50,7 +50,7 @@
         </script>
 
 </div>
-<div class="col-span-6">
+<div class="col col-lg-6">
 
 <h3>Html</h3>
 <pre class="prettyprint nocode">
@@ -58,10 +58,10 @@
     &lt;table ng-table="tableParams" show-filter="true" class="table"&gt;
         &lt;tr ng-repeat="user in users"&gt;
             &lt;td title="Name" filter="{ 'name': 'text' }" sortable="name"&gt;
-                {[user.name]}
+                {{user.name}}
             &lt;/td&gt;
             &lt;td title="Age" filter="{ 'action': 'button' }" sortable="age"&gt;
-                {[user.age]}
+                {{user.age}}
             &lt;/td&gt;
         &lt;/tr&gt;
     &lt;/table&gt;

@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="css/prettify.css">
         <link rel="stylesheet" href="css/ng-table.css">
         <link rel="stylesheet" href="css/docs.css">
+        <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="js/angular-resource.min.js"></script>
         <script src="js/angular-mocks.js"></script>
@@ -42,17 +43,19 @@
                     <li><a href="#!/demo6/">AJAX Data Loading</a></li>
                     <li class="nav-header">Pagination</li>
                     <li><a href="#!/demo1/">Simple table pagination</a></li>
-                    <li><a href="#!/demo2/">Custom templates</a></li>
+                    <li><a href="#!/demo7/">Hidden pagination</a></li>
                     <li class="nav-header">Sorting</li>
                     <li><a href="#!/demo3/">Simple table sorting</a></li>
                     <li class="nav-header">Filtering</li>
                     <li><a href="#!/demo4/">Table with filters</a></li>
+                    <li class="nav-header">Template</li>
+                    <li><a href="#!/demo2/">Pagination template</a></li>
+                    <li><a href="#!/demo8/">Cell Template</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" data-toggle="dropdown" class="dropdown-toggle">
-                        Need Help?
-                        <b class="caret"></b>
+                        Need Help? <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="https://github.com/esvit/ng-table/issues?sort=updated&amp;state=open">Want a new feature?</a></li>
@@ -61,7 +64,7 @@
                 </li>
             </ul>
 
-              <div class="pull-right" style="padding: 12px 0;">
+              <div class="pull-right" style="padding: 10px 0 0;">
                 <iframe width="100px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=watch&amp;count=true" class="github-btn"></iframe>
                 <iframe width="102px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=fork&amp;count=true" class="github-btn"></iframe>
                 <iframe allowtransparency="true" frameborder="0" scrolling="no" src="https://platform.twitter.com/widgets/tweet_button.1368146021.html#_=1369553836396&amp;count=horizontal&amp;dnt=true&amp;id=twitter-widget-92&amp;lang=ru&amp;original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons%23tweet&amp;size=m&amp;text=ngTable%3A%20Table%20directive%20for%20AngularJS&amp;url=https%3A%2F%2Fgithub.com%2Fesvit%2Fng-table%2F" class="twitter-share-button twitter-count-horizontal" title="Twitter Tweet Button" data-twttr-rendered="true" style="width: 140px; height: 20px;"></iframe>
@@ -107,6 +110,9 @@
             <li><a target="_blank" href="http://github.com/esvit/ng-table/issues?state=open">Issues</a></li>
           </ul>
         </footer>
+        <script type="text/ng-template" id="ng-table/pager.html">
+        <div><ul class="pagination ng-cloak"><li ng-class="{'disabled': !page.active}" ng-repeat="page in pages" ng-switch="page.type"><a ng-switch-when="prev" ng-click="goToPage(page.number)" href="">«</a><a ng-switch-when="first" ng-click="goToPage(page.number)" href="">{{page.number}}</a><a ng-switch-when="page" ng-click="goToPage(page.number)" href="">{{page.number}}</a><a ng-switch-when="more" ng-click="goToPage(page.number)" href="">…</a><a ng-switch-when="last" ng-click="goToPage(page.number)" href="">{{page.number}}</a><a ng-switch-when="next" ng-click="goToPage(page.number)" href="">»</a></li></ul><div ng-show="params.counts.length" class="btn-group pull-right"><button ng-repeat="count in params.counts" type="button" ng-class="{'active':params.count == count}" ng-click="changeCount(count)" class="btn btn-default btn-small">{{count}}</button></div></div>
+        </script>
         <script>
         function isNumber(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
@@ -176,7 +182,6 @@
                 $httpBackend.whenGET(/.*/).passThrough();
             }).
             config(function($interpolateProvider, $routeProvider, $locationProvider, $provide){
-                $interpolateProvider.startSymbol('{[').endSymbol(']}'); // Twig noConflict
 
                 $locationProvider.html5Mode(false).hashPrefix('!');
                 $routeProvider
@@ -187,9 +192,11 @@
                     .when('/demo4', { templateUrl: 'views/demo4.html' })
                     .when('/demo5', { templateUrl: 'views/demo5.html' })
                     .when('/demo6', { templateUrl: 'views/demo6.html' })
+                    .when('/demo7', { templateUrl: 'views/demo7.html' })
+                    .when('/demo8', { templateUrl: 'views/demo8.html' })
                     .otherwise({ redirectTo: '/' })
                 ;
-/*
+
                 var pulseElements = $(),
                     pulseColor = {r:0xE6, g:0xF0, b: 0xFF},
                     baseColor = {r:0x99, g:0xc2, b: 0xFF},
@@ -226,7 +233,7 @@
                     setTimeout(tick, 50);
                   }
                 }
-*/
+
                 $provide.value('startPulse', function() {
                    setTimeout(function() {
                      lastPulse = new Date().getTime();

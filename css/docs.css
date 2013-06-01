@@ -13,6 +13,10 @@ body {
 }
 .navbar a.navbar-brand {
     color: #fff;
+    padding: 10px;
+}
+.pagination {
+    margin-top: 0;
 }
 .navbar .nav > li > a.active, .navbar .nav > li > a:hover, .navbar .nav > li > a:hover .caret,
 .navbar .nav > li > a:focus, .navbar .nav > li > a:focus .caret,

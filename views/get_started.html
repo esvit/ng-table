@@ -2,7 +2,7 @@
 
 <div class="row">
 
-<div class="col-span-6">
+<div class="col col-lg-6">
     <div style="margin-top: 20px">
         <h3>Steps for getting started (example on right)</h3>
         <ol>
@@ -36,10 +36,10 @@ $scope.users = [{name: "Moroni", age: 50},
             <table ng-table class="table" style="border: 1px solid #000;">
             <tr ng-repeat="user in users">
                 <td title="Name">
-                    {[user.name]}
+                    {{user.name}}
                 </td>
                 <td title="Age">
-                    {[user.age]}
+                    {{user.age}}
                 </td>
             </tr>
             </table>
@@ -47,7 +47,7 @@ $scope.users = [{name: "Moroni", age: 50},
         </li></ol>
     </div>
 </div>
-<div class="col-span-6">
+<div class="col col-lg-6">
 
     <h3>HTML</h3>
 <pre class="prettyprint nocode">
@@ -66,10 +66,10 @@ $scope.users = [{name: "Moroni", age: 50},
     &lt;table <code class="nocode" rel="popover" data-content="Init ngTable" data-original-title="Step 4">ng-table</code> class="table"&gt;
     &lt;tr ng-repeat="user in users"&gt;
         &lt;td title="Name"&gt;
-            {[user.name]}
+            {{user.name}}
         &lt;/td&gt;
         &lt;td title="Age"&gt;
-            {[user.age]}
+            {{user.age}}
         &lt;/td&gt;
     &lt;/tr&gt;
     &lt;/table&gt;

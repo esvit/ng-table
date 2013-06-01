@@ -1,7 +1,11 @@
-<h1>Saving params in url</h1>
+<h1>Table with hidden pagination</h1>
 
 <div class="row">
 <div class="col col-lg-6" ng-controller="DemoCtrl">
+
+    <button ng-click="tableParams.sorting = {}" class="btn btn-default pull-right">Clear sorting</button>
+    <p><strong>Sorting:</strong> {{tableParams.sorting|json}}
+
 
         <table ng-table="tableParams" class="table">
             <tr ng-repeat="user in users">
@@ -15,7 +19,7 @@
         </table>
 
         <script>
-        function DemoCtrl($scope, $location, $filter, ngTableParams) {
+        function DemoCtrl($scope, $filter, ngTableParams) {
             var data = [{name: "Moroni", age: 50},
                         {name: "Tiancum", age: 43},
                         {name: "Jacob", age: 27},
@@ -34,22 +38,14 @@
                         {name: "Nephi", age: 29},
                         {name: "Enos", age: 34}];
 
-            $scope.tableParams = new ngTableParams(
-                // merge default params with url
-                angular.extend({
-                    page: 1,            // show first page
-                    total: data.length, // length of data
-                    count: 10,          // count per page
-                    sorting: {
-                        name: 'asc'     // initial sorting
-                    }
-                },
-                $location.search())
-            );
+            $scope.tableParams = new ngTableParams({
+                page: 1,   // show first page
+                total: 1,  // value less than count hide pagination
+                count: 5,  // count per page
+                counts: [] // hide page counts control
+            });
             
             $scope.$watch('tableParams', function(params) {
-                $location.search(params.url()); // put params in url
-
                 // use build-in angular filter
                 var orderedData = params.sorting ? 
                                     $filter('orderBy')(data, params.orderBy()) :
@@ -65,49 +61,32 @@
 
 <h3>Javascript</h3>
 <pre class="prettyprint nocode">
-function DemoCtrl($scope, <code class="nocode">$location</code>, $filter, ngTableParams) {
+function DemoCtrl($scope, $filter, ngTableParams) {
     var data = [{name: "Moroni", age: 50},
                 // more data...
                 {name: "Enos", age: 34}];
 
-    $scope.tableParams = new ngTableParams(
-        // merge default params with url
-        angular.extend({
-            page: 1,            // show first page
-            total: data.length, // length of data
-            count: 10,          // count per page
-            sorting: {
-                name: 'asc'     // initial sorting
-            }
-        },
-        <code class="nocode">$location.search()</code>)
-    );
-    
-    $scope.$watch('tableParams', function(params) {
-        <code class="nocode">$location.search(params.url());</code> // put params in url
+    $scope.tableParams = new ngTableParams({
+        page: 1,   // show first page
+        <code class="nocode">total: 1</code>,  // value less than count hide pagination
+        count: 5,  // count per page
+        <code class="nocode">counts: []</code> // hide page counts control
+    });
 
+    // watch for changes of parameters
+    $scope.$watch('tableParams', function(params) {
         // use build-in angular filter
         var orderedData = params.sorting ? 
-                            $filter('orderBy')(data, params.orderBy()) :
-                            data;
+                        $filter('orderBy')(data, params.orderBy()) :
+                        data;
 
-        $scope.users = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+        // slice array data on pages
+        $scope.users = orderedData.slice(
+            (params.page - 1) * params.count,
+            params.page * params.count
+        );
     }, true);
 }
-</pre>
-
-<h3>Html</h3>
-<pre class="prettyprint nocode">
-&lt;table ng-table="tableParams" class="table"&gt;
-&lt;tr ng-repeat="user in users"&gt;
-    &lt;td title="Name" sortable="name"&gt;
-        {{user.name}}
-    &lt;/td&gt;
-    &lt;td title="Age" sortable="age"&gt;
-        {{user.age}}
-    &lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;
 </pre>
 
 </div>

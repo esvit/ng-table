@@ -1,19 +1,19 @@
 <h1>Table with sorting</h1>
 
 <div class="row">
-<div class="col-span-6" ng-controller="DemoCtrl">
+<div class="col col-lg-6" ng-controller="DemoCtrl">
 
-    <button ng-click="tableParams.sorting = {}" class="btn pull-right">Clear sorting</button>
-    <p><strong>Sorting:</strong> {[tableParams.sorting|json]}
+    <button ng-click="tableParams.sorting = {}" class="btn btn-default pull-right">Clear sorting</button>
+    <p><strong>Sorting:</strong> {{tableParams.sorting|json}}
 
 
         <table ng-table="tableParams" class="table">
             <tr ng-repeat="user in users">
                 <td title="Name" sortable="name">
-                    {[user.name]}
+                    {{user.name}}
                 </td>
                 <td title="Age" sortable="age">
-                    {[user.age]}
+                    {{user.age}}
                 </td>
             </tr>
         </table>
@@ -59,17 +59,17 @@
         </script>
 
 </div>
-<div class="col-span-6">
+<div class="col col-lg-6">
 
 <h3>Html</h3>
 <pre class="prettyprint nocode">
 &lt;table ng-table="tableParams" class="table"&gt;
 &lt;tr ng-repeat="user in users"&gt;
     &lt;td title="Name" <code class="nocode">sortable="name"</code>&gt;
-        {[user.name]}
+        {{user.name}}
     &lt;/td&gt;
     &lt;td title="Age" <code class="nocode">sortable="age"</code>&gt;
-        {[user.age]}
+        {{user.age}}
     &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;

@@ -1,19 +1,19 @@
 <h1>Custom pagination template</h1>
 
 <div class="row">
-<div class="col-span-6" ng-controller="DemoCtrl">
+<div class="col col-lg-6" ng-controller="DemoCtrl">
 
-    <p><strong>Page:</strong> {[tableParams.page]}
-    <p><strong>Count per page:</strong> {[tableParams.count]}
+    <p><strong>Page:</strong> {{tableParams.page}}
+    <p><strong>Count per page:</strong> {{tableParams.count}}
 
 
         <table ng-table="tableParams" template-pagination="custom/pager" class="table">
             <tr ng-repeat="user in users">
                 <td title="Name">
-                    {[user.name]}
+                    {{user.name}}
                 </td>
                 <td title="Age">
-                    {[user.age]}
+                    {{user.age}}
                 </td>
             </tr>
         </table>
@@ -27,10 +27,10 @@
               </li>
                 <li> 
                 <div class="btn-group">
-                    <button type="button" ng-class="{'active':params.count == 10}" ng-click="changeCount(10)" class="btn">10</button>
-                    <button type="button" ng-class="{'active':params.count == 25}" ng-click="changeCount(25)" class="btn">25</button>
-                    <button type="button" ng-class="{'active':params.count == 50}" ng-click="changeCount(50)" class="btn">50</button>
-                    <button type="button" ng-class="{'active':params.count == 100}" ng-click="changeCount(100)" class="btn">100</button>
+                    <button type="button" ng-class="{'active':params.count == 10}" ng-click="changeCount(10)" class="btn btn-default btn-small">10</button>
+                    <button type="button" ng-class="{'active':params.count == 25}" ng-click="changeCount(25)" class="btn btn-default btn-small">25</button>
+                    <button type="button" ng-class="{'active':params.count == 50}" ng-click="changeCount(50)" class="btn btn-default btn-small">50</button>
+                    <button type="button" ng-class="{'active':params.count == 100}" ng-click="changeCount(100)" class="btn btn-default btn-small">100</button>
                 </div>
                 </li>
             </ul>
@@ -70,17 +70,17 @@
         </script>
 
 </div>
-<div class="col-span-6">
+<div class="col col-lg-6">
 
 <h3>Html</h3>
 <pre class="prettyprint nocode">
 &lt;table ng-table="tableParams" <code class="nocode">template-pagination="custom/pager"</code> class="table"&gt;
     &lt;tr ng-repeat="user in users"&gt;
         &lt;td title="Name"&gt;
-            {[user.name]}
+            {{user.name}}
         &lt;/td&gt;
         &lt;td title="Age"&gt;
-            {[user.age]}
+            {{user.age}}
         &lt;/td&gt;
     &lt;/tr&gt;
 &lt;/table&gt;
@@ -100,16 +100,16 @@
     &lt;div class="btn-group"&gt;
         &lt;button type="button"
             ng-class="{'active':params.count == 10}"
-            ng-click="changeCount(10)" class="btn"&gt;10&lt;/button&gt;
+            ng-click="changeCount(10)" class="btn btn-default btn-small"&gt;10&lt;/button&gt;
         &lt;button type="button"
             ng-class="{'active':params.count == 25}"
-            ng-click="changeCount(25)" class="btn"&gt;25&lt;/button&gt;
+            ng-click="changeCount(25)" class="btn btn-default btn-small"&gt;25&lt;/button&gt;
         &lt;button type="button"
             ng-class="{'active':params.count == 50}"
-            ng-click="changeCount(50)" class="btn"&gt;50&lt;/button&gt;
+            ng-click="changeCount(50)" class="btn btn-default btn-small"&gt;50&lt;/button&gt;
         &lt;button type="button"
             ng-class="{'active':params.count == 100}"
-            ng-click="changeCount(100)" class="btn"&gt;100&lt;/button&gt;
+            ng-click="changeCount(100)" class="btn btn-default btn-small"&gt;100&lt;/button&gt;
     &lt;/div&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
