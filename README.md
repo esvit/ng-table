@@ -15,6 +15,8 @@ bower install https://github.com/esvit/ng-table.git
 * [Pagination](http://esvit.github.io/ng-table/#!/demo1)
 * [Sorting](http://esvit.github.io/ng-table/#!/demo3)
 * [Filtering](http://esvit.github.io/ng-table/#!/demo4)
+* [Cell template](http://esvit.github.io/ng-table/#!/demo8)
+* [Row template](http://esvit.github.io/ng-table/#!/demo9)
 * [Params in url](http://esvit.github.io/ng-table/#!/demo5)
 * [Ajax](http://esvit.github.io/ng-table/#!/demo6)
 * [Custom template(pagination)](http://esvit.github.io/ng-table/#!/demo2)
