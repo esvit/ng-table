@@ -24,10 +24,10 @@ bower install https://github.com/esvit/ng-table.git
 <table ng-table="tableParams" show-filter="true">
 <tr ng-repeat="user in users">
     <td title="Name" filter="{ 'name': 'text' }" sortable="name">
-        {[user.name]}
+        {{user.name}}
     </td>
     <td title="Age" filter="{ 'action': 'button' }" sortable="age">
-        {[user.age]}
+        {{user.age}}
     </td>
 </tr>
 </table>
