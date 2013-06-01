@@ -13,8 +13,8 @@
             <td title="Age">
                 {{user.age}}
             </td>
-            <td title="Money" sortable="money" ng-class="{ 'plus': user.money >= 0,'minus': user.money < 0 }">
-                {{user.money}}
+            <td title="Money" sortable="money">
+                <span ng-class="{ 'plus': user.money >= 0,'minus': user.money < 0 }">{{user.money}}</span>
             </td>
         </tr>
     </table>
@@ -102,9 +102,8 @@
     &lt;td title="Age"&gt;
         {{user.age}}
     &lt;/td&gt;
-    &lt;td title="Money" sortable="money"
-    <code class="nocode">ng-class="{ 'plus': user.money >= 0,'minus': user.money &lt; 0 }"</code>&gt;
-        {{user.money}}
+    &lt;td title="Money" sortable="money"&gt;
+        &lt;span <code class="nocode">ng-class="{ 'plus': user.money >= 0,'minus': user.money &lt; 0 }"</code>&gt;{{user.money}}&lt;/span&gt;
     &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;
