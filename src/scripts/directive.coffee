@@ -28,7 +28,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$parse", "$http
 
     # goto page
     $scope.goToPage = (page) ->
-      updateParams page: page  if page > 0 and $scope.params.page isnt page and $scope.pages.length + 1 >= page
+      updateParams page: page  if page > 0 and $scope.params.page isnt page and $scope.params.count * (page - 1) <= $scope.params.total
 
     # change items per page
     $scope.changeCount = (count) ->
