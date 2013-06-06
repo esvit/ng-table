@@ -5,12 +5,12 @@ ngTable: Table + Angular JS
 
 @author Vitalii Savchuk <esvit666@gmail.com>
 @copyright 2013 Vitalii Savchuk <esvit666@gmail.com>
-@version 0.2.0
+@version 0.2.1
 @url https://github.com/esvit/ng-table/
 @license New BSD License <http://creativecommons.org/licenses/BSD/>
 ###
 
-angular.module("ngTable", []).directive("ngTable", ["$compile", "$parse", "$http", "ngTableParams", ($compile, $parse, $http, ngTableParams) ->
+angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", "$http", "ngTableParams", ($compile, $q, $parse, $http, ngTableParams) ->
   restrict: "A"
   priority: 1001
   scope: true
@@ -122,13 +122,13 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$parse", "$http
       # get data from columns
       angular.forEach columns, (column) ->
         return  unless column.filterData
-        promise = scope[column.filterData]
-        throw new Error("Function " + column.filterData + " not found in scope")  unless promise
+        promise = $parse(column.filterData)(scope, $column: column)
+        throw new Error("Function " + column.filterData + " must be promise")  unless (angular.isObject(promise) && angular.isFunction(promise.then))
         delete column["filterData"]
 
-        promise(column).then (data) ->
+        promise.then (data) ->
           data = []  unless angular.isArray(data)
-          data.unshift title: "-"
+          data.unshift title: "-", id: ""
           column.data = data
 
       # create table
