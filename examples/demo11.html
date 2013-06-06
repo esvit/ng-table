@@ -23,7 +23,7 @@
 
     <table ng-table="tableParams" show-filter="true" class="table">
         <tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money > 500 }">
-            <td title="Name" filter="{ 'name': 'select' }" filter-data="names($column)">
+            <td title="Name" filter="{ 'name': 'text' }" filter-data="names($column)">
                 {{user.name}}
             </td>
             <td title="Age" filter="{ 'age': 'age' }">
@@ -62,6 +62,7 @@
                     {name: "Enos", age: 34, money: -100}];
 
         $scope.tableParams = new ngTableParams({
+            $liveFiltering: true,
             page: 1,            // show first page
             total: data.length, // length of data
             count: 10           // count per page
@@ -85,7 +86,6 @@
         };
 
         $scope.$watch('tableParams', function(params) {
-            console.info(params);
             // use build-in angular filter
             var orderedData = params.sorting ? 
                                 $filter('orderBy')(data, params.orderBy()) :
