@@ -27,6 +27,7 @@
         <script src="js/angular-mocks.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/ng-table.js"></script>
+        <script src="js/disqus.js"></script>
         <script src="js/google-code-prettify/prettify.js"></script>
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
@@ -119,7 +120,7 @@
         function isNumber(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
         }
-        var app = angular.module('app', ['ngTable', 'ngResource', 'ngMockE2E']).
+        var app = angular.module('app', ['ngTable', 'ngResource', 'ngMockE2E', 'disqus']).
             run(function($httpBackend, $filter, $log, ngTableParams) {
                 // emulation of api server
                 $httpBackend.whenGET(/data.*/).respond(function(method, url, data, headers) {
