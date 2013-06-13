@@ -3,12 +3,13 @@
 <div class="row">
 <div class="col col-lg-6" ng-controller="DemoCtrl">
 
+    {{checkboxes.items}}
     <button ng-click="tableParams.sorting = {}" class="btn btn-default pull-right">Clear sorting</button>
 
     <table ng-table="tableParams" show-filter="true" class="table">
         <tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money > 500 }">
             <td title="" filter="{ 'checked': 'checkbox' }">
-                <input type="checkbox" ng-model="user.checked" />
+                <input type="checkbox" ng-model="checkboxes.items[user.id]" />
             </td>
             <td title="Name" filter="{ 'name': 'select' }" filter-data="names($column)">
                 {{user.name}}
@@ -24,23 +25,23 @@
 
     <script>
     function DemoCtrl($scope, $filter, $q, ngTableParams) {
-        var data = [{name: "Moroni", age: 50, money: -10},
-                    {name: "Tiancum", age: 43,money: 120},
-                    {name: "Jacob", age: 27, money: 5.5},
-                    {name: "Nephi", age: 29,money: -54},
-                    {name: "Enos", age: 34,money: 110},
-                    {name: "Tiancum", age: 43, money: 1000},
-                    {name: "Jacob", age: 27,money: -201},
-                    {name: "Nephi", age: 29, money: 100},
-                    {name: "Enos", age: 34, money: -52.5},
-                    {name: "Tiancum", age: 43, money: 52.1},
-                    {name: "Jacob", age: 27, money: 110},
-                    {name: "Nephi", age: 29, money: -55},
-                    {name: "Enos", age: 34, money: 551},
-                    {name: "Tiancum", age: 43, money: -1410},
-                    {name: "Jacob", age: 27, money: 410},
-                    {name: "Nephi", age: 29, money: 100},
-                    {name: "Enos", age: 34, money: -100}];
+        var data = [{id: 1, name: "Moroni", age: 50, money: -10},
+                    {id: 2, name: "Tiancum", age: 43,money: 120},
+                    {id: 3, name: "Jacob", age: 27, money: 5.5},
+                    {id: 4, name: "Nephi", age: 29,money: -54},
+                    {id: 5, name: "Enos", age: 34,money: 110},
+                    {id: 6, name: "Tiancum", age: 43, money: 1000},
+                    {id: 7, name: "Jacob", age: 27,money: -201},
+                    {id: 8, name: "Nephi", age: 29, money: 100},
+                    {id: 9, name: "Enos", age: 34, money: -52.5},
+                    {id: 10, name: "Tiancum", age: 43, money: 52.1},
+                    {id: 11, name: "Jacob", age: 27, money: 110},
+                    {id: 12, name: "Nephi", age: 29, money: -55},
+                    {id: 13, name: "Enos", age: 34, money: 551},
+                    {id: 14, name: "Tiancum", age: 43, money: -1410},
+                    {id: 15, name: "Jacob", age: 27, money: 410},
+                    {id: 16, name: "Nephi", age: 29, money: 100},
+                    {id: 17, name: "Enos", age: 34, money: -100}];
 
         $scope.tableParams = new ngTableParams({
             $liveFiltering: true,
@@ -66,26 +67,30 @@
             return def.promise;
         };
 
-        // IMPORTANT! Must be an object
-        $scope.checkboxes = { 'checked': false };
+        $scope.checkboxes = { 'checked': false, items: {} };
 
         // watch for check all checkbox
         $scope.$watch('checkboxes.checked', function(value) {
             angular.forEach($scope.users, function(item) {
-                item.checked = value;
+                if (angular.isDefined(item.id)) {
+                    $scope.checkboxes.items[item.id] = value;
+                }
             });
         });
 
         // watch for data checkboxes
-        $scope.$watch('users', function(values) {
-            var checked = 0, unchecked = 0;
-            angular.forEach(values, function(item) {
-                checked   +=  (item.checked) || 0;
-                unchecked += (!item.checked) || 0;
+        $scope.$watch('checkboxes.items', function(values) {
+            var checked = 0, unchecked = 0,
+                total = $scope.users.length;
+            angular.forEach($scope.users, function(item) {
+                checked   +=  ($scope.checkboxes.items[item.id]) || 0;
+                unchecked += (!$scope.checkboxes.items[item.id]) || 0;
             });
+            if ((unchecked == 0) || (checked == 0)) {
+                $scope.checkboxes.checked = (checked == total);
+            }
             // grayed checkbox
             $("#select_all").prop("indeterminate", (checked != 0 && unchecked != 0));
-            $scope.checkboxes.checked = (unchecked == 0) && (checked > 0);
         }, true);
 
         $scope.$watch('tableParams', function(params) {
@@ -116,7 +121,7 @@
 &lt;table ng-table="tableParams" show-filter="true" class="table"&gt;
     &lt;tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money &gt; 500 }"&gt;
         &lt;td title="" filter="{ 'checked': '<code class="nocode">checkbox</code>' }"&gt;
-            &lt;input type="checkbox" ng-model="<code class="nocode">user.checked</code>" /&gt;
+            &lt;input type="checkbox" ng-model="<code class="nocode">checkboxes.items[user.id]</code>" /&gt;
         &lt;/td&gt;
         &lt;td title="Name" filter="{ 'name': 'select' }" filter-data="names($column)"&gt;
             {{user.name}}
@@ -133,26 +138,30 @@
 
 <h3>Javascript:</h3>
 <pre class="prettyprint">
-// IMPORTANT! Must be an object
-$scope.<code class="nocode">checkboxes = { 'checked': false };</code>
+$scope.checkboxes = { 'checked': false, items: {} };
 
 // watch for check all checkbox
 $scope.$watch('checkboxes.checked', function(value) {
     angular.forEach($scope.users, function(item) {
-        item.checked = value;
+        if (angular.isDefined(item.id)) {
+            $scope.checkboxes.items[item.id] = value;
+        }
     });
 });
 
 // watch for data checkboxes
-$scope.$watch('users', function(values) {
-    var checked = 0, unchecked = 0;
-    angular.forEach(values, function(item) {
-        checked   +=  (item.checked) || 0;
-        unchecked += (!item.checked) || 0;
+$scope.$watch('checkboxes.items', function(values) {
+    var checked = 0, unchecked = 0,
+        total = $scope.users.length;
+    angular.forEach($scope.users, function(item) {
+        checked   +=  ($scope.checkboxes.items[item.id]) || 0;
+        unchecked += (!$scope.checkboxes.items[item.id]) || 0;
     });
+    if ((unchecked == 0) || (checked == 0)) {
+        $scope.checkboxes.checked = (checked == total);
+    }
     // grayed checkbox
     $("#select_all").prop("indeterminate", (checked != 0 && unchecked != 0));
-    $scope.checkboxes.checked = (unchecked == 0) && (checked > 0);
 }, true);
 
 $scope.$watch('tableParams', function(params) {
