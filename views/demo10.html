@@ -17,7 +17,7 @@
                 {{user.money}}
             </td>
         </tr>
-    </table>    
+    </table>
     <script type="text/ng-template" id="ng-table/filters/checkbox.html">
         <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value="" />
     </script>
@@ -114,50 +114,59 @@
 <h3>Html</h3>
 <pre class="prettyprint nocode">
 &lt;table ng-table="tableParams" show-filter="true" class="table"&gt;
-    &lt;tr ng-repeat="user in users"&gt;
-        &lt;td title="Name" filter="{ 'name': 'select' }" <code class="nocode">filter-data="names($column)"</code>&gt;
-            {{user.name}}
+    &lt;tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money &gt; 500 }"&gt;
+        &lt;td title="" filter="{ 'checked': '<code class="nocode">checkbox</code>' }"&gt;
+            &lt;input type="checkbox" ng-model="<code class="nocode">user.checked</code>" /&gt;
         &lt;/td&gt;
-        &lt;td title="Age" filter="{ 'age': '<code class="nocode">age</code>' }"&gt;
-            {{user.age}}
+        &lt;td title="Name" filter="{ 'name': 'select' }" filter-data="names($column)"&gt;
+            {{user.name}}
         &lt;/td&gt;
         &lt;td title="Money" filter="{ 'action': 'button' }" sortable="money"&gt;
             {{user.money}}
         &lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;    
-&lt;script type="text/ng-template" id="ng-table/filters/<code class="nocode">age</code>.html"&gt;
-    &lt;input type="radio" ng-model="params.filter[name]" name="filter-age" value="" /&gt; None
-    &lt;br /&gt;
-    &lt;input type="radio" ng-model="params.filter[name]" name="filter-age" value="50" /&gt; 50 years
+&lt;/table&gt;
+&lt;script type="text/ng-template" id="ng-table/filters/<code class="nocode">checkbox</code>.html"&gt;
+    &lt;input type="checkbox" ng-model="<code class="nocode">checkboxes.checked</code>" id="select_all" name="filter-checkbox" value="" /&gt;
 &lt;/script&gt;
 </pre>
 
 <h3>Javascript:</h3>
 <pre class="prettyprint">
-$scope.tableParams = new ngTableParams({
-    <code class="nocode">$liveFiltering: true</code>, // live data update
-    page: 1,            // show first page
-    total: data.length, // length of data
-    count: 10           // count per page
+// IMPORTANT! Must be an object
+$scope.<code class="nocode">checkboxes = { 'checked': false };</code>
+
+// watch for check all checkbox
+$scope.$watch('checkboxes.checked', function(value) {
+    angular.forEach($scope.users, function(item) {
+        item.checked = value;
+    });
 });
 
-$scope.<code class="nocode">names</code> = function(column) {
-    var def = $q.defer(),
-        arr = [],
-        names = [];
-    angular.forEach(data, function(item){
-        if ($.inArray(item.name, arr) === -1) {
-            arr.push(item.name);
-            names.push({
-                'id': item.name,
-                'title': item.name
-            });
-        }
+// watch for data checkboxes
+$scope.$watch('users', function(values) {
+    var checked = 0, unchecked = 0;
+    angular.forEach(values, function(item) {
+        checked   +=  (item.checked) || 0;
+        unchecked += (!item.checked) || 0;
     });
-    def.resolve(names);
-    return def.promise;
-};
+    // grayed checkbox
+    $("#select_all").prop("indeterminate", (checked != 0 && unchecked != 0));
+    $scope.checkboxes.checked = (unchecked == 0) && (checked > 0);
+}, true);
+
+$scope.$watch('tableParams', function(params) {
+    // use build-in angular filter
+    var orderedData = params.sorting ? 
+                        $filter('orderBy')(data, params.orderBy()) :
+                        data;
+    orderedData = params.filter ? 
+                        $filter('filter')(orderedData, params.filter) :
+                        orderedData;
+
+    params.total = orderedData.length; // set total for recalc pagination
+    $scope.users = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+}, true);
 </pre>
 
 </div>
