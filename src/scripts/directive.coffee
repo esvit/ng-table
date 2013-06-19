@@ -57,9 +57,10 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
     columns = []
     angular.forEach element.find("td"), (item) ->
       el = $(item)
+      parsedTitle = $parse(el.attr("title"))
       columns.push
         id: i++
-        title: el.attr("title") or el.text()
+        title: parsedTitle() or el.attr("title") or el.text()
         sortable: (if el.attr("sortable") then el.attr("sortable") else false)
         filter: (if el.attr("filter") then $parse(el.attr("filter"))() else false)
         filterData: (if el.attr("filter-data") then el.attr("filter-data") else null)
