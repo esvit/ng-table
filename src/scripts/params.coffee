@@ -20,6 +20,7 @@ angular.module("ngTable").factory "ngTableParams", ->
             value = {}
             value[lastKey = name] = (if isNumber(v) then parseFloat(v) else v)
 
+        this[lastKey] = {} if lastKey == 'sorting' # clear previously sorting
         this[lastKey] = angular.extend(this[lastKey] or {}, value[lastKey])
       else
         this[key] = (if isNumber(data[key]) then parseFloat(data[key]) else data[key])
