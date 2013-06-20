@@ -69,11 +69,12 @@ angular.module("ngTable", []).directive("ngTable", [
         i = 0;
         columns = [];
         angular.forEach(element.find("td"), function(item) {
-          var el;
+          var el, parsedTitle;
           el = $(item);
+          parsedTitle = $parse(el.attr("title"));
           return columns.push({
             id: i++,
-            title: el.attr("title") || el.text(),
+            title: parsedTitle() || el.attr("title") || el.text(),
             sortable: (el.attr("sortable") ? el.attr("sortable") : false),
             filter: (el.attr("filter") ? $parse(el.attr("filter"))() : false),
             filterData: (el.attr("filter-data") ? el.attr("filter-data") : null)
