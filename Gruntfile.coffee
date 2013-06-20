@@ -37,7 +37,7 @@ module.exports = (grunt) ->
         uglify:
             # concat js files before minification
             js:
-                src: ['.temp/scripts/directive.js','.temp/scripts/*.js']
+                src: ['ng-table.src.js']
                 dest: 'ng-table.js'
                 options:
                   sourceMap: (fileName) ->
@@ -46,7 +46,7 @@ module.exports = (grunt) ->
             # concat js files before minification
             js:
                 src: ['.temp/scripts/directive.js','.temp/scripts/*.js']
-                dest: 'ng-table.js'
+                dest: 'ng-table.src.js'
 
         less:
             css:
@@ -96,16 +96,6 @@ module.exports = (grunt) ->
     # https://github.com/CaryLandholt/grunt-hustler
     grunt.loadNpmTasks 'grunt-hustler'
 
-    grunt.registerTask 'default', [
-        'clean'
-        'coffee'
-        'jade'
-        'ngTemplateCache'
-        'uglify'
-        'less'
-        'cssmin'
-        'copy'
-    ]
     grunt.registerTask 'dev', [
         'clean'
         'coffee'
@@ -114,4 +104,9 @@ module.exports = (grunt) ->
         'concat'
         'less'
         'copy'
+    ]
+    grunt.registerTask 'default', [
+        'dev'
+        'uglify'
+        'cssmin'
     ]
