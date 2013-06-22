@@ -24,7 +24,8 @@ angular.module("ngTable", []).directive("ngTable", [
           };
           $scope.$watch('params.filter', (function(value) {
             if ($scope.params.$liveFiltering) {
-              return updateParams(value);
+              updateParams(value);
+              return $scope.goToPage(1);
             }
           }), true);
           updateParams = function(newParams) {

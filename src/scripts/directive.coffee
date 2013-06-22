@@ -21,7 +21,9 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
 
     # update result every time when chenge filters
     $scope.$watch('params.filter', ((value) ->
-      updateParams value if $scope.params.$liveFiltering
+      if $scope.params.$liveFiltering
+        updateParams value
+        $scope.goToPage 1
     ), true)
 
     updateParams = (newParams) ->
