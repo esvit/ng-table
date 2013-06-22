@@ -59,6 +59,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
     columns = []
     angular.forEach element.find("td"), (item) ->
       el = $(item)
+      if (el.attr("ignore-cell") && "true" == el.attr("ignore-cell"))
+        return
       parsedTitle = $parse(el.attr("title"))
       columns.push
         id: i++
