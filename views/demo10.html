@@ -120,7 +120,7 @@
 <pre class="prettyprint nocode">
 &lt;table ng-table="tableParams" show-filter="true" class="table"&gt;
     &lt;tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money &gt; 500 }"&gt;
-        &lt;td title="" filter="{ 'checked': '<code class="nocode">checkbox</code>' }"&gt;
+        &lt;td title="" width="30" style="text-align: left;" filter="{ 'checked': '<code class="nocode">checkbox</code>' }"&gt;
             &lt;input type="checkbox" ng-model="<code class="nocode">checkboxes.items[user.id]</code>" /&gt;
         &lt;/td&gt;
         &lt;td title="Name" filter="{ 'name': 'select' }" filter-data="names($column)"&gt;
