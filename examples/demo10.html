@@ -24,7 +24,7 @@
 
     <table ng-table="tableParams" show-filter="true" class="table">
         <tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money > 500 }">
-            <td title="" filter="{ 'checked': 'checkbox' }">
+            <td title="" width="30" style="text-align: left" filter="{ 'checked': 'checkbox' }">
                 <input type="checkbox" ng-model="checkboxes.items[user.id]" />
             </td>
             <td title="'Name'" filter="{ 'name': 'select' }" filter-data="names($column)">
