@@ -27,10 +27,11 @@ bower install https://github.com/esvit/ng-table.git
 ```html
 <table ng-table="tableParams" show-filter="true">
 <tr ng-repeat="user in users">
-    <td title="Name" filter="{ 'name': 'text' }" sortable="name">
+    <!-- IMPORTANT: String titles must be in single quotes -->
+    <td title="'Name of person'" filter="{ 'name': 'text' }" sortable="name">
         {{user.name}}
     </td>
-    <td title="Age" filter="{ 'action': 'button' }" sortable="age">
+    <td title="'Age'" filter="{ 'action': 'button' }" sortable="age">
         {{user.age}}
     </td>
 </tr>
