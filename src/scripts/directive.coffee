@@ -59,7 +59,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
     columns = []
     angular.forEach element.find("td"), (item) ->
       el = $(item)
-      parsedTitle = $parse(el.attr("title"))
+      var titleModified = el.attr("title").replace(/\s+/g, "_");
+      parsedTitle = $parse(titleModified)
       columns.push
         id: i++
         title: parsedTitle() or el.attr("title") or el.text()
