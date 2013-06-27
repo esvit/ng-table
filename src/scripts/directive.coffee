@@ -61,10 +61,11 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       el = $(item)
       if (el.attr("ignore-cell") && "true" == el.attr("ignore-cell"))
         return
-      parsedTitle = $parse(el.attr("title"))
+      parsedTitle = $parse(el.attr("title"))() or el.attr("title") or el.text()
+      el.attr('title', parsedTitle)
       columns.push
         id: i++
-        title: parsedTitle() or el.attr("title") or el.text()
+        title: parsedTitle
         sortable: (if el.attr("sortable") then el.attr("sortable") else false)
         filter: (if el.attr("filter") then $parse(el.attr("filter"))() else false)
         filterData: (if el.attr("filter-data") then el.attr("filter-data") else null)

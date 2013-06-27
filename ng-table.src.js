@@ -75,10 +75,11 @@ angular.module("ngTable", []).directive("ngTable", [
           if (el.attr("ignore-cell") && "true" === el.attr("ignore-cell")) {
             return;
           }
-          parsedTitle = $parse(el.attr("title"));
+          parsedTitle = $parse(el.attr("title"))() || el.attr("title") || el.text();
+          el.attr('title', parsedTitle);
           return columns.push({
             id: i++,
-            title: parsedTitle() || el.attr("title") || el.text(),
+            title: parsedTitle,
             sortable: (el.attr("sortable") ? el.attr("sortable") : false),
             filter: (el.attr("filter") ? $parse(el.attr("filter"))() : false),
             filterData: (el.attr("filter-data") ? el.attr("filter-data") : null)
