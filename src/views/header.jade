@@ -1,8 +1,8 @@
 tr
-  th.header(ng-class="{sortable: column.sortable,'sort-asc': params.sorting[column.sortable]=='asc', 'sort-desc': params.sorting[column.sortable]=='desc'}", ng-click='sortBy(column)', ng-repeat='column in columns')
+  th.header(ng-class="{sortable: column.sortable,'sort-asc': params.sorting[column.sortable]=='asc', 'sort-desc': params.sorting[column.sortable]=='desc'}", ng-click='sortBy(column)', ng-repeat='column in columns', ng-show='column.show(this)')
     div {{column.title}}
 tr(ng-show='show_filter')
-  th.filter(ng-repeat='column in columns')
+  th.filter(ng-repeat='column in columns', ng-show='column.show(this)')
     form(ng-submit='doFilter()')
       // Hidden submit for ENTER key work
       input(type='submit', style='position: absolute; left: -9999px; width: 1px; height: 1px;')

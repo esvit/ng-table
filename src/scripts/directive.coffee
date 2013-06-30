@@ -69,6 +69,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
         sortable: (if el.attr("sortable") then el.attr("sortable") else false)
         filter: (if el.attr("filter") then $parse(el.attr("filter"))() else false)
         filterData: (if el.attr("filter-data") then el.attr("filter-data") else null)
+        show: (if el.attr("ng-show") then (scope) -> $parse(el.attr("ng-show"))(scope) else () -> true)
 
 
     (scope, element, attrs) ->
