@@ -1,5 +1,5 @@
-div
-  ul.pagination.ng-cloak
+div.pagination.ng-cloak
+  ul
     li(ng-class="{'disabled': !page.active}", ng-repeat='page in pages', ng-switch='page.type')
       a(ng-switch-when='prev', ng-click='goToPage(page.number)', href='') «
       a(ng-switch-when='first', ng-click='goToPage(page.number)', href='') {{page.number}}
