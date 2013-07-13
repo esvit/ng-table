@@ -2,7 +2,7 @@ angular.module("ngTable").factory "ngTableParams", ->
   isNumber = (n) ->
     not isNaN(parseFloat(n)) and isFinite(n)
   ngTableParams = (data) ->
-    ignoreFields = ["total","counts"]
+    ignoreFields = ["total","counts", "$liveFiltering"]
     @page = 1
     @count = 1
     @counts = [10,25,50,100]
