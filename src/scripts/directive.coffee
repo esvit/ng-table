@@ -16,8 +16,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
   scope: true
   controller: [ "$scope", "$timeout", ($scope, $timeout) ->
     $scope.params = $scope.params or
-    page: 1
-    count: 10
+      page: 1
+      count: 10
 
     # update result every time when chenge filters
     $scope.$watch('params.filter', ((value) ->
