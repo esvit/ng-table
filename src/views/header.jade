@@ -7,4 +7,7 @@ tr(ng-show='show_filter')
       // Hidden submit for ENTER key work
       input(type='submit', style='position: absolute; left: -9999px; width: 1px; height: 1px;')
       div(ng-repeat='(name, filter) in column.filter')
-        div(ng-include="'ng-table/filters/' + filter + '.html'")
+        div(ng-if="column.filterTemplateURL")
+          div(ng-include="column.filterTemplateURL")
+        div(ng-if="!column.filterTemplateURL")
+          div(ng-include="'ng-table/filters/' + filter + '.html'")
