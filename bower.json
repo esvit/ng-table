@@ -1,7 +1,7 @@
 {
   "name": "ng-table",
-  "version": "0.2.0",
-  "main": "ng-table.js",
+  "version": "0.2.1",
+  "main": ["ng-table.js", "ng-table.css"],
   "ignore": [
     "examples", "src"
   ],

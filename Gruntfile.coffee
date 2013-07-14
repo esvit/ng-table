@@ -3,6 +3,10 @@ path = require 'path'
 # Build configurations.
 module.exports = (grunt) ->
     grunt.initConfig
+        cmpnt: grunt.file.readJSON('bower.json'),
+        banner: '/*! ngTable v<%= cmpnt.version %> by Vitalii Savchuk(esvit666@gmail.com) - ' +
+                    'https://github.com/esvit/ng-table - New BSD License */\n',
+            
         # Deletes built file and temp directories.
         clean:
             working:
@@ -40,6 +44,7 @@ module.exports = (grunt) ->
                 src: ['ng-table.src.js']
                 dest: 'ng-table.js'
                 options:
+                  banner: '<%= banner %>'
                   sourceMap: (fileName) ->
                     fileName.replace /\.js$/, '.map'
         concat:
@@ -57,6 +62,8 @@ module.exports = (grunt) ->
             css:
                 files:
                     'ng-table.css': 'ng-table.css'
+                options:
+                    banner: '<%= banner %>'
 
         # Compile jade files (.jade) to HTML (.html).
         #
