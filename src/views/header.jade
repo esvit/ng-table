@@ -6,7 +6,7 @@ tr(ng-show='show_filter')
   th.filter(ng-repeat='column in columns', ng-show='column.show(this)')
     form(ng-submit='doFilter()')
       // Hidden submit for ENTER key work
-      input(type='submit', style='position: absolute; left: -9999px; width: 1px; height: 1px;')
+      input(type='submit', tabindex="-1", style='position: absolute; left: -9999px; width: 1px; height: 1px;')
       div(ng-repeat='(name, filter) in column.filter')
         div(ng-if="column.filterTemplateURL")
           div(ng-include="column.filterTemplateURL")
