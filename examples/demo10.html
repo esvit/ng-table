@@ -24,18 +24,18 @@
 
     <table ng-table="tableParams" show-filter="true" class="table">
         <tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money > 500 }">
-            <td title="" width="30" style="text-align: left" filter="{ 'checked': 'checkbox' }">
+            <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
                 <input type="checkbox" ng-model="checkboxes.items[user.id]" />
             </td>
-            <td title="'Name'" filter="{ 'name': 'select' }" filter-data="names($column)">
+            <td data-title="'Name'" filter="{ 'name': 'select' }" filter-data="names($column)">
                 {{user.name}}
             </td>
-            <td title="'Money'" filter="{ 'action': 'button' }" sortable="money">
+            <td data-title="'Money'" filter="{ 'action': 'button' }" sortable="money">
                 {{user.money}}
             </td>
         </tr>
     </table>
-    <script type="text/ng-template" id="ng-table/filters/checkbox.html">
+    <script type="text/ng-template" id="ng-table/headers/checkbox.html">
         <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value="" />
     </script>
 
@@ -97,6 +97,9 @@
 
         // watch for data checkboxes
         $scope.$watch('checkboxes.items', function(values) {
+            if (!$scope.users) {
+                return;
+            }
             var checked = 0, unchecked = 0,
                 total = $scope.users.length;
             angular.forEach($scope.users, function(item) {

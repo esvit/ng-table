@@ -64,6 +64,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       parsedTitle = $parse(el.attr("data-title"))() or el.attr("data-title") or " "
       #el.attr('title', parsedTitle)
 
+      headerTemplateURL = if el.attr("header") then $parse(el.attr("header"))() else false
 
       filter = if el.attr("filter") then $parse(el.attr("filter"))() else false
       filterTemplateURL = false
@@ -77,6 +78,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
         sortable: (if el.attr("sortable") then el.attr("sortable") else false)
         filter: filter
         filterTemplateURL: filterTemplateURL
+        headerTemplateURL: headerTemplateURL
         filterData: (if el.attr("filter-data") then el.attr("filter-data") else null)
         show: (if el.attr("ng-show") then (scope) -> $parse(el.attr("ng-show"))(scope) else () -> true)
 
