@@ -7,7 +7,7 @@ Header row with titles and filters automatic generated on compilation step.
 
 ## Installing via Bower
 ```
-bower install https://github.com/esvit/ng-table.git
+bower install ng-table
 ```
 
 ## Examples (from simple to complex)
