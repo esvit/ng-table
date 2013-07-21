@@ -7,13 +7,13 @@
 
     <table ng-table="tableParams" show-filter="true" class="table">
         <tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money > 500 }">
-            <td title="'Name'" filter="{ 'name': 'select' }" filter-data="names($column)">
+            <td data-title="'Name'" filter="{ 'name': 'select' }" filter-data="names($column)">
                 {{user.name}}
             </td>
-            <td title="'Age'" filter="{ 'age': 'age' }">
+            <td data-title="'Age'" filter="{ 'age': 'age' }">
                 {{user.age}}
             </td>
-            <td title="'Money'" sortable="money">
+            <td data-title="'Money'" sortable="money">
                 {{user.money}}
             </td>
         </tr>
@@ -95,13 +95,13 @@
 <pre class="prettyprint nocode">
 &lt;table ng-table="tableParams" show-filter="true" class="table"&gt;
     &lt;tr ng-repeat="user in users"&gt;
-        &lt;td title="Name" filter="{ 'name': 'select' }" <code class="nocode">filter-data="names($column)"</code>&gt;
+        &lt;td data-title="'Name'" filter="{ 'name': 'select' }" <code class="nocode">filter-data="names($column)"</code>&gt;
             {{user.name}}
         &lt;/td&gt;
-        &lt;td title="Age" filter="{ 'age': '<code class="nocode">age</code>' }"&gt;
+        &lt;td data-title="'Age'" filter="{ 'age': '<code class="nocode">age</code>' }"&gt;
             {{user.age}}
         &lt;/td&gt;
-        &lt;td title="Money" filter="{ 'action': 'button' }" sortable="money"&gt;
+        &lt;td data-title="'Money'" filter="{ 'action': 'button' }" sortable="money"&gt;
             {{user.money}}
         &lt;/td&gt;
     &lt;/tr&gt;

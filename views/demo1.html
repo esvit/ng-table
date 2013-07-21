@@ -9,10 +9,10 @@
 
         <table ng-table="tableParams" class="table">
             <tr ng-repeat="user in users">
-                <td title="'Name'">
+                <td data-title="'Name'">
                     {{user.name}}
                 </td>
-                <td title="'Age'">
+                <td data-title="'Age'">
                     {{user.age}}
                 </td>
             </tr>
@@ -58,10 +58,10 @@
 <pre class="prettyprint nocode">
 &lt;table ng-table="tableParams" class="table"&gt;
     &lt;tr ng-repeat="user in users"&gt;
-        &lt;td title="Name"&gt;
+        &lt;td data-title="'Name'"&gt;
             {{user.name}}
         &lt;/td&gt;
-        &lt;td title="Age"&gt;
+        &lt;td data-title="'Age'"&gt;
             {{user.age}}
         &lt;/td&gt;
     &lt;/tr&gt;

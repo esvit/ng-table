@@ -9,10 +9,10 @@
         <div loading-container="loading">
             <table ng-table="tableParams" show-filter="true" class="table">
                 <tr ng-repeat="user in users">
-                    <td title="'Name'" filter="{ 'name': 'text' }" sortable="name">
+                    <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="name">
                         {{user.name}}
                     </td>
-                    <td title="'Age'" filter="{ 'action': 'button' }" sortable="age">
+                    <td data-title="'Age'" filter="{ 'action': 'button' }" sortable="age">
                         {{user.age}}
                     </td>
                 </tr>
@@ -57,10 +57,10 @@
 &lt;div <code class="nocode">loading-container="loading"</code>&gt;
     &lt;table ng-table="tableParams" show-filter="true" class="table"&gt;
         &lt;tr ng-repeat="user in users"&gt;
-            &lt;td title="Name" filter="{ 'name': 'text' }" sortable="name"&gt;
+            &lt;td data-title="'Name'" filter="{ 'name': 'text' }" sortable="name"&gt;
                 {{user.name}}
             &lt;/td&gt;
-            &lt;td title="Age" filter="{ 'action': 'button' }" sortable="age"&gt;
+            &lt;td data-title="'Age'" filter="{ 'action': 'button' }" sortable="age"&gt;
                 {{user.age}}
             &lt;/td&gt;
         &lt;/tr&gt;

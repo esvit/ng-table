@@ -5,10 +5,10 @@
 
         <table ng-table="tableParams" class="table">
             <tr ng-repeat="user in users">
-                <td title="'Name'" sortable="name">
+                <td data-title="'Name'" sortable="name">
                     {{user.name}}
                 </td>
-                <td title="'Age'" sortable="age">
+                <td data-title="'Age'" sortable="age">
                     {{user.age}}
                 </td>
             </tr>
@@ -100,10 +100,10 @@ function DemoCtrl($scope, <code class="nocode">$location</code>, $filter, ngTabl
 <pre class="prettyprint nocode">
 &lt;table ng-table="tableParams" class="table"&gt;
 &lt;tr ng-repeat="user in users"&gt;
-    &lt;td title="Name" sortable="name"&gt;
+    &lt;td data-title="'Name'" sortable="name"&gt;
         {{user.name}}
     &lt;/td&gt;
-    &lt;td title="Age" sortable="age"&gt;
+    &lt;td data-title="'Age'" sortable="age"&gt;
         {{user.age}}
     &lt;/td&gt;
 &lt;/tr&gt;

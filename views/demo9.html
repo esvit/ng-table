@@ -7,13 +7,13 @@
 
     <table ng-table="tableParams" class="table">
         <tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money > 500 }">
-            <td title="'Name'">
+            <td data-title="'Name'">
                 {{user.name}}
             </td>
-            <td title="'Age'">
+            <td data-title="'Age'">
                 {{user.age}}
             </td>
-            <td title="'Money'" sortable="money">
+            <td data-title="'Money'" sortable="money">
                 {{user.money}}
             </td>
         </tr>
@@ -68,13 +68,13 @@
 <pre class="prettyprint nocode">
 &lt;table ng-table="tableParams" class="table"&gt;
 &lt;tr ng-repeat="user in users" <code class="nocode">ng-class="{ 'emphasis': user.money > 500 }"</code>&gt;
-    &lt;td title="Name"&gt;
+    &lt;td data-title="'Name'"&gt;
         {{user.name}}
     &lt;/td&gt;
-    &lt;td title="Age"&gt;
+    &lt;td data-title="'Age'"&gt;
         {{user.age}}
     &lt;/td&gt;
-    &lt;td title="Money" sortable="money"&gt;
+    &lt;td data-title="'Money'" sortable="money"&gt;
         {{user.money}}
     &lt;/td&gt;
 &lt;/tr&gt;
