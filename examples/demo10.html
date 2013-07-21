@@ -22,7 +22,7 @@
     {{checkboxes.items}}
     <button ng-click="tableParams.sorting = {}" class="btn btn-default pull-right">Clear sorting</button>
 
-    <table ng-table="tableParams" show-filter="true" class="table">
+    <table ng-table="tableParams" show-filter="true" class="table ng-table-responsive">
         <tr ng-repeat="user in users" ng-class="{ 'emphasis': user.money > 500 }">
             <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
                 <input type="checkbox" ng-model="checkboxes.items[user.id]" />

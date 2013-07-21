@@ -62,7 +62,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       if (el.attr("ignore-cell") && "true" == el.attr("ignore-cell"))
         return
       parsedTitle = $parse(el.attr("data-title"))() or el.attr("data-title") or " "
-      #el.attr('title', parsedTitle)
+      el.attr('data-title-text', parsedTitle)
 
       headerTemplateURL = if el.attr("header") then $parse(el.attr("header"))() else false
 

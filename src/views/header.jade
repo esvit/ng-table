@@ -2,8 +2,8 @@ tr
   th.header(ng-class="{sortable: column.sortable,'sort-asc': params.sorting[column.sortable]=='asc', 'sort-desc': params.sorting[column.sortable]=='desc'}", ng-click='sortBy(column)', ng-repeat='column in columns', ng-show='column.show(this)')
     div(ng-hide="column.headerTemplateURL") {{column.title}}
     div(ng-show="column.headerTemplateURL", ng-include="column.headerTemplateURL")
-tr(ng-show='show_filter')
-  th.filter(ng-repeat='column in columns', ng-show='column.show(this)')
+tr(ng-show='show_filter', class="ng-table-filters")
+  th.filter(ng-repeat='column in columns', ng-show='column.show(this)', data-title-text="{{column.title}}")
     form(ng-submit='doFilter()')
       // Hidden submit for ENTER key work
       input(type='submit', tabindex="-1", style='position: absolute; left: -9999px; width: 1px; height: 1px;')
