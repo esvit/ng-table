@@ -23,13 +23,13 @@
 
     <table ng-table="tableParams" class="table">
         <tr ng-repeat="user in users">
-            <td title="'Name'">
+            <td data-title="'Name'">
                 {{user.name}}
             </td>
-            <td title="'Age'">
+            <td data-title="'Age'">
                 {{user.age}}
             </td>
-            <td title="'Money'" sortable="money">
+            <td data-title="'Money'" sortable="money">
                 <span ng-class="{ 'plus': user.money >= 0,'minus': user.money < 0 }">{{user.money}}</span>
             </td>
         </tr>

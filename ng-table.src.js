@@ -79,13 +79,13 @@ angular.module("ngTable", []).directive("ngTable", [
         i = 0;
         columns = [];
         angular.forEach(element.find("td"), function(item) {
-          var el, filter, filterTemplateURL, parsedTitle;
+          var el, filter, filterTemplateURL, headerTemplateURL, parsedTitle;
           el = $(item);
           if (el.attr("ignore-cell") && "true" === el.attr("ignore-cell")) {
             return;
           }
-          parsedTitle = $parse(el.attr("title"))() || el.attr("title") || el.text();
-          el.attr('title', parsedTitle);
+          parsedTitle = $parse(el.attr("data-title"))() || el.attr("data-title") || " ";
+          headerTemplateURL = el.attr("header") ? $parse(el.attr("header"))() : false;
           filter = el.attr("filter") ? $parse(el.attr("filter"))() : false;
           filterTemplateURL = false;
           if (filter && filter.templateURL) {
@@ -98,6 +98,7 @@ angular.module("ngTable", []).directive("ngTable", [
             sortable: (el.attr("sortable") ? el.attr("sortable") : false),
             filter: filter,
             filterTemplateURL: filterTemplateURL,
+            headerTemplateURL: headerTemplateURL,
             filterData: (el.attr("filter-data") ? el.attr("filter-data") : null),
             show: (el.attr("ng-show") ? function(scope) {
               return $parse(el.attr("ng-show"))(scope);
@@ -306,7 +307,7 @@ angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/filters/button.html', '<button ng-click="doFilter()" ng-show="filter==\'button\'" class="btn btn-primary btn-block">Filter</button>');
 	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in column.data" ng-model="params.filter[name]" ng-show="filter==\'select\'" class="filter filter-select"></select>');
 	$templateCache.put('ng-table/filters/text.html', '<input type="text" ng-model="params.filter[name]" ng-show="filter==\'text\'" class="input-filter"/>');
-	$templateCache.put('ng-table/header.html', '<tr><th ng-class="{sortable: column.sortable,\'sort-asc\': params.sorting[column.sortable]==\'asc\', \'sort-desc\': params.sorting[column.sortable]==\'desc\'}" ng-click="sortBy(column)" ng-repeat="column in columns" ng-show="column.show(this)" class="header"><div>{{column.title}}</div></th></tr><tr ng-show="show_filter"><th ng-repeat="column in columns" ng-show="column.show(this)" class="filter"><form ng-submit="doFilter()"><input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/><div ng-repeat="(name, filter) in column.filter"><div ng-if="column.filterTemplateURL"><div ng-include="column.filterTemplateURL"></div></div><div ng-if="!column.filterTemplateURL"><div ng-include="\'ng-table/filters/\' + filter + \'.html\'"></div></div></div></form></th></tr>');
+	$templateCache.put('ng-table/header.html', '<tr><th ng-class="{sortable: column.sortable,\'sort-asc\': params.sorting[column.sortable]==\'asc\', \'sort-desc\': params.sorting[column.sortable]==\'desc\'}" ng-click="sortBy(column)" ng-repeat="column in columns" ng-show="column.show(this)" class="header"><div ng-hide="column.headerTemplateURL">{{column.title}}</div><div ng-show="column.headerTemplateURL" ng-include="column.headerTemplateURL"></div></th></tr><tr ng-show="show_filter"><th ng-repeat="column in columns" ng-show="column.show(this)" class="filter"><form ng-submit="doFilter()"><input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/><div ng-repeat="(name, filter) in column.filter"><div ng-if="column.filterTemplateURL"><div ng-include="column.filterTemplateURL"></div></div><div ng-if="!column.filterTemplateURL"><div ng-include="\'ng-table/filters/\' + filter + \'.html\'"></div></div></div></form></th></tr>');
 	$templateCache.put('ng-table/pager.html', '<div class="pagination ng-cloak"><ul class="pagination"><li ng-class="{\'disabled\': !page.active}" ng-repeat="page in pages" ng-switch="page.type"><a ng-switch-when="prev" ng-click="goToPage(page.number)" href="">«</a><a ng-switch-when="first" ng-click="goToPage(page.number)" href="">{{page.number}}</a><a ng-switch-when="page" ng-click="goToPage(page.number)" href="">{{page.number}}</a><a ng-switch-when="more" ng-click="goToPage(page.number)" href="">…</a><a ng-switch-when="last" ng-click="goToPage(page.number)" href="">{{page.number}}</a><a ng-switch-when="next" ng-click="goToPage(page.number)" href="">»</a></li></ul><div ng-show="params.counts.length" class="btn-group pull-right"><button ng-repeat="count in params.counts" type="button" ng-class="{\'active\':params.count==count}" ng-click="changeCount(count)" class="btn btn-mini">{{count}}</button></div></div>');
 }]);
     return angular.module('ngTable');

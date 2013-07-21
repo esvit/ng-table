@@ -25,10 +25,10 @@
 
         <table ng-table="tableParams" template-pagination="custom/pager" class="table">
             <tr ng-repeat="user in users">
-                <td title="'Name of people'">
+                <td data-title="'Name of people'">
                     {{user.name}}
                 </td>
-                <td title="'Age'">
+                <td data-title="'Age'">
                     {{user.age}}
                 </td>
             </tr>

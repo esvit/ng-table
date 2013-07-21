@@ -24,10 +24,10 @@
 
         <table ng-table="tableParams" show-filter="true" class="table">
             <tr ng-repeat="user in users">
-                <td title="'Name'" filter="{ 'name': 'text' }">
+                <td data-title="'Name'" filter="{ 'name': 'text' }">
                     {{user.name}}
                 </td>
-                <td title="'Age'" filter="{ 'action': 'button' }">
+                <td data-title="'Age'" filter="{ 'action': 'button' }">
                     {{user.age}}
                 </td>
             </tr>

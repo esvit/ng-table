@@ -26,10 +26,10 @@
 
         <table ng-table="tableParams" class="table">
             <tr ng-repeat="user in users">
-                <td title="'Name'" sortable="name">
+                <td data-title="'Name'" sortable="name">
                     {{user.name}}
                 </td>
-                <td title="'Age'" sortable="age">
+                <td data-title="'Age'" sortable="age">
                     {{user.age}}
                 </td>
             </tr>
