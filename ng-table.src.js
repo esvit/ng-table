@@ -78,7 +78,7 @@ angular.module("ngTable", []).directive("ngTable", [
         var columns, i;
         i = 0;
         columns = [];
-        angular.forEach(element.find("td"), function(item) {
+        angular.forEach(element.find("tr").eq(0).find("td"), function(item) {
           var el, filter, filterTemplateURL, headerTemplateURL, parsedTitle;
           el = $(item);
           if (el.attr("ignore-cell") && "true" === el.attr("ignore-cell")) {
