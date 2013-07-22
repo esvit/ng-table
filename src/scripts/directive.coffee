@@ -57,7 +57,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
   compile: (element, attrs) ->
     i = 0
     columns = []
-    angular.forEach element.find("td"), (item) ->
+    angular.forEach element.find("tr").eq(0).find("td"), (item) ->
       el = $(item)
       if (el.attr("ignore-cell") && "true" == el.attr("ignore-cell"))
         return
