@@ -163,6 +163,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
         headerTemplate = $compile("<thead ng-include=\"templates.header\"></thead>")(scope)
         paginationTemplate = $compile("<div ng-include=\"templates.pagination\"></div>")(scope)
         element.filter("thead").remove()
-        element.prepend(headerTemplate).addClass "ng-table"
+        tbody = element.find('tbody')
+        if (tbody[0]) then $(tbody[0]).before headerTemplate else element.prepend headerTemplate
+        element.addClass "ng-table"
         element.after paginationTemplate
 ])
