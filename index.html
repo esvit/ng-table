@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="css/prettify.css">
         <link rel="stylesheet" href="css/ng-table.css">
         <link rel="stylesheet" href="css/docs.css">
+        <link rel="stylesheet" href="css/angular-social.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="js/angular-resource.min.js"></script>
@@ -28,6 +29,7 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/ng-table.js?v=0.2.1"></script>
         <script src="js/disqus.js"></script>
+        <script src="js/angular-social.js"></script>
         <script src="js/google-code-prettify/prettify.js"></script>
     </head>
     <body ng-app="app" ng-controller="IndexCtrl">
@@ -67,12 +69,6 @@
                     </ul>
                 </li>
             </ul>
-
-              <div class="pull-right" style="padding: 10px 0 0;">
-                <iframe width="100px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=watch&amp;count=true" class="github-btn"></iframe>
-                <iframe width="102px" scrolling="0" height="20px" frameborder="0" allowtransparency="true" src="http://ghbtns.com/github-btn.html?user=esvit&amp;repo=ng-table&amp;type=fork&amp;count=true" class="github-btn"></iframe>
-                <iframe allowtransparency="true" frameborder="0" scrolling="no" src="https://platform.twitter.com/widgets/tweet_button.1368146021.html#_=1369553836396&amp;count=horizontal&amp;dnt=true&amp;id=twitter-widget-92&amp;lang=ru&amp;original_referer=https%3A%2F%2Ftwitter.com%2Fabout%2Fresources%2Fbuttons%23tweet&amp;size=m&amp;text=ngTable%3A%20Table%20directive%20for%20AngularJS&amp;url=https%3A%2F%2Fgithub.com%2Fesvit%2Fng-table%2F" class="twitter-share-button twitter-count-horizontal" title="Twitter Tweet Button" data-twttr-rendered="true" style="width: 140px; height: 20px;"></iframe>
-              </div>
             </div>
           </div>
         </div>
@@ -85,6 +81,21 @@
                 <a target="_blank" href="https://github.com/esvit/ng-table" class="btn btn-large">Project GitHub</a>
             </p>
 
+            <p>
+                    
+                <ul ng-social-buttons
+                     data-url="'http://esvit.github.io/ng-table/'"
+                     data-title="'ngTable: cool directive for simple and easy work with table on AngularJS'"
+                     data-description="'Angular Table directive'">
+                    <li class="ng-social-facebook">Facebook</li>
+                    <li class="ng-social-google-plus">Google+</li>
+                    <li class="ng-social-twitter">Twitter</li>
+                    <li class="ng-social-pinterest">Pinterest</li>
+                    <li class="ng-social-github" user="esvit" repository="ng-table">GitHub</li>
+                    <li class="ng-social-github-forks" user="esvit" repository="ng-table">Forks</li>
+                </ul>
+            </p>
+            <p><a href="https://github.com/esvit/angular-social" target="_blank">&uarr; Another my project Angular Share buttons &uarr;</a></p>
         </div>
         <div class="container" id="ng-view" data-ng-view></div>
         <footer class="bs-footer">
@@ -121,7 +132,7 @@
         function isNumber(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
         }
-        var app = angular.module('app', ['ngTable', 'ngResource', 'ngMockE2E', 'disqus']).
+        var app = angular.module('app', ['ngTable', 'ngResource', 'ngMockE2E', 'disqus', 'ngSocial']).
             run(function($httpBackend, $filter, $log, ngTableParams) {
                 // emulation of api server
                 $httpBackend.whenGET(/data.*/).respond(function(method, url, data, headers) {
@@ -184,6 +195,7 @@
                     }];
                 });
                 $httpBackend.whenGET(/.*/).passThrough();
+                $httpBackend.whenJSONP(/.*/).passThrough();
             }).
             config(function($interpolateProvider, $routeProvider, $locationProvider, $provide){
 
