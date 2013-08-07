@@ -138,7 +138,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       ), true
 
       scope.parse = (text) ->
-        var p = $parse(text)
+        p = $parse(text)
         return p()
 
       # show/hide filter row
