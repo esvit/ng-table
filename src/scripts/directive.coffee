@@ -137,6 +137,10 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
         scope.params = angular.copy(params)
       ), true
 
+      scope.parse = (text) ->
+        var p = $parse(text)
+        return p()
+
       # show/hide filter row
       if attrs.showFilter
         scope.$parent.$watch attrs.showFilter, (value) ->
