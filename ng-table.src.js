@@ -84,8 +84,10 @@ angular.module("ngTable", []).directive("ngTable", [
           if (el.attr("ignore-cell") && "true" === el.attr("ignore-cell")) {
             return;
           }
-          parsedTitle = $parse(el.attr("data-title"))() || el.attr("data-title") || " ";
-          el.attr('data-title-text', parsedTitle);
+          parsedTitle = function(scope) {
+            return $parse(el.attr("data-title"))(scope) || el.attr("data-title") || " ";
+          };
+          el.attr('data-title-text', parsedTitle());
           headerTemplateURL = el.attr("header") ? $parse(el.attr("header"))() : false;
           filter = el.attr("filter") ? $parse(el.attr("filter"))() : false;
           filterTemplateURL = false;
@@ -168,9 +170,7 @@ angular.module("ngTable", []).directive("ngTable", [
             return scope.params = angular.copy(params);
           }), true);
           scope.parse = function(text) {
-            var p;
-            p = $parse(text);
-            return p();
+            return text(scope);
           };
           if (attrs.showFilter) {
             scope.$parent.$watch(attrs.showFilter, function(value) {

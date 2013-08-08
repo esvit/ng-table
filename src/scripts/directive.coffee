@@ -61,8 +61,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       el = $(item)
       if (el.attr("ignore-cell") && "true" == el.attr("ignore-cell"))
         return
-      parsedTitle = $parse(el.attr("data-title"))() or el.attr("data-title") or " "
-      el.attr('data-title-text', parsedTitle)
+      parsedTitle = (scope) -> $parse(el.attr("data-title"))(scope) or el.attr("data-title") or " "
+      el.attr('data-title-text', parsedTitle())
 
       headerTemplateURL = if el.attr("header") then $parse(el.attr("header"))() else false
 
@@ -138,8 +138,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       ), true
 
       scope.parse = (text) ->
-        p = $parse(text)
-        return p()
+        return text(scope)
 
       # show/hide filter row
       if attrs.showFilter
