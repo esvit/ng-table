@@ -226,7 +226,8 @@ angular.module("ngTable", []).directive("ngTable", [
 /*
 //@ sourceMappingURL=directive.js.map
 */
-var __hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 angular.module("ngTable").factory("ngTableParams", function() {
   var isNumber, ngTableParams;
@@ -280,7 +281,7 @@ angular.module("ngTable").factory("ngTableParams", function() {
       pairs = (asString ? [] : {});
       for (key in this) {
         if (this.hasOwnProperty(key)) {
-          if (ignoreFields.indexOf(key) >= 0) {
+          if (__indexOf.call(ignoreFields, key) >= 0) {
             continue;
           }
           item = this[key];
