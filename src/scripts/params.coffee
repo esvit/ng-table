@@ -37,7 +37,7 @@ angular.module("ngTable").factory "ngTableParams", ->
       pairs = (if asString then [] else {})
       for key of this
         if @hasOwnProperty(key)
-          continue  if ignoreFields.indexOf(key) >= 0
+          continue  if key in ignoreFields
           item = this[key]
           name = encodeURIComponent(key)
           if typeof item is "object"
