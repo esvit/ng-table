@@ -36,7 +36,7 @@ module.exports = (grunt) ->
             overwrite: true
             replacements: [{
                 from: '<script src="/js/require.js"></script><script src="/js/config.js"></script>'
-                to: '<script src="/main.js"></script>'
+                to: '<script src="main.js"></script>'
             }]
 
 
