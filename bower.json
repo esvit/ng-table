@@ -1,0 +1,15 @@
+{
+  "name": "ng-table-ghpages",
+  "dependencies": {
+    "jquery": ">=1.10.2",
+    "angular": ">=1.2.0-rc.2",
+    "angular-resource": ">=1.2.0-rc.2",
+    "angular-mocks": "1.2.0-rc.2",
+    "ng-table": "master",
+    "angular-route": "1.2.0-rc.2",
+    "bootstrap": "~3.0.0",
+    "requirejs": "~2.1.8",
+    "angular-social": "*",
+    "google-code-prettify": "~1.0.0"
+  }
+}

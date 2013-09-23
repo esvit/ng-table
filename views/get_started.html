@@ -35,10 +35,10 @@ $scope.users = [{name: "Moroni", age: 50},
             
             <table ng-table class="table" style="border: 1px solid #000;">
             <tr ng-repeat="user in users">
-                <td title="Name">
+                <td data-title="'Name'">
                     {{user.name}}
                 </td>
-                <td title="Age">
+                <td data-title="'Age'">
                     {{user.age}}
                 </td>
             </tr>
@@ -65,10 +65,10 @@ $scope.users = [{name: "Moroni", age: 50},
 &lt;body ng-controller="MyCtrl"&gt;
     &lt;table <code class="nocode" rel="popover" data-content="Init ngTable" data-original-title="Step 4">ng-table</code> class="table"&gt;
     &lt;tr ng-repeat="user in users"&gt;
-        &lt;td title="Name"&gt;
+        &lt;td data-title="'Name'"&gt;
             {{user.name}}
         &lt;/td&gt;
-        &lt;td title="Age"&gt;
+        &lt;td data-title="'Age'"&gt;
             {{user.age}}
         &lt;/td&gt;
     &lt;/tr&gt;

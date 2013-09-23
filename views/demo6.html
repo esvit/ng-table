@@ -1,7 +1,7 @@
 <h1>AJAX Data Loading</h1>
 
 <div class="row">
-<div class="col col-lg-6" ng-controller="DemoCtrl">
+<div class="col col-lg-6">
 
     <button ng-click="tableParams.sorting = {}" class="btn btn-default pull-right">Clear sorting</button>
     <div class="clearfix"></div>
@@ -18,36 +18,6 @@
                 </tr>
             </table>
         </div>
-
-        <script>
-        function DemoCtrl($scope, $timeout, $resource, ngTableParams) {
-            var Api = $resource('/data');
-
-            $scope.tableParams = new ngTableParams({
-                page: 1,            // show first page
-                total: 0,           // length of data
-                count: 10,          // count per page
-                sorting: {
-                    name: 'asc'     // initial sorting
-                }
-            });
-
-            $scope.$watch('tableParams', function(params) {
-                $scope.loading = true;
-                // ajax request to api
-                Api.get(params.url(), function(data) {
-                    $timeout(function() {
-                    $scope.loading = false;
-                    // set new data
-                    $scope.users = data.result;
-
-                    // update table params
-                    $scope.tableParams.total = data.total;
-                    }, 500);
-                });
-            }, true);
-        }
-        </script>
 
 </div>
 <div class="col col-lg-6">

@@ -1,7 +1,9 @@
 body {
     padding-top: 50px;
 }
-
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
 @media screen and (max-width: 768px) {
     body{
         padding-top: 200px;
