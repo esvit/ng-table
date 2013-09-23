@@ -18,6 +18,7 @@ local.properties
 node_modules/
 .idea
 .temp
+bower_components
 
 # External tool builders
 .externalToolBuilders/
