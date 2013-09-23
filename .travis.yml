@@ -6,6 +6,11 @@ before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - npm install -g karma
+  - npm install -g grunt-cli
+  - npm install -g bower
+  - npm install
+  - bower install
+  - grunt
 
 script:
   - karma start --no-auto-watch --single-run --reporters dots --browsers Firefox
