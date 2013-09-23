@@ -14,7 +14,7 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
 
       // directive
-      'ng-table.js',
+      'ng-table.src.js',
 
       // tests
       'test/*.js',
@@ -22,10 +22,16 @@ module.exports = function(config) {
 
     // generate js files from html templates
     preprocessors: {
-      'tpl/*.html': 'ng-html2js'
+      'ng-table.src.js': 'coverage' 
     },
 
+    reporters: ['progress', 'coverage'],
+
     autoWatch: true,
-    browsers: ['PhantomJS']
+    browsers: ['PhantomJS'],
+    coverageReporter: {
+        type: 'lcov',
+        dir : 'out/coverage'
+    }
   });
 };

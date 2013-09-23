@@ -25,7 +25,9 @@
     "karma-jasmine": "*",
     "karma-chrome-launcher": "*",
     "karma-firefox-launcher": "*",
-    "karma-ng-html2js-preprocessor": "*"
+    "karma-ng-html2js-preprocessor": "*",
+    "coveralls": "",
+    "karma-coverage": "~0.1.0"
   },
   "scripts": {
     "test": "karma start --single-run --no-auto-watch"

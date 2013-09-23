@@ -14,3 +14,6 @@ before_script:
 
 script:
   - karma start --no-auto-watch --single-run --reporters dots --browsers Firefox
+
+after_success:
+  cat out/coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
