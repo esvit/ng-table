@@ -80,7 +80,7 @@ angular.module("ngTable", []).directive("ngTable", [
         columns = [];
         angular.forEach(element.find("tr").eq(0).find("td"), function(item) {
           var el, filter, filterTemplateURL, headerTemplateURL, parsedTitle;
-          el = $(item);
+          el = angular.element(item);
           if (el.attr("ignore-cell") && "true" === el.attr("ignore-cell")) {
             return;
           }
@@ -207,10 +207,10 @@ angular.module("ngTable", []).directive("ngTable", [
             };
             headerTemplate = $compile("<thead ng-include=\"templates.header\"></thead>")(scope);
             paginationTemplate = $compile("<div ng-include=\"templates.pagination\"></div>")(scope);
-            element.filter("thead").remove();
+            element.find("thead").remove();
             tbody = element.find('tbody');
             if (tbody[0]) {
-              $(tbody[0]).before(headerTemplate);
+              angular.element(tbody[0]).before(headerTemplate);
             } else {
               element.prepend(headerTemplate);
             }

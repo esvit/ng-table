@@ -1,3 +1,4 @@
 .temp
 .idea
 node_modules
+bower_components

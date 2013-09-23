@@ -1,11 +1,19 @@
 {
   "name": "ng-table",
-  "version": "0.2.1",
-  "main": ["ng-table.js", "ng-table.css"],
+  "version": "0.2.2",
+  "main": [
+    "ng-table.js",
+    "ng-table.css"
+  ],
   "ignore": [
-    "examples", "src"
+    "examples",
+    "src"
   ],
   "dependencies": {
-    "angular": "~1.0.6"
+    "angular": ">=1.2.0-rc.2",
+    "jquery": ">=1.10.2"
+  },
+  "devDependencies": {
+    "angular-mocks": "1.2.0-rc.2"
   }
 }

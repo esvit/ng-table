@@ -1,5 +1,13 @@
 {
-  "dependencies": {
+  "name": "ng-table",
+  "version": "0.2.2",
+  "author": "Vitalii Savchuk <esvit666@gmail.com>",
+  "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/esvit/ng-table.git"
+  },
+  "devDependencies": {
     "coffee-script": "~1.6.2",
     "grunt-regarde": "~0.1.1",
     "grunt-contrib-jade": "~0.5.0",
@@ -12,8 +20,14 @@
     "grunt-contrib-uglify": "~0.2.1",
     "grunt": "~0.4.1",
     "grunt-contrib-less": "~0.5.2",
-    "grunt-contrib-cssmin": "~0.6.1"
+    "grunt-contrib-cssmin": "~0.6.1",
+    "karma": "~0.10",
+    "karma-jasmine": "*",
+    "karma-chrome-launcher": "*",
+    "karma-firefox-launcher": "*",
+    "karma-ng-html2js-preprocessor": "*"
   },
-  "name": "ng-table",
-  "version": "0.2.1"
+  "scripts": {
+    "test": "karma start --single-run --no-auto-watch"
+  }
 }

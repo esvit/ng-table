@@ -58,7 +58,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
     i = 0
     columns = []
     angular.forEach element.find("tr").eq(0).find("td"), (item) ->
-      el = $(item)
+      el = angular.element(item)
       if (el.attr("ignore-cell") && "true" == el.attr("ignore-cell"))
         return
       parsedTitle = (scope) -> $parse(el.attr("data-title"))(scope) or el.attr("data-title") or " "
@@ -165,9 +165,9 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
 
         headerTemplate = $compile("<thead ng-include=\"templates.header\"></thead>")(scope)
         paginationTemplate = $compile("<div ng-include=\"templates.pagination\"></div>")(scope)
-        element.filter("thead").remove()
+        element.find("thead").remove()
         tbody = element.find('tbody')
-        if (tbody[0]) then $(tbody[0]).before headerTemplate else element.prepend headerTemplate
+        if (tbody[0]) then angular.element(tbody[0]).before headerTemplate else element.prepend headerTemplate
         element.addClass "ng-table"
         element.after paginationTemplate
 ])
