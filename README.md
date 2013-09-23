@@ -1,5 +1,7 @@
 Table + AngularJS
 =================
+[![Build Status](https://travis-ci.org/esvit/ng-table.png)](https://travis-ci.org/esvit/ng-table)
+
 Code licensed under New BSD License.
 
 This directive allow to liven your tables. It support sorting, filtering and pagination.
