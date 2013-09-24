@@ -178,18 +178,18 @@ angular.module("ngTable", []).directive("ngTable", [
             });
           }
           angular.forEach(columns, function(column) {
-            var promise;
+            var def;
             if (!column.filterData) {
               return;
             }
-            promise = $parse(column.filterData)(scope, {
+            def = $parse(column.filterData)(scope, {
               $column: column
             });
-            if (!(angular.isObject(promise) && angular.isFunction(promise.then))) {
-              throw new Error("Function " + column.filterData + " must be promise");
+            if (!(angular.isObject(def) && angular.isObject(def.promise))) {
+              throw new Error("Function " + column.filterData + " must be instance of $q.defer()");
             }
             delete column["filterData"];
-            return promise.then(function(data) {
+            return def.promise.then(function(data) {
               if (!angular.isArray(data)) {
                 data = [];
               }

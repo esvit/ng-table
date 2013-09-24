@@ -148,11 +148,11 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       # get data from columns
       angular.forEach columns, (column) ->
         return  unless column.filterData
-        promise = $parse(column.filterData)(scope, $column: column)
-        throw new Error("Function " + column.filterData + " must be promise")  unless (angular.isObject(promise) && angular.isFunction(promise.then))
+        def = $parse(column.filterData)(scope, $column: column)
+        throw new Error("Function " + column.filterData + " must be instance of $q.defer()")  unless (angular.isObject(def) && angular.isObject(def.promise))
         delete column["filterData"]
 
-        promise.then (data) ->
+        def.promise.then (data) ->
           data = []  unless angular.isArray(data)
           data.unshift title: "-", id: ""
           column.data = data
