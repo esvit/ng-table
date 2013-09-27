@@ -75,6 +75,7 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       columns.push
         id: i++
         title: parsedTitle
+        class: el.attr('class')
         sortable: (if el.attr("sortable") then el.attr("sortable") else false)
         filter: filter
         filterTemplateURL: filterTemplateURL
