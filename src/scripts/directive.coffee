@@ -61,7 +61,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       el = angular.element(item)
       if (el.attr("ignore-cell") && "true" == el.attr("ignore-cell"))
         return
-      parsedTitle = (scope) -> $parse(el.attr("data-title"))(scope) or el.attr("data-title") or " "
+      parsedTitle = (scope) ->
+        $parse(el.attr("x-data-title") or el.attr("data-title") or el.attr("title"))(scope, {$columns: columns}) or " "
       el.attr('data-title-text', parsedTitle())
 
       headerTemplateURL = if el.attr("header") then $parse(el.attr("header"))() else false
@@ -75,7 +76,6 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       columns.push
         id: i++
         title: parsedTitle
-        class: el.attr('class')
         sortable: (if el.attr("sortable") then el.attr("sortable") else false)
         filter: filter
         filterTemplateURL: filterTemplateURL

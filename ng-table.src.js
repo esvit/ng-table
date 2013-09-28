@@ -85,7 +85,9 @@ angular.module("ngTable", []).directive("ngTable", [
             return;
           }
           parsedTitle = function(scope) {
-            return $parse(el.attr("data-title"))(scope) || el.attr("data-title") || " ";
+            return $parse(el.attr("x-data-title") || el.attr("data-title") || el.attr("title"))(scope, {
+              $columns: columns
+            }) || " ";
           };
           el.attr('data-title-text', parsedTitle());
           headerTemplateURL = el.attr("header") ? $parse(el.attr("header"))() : false;
@@ -98,7 +100,6 @@ angular.module("ngTable", []).directive("ngTable", [
           return columns.push({
             id: i++,
             title: parsedTitle,
-            "class": el.attr('class'),
             sortable: (el.attr("sortable") ? el.attr("sortable") : false),
             filter: filter,
             filterTemplateURL: filterTemplateURL,
