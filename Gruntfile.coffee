@@ -22,22 +22,6 @@ module.exports = (grunt) ->
                     dest: './ng-table.css'
                 ]
 
-        # Compile CoffeeScript (.coffee) files to JavaScript (.js).
-        coffee:
-            scripts:
-                files: [
-                    cwd: './src/'
-                    src: 'scripts/**/*.coffee'
-                    dest: './.temp/'
-                    expand: true
-                    ext: '.js'
-                ]
-                options:
-                    # Don't include a surrounding Immediately-Invoked Function Expression (IIFE) in the compiled output.
-                    # For more information on IIFEs, please visit http://benalman.com/news/2010/11/immediately-invoked-function-expression/
-                    bare: true
-                    sourceMap: true
-                    sourceRoot : '/src'
         uglify:
             # concat js files before minification
             js:
@@ -85,17 +69,36 @@ module.exports = (grunt) ->
                     trim: './.temp/'
                     module: 'ngTable'
 
+        docular:
+            groups: [
+                groupTitle: 'ngTable'
+                groupId: 'ng-table'
+                groupIcon: 'icon-table'
+                sections: [
+                    id: 'ngTable'
+                    title: 'ngTable API'
+                    scripts: [
+                        'src/scripts/02-app.js'
+                        'src/scripts/03-params.js'
+                        'src/scripts/04-directive.js'
+                    ]
+                    showSource: true
+                ]
+            ]
+            showDocularDocs: false
+            showAngularDocs: false
+
     # Register grunt tasks supplied by grunt-contrib-*.
     # Referenced in package.json.
     # https://github.com/gruntjs/grunt-contrib
     grunt.loadNpmTasks 'grunt-contrib-clean'
-    grunt.loadNpmTasks 'grunt-contrib-coffee'
     grunt.loadNpmTasks 'grunt-contrib-copy'
     grunt.loadNpmTasks 'grunt-contrib-jade'
     grunt.loadNpmTasks 'grunt-contrib-less'
     grunt.loadNpmTasks 'grunt-contrib-cssmin'
     grunt.loadNpmTasks 'grunt-contrib-uglify'
     grunt.loadNpmTasks 'grunt-contrib-concat'
+    grunt.loadNpmTasks 'grunt-docular'
 
 
     # Register grunt tasks supplied by grunt-hustler.
@@ -105,7 +108,6 @@ module.exports = (grunt) ->
 
     grunt.registerTask 'dev', [
         'clean'
-        'coffee'
         'jade'
         'ngTemplateCache'
         'concat'
