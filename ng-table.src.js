@@ -33,16 +33,22 @@ angular.module("ngTable", []).directive("ngTable", [
           };
           $scope.$watch('params.filter', (function(value) {
             if ($scope.params.$liveFiltering) {
-              updateParams(value);
+              updateParams({
+                filter: value
+              });
               return $scope.goToPage(1);
             }
           }), true);
           $scope.$watch('params.sorting', (function(value) {
-            return updateParams(value);
+            return updateParams({
+              sorting: value
+            });
           }), true);
           updateParams = function(newParams) {
             newParams = angular.extend($scope.params, newParams);
-            $scope.paramsModel.assign($scope.$parent, new ngTableParams(newParams));
+            if ($scope.paramsModel) {
+              $scope.paramsModel.assign($scope.$parent, new ngTableParams(newParams));
+            }
             return $scope.params = angular.copy(newParams);
           };
           $scope.goToPage = function(page) {

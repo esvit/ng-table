@@ -22,19 +22,19 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
     # update result every time filter changes
     $scope.$watch('params.filter', ((value) ->
       if $scope.params.$liveFiltering
-        updateParams value
+        updateParams filter: value
         $scope.goToPage 1
     ), true)
 
     $scope.$watch('params.sorting', ((value) ->
-      updateParams value
+      updateParams sorting: value
     ), true)
 
     updateParams = (newParams) ->
       newParams = angular.extend($scope.params, newParams)
 
       # assign params in both scopes
-      $scope.paramsModel.assign $scope.$parent, new ngTableParams(newParams)
+      $scope.paramsModel.assign $scope.$parent, new ngTableParams(newParams) if $scope.paramsModel
       $scope.params = angular.copy(newParams)
 
     # goto page
