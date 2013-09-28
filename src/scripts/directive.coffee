@@ -69,7 +69,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
         $parse(el.attr("x-data-title") or el.attr("data-title") or el.attr("title"))(scope, {$columns: columns}) or " "
       el.attr('data-title-text', parsedTitle())
 
-      headerTemplateURL = if el.attr("header") then $parse(el.attr("header"))() else false
+      headerTemplateURL = (scope) ->
+        $parse(el.attr("x-data-header") or el.attr("data-header") or el.attr("header"))(scope, {$columns: columns}) or false
 
       filter = if el.attr("filter") then $parse(el.attr("filter"))() else false
       filterTemplateURL = false

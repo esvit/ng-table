@@ -1,7 +1,7 @@
 tr
-  th(class="header {{column.class}}", ng-class="{sortable: column.sortable,'sort-asc': params.sorting[column.sortable]=='asc', 'sort-desc': params.sorting[column.sortable]=='desc'}", ng-click='sortBy(column)', ng-repeat='column in columns', ng-show='column.show(this)')
-    div(ng-hide="column.headerTemplateURL", ng-bind="parse(column.title)")
-    div(ng-show="column.headerTemplateURL", ng-include="column.headerTemplateURL")
+  th(class="header {{column.class}}", ng-class="{sortable: column.sortable,'sort-asc': params.sorting[column.sortable]=='asc', 'sort-desc': params.sorting[column.sortable]=='desc'}", ng-click='sortBy(column)', ng-repeat='column in columns', ng-show='column.show(this)', ng-init="template = column.headerTemplateURL(this)")
+    div(ng-if="!template", ng-bind="parse(column.title)")
+    div(ng-if="template", ng-include="template")
 tr(ng-show='show_filter', class="ng-table-filters")
   th.filter(ng-repeat='column in columns', ng-show='column.show(this)', data-title-text="{{column.title}}")
     form(ng-submit='doFilter()')
