@@ -1,5 +1,23 @@
 describe('ng-table', function () {
-    var elm, scope;
+    var elm, scope, data = [
+        {id: 1, name: "Moroni", age: 50, money: -10},
+        {id: 2, name: "Tiancum", age: 43, money: 120},
+        {id: 3, name: "Jacob", age: 27, money: 5.5},
+        {id: 4, name: "Nephi", age: 29, money: -54},
+        {id: 5, name: "Enos", age: 34, money: 110},
+        {id: 6, name: "Tiancum", age: 43, money: 1000},
+        {id: 7, name: "Jacob", age: 27, money: -201},
+        {id: 8, name: "Nephi", age: 29, money: 100},
+        {id: 9, name: "Enos", age: 34, money: -52.5},
+        {id: 10, name: "Tiancum", age: 43, money: 52.1},
+        {id: 11, name: "Jacob", age: 27, money: 110},
+        {id: 12, name: "Nephi", age: 29, money: -55},
+        {id: 13, name: "Enos", age: 34, money: 551},
+        {id: 14, name: "Tiancum", age: 43, money: -1410},
+        {id: 15, name: "Jacob", age: 27, money: 410},
+        {id: 16, name: "Nephi", age: 29, money: 100},
+        {id: 17, name: "Enos", age: 34, money: -100}
+    ];
 
     beforeEach(module('ngTable'));
 
@@ -56,26 +74,8 @@ describe('ng-table', function () {
         expect(filters.length).toBe(3);
     }));
 
-    it('should show scope data', inject(function ($compile, $rootScope) {
-        scope.users = [
-            {id: 1, name: "Moroni", age: 50, money: -10},
-            {id: 2, name: "Tiancum", age: 43, money: 120},
-            {id: 3, name: "Jacob", age: 27, money: 5.5},
-            {id: 4, name: "Nephi", age: 29, money: -54},
-            {id: 5, name: "Enos", age: 34, money: 110},
-            {id: 6, name: "Tiancum", age: 43, money: 1000},
-            {id: 7, name: "Jacob", age: 27, money: -201},
-            {id: 8, name: "Nephi", age: 29, money: 100},
-            {id: 9, name: "Enos", age: 34, money: -52.5},
-            {id: 10, name: "Tiancum", age: 43, money: 52.1},
-            {id: 11, name: "Jacob", age: 27, money: 110},
-            {id: 12, name: "Nephi", age: 29, money: -55},
-            {id: 13, name: "Enos", age: 34, money: 551},
-            {id: 14, name: "Tiancum", age: 43, money: -1410},
-            {id: 15, name: "Jacob", age: 27, money: 410},
-            {id: 16, name: "Nephi", age: 29, money: 100},
-            {id: 17, name: "Enos", age: 34, money: -100}
-        ];
+    it('should show scope data', inject(function ($compile, $rootScope, ngTableParams) {
+        scope.users = data;
 
         scope.$digest();
 
@@ -84,6 +84,26 @@ describe('ng-table', function () {
 
         var rows = tbody.find('tr');
         expect(rows.length).toBe(scope.users.length);
+
+        var params = new ngTableParams({
+            page: 1,            // show first page
+            total: data.length, // length of data
+            count: 10           // count per page
+        });
+        scope.tableParams = params;
+        scope.$watch('tableParams', function(params) {
+            scope.users = data.slice((params.page - 1) * params.count, params.page * params.count);
+        }, true);
+        scope.$digest();
+
+        rows = tbody.find('tr');
+        expect(rows.length).toBe(10);
+
+        scope.tableParams.page = 2;
+        scope.$digest();
+        
+        rows = tbody.find('tr');
+        expect(rows.length).toBe(7);
     }));
 
 });
