@@ -37,6 +37,9 @@ angular.module("ngTable", []).directive("ngTable", [
               return $scope.goToPage(1);
             }
           }), true);
+          $scope.$watch('params.sorting', (function(value) {
+            return updateParams(value);
+          }), true);
           updateParams = function(newParams) {
             newParams = angular.extend($scope.params, newParams);
             $scope.paramsModel.assign($scope.$parent, new ngTableParams(newParams));

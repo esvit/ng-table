@@ -26,6 +26,10 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
         $scope.goToPage 1
     ), true)
 
+    $scope.$watch('params.sorting', ((value) ->
+      updateParams value
+    ), true)
+
     updateParams = (newParams) ->
       newParams = angular.extend($scope.params, newParams)
 
