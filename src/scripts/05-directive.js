@@ -18,34 +18,36 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
     function ($compile, $q, $parse) {
         'use strict';
 
-        return {
+        var ngTable = {
             restrict: 'A',
             priority: 1001,
             scope: true,
             controller: ngTableController,
             compile: function (element) {
+            
+                var tableElement = element.clone();
+                
                 var columns, i;
                 i = 0;
                 columns = [];
-                angular.forEach(element.find('tr').eq(0).find('td'), function (item) {
-                    var el, filter, filterTemplateURL, headerTemplateURL, parsedTitle;
-                    el = angular.element(item);
+                angular.forEach(element.find('tr:not(.ng-table-group)').eq(0).find('td'), function (item) {
+                    var el = angular.element(item);
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
                         return;
                     }
-                    parsedTitle = function (scope) {
+                    var parsedTitle = function (scope) {
                         return $parse(el.attr('x-data-title') || el.attr('data-title') || el.attr('title'))(scope, {
                             $columns: columns
                         }) || ' ';
                     };
                     el.attr('data-title-text', parsedTitle());
-                    headerTemplateURL = function (scope) {
+                    var headerTemplateURL = function (scope) {
                         return $parse(el.attr("x-data-header") || el.attr("data-header") || el.attr("header"))(scope, {
                             $columns: columns
                         }) || false;
                     };
-                    filter = el.attr("filter") ? $parse(el.attr("filter"))() : false;
-                    filterTemplateURL = false;
+                    var filter = el.attr("filter") ? $parse(el.attr("filter"))() : false;
+                    var filterTemplateURL = false;
                     if (filter && filter.templateURL) {
                         filterTemplateURL = filter.templateURL;
                         delete filter.templateURL;
@@ -66,7 +68,6 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     });
                 });
                 return function (scope, element, attrs) {
-                    var headerTemplate, paginationTemplate, tbody;
                     scope.columns = columns;
 
                     scope.$parent.$watch(attrs.ngTable, (function (params) {
@@ -113,10 +114,10 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             header: (attrs.templateHeader ? attrs.templateHeader : 'ng-table/header.html'),
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
-                        headerTemplate = $compile('<thead ng-include="templates.header"></thead>')(scope);
-                        paginationTemplate = $compile('<div ng-include="templates.pagination"></div>')(scope);
+                        var headerTemplate = $compile('<thead ng-include="templates.header"></thead>')(scope);
+                        var paginationTemplate = $compile('<div ng-include="templates.pagination"></div>')(scope);
                         element.find('thead').remove();
-                        tbody = element.find('tbody');
+                        var tbody = element.find('tbody');
                         if (tbody[0]) {
                             angular.element(tbody[0]).before(headerTemplate);
                         } else {
@@ -126,7 +127,11 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         return element.after(paginationTemplate);
                     }
                 };
+            },
+            link: function() {
+                console.info(tableElement);
             }
         };
+        return ngTable;
     }
 ]);

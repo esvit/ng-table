@@ -34,7 +34,7 @@ module.exports = (grunt) ->
         concat:
             # concat js files before minification
             js:
-                src: ['src/scripts/intro.js', '.temp/scripts/directive.js','.temp/scripts/*.js','src/scripts/outro.js']
+                src: ['src/scripts/*.js']
                 dest: 'ng-table.src.js'
 
         less:
