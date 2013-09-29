@@ -17,6 +17,7 @@ module.exports = function(config) {
       'src/scripts/02-*.js',
       'src/scripts/03-*.js',
       'src/scripts/04-*.js',
+      'src/scripts/05-*.js',
 
       // tests
       //'test/*.js',

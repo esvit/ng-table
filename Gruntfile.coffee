@@ -80,7 +80,8 @@ module.exports = (grunt) ->
                     scripts: [
                         'src/scripts/02-app.js'
                         'src/scripts/03-params.js'
-                        'src/scripts/04-directive.js'
+                        'src/scripts/04-controller.js'
+                        'src/scripts/05-directive.js'
                     ]
                     showSource: true
                 ]
