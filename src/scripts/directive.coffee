@@ -52,10 +52,11 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       updateParams page: 1
 
     $scope.sortBy = (column) ->
-      return  unless column.sortable
-      sorting = $scope.params.sorting and $scope.params.sorting[column.sortable] and ($scope.params.sorting[column.sortable] is "desc")
+      parsedSortable = $scope.parse(column.sortable)
+      return  unless parsedSortable
+      sorting = $scope.params.sorting and $scope.params.sorting[parsedSortable] and ($scope.params.sorting[parsedSortable] is "desc")
       sortingParams = {}
-      sortingParams[column.sortable] = (if sorting then "asc" else "desc")
+      sortingParams[parsedSortable] = (if sorting then "asc" else "desc")
       updateParams sorting: sortingParams
   ]
   compile: (element, attrs) ->
@@ -65,9 +66,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       el = angular.element(item)
       if (el.attr("ignore-cell") && "true" == el.attr("ignore-cell"))
         return
-      parsedTitle = (scope) ->
-        $parse(el.attr("x-data-title") or el.attr("data-title") or el.attr("title"))(scope, {$columns: columns}) or " "
-      el.attr('data-title-text', parsedTitle())
+      parsedAttribute = (attr, defaultValue) ->
+        (scope) -> $parse(el.attr("x-data-#{attr}") or el.attr("data-#{attr}") or el.attr(attr))(scope, {$columns: columns}) or defaultValue
 
       headerTemplateURL = (scope) ->
         $parse(el.attr("x-data-header") or el.attr("data-header") or el.attr("header"))(scope, {$columns: columns}) or false
@@ -80,8 +80,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
 
       columns.push
         id: i++
-        title: parsedTitle
-        sortable: (if el.attr("sortable") then el.attr("sortable") else false)
+        title: parsedAttribute("title", " ")
+        sortable: parsedAttribute("sortable", false)
         filter: filter
         filterTemplateURL: filterTemplateURL
         headerTemplateURL: headerTemplateURL
