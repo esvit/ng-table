@@ -47,10 +47,10 @@
         <div loading-container="loading">
             <table ng-table="tableParams" show-filter="true" class="table">
                 <tr ng-repeat="user in users">
-                    <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="name">
+                    <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="'name'">
                         {{user.name}}
                     </td>
-                    <td data-title="'Age'" filter="{ 'action': 'button' }" sortable="age">
+                    <td data-title="'Age'" filter="{ 'action': 'button' }" sortable="'age'">
                         {{user.age}}
                     </td>
                 </tr>
