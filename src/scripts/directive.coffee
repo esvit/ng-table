@@ -52,10 +52,11 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       updateParams page: 1
 
     $scope.sortBy = (column) ->
-      return  unless column.sortable
-      sorting = $scope.params.sorting and $scope.params.sorting[column.sortable] and ($scope.params.sorting[column.sortable] is "desc")
+      parsedSortable = $scope.parse(column.sortable)
+      return  unless parsedSortable
+      sorting = $scope.params.sorting and $scope.params.sorting[parsedSortable] and ($scope.params.sorting[parsedSortable] is "desc")
       sortingParams = {}
-      sortingParams[column.sortable] = (if sorting then "asc" else "desc")
+      sortingParams[parsedSortable] = (if sorting then "asc" else "desc")
       updateParams sorting: sortingParams
   ]
   compile: (element, attrs) ->
@@ -79,8 +80,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
 
       columns.push
         id: i++
-        sortable: (if el.attr("sortable") then el.attr("sortable") else false)
         title: parsedAttribute("title", " ")
+        sortable: parsedAttribute("sortable", false)
         filter: filter
         filterTemplateURL: filterTemplateURL
         headerTemplateURL: headerTemplateURL
