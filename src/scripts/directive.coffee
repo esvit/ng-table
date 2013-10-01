@@ -68,6 +68,8 @@ angular.module("ngTable", []).directive("ngTable", ["$compile", "$q", "$parse", 
       parsedTitle = (scope) ->
         $parse(el.attr("x-data-title") or el.attr("data-title") or el.attr("title"))(scope, {$columns: columns}) or " "
       el.attr('data-title-text', parsedTitle())
+      parsedAttribute = (attr, defaultValue) ->
+        (scope) -> $parse(el.attr("x-data-#{attr}") or el.attr("data-#{attr}") or el.attr(attr))(scope, {$columns: columns}) or defaultValue
 
       headerTemplateURL = (scope) ->
         $parse(el.attr("x-data-header") or el.attr("data-header") or el.attr("header"))(scope, {$columns: columns}) or false
