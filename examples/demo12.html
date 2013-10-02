@@ -12,10 +12,7 @@
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
-        <script src="../src/scripts/02-app.js"></script>
-        <script src="../src/scripts/03-params.js"></script>
-        <script src="../src/scripts/04-controller.js"></script>
-        <script src="../src/scripts/05-directive.js"></script>
+        <script src="../ng-table.src.js"></script>
         <link rel="stylesheet" href="../ng-table.css">
     </head>
 <body ng-app="main">
@@ -26,7 +23,7 @@
         <table ng-table="tableParams" class="table ng-table-responsive">
             <tbody ng-repeat="group in $groups">
                 <tr class="ng-table-group">
-                    <td colspan="2">
+                    <td colspan="{{$columns.length}}">
                         <a href="" ng-click="group.$hideRows = !group.$hideRows">
                             <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
                             <strong>{{ group.value }}</strong>
@@ -70,16 +67,16 @@
                 count: 10          // count per page
             }, {
                 groupBy: 'role',
-                total: data.length
-            });
-            $scope.tableParams.getData = function(params) {
-                var orderedData = params.sorting ? 
-                                    $filter('orderBy')(data, $scope.tableParams.orderBy()) :
-                                    data;
-                $scope.users = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+                total: data.length,
+                getData: function(params) {
+                    var orderedData = params.sorting() ?
+                            $filter('orderBy')(data, $scope.tableParams.orderBy()) :
+                            data;
+                    $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
 
-                return $scope.users;
-            };
+                    return $scope.users;
+                }
+            });
         })
         </script>
 

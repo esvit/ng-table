@@ -62,20 +62,7 @@ app.factory('ngTableParams', function () {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
     var ngTableParams = function (baseParameters, baseSettings) {
-    
-        var params = {
-            page: 1,
-            count: 1,
-            filter: {},
-            sorting: {},
-            group: {},
-            groupBy: null
-        };
-        var settings = {
-            liveFiltering: false,
-            total: 0,
-            counts: [10, 25, 50, 100]
-        };
+        var self = this;
 
         /**
          * @ngdoc method
@@ -148,6 +135,19 @@ app.factory('ngTableParams', function () {
 
         /**
          * @ngdoc method
+         * @name ngTable.factory:ngTableParams#count
+         * @methodOf ngTable.factory:ngTableParams
+         * @description If parameter count not set return current count per page else set count per page
+         *
+         * @param {string} count Count per number
+         * @returns {Object|Number} Count per page or `this`
+         */
+        this.count = function (count) {
+            return count ? this.parameters({'count': count}) : params.count;
+        };
+
+        /**
+         * @ngdoc method
          * @name ngTable.factory:ngTableParams#filter
          * @methodOf ngTable.factory:ngTableParams
          * @description If parameter page not set return current filter else set current filter
@@ -210,7 +210,7 @@ app.factory('ngTableParams', function () {
          * @returns {Array} Array of unique groups
          */
         this.getGroups = function (column) {
-            data = this.getData(params);
+            data = this.getData(self);
             
             var groups = {};
             for (var k in data) {
@@ -329,6 +329,22 @@ app.factory('ngTableParams', function () {
             return pairs;
         };
 
+        var params = this.$params = {
+            page: 1,
+            count: 1,
+            filter: {},
+            sorting: {},
+            group: {},
+            groupBy: null
+        };
+        var settings = {
+            liveFiltering: false,
+            total: 0,
+            counts: [10, 25, 50, 100],
+            getGroups: this.getGroups,
+            getData: this.getData
+        };
+
         this.settings(baseSettings);
         this.parameters(baseParameters, true);
         return this;
@@ -351,7 +367,16 @@ app.factory('ngTableParams', function () {
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
 var ngTableController = ['$scope', 'ngTableParams', function($scope, ngTableParams) {
+    if (!$scope.params) {
+        $scope.params = new ngTableParams();
+    }
 
+    $scope.$watch('params.$params', function(params) {
+        $scope.$groups = $scope.params.settings().getGroups($scope.params.settings().groupBy);
+        console.info($scope.$groups);
+        $scope.pages = $scope.params.generatePagesArray($scope.params.page(), $scope.params.settings().total, $scope.params.parameters().count);
+    }, true);
+/*
     var updateParams = function (newParams) {
         newParams = angular.extend($scope.params, newParams);
         $scope.$groups = $scope.params.getGroups($scope.params.settings().groupBy);
@@ -361,10 +386,6 @@ var ngTableController = ['$scope', 'ngTableParams', function($scope, ngTablePara
         $scope.params = angular.copy(newParams);
     };
 
-    $scope.params = $scope.params || {
-        page: 1,
-        count: 10
-    };
     // update result every time filter changes
     $scope.$watch('params.filter', function (value) {
         if ($scope.params.$liveFiltering) {
@@ -399,16 +420,16 @@ var ngTableController = ['$scope', 'ngTableParams', function($scope, ngTablePara
         updateParams({
             page: 1
         });
-    };
+    };*/
     $scope.sortBy = function (column) {
         var sorting, sortingParams;
         if (!column.sortable) {
             return;
         }
-        sorting = $scope.params.sorting && $scope.params.sorting[column.sortable] && ($scope.params.sorting[column.sortable] === "desc");
+        sorting = $scope.params.sorting() && $scope.params.sorting()[column.sortable] && ($scope.params.sorting()[column.sortable] === "desc");
         sortingParams = {};
         sortingParams[column.sortable] = (sorting ? 'asc' : 'desc');
-        updateParams({
+        $scope.params.parameters({
             sorting: sortingParams
         });
     };
@@ -439,12 +460,8 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
             scope: true,
             controller: ngTableController,
             compile: function (element) {
-            
-                var tableElement = element.clone();
-                
-                var columns, i;
-                i = 0;
-                columns = [];
+                var columns = [], i = 0;
+
                 angular.forEach(element.find('tr:not(.ng-table-group)').eq(0).find('td'), function (item) {
                     var el = angular.element(item);
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
@@ -485,13 +502,12 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 return function (scope, element, attrs) {
                     scope.columns = columns;
 
-                    scope.$parent.$watch(attrs.ngTable, (function (params) {
+                    scope.$watch(attrs.ngTable, (function (params) {
                         if (angular.isUndefined(params)) {
                             return;
                         }
                         scope.paramsModel = $parse(attrs.ngTable);
-                        scope.pages = params.generatePagesArray(params.page(), params.settings().total, params.parameters().count);
-                        scope.params = angular.copy(params);
+                        scope.params = params;
                     }), true);
                     scope.parse = function (text) {
                         return text(scope);
@@ -550,5 +566,12 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
         return ngTable;
     }
 ]);
+angular.module('ngTable').run(['$templateCache', function ($templateCache) {
+	$templateCache.put('ng-table/filters/button.html', '<button ng-click="doFilter()" ng-show="filter==\'button\'" class="btn btn-primary btn-block"> Filter </button>');
+	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in column.data" ng-model="params.filter[name]" ng-show="filter==\'select\'" class="filter filter-select"> </select>');
+	$templateCache.put('ng-table/filters/text.html', '<input type="text" ng-model="params.$params.filter[name]" ng-if="filter==\'text\'" class="input-filter"/>');
+	$templateCache.put('ng-table/header.html', '<tr> <th ng-repeat="column in columns" ng-class="{ \'sortable\': column.sortable, \'sort-asc\': params.sorting()[column.sortable]==\'asc\', \'sort-desc\': params.sorting()[column.sortable]==\'desc\', column.class: true }" ng-click="sortBy(column)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header"> <div ng-if="!template" ng-bind="parse(column.title)"></div> <div ng-if="template" ng-include="template"></div> </th> </tr> <tr ng-show="show_filter" class="ng-table-filters"> <th ng-repeat="column in columns" ng-show="column.show(this)" data-title-text="{{column.title}}" class="filter"> <form ng-submit="doFilter()"> <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/> <div ng-repeat="(name, filter) in column.filter"> <div ng-if="column.filterTemplateURL"> <div ng-include="column.filterTemplateURL"></div> </div> <div ng-if="!column.filterTemplateURL"> <div ng-include="\'ng-table/filters/\' + filter + \'.html\'"></div> </div> </div> </form> </th> </tr>');
+	$templateCache.put('ng-table/pager.html', '<div class="ng-cloak"> <div ng-if="params.settings().counts.length" class="btn-group pull-right"> <button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default btn-xs"> {{count}} </button> </div> <ul class="pagination"> <li ng-class="{\'disabled\': !page.active}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">«</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href="">{{page.number}}</a> <a ng-switch-when="page" ng-click="params.page(page.number)" href="">{{page.number}}</a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="">…</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href="">{{page.number}}</a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">»</a> </li> </ul> </div>');
+}]);
     return app;
 }));

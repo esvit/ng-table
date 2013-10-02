@@ -21,7 +21,7 @@ module.exports = function(config) {
 
       // tests
       //'test/*.js',
-      'test/tableParamsSpec.js'
+      'test/tableControllerSpec.js'
     ],
 
     // generate js files from html templates

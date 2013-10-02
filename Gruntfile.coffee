@@ -34,7 +34,15 @@ module.exports = (grunt) ->
         concat:
             # concat js files before minification
             js:
-                src: ['src/scripts/*.js']
+                src: [
+                    'src/scripts/01-*.js'
+                    'src/scripts/02-*.js'
+                    'src/scripts/03-*.js'
+                    'src/scripts/04-*.js'
+                    'src/scripts/05-*.js'
+                    './.temp/scripts/views.js'
+                    'src/scripts/06-*.js'
+                ]
                 dest: 'ng-table.src.js'
 
         less:
@@ -49,24 +57,12 @@ module.exports = (grunt) ->
                 options:
                     banner: '<%= banner %>'
 
-        # Compile jade files (.jade) to HTML (.html).
-        #
-        jade:
-            views:
-                files:[
-                    src:'**/*.jade'
-                    dest: './.temp/ng-table/'
-                    cwd: './src/views'
-                    ext: ".html"
-                    expand: true
-                ]
-
         ngTemplateCache:
             views:
                 files:
-                    './.temp/scripts/views.js': './.temp/ng-table/**/*.html'
+                    './.temp/scripts/views.js': 'src/ng-table/**/*.html'
                 options:
-                    trim: './.temp/'
+                    trim: 'src/'
                     module: 'ngTable'
 
         docular:
@@ -94,7 +90,6 @@ module.exports = (grunt) ->
     # https://github.com/gruntjs/grunt-contrib
     grunt.loadNpmTasks 'grunt-contrib-clean'
     grunt.loadNpmTasks 'grunt-contrib-copy'
-    grunt.loadNpmTasks 'grunt-contrib-jade'
     grunt.loadNpmTasks 'grunt-contrib-less'
     grunt.loadNpmTasks 'grunt-contrib-cssmin'
     grunt.loadNpmTasks 'grunt-contrib-uglify'
@@ -109,7 +104,6 @@ module.exports = (grunt) ->
 
     grunt.registerTask 'dev', [
         'clean'
-        'jade'
         'ngTemplateCache'
         'concat'
         'less'

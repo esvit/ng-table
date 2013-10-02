@@ -24,12 +24,8 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
             scope: true,
             controller: ngTableController,
             compile: function (element) {
-            
-                var tableElement = element.clone();
-                
-                var columns, i;
-                i = 0;
-                columns = [];
+                var columns = [], i = 0;
+
                 angular.forEach(element.find('tr:not(.ng-table-group)').eq(0).find('td'), function (item) {
                     var el = angular.element(item);
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
@@ -70,13 +66,12 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 return function (scope, element, attrs) {
                     scope.columns = columns;
 
-                    scope.$parent.$watch(attrs.ngTable, (function (params) {
+                    scope.$watch(attrs.ngTable, (function (params) {
                         if (angular.isUndefined(params)) {
                             return;
                         }
                         scope.paramsModel = $parse(attrs.ngTable);
-                        scope.pages = params.generatePagesArray(params.page(), params.settings().total, params.parameters().count);
-                        scope.params = angular.copy(params);
+                        scope.params = params;
                     }), true);
                     scope.parse = function (text) {
                         return text(scope);

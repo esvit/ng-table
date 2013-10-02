@@ -16,20 +16,7 @@ app.factory('ngTableParams', function () {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
     var ngTableParams = function (baseParameters, baseSettings) {
-    
-        var params = {
-            page: 1,
-            count: 1,
-            filter: {},
-            sorting: {},
-            group: {},
-            groupBy: null
-        };
-        var settings = {
-            liveFiltering: false,
-            total: 0,
-            counts: [10, 25, 50, 100]
-        };
+        var self = this;
 
         /**
          * @ngdoc method
@@ -102,6 +89,19 @@ app.factory('ngTableParams', function () {
 
         /**
          * @ngdoc method
+         * @name ngTable.factory:ngTableParams#count
+         * @methodOf ngTable.factory:ngTableParams
+         * @description If parameter count not set return current count per page else set count per page
+         *
+         * @param {string} count Count per number
+         * @returns {Object|Number} Count per page or `this`
+         */
+        this.count = function (count) {
+            return count ? this.parameters({'count': count}) : params.count;
+        };
+
+        /**
+         * @ngdoc method
          * @name ngTable.factory:ngTableParams#filter
          * @methodOf ngTable.factory:ngTableParams
          * @description If parameter page not set return current filter else set current filter
@@ -164,7 +164,7 @@ app.factory('ngTableParams', function () {
          * @returns {Array} Array of unique groups
          */
         this.getGroups = function (column) {
-            data = this.getData(params);
+            data = this.getData(self);
             
             var groups = {};
             for (var k in data) {
@@ -281,6 +281,22 @@ app.factory('ngTableParams', function () {
                 }
             }
             return pairs;
+        };
+
+        var params = this.$params = {
+            page: 1,
+            count: 1,
+            filter: {},
+            sorting: {},
+            group: {},
+            groupBy: null
+        };
+        var settings = {
+            liveFiltering: false,
+            total: 0,
+            counts: [10, 25, 50, 100],
+            getGroups: this.getGroups,
+            getData: this.getData
         };
 
         this.settings(baseSettings);

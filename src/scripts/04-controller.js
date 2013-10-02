@@ -14,7 +14,16 @@
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
 var ngTableController = ['$scope', 'ngTableParams', function($scope, ngTableParams) {
+    if (!$scope.params) {
+        $scope.params = new ngTableParams();
+    }
 
+    $scope.$watch('params.$params', function(params) {
+        $scope.$groups = $scope.params.settings().getGroups($scope.params.settings().groupBy);
+        console.info($scope.$groups);
+        $scope.pages = $scope.params.generatePagesArray($scope.params.page(), $scope.params.settings().total, $scope.params.parameters().count);
+    }, true);
+/*
     var updateParams = function (newParams) {
         newParams = angular.extend($scope.params, newParams);
         $scope.$groups = $scope.params.getGroups($scope.params.settings().groupBy);
@@ -24,10 +33,6 @@ var ngTableController = ['$scope', 'ngTableParams', function($scope, ngTablePara
         $scope.params = angular.copy(newParams);
     };
 
-    $scope.params = $scope.params || {
-        page: 1,
-        count: 10
-    };
     // update result every time filter changes
     $scope.$watch('params.filter', function (value) {
         if ($scope.params.$liveFiltering) {
@@ -62,16 +67,16 @@ var ngTableController = ['$scope', 'ngTableParams', function($scope, ngTablePara
         updateParams({
             page: 1
         });
-    };
+    };*/
     $scope.sortBy = function (column) {
         var sorting, sortingParams;
         if (!column.sortable) {
             return;
         }
-        sorting = $scope.params.sorting && $scope.params.sorting[column.sortable] && ($scope.params.sorting[column.sortable] === "desc");
+        sorting = $scope.params.sorting() && $scope.params.sorting()[column.sortable] && ($scope.params.sorting()[column.sortable] === "desc");
         sortingParams = {};
         sortingParams[column.sortable] = (sorting ? 'asc' : 'desc');
-        updateParams({
+        $scope.params.parameters({
             sorting: sortingParams
         });
     };
