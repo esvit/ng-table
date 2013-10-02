@@ -144,7 +144,9 @@ describe('ngTableParams', function () {
         expect(params.settings()).toEqual({
             liveFiltering: false,
             total: 0,
-            counts: [10, 25, 50, 100]
+            counts: [10, 25, 50, 100],
+            getData: params.getData,
+            getGroups: params.getGroups
         });
         
         params = new ngTableParams({
@@ -157,7 +159,9 @@ describe('ngTableParams', function () {
         expect(params.settings()).toEqual({
             liveFiltering: true,
             total: 100,
-            counts: [10, 25, 50, 100]
+            counts: [10, 25, 50, 100],
+            getData: params.getData,
+            getGroups: params.getGroups
         });
     }));
 
