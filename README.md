@@ -9,6 +9,11 @@ Header row with titles and filters automatic generated on compilation step.
 
 ## Updates
 
+### v0.3.0
+- I abandoned from CoffeeScript in favor of a javascript, fully agree with http://blog.ponyfoo.com/2013/09/28/we-dont-want-your-coffee
+
+
+### v0.2.2
 In functions that return data for the filters were removed `.promise`
 ```
 $scope.names = function(column) {
