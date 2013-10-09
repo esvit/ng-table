@@ -577,8 +577,8 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             header: (attrs.templateHeader ? attrs.templateHeader : 'ng-table/header.html'),
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
-                        var headerTemplate = $compile('<thead ng-include="templates.header"></thead>')(scope);
-                        var paginationTemplate = $compile('<div ng-include="templates.pagination"></div>')(scope);
+                        var headerTemplate = angular.element('<thead ng-include="templates.header"></thead>');
+                        var paginationTemplate = angular.element('<div ng-include="templates.pagination"></div>');
                         element.find('thead').remove();
                         var tbody = element.find('tbody');
                         if (tbody[0]) {
@@ -586,6 +586,8 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         } else {
                             element.prepend(headerTemplate);
                         }
+                        $compile(headerTemplate)(scope);
+                        $compile(paginationTemplate)(scope);
                         element.addClass('ng-table');
                         return element.after(paginationTemplate);
                     }

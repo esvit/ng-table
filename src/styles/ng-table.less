@@ -18,25 +18,41 @@
         padding-right: 18px;
         position: relative;
 
-        &:after {
+        &:after, &:before {
           content: "";
           border-width: 0 4px 4px;
           border-style: solid;
           border-color: #000 transparent;
-          visibility: hidden;
+          visibility: visible;
           right: 8px;
           top: 50%;
           position: absolute;
-          margin-top: -2px;
+          opacity: .3;
+          margin-top: -4px;
+        }
+        &:before {
+          margin-top: 2px;
+          border-bottom: none;
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          border-top: 4px solid #000;
         }
       }
 
-      div:hover:after {
+      div:hover:after, div:hover:before {
+        opacity: 1;
         visibility: visible;
       }
       &.sort-desc, &.sort-asc {
         background-color: rgba(141, 192, 219, 0.25);
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+
+        div:after {
+          margin-top: -2px;
+        }
+        div:before {
+          visibility: hidden;
+        }
       }
       &.sort-asc div:after, &.sort-asc div:hover:after {
         visibility: visible;
