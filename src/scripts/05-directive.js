@@ -18,7 +18,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
     function ($compile, $q, $parse) {
         'use strict';
 
-        var ngTable = {
+        return {
             restrict: 'A',
             priority: 1001,
             scope: true,
@@ -64,7 +64,8 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     });
                 });
                 return function (scope, element, attrs) {
-                    scope.columns = columns;
+                    scope.$loading = false;
+                    scope.$columns = columns;
 
                     scope.$watch(attrs.ngTable, (function (params) {
                         if (angular.isUndefined(params)) {
@@ -122,11 +123,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         return element.after(paginationTemplate);
                     }
                 };
-            },
-            link: function() {
-                console.info(tableElement);
             }
-        };
-        return ngTable;
+        }
     }
 ]);

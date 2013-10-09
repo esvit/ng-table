@@ -23,11 +23,11 @@
         <p><strong>Filter:</strong> {{tableParams.filter()|json}}
 
         <table ng-table="tableParams" show-filter="true" class="table">
-            <tr ng-repeat="user in users">
+            <tr ng-repeat="user in $data">
                 <td data-title="'Name'" filter="{ 'name': 'text' }">
                     {{user.name}}
                 </td>
-                <td data-title="'Age'" filter="{ 'action': 'button' }">
+                <td data-title="'Age'">
                     {{user.age}}
                 </td>
             </tr>
@@ -62,14 +62,16 @@
                 }
             }, {
                 total: data.length, // length of data
-                getData: function(params) {
+                getData: function($defer, params) {
                     // use build-in angular filter
                     var orderedData = params.filter() ?
                            $filter('filter')(data, params.filter()) :
                            data;
 
-                    params.total = orderedData.length; // set total for recalc pagination
                     $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+
+                    params.total(orderedData.length); // set total for recalc pagination
+                    $defer.resolve($scope.users);
                 }
             });
         })

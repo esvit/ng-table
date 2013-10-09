@@ -8,7 +8,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="js/angular-resource.min.js"></script>
@@ -41,16 +41,17 @@
 
 <div ng-controller="DemoCtrl">
 
-    <button ng-click="tableParams.sorting = {}" class="btn pull-right">Clear sorting</button>
+    <button ng-click="tableParams.sorting({})" class="btn pull-right">Clear sorting</button>
     <div class="clearfix"></div>
 
-        <div loading-container="loading">
+        <div loading-container="tableParams.settings().$loading">
             <table ng-table="tableParams" show-filter="true" class="table">
-                <tr ng-repeat="user in users">
+                <tr ng-repeat="user in $data">
                     <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="name">
                         {{user.name}}
+                        {{$loading}}
                     </td>
-                    <td data-title="'Age'" filter="{ 'action': 'button' }" sortable="age">
+                    <td data-title="'Age'" sortable="age">
                         {{user.age}}
                     </td>
                 </tr>
@@ -113,11 +114,11 @@
                             {name: "Enos", age: 34}];
 
                     var params = new ngTableParams(requestParams);
-                    data = params.filter ? $filter('filter')(data, params.filter) : data;
-                    data = params.sorting ? $filter('orderBy')(data, params.orderBy()) : data;
+                    data = params.filter() ? $filter('filter')(data, params.filter()) : data;
+                    data = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
 
                     var total = data.length;
-                    data = data.slice((params.page - 1) * params.count, params.page * params.count);
+                    data = data.slice((params.page() - 1) * params.count(), params.page() * params.count());
 
                     return [200, {
                         result: data,
@@ -144,27 +145,24 @@
 
             $scope.tableParams = new ngTableParams({
                 page: 1,            // show first page
-                total: 0,           // length of data
                 count: 10,          // count per page
                 sorting: {
                     name: 'asc'     // initial sorting
                 }
+            }, {
+                total: 0,           // length of data
+                getData: function($defer, params) {
+                    // ajax request to api
+                    Api.get(params.url(), function(data) {
+                        $timeout(function() {
+                            // update table params
+                            params.total(data.total);
+                            // set new data
+                            $defer.resolve(data.result);
+                        }, 500);
+                    });
+                }
             });
-
-            $scope.$watch('tableParams', function(params) {
-                $scope.loading = true;
-                // ajax request to api
-                Api.get(params.url(), function(data) {
-                    $timeout(function() {
-                    $scope.loading = false;
-                    // set new data
-                    $scope.users = data.result;
-
-                    // update table params
-                    $scope.tableParams.total = data.total;
-                    }, 500);
-                });
-            }, true);
         })
         </script>
 

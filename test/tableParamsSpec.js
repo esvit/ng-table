@@ -32,31 +32,31 @@ describe('ngTableParams', function () {
     it('ngTableParams test generatePagesArray', inject(function (ngTableParams) {
         var params = new ngTableParams();
         expect(params.generatePagesArray(1, 30, 10)).toEqual([
-            { type : 'prev', number : 1, active : false },
-            { type : 'first', number : 1, active : false },
-            { type : 'page', number : 2, active : true },
-            { type : 'last', number : 3, active: true },
-            { type : 'next', number : 2, active: true }
+            { type: 'prev', number: 1, active: false },
+            { type: 'first', number: 1, active: false },
+            { type: 'page', number: 2, active: true },
+            { type: 'last', number: 3, active: true },
+            { type: 'next', number: 2, active: true }
         ]);
         expect(params.generatePagesArray(2, 30, 10)).toEqual([
-            { type : 'prev', number : 1, active : true },
-            { type : 'first', number : 1, active : true },
-            { type : 'page', number : 2, active : false },
-            { type : 'last', number : 3, active: true },
-            { type : 'next', number : 3, active: true }
+            { type: 'prev', number: 1, active: true },
+            { type: 'first', number: 1, active: true },
+            { type: 'page', number: 2, active: false },
+            { type: 'last', number: 3, active: true },
+            { type: 'next', number: 3, active: true }
         ]);
         expect(params.generatePagesArray(2, 100, 10)).toEqual([
-            { type : 'prev', number : 1, active : true },
-            { type : 'first', number : 1, active : true },
-            { type : 'page', number : 2, active : false },
-            { type : 'page', number : 3, active : true },
-            { type : 'page', number : 4, active : true },
-            { type : 'page', number : 5, active : true },
-            { type : 'page', number : 6, active : true },
-            { type : 'page', number : 7, active : true },
-            { type : 'more', active: false },
-            { type : 'last', number : 10, active: true },
-            { type : 'next', number : 3, active: true }
+            { type: 'prev', number: 1, active: true },
+            { type: 'first', number: 1, active: true },
+            { type: 'page', number: 2, active: false },
+            { type: 'page', number: 3, active: true },
+            { type: 'page', number: 4, active: true },
+            { type: 'page', number: 5, active: true },
+            { type: 'page', number: 6, active: true },
+            { type: 'page', number: 7, active: true },
+            { type: 'more', active: false },
+            { type: 'last', number: 10, active: true },
+            { type: 'next', number: 3, active: true }
         ]);
     }));
 
@@ -142,22 +142,21 @@ describe('ngTableParams', function () {
         });
 
         expect(params.settings()).toEqual({
-            liveFiltering: false,
+            $loading: false,
             total: 0,
             counts: [10, 25, 50, 100],
             getData: params.getData,
             getGroups: params.getGroups
         });
-        
+
         params = new ngTableParams({
             'sorting[name]': 'asc'
         }, {
-            liveFiltering: true,
             total: 100
         });
 
         expect(params.settings()).toEqual({
-            liveFiltering: true,
+            $loading: false,
             total: 100,
             counts: [10, 25, 50, 100],
             getData: params.getData,
@@ -165,100 +164,112 @@ describe('ngTableParams', function () {
         });
     }));
 
-    it('ngTableParams test getData', inject(function (ngTableParams) {
+    it('ngTableParams test getData', inject(function ($q, ngTableParams) {
         var params = new ngTableParams({
             'sorting[name]': 'asc'
         });
-
-        expect(params.getData()).toEqual([]);
+        $defer = $q.defer();
+        $defer.promise.then(function(data) {
+            expect(data).toEqual([]);
+        });
+        params.getData($defer);
     }));
 
-    it('ngTableParams test grouping', inject(function (ngTableParams) {
+    it('ngTableParams test grouping', inject(function ($q, ngTableParams) {
         var params = new ngTableParams({
             'sorting[name]': 'asc'
         });
-        params.getData = function() {
-            return data;
-        }
+        params.getData = function ($defer) {
+            $defer.resolve(data);
+        };
 
-        expect(params.getGroups('role')).toEqual([
-            {
-                value: 'Administrator',
-                data: [
-                    {name: "Moroni", age: 50, role: 'Administrator'},
-                    {name: "Tiancum", age: 43, role: 'Administrator'},
-                    {name: "Jacob", age: 27, role: 'Administrator'}
-                ]
-            },
-            {
-                value: 'Moderator',
-                data: [
-                    {name: "Nephi", age: 29, role: 'Moderator'},
-                    {name: "Nephi", age: 29, role: 'Moderator'},
-                    {name: "Tiancum", age: 43, role: 'Moderator'},
-                    {name: "Enos", age: 34, role: 'Moderator'}
-                ]
-            },
-            {
-                value: 'User',
-                data: [
-                    {name: "Enos", age: 34, role: 'User'},
-                    {name: "Tiancum", age: 43, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Enos", age: 34, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Nephi", age: 29, role: 'User'},
-                    {name: "Tiancum", age: 43, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Nephi", age: 29, role: 'User'},
-                    {name: "Enos", age: 34, role: 'User'}
-                ]
-            }
-        ]);
+        $defer = $q.defer();
+        $defer.promise.then(function (data) {
 
-        expect(params.getGroups('age')).toEqual([
-            {
-                value: 50,
-                data: [
-                    {name: "Moroni", age: 50, role: 'Administrator'}
-                ]
-            },
-            {
-                value: 43,
-                data: [
-                    {name: "Tiancum", age: 43, role: 'Administrator'},
-                    {name: "Tiancum", age: 43, role: 'User'},
-                    {name: "Tiancum", age: 43, role: 'Moderator'},
-                    {name: "Tiancum", age: 43, role: 'User'}
-                ]
-            },
-            {
-                value: 27,
-                data: [
-                    {name: "Jacob", age: 27, role: 'Administrator'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'}
-                ]
-            },
-            {
-                value: 29,
-                data: [
-                    {name: "Nephi", age: 29, role: 'Moderator'},
-                    {name: "Nephi", age: 29, role: 'Moderator'},
-                    {name: "Nephi", age: 29, role: 'User'},
-                    {name: "Nephi", age: 29, role: 'User'}
-                ]
-            },
-            {
-                value: 34,
-                data: [
-                    {name: "Enos", age: 34, role: 'User'},
-                    {name: "Enos", age: 34, role: 'User'},
-                    {name: "Enos", age: 34, role: 'Moderator'},
-                    {name: "Enos", age: 34, role: 'User'}
-                ]
-            }
-        ]);
+            expect(data).toEqual([
+                {
+                    value: 'Administrator',
+                    data: [
+                        {name: "Moroni", age: 50, role: 'Administrator'},
+                        {name: "Tiancum", age: 43, role: 'Administrator'},
+                        {name: "Jacob", age: 27, role: 'Administrator'}
+                    ]
+                },
+                {
+                    value: 'Moderator',
+                    data: [
+                        {name: "Nephi", age: 29, role: 'Moderator'},
+                        {name: "Nephi", age: 29, role: 'Moderator'},
+                        {name: "Tiancum", age: 43, role: 'Moderator'},
+                        {name: "Enos", age: 34, role: 'Moderator'}
+                    ]
+                },
+                {
+                    value: 'User',
+                    data: [
+                        {name: "Enos", age: 34, role: 'User'},
+                        {name: "Tiancum", age: 43, role: 'User'},
+                        {name: "Jacob", age: 27, role: 'User'},
+                        {name: "Enos", age: 34, role: 'User'},
+                        {name: "Jacob", age: 27, role: 'User'},
+                        {name: "Nephi", age: 29, role: 'User'},
+                        {name: "Tiancum", age: 43, role: 'User'},
+                        {name: "Jacob", age: 27, role: 'User'},
+                        {name: "Nephi", age: 29, role: 'User'},
+                        {name: "Enos", age: 34, role: 'User'}
+                    ]
+                }
+            ]);
+        });
+        params.getGroups($defer, 'role');
+
+        $defer = $q.defer();
+        $defer.promise.then(function (data) {
+            expect(data).toEqual([
+                {
+                    value: 50,
+                    data: [
+                        {name: "Moroni", age: 50, role: 'Administrator'}
+                    ]
+                },
+                {
+                    value: 43,
+                    data: [
+                        {name: "Tiancum", age: 43, role: 'Administrator'},
+                        {name: "Tiancum", age: 43, role: 'User'},
+                        {name: "Tiancum", age: 43, role: 'Moderator'},
+                        {name: "Tiancum", age: 43, role: 'User'}
+                    ]
+                },
+                {
+                    value: 27,
+                    data: [
+                        {name: "Jacob", age: 27, role: 'Administrator'},
+                        {name: "Jacob", age: 27, role: 'User'},
+                        {name: "Jacob", age: 27, role: 'User'},
+                        {name: "Jacob", age: 27, role: 'User'}
+                    ]
+                },
+                {
+                    value: 29,
+                    data: [
+                        {name: "Nephi", age: 29, role: 'Moderator'},
+                        {name: "Nephi", age: 29, role: 'Moderator'},
+                        {name: "Nephi", age: 29, role: 'User'},
+                        {name: "Nephi", age: 29, role: 'User'}
+                    ]
+                },
+                {
+                    value: 34,
+                    data: [
+                        {name: "Enos", age: 34, role: 'User'},
+                        {name: "Enos", age: 34, role: 'User'},
+                        {name: "Enos", age: 34, role: 'Moderator'},
+                        {name: "Enos", age: 34, role: 'User'}
+                    ]
+                }
+            ]);
+        });
+        params.getGroups($defer, 'age');
     }));
 });

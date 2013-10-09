@@ -65,26 +65,6 @@ module.exports = (grunt) ->
                     trim: 'src/'
                     module: 'ngTable'
 
-        docular:
-            groups: [
-                groupTitle: 'ngTable'
-                groupId: 'ng-table'
-                groupIcon: 'icon-table'
-                sections: [
-                    id: 'ngTable'
-                    title: 'ngTable API'
-                    scripts: [
-                        'src/scripts/02-app.js'
-                        'src/scripts/03-params.js'
-                        'src/scripts/04-controller.js'
-                        'src/scripts/05-directive.js'
-                    ]
-                    showSource: true
-                ]
-            ]
-            showDocularDocs: false
-            showAngularDocs: false
-
     # Register grunt tasks supplied by grunt-contrib-*.
     # Referenced in package.json.
     # https://github.com/gruntjs/grunt-contrib
@@ -94,7 +74,6 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-contrib-cssmin'
     grunt.loadNpmTasks 'grunt-contrib-uglify'
     grunt.loadNpmTasks 'grunt-contrib-concat'
-    grunt.loadNpmTasks 'grunt-docular'
 
 
     # Register grunt tasks supplied by grunt-hustler.

@@ -9,6 +9,7 @@
         <meta name="viewport" content="width=device-width">
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="../ng-table.js"></script>
@@ -25,7 +26,7 @@
 
 
         <table ng-table="tableParams" class="table">
-            <tr ng-repeat="user in users">
+            <tr ng-repeat="user in $data">
                 <td data-title="'Name'" sortable="name">
                     {{user.name}}
                 </td>
@@ -64,13 +65,13 @@
                 }
             }, {
                 total: data.length, // length of data
-                getData: function(params) {
+                getData: function($defer, params) {
                     // use build-in angular filter
                     var orderedData = params.sorting() ?
                                         $filter('orderBy')(data, params.orderBy()) :
                                         data;
 
-                    return $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                    $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                 }
             });
         })

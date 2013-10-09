@@ -14,20 +14,17 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
 
       // directive
-      'src/scripts/02-*.js',
-      'src/scripts/03-*.js',
-      'src/scripts/04-*.js',
-      'src/scripts/05-*.js',
+      'ng-table.src.js',
 
       // tests
-      //'test/*.js',
+      'test/*.js'
       //'test/tableParamsSpec.js'
-      'test/tableControllerSpec.js'
+      //'test/tableControllerSpec.js'
     ],
 
     // generate js files from html templates
     preprocessors: {
-      'src/scripts/*.js': 'coverage'
+      '*.js': 'coverage'
     },
 
     reporters: ['progress', 'coverage'],

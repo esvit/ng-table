@@ -20,7 +20,7 @@ describe('ngTableParams', function () {
     ];
     beforeEach(module('ngTable'));
 
-    beforeEach(inject(function ($controller, $rootScope, ngTableParams) {
+    /*beforeEach(inject(function ($controller, $rootScope, ngTableParams) {
         scope = $rootScope.$new();
         params = scope.params = new ngTableParams();
         ctrl = $controller(ngTableController, {
@@ -31,5 +31,5 @@ describe('ngTableParams', function () {
     it('ngTableController should have parameters', inject(function (ngTableParams) {
         var params = new ngTableParams();
         expect(ngTableParams).toBeDefined();
-    }));
+    }));*/
 });

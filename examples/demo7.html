@@ -8,7 +8,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="../ng-table.js"></script>
@@ -54,14 +54,13 @@
             $scope.tableParams = new ngTableParams({
                 page: 1,   // show first page
                 total: 1,  // value less than count hide pagination
-                count: 5,  // count per page
-                counts: [] // hide page counts control
+                count: 5  // count per page
+            }, {
+                counts: [], // hide page counts control
+                getData: function($defer, params) {
+                    $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                }
             });
-            
-            $scope.$watch('tableParams', function(params) {
-
-                $scope.users = data.slice((params.page - 1) * params.count, params.page * params.count);
-            }, true);
         })
         </script>
 

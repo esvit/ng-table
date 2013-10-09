@@ -13,15 +13,30 @@
  * @description
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
-var ngTableController = ['$scope', 'ngTableParams', function($scope, ngTableParams) {
+var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTableParams, $q) {
+    $scope.$loading = false;
+
     if (!$scope.params) {
         $scope.params = new ngTableParams();
     }
 
     $scope.$watch('params.$params', function(params) {
-        $scope.$groups = $scope.params.settings().getGroups($scope.params.settings().groupBy);
-        console.info($scope.$groups);
-        $scope.pages = $scope.params.generatePagesArray($scope.params.page(), $scope.params.settings().total, $scope.params.parameters().count);
+        var $defer = $q.defer();
+        $scope.params.settings().$loading = true;
+        if ($scope.params.settings().groupBy) {
+            $scope.params.settings().getGroups($defer, $scope.params.settings().groupBy);
+        } else {
+            $scope.params.settings().getData($defer, $scope.params);
+        }
+        $defer.promise.then(function(data) {
+            $scope.params.settings().$loading = false;
+            if ($scope.params.settings().groupBy) {
+                $scope.$groups = data;
+            } else {
+                $scope.$data = data;
+            }
+            $scope.pages = $scope.params.generatePagesArray($scope.params.page(), $scope.params.settings().total, $scope.params.parameters().count);
+        });
     }, true);
 /*
     var updateParams = function (newParams) {

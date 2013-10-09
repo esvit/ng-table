@@ -11,7 +11,7 @@
  * @name ngTable.factory:ngTableParams
  * @description Parameters manager for ngTable
  */
-app.factory('ngTableParams', function () {
+app.factory('ngTableParams', ['$q', function ($q) {
     var isNumber = function (n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
@@ -63,7 +63,7 @@ app.factory('ngTableParams', function () {
          * @methodOf ngTable.factory:ngTableParams
          * @description Set new settings for table
          *
-         * @param {string} New settings or undefined
+         * @param {string} newSettings New settings or undefined
          * @returns {Object} Current settings or `this`
          */
         this.settings = function (newSettings) {
@@ -80,11 +80,24 @@ app.factory('ngTableParams', function () {
          * @methodOf ngTable.factory:ngTableParams
          * @description If parameter page not set return current page else set current page
          *
-         * @param {string} Page number
+         * @param {string} page Page number
          * @returns {Object|Number} Current page or `this`
          */
         this.page = function (page) {
-            return page ? this.parameters({'page': page}) : params.page;
+            return angular.isDefined(page) ? this.parameters({'page': page}) : params.page;
+        };
+
+        /**
+         * @ngdoc method
+         * @name ngTable.factory:ngTableParams#total
+         * @methodOf ngTable.factory:ngTableParams
+         * @description If parameter total not set return current quantity else set quantity
+         *
+         * @param {string} total Total quantity of items
+         * @returns {Object|Number} Current page or `this`
+         */
+        this.total = function (total) {
+            return angular.isDefined(total) ? this.settings({'total': total}) : settings.total;
         };
 
         /**
@@ -97,7 +110,8 @@ app.factory('ngTableParams', function () {
          * @returns {Object|Number} Count per page or `this`
          */
         this.count = function (count) {
-            return count ? this.parameters({'count': count}) : params.count;
+            // reset to first page because can be blank page
+            return angular.isDefined(count) ? this.parameters({'count': count, 'page': 1}) : params.count;
         };
 
         /**
@@ -106,11 +120,11 @@ app.factory('ngTableParams', function () {
          * @methodOf ngTable.factory:ngTableParams
          * @description If parameter page not set return current filter else set current filter
          *
-         * @param {string} New filter
+         * @param {string} filter New filter
          * @returns {Object} Current filter or `this`
          */
         this.filter = function (filter) {
-            return filter ? this.parameters({'filter': filter}) : params.filter;
+            return angular.isDefined(filter) ? this.parameters({'filter': filter}) : params.filter;
         };
 
         /**
@@ -119,11 +133,11 @@ app.factory('ngTableParams', function () {
          * @methodOf ngTable.factory:ngTableParams
          * @description If parameter page not set return current sorting else set current sorting
          *
-         * @param {string} New sorting
+         * @param {string} sorting New sorting
          * @returns {Object} Current sorting or `this`
          */
         this.sorting = function (sorting) {
-            return sorting ? this.parameters({'sorting': sorting}) : params.sorting;
+            return angular.isDefined(sorting) ? this.parameters({'sorting': sorting}) : params.sorting;
         };
 
         /**
@@ -148,11 +162,11 @@ app.factory('ngTableParams', function () {
          * @methodOf ngTable.factory:ngTableParams
          * @description Called when updated some of parameters for get new data
          *
+         * @param {Object} $defer promise object
          * @param {Object} params New parameters
-         * @returns {Array} Array of data
          */
-        this.getData = function (params) {
-            return [];
+        this.getData = function ($defer, params) {
+            $defer.resolve([]);
         };
 
         /**
@@ -160,27 +174,29 @@ app.factory('ngTableParams', function () {
          * @name ngTable.factory:ngTableParams#getGroups
          * @methodOf ngTable.factory:ngTableParams
          * @description Return groups for table grouping
-         *
-         * @returns {Array} Array of unique groups
          */
-        this.getGroups = function (column) {
-            data = this.getData(self);
-            
-            var groups = {};
-            for (var k in data) {
-                var item = data[k];
+        this.getGroups = function ($defer, column) {
+            var defer = $q.defer();
 
-                groups[item[column]] = groups[item[column]] || {
-                    data: []
-                };
-                groups[item[column]]['value'] = item[column];
-                groups[item[column]].data.push(item);
-            }
-            var result = [];
-            for (var i in groups) {
-                result.push(groups[i]);
-            }
-            return result;
+            defer.promise.then(function(data) {
+                var groups = {};
+                for (var k in data) {
+                    var item = data[k],
+                        groupName = angular.isFunction(column) ? column(item) : item[column];
+
+                    groups[groupName] = groups[groupName] || {
+                        data: []
+                    };
+                    groups[groupName]['value'] = groupName;
+                    groups[groupName].data.push(item);
+                }
+                var result = [];
+                for (var i in groups) {
+                    result.push(groups[i]);
+                }
+                $defer.resolve(result);
+            });
+            this.getData(defer, self);
         };
 
         /**
@@ -292,7 +308,7 @@ app.factory('ngTableParams', function () {
             groupBy: null
         };
         var settings = {
-            liveFiltering: false,
+            $loading: false,
             total: 0,
             counts: [10, 25, 50, 100],
             getGroups: this.getGroups,
@@ -304,4 +320,4 @@ app.factory('ngTableParams', function () {
         return this;
     };
     return ngTableParams;
-});
+}]);

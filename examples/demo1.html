@@ -9,9 +9,10 @@
         <meta name="viewport" content="width=device-width">
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/angular.min.js"></script>
-        <script src="../ng-table.js"></script>
+        <script src="../ng-table.src.js"></script>
         <link rel="stylesheet" href="../ng-table.css">
     </head>
 <body ng-app="main">
@@ -24,7 +25,7 @@
 
 
         <table ng-table="tableParams" class="table ng-table-responsive">
-            <tr ng-repeat="user in users">
+            <tr ng-repeat="user in $data">
                 <td data-title="'Name'">
                     {{user.name}}
                 </td>
@@ -59,13 +60,11 @@
                 page: 1,            // show first page
                 count: 10           // count per page
             }, {
-                total: data.length // length of data
+                total: data.length, // length of data
+                getData: function($defer, params) {
+                    $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                }
             });
-            $scope.tableParams.getData = function(params) {
-                $scope.users = data.slice((params.page - 1) * params.count, params.page * params.count);
-
-                return $scope.users;
-            };
         })
         </script>
 

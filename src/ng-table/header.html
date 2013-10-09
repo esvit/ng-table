@@ -1,5 +1,5 @@
 <tr>
-    <th ng-repeat="column in columns"
+    <th ng-repeat="column in $columns"
         ng-class="{
                     'sortable': column.sortable,
                     'sort-asc': params.sorting()[column.sortable]=='asc',
@@ -15,7 +15,7 @@
     </th>
 </tr>
 <tr ng-show="show_filter" class="ng-table-filters">
-    <th ng-repeat="column in columns" ng-show="column.show(this)" data-title-text="{{column.title}}" class="filter">
+    <th ng-repeat="column in $columns" ng-show="column.show(this)" data-title-text="{{column.title}}" class="filter">
         <form ng-submit="doFilter()">
             <!-- Hidden submit for ENTER key work-->
             <input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
