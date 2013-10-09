@@ -17,12 +17,14 @@ module.exports = function(config) {
       'ng-table.src.js',
 
       // tests
-      'test/*.js',
+      'test/*.js'
+      //'test/tableParamsSpec.js'
+      //'test/tableControllerSpec.js'
     ],
 
     // generate js files from html templates
     preprocessors: {
-      'ng-table.src.js': 'coverage' 
+      '*.js': 'coverage'
     },
 
     reporters: ['progress', 'coverage'],

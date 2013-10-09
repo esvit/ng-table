@@ -1,6 +1,6 @@
 {
   "name": "ng-table",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "author": "Vitalii Savchuk <esvit666@gmail.com>",
   "license": "BSD",
   "repository": {
@@ -27,7 +27,8 @@
     "karma-firefox-launcher": "*",
     "karma-ng-html2js-preprocessor": "*",
     "coveralls": "",
-    "karma-coverage": "~0.1.0"
+    "karma-coverage": "~0.1.0",
+    "grunt-docular": "~0.1.2"
   },
   "scripts": {
     "test": "karma start --single-run --no-auto-watch"
