@@ -57,25 +57,26 @@ describe('ng-table', function () {
     }));
 
     it('should create table header', inject(function ($compile, $rootScope) {
-        var thead = elm.find('table thead');
+        var thead = elm.find('thead');
         expect(thead.length).toBe(1);
 
         var rows = thead.find('tr');
         expect(rows.length).toBe(2);
 
-        var titles = rows.eq(0).find('th');
+        var titles = angular.element(rows[0]).find('th');
 
         expect(titles.length).toBe(3);
-        expect($.trim(titles.eq(0).text())).toBe('Name of person');
-        expect($.trim(titles.eq(1).text())).toBe('Age');
-        expect($.trim(titles.eq(2).text())).toBe('Money');
+        expect(angular.element(titles[0]).text().trim()).toBe('Name of person');
+        expect(angular.element(titles[1]).text().trim()).toBe('Age');
+        expect(angular.element(titles[2]).text().trim()).toBe('Money');
 
-        var filters = rows.eq(1).find('th');
+        var filters = angular.element(rows[1]).find('th');
         expect(filters.length).toBe(3);
     }));
 
     it('should show scope data', inject(function ($compile, $rootScope, ngTableParams) {
-        var tbody = elm.find('table tbody');
+        debugger;
+        var tbody = elm.find('tbody');
         expect(tbody.length).toBe(1);
 
         var rows = tbody.find('tr');
