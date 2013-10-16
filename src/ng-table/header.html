@@ -11,7 +11,7 @@
         ng-init="template = column.headerTemplateURL(this)"
         class="header">
         <div ng-if="!template" ng-bind="parse(column.title)"></div>
-        <div ng-if="template" ng-include="template"></div>
+        <div ng-if="template"><div ng-include="template"></div></div>
     </th>
 </tr>
 <tr ng-show="show_filter" class="ng-table-filters">
