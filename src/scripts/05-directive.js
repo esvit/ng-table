@@ -26,7 +26,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
             compile: function (element) {
                 var columns = [], i = 0;
 
-                angular.forEach(element.find('tr:not(.ng-table-group)').eq(0).find('td'), function (item) {
+                angular.forEach(angular.element(element[0].querySelector('tr:not(.ng-table-group)')).find('td'), function (item) {
                     var el = angular.element(item);
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
                         return;
@@ -110,15 +110,11 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             header: (attrs.templateHeader ? attrs.templateHeader : 'ng-table/header.html'),
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
-                        var headerTemplate = angular.element('<thead ng-include="templates.header"></thead>');
-                        var paginationTemplate = angular.element('<div ng-include="templates.pagination"></div>');
+                        var headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
+                        var paginationTemplate = angular.element(document.createElement('div')).attr('ng-include', 'templates.pagination');
                         element.find('thead').remove();
                         var tbody = element.find('tbody');
-                        if (tbody[0]) {
-                            angular.element(tbody[0]).before(headerTemplate);
-                        } else {
-                            element.prepend(headerTemplate);
-                        }
+                        element.prepend(headerTemplate);
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
                         element.addClass('ng-table');
