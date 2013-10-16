@@ -18,8 +18,8 @@ module.exports = (grunt) ->
         copy:
             styles:
                 files: [
-                    src: './src/styles/ng-table.css'
-                    dest: './ng-table.css'
+                    src: './src/styles/ng-table.less'
+                    dest: './ng-table.less'
                 ]
 
         uglify:
