@@ -345,6 +345,33 @@ app.factory('ngTableParams', ['$q', function ($q) {
             return pairs;
         };
 
+        /**
+         * @ngdoc method
+         * @name ngTable.factory:ngTableParams#reload
+         * @methodOf ngTable.factory:ngTableParams
+         * @description Reload table data
+         */
+        this.reload = function() {
+            var $defer = $q.defer(),
+                self = this;
+
+            settings.$loading = true;
+            if (settings.groupBy) {
+                settings.getGroups($defer, settings.groupBy, this);
+            } else {
+                settings.getData($defer, this);
+            }
+            $defer.promise.then(function(data) {
+                settings.$loading = false;
+                if (settings.groupBy) {
+                    settings.$scope.$groups = data;
+                } else {
+                    settings.$scope.$data = data;
+                }
+                settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+            });
+        };
+
         var params = this.$params = {
             page: 1,
             count: 1,
@@ -354,6 +381,7 @@ app.factory('ngTableParams', ['$q', function ($q) {
             groupBy: null
         };
         var settings = {
+            $scope: null, // set by ngTable controller
             $loading: false,
             total: 0,
             counts: [10, 25, 50, 100],
@@ -388,24 +416,11 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
     if (!$scope.params) {
         $scope.params = new ngTableParams();
     }
+    $scope.params.settings().$scope = $scope;
 
     $scope.$watch('params.$params', function(params) {
-        var $defer = $q.defer();
-        $scope.params.settings().$loading = true;
-        if ($scope.params.settings().groupBy) {
-            $scope.params.settings().getGroups($defer, $scope.params.settings().groupBy);
-        } else {
-            $scope.params.settings().getData($defer, $scope.params);
-        }
-        $defer.promise.then(function(data) {
-            $scope.params.settings().$loading = false;
-            if ($scope.params.settings().groupBy) {
-                $scope.$groups = data;
-            } else {
-                $scope.$data = data;
-            }
-            $scope.pages = $scope.params.generatePagesArray($scope.params.page(), $scope.params.settings().total, $scope.params.parameters().count);
-        });
+        $scope.params.settings().$scope = $scope;
+        $scope.params.reload();
     }, true);
 /*
     var updateParams = function (newParams) {

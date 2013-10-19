@@ -19,24 +19,11 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
     if (!$scope.params) {
         $scope.params = new ngTableParams();
     }
+    $scope.params.settings().$scope = $scope;
 
     $scope.$watch('params.$params', function(params) {
-        var $defer = $q.defer();
-        $scope.params.settings().$loading = true;
-        if ($scope.params.settings().groupBy) {
-            $scope.params.settings().getGroups($defer, $scope.params.settings().groupBy);
-        } else {
-            $scope.params.settings().getData($defer, $scope.params);
-        }
-        $defer.promise.then(function(data) {
-            $scope.params.settings().$loading = false;
-            if ($scope.params.settings().groupBy) {
-                $scope.$groups = data;
-            } else {
-                $scope.$data = data;
-            }
-            $scope.pages = $scope.params.generatePagesArray($scope.params.page(), $scope.params.settings().total, $scope.params.parameters().count);
-        });
+        $scope.params.settings().$scope = $scope;
+        $scope.params.reload();
     }, true);
 /*
     var updateParams = function (newParams) {

@@ -40,6 +40,7 @@
 
 <div ng-controller="DemoCtrl">
 
+    <button ng-click="tableParams.reload()" class="btn pull-right">Reload</button>
     <button ng-click="tableParams.sorting({})" class="btn pull-right">Clear sorting</button>
     <div class="clearfix"></div>
 
@@ -131,10 +132,11 @@
                     restrict: 'A',
                     scope: false,
                     link: function(scope, element, attrs) {
-                        var loadingLayer = $('<div class="loading"></div>').appendTo(element);
-                        $(element).addClass('loading-container');
+                        var loadingLayer = angular.element('<div class="loading"></div>');
+                        element.append(loadingLayer);
+                        element.addClass('loading-container');
                         scope.$watch(attrs.loadingContainer, function(value) {
-                            loadingLayer.toggle(value);
+                            loadingLayer.toggleClass('ng-hide', !value);
                         });
                     }
                 };

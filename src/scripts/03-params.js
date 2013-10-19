@@ -299,6 +299,33 @@ app.factory('ngTableParams', ['$q', function ($q) {
             return pairs;
         };
 
+        /**
+         * @ngdoc method
+         * @name ngTable.factory:ngTableParams#reload
+         * @methodOf ngTable.factory:ngTableParams
+         * @description Reload table data
+         */
+        this.reload = function() {
+            var $defer = $q.defer(),
+                self = this;
+
+            settings.$loading = true;
+            if (settings.groupBy) {
+                settings.getGroups($defer, settings.groupBy, this);
+            } else {
+                settings.getData($defer, this);
+            }
+            $defer.promise.then(function(data) {
+                settings.$loading = false;
+                if (settings.groupBy) {
+                    settings.$scope.$groups = data;
+                } else {
+                    settings.$scope.$data = data;
+                }
+                settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+            });
+        };
+
         var params = this.$params = {
             page: 1,
             count: 1,
@@ -308,6 +335,7 @@ app.factory('ngTableParams', ['$q', function ($q) {
             groupBy: null
         };
         var settings = {
+            $scope: null, // set by ngTable controller
             $loading: false,
             total: 0,
             counts: [10, 25, 50, 100],
