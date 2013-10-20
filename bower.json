@@ -10,6 +10,7 @@
     "bootstrap": "~3.0.0",
     "requirejs": "~2.1.8",
     "angular-social": "*",
-    "google-code-prettify": "~1.0.0"
+    "google-code-prettify": "~1.0.0",
+    "editr": "*"
   }
 }

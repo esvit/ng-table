@@ -14,14 +14,39 @@
         <link rel="stylesheet" href="css/ng-table.css">
         <link rel="stylesheet" href="css/docs.css">
         <link rel="stylesheet" href="css/angular-social.css">
+        <link rel="stylesheet" href="css/editr.css">
         <script src="/js/require.js"></script>
         <script src="/js/config.js"></script>
     </head>
     <body ng-controller="IndexCtrl">
-        <div class="navbar navbar-fixed navbar-fixed-top">
+        <div class="bs-masthead">
+
+            <h1>ngTable</h1>
+            <p class="lead">Angular Table directive</p>
+            <p>
+                <a href="https://github.com/esvit/ng-table/archive/master.zip" class="btn btn-large" onclick="_gaq.push(['_trackEvent', 'Jumbotron actions', 'Download', 'Download']);">Download ngTable</a>
+                <a target="_blank" href="https://github.com/esvit/ng-table" class="btn btn-large">Project GitHub</a>
+            </p>
+
+            <p>
+                    
+                <ul class="ng-cloak" ng-social-buttons
+                     data-url="'http://esvit.github.io/ng-table/'"
+                     data-title="'ngTable: cool directive for simple and easy work with table on AngularJS'"
+                     data-description="'Angular Table directive'">
+                    <li class="ng-social-facebook">Facebook</li>
+                    <li class="ng-social-google-plus">Google+</li>
+                    <li class="ng-social-twitter">Twitter</li>
+                    <li class="ng-social-github" user="esvit" repository="ng-table">GitHub</li>
+                    <li class="ng-social-github-forks" user="esvit" repository="ng-table">Forks</li>
+                </ul>
+            </p>
+            <p><a href="https://github.com/esvit/angular-social" target="_blank">&uarr; Another my project Angular Share buttons &uarr;</a></p>
+        </div>
+        
+        <div class="navbar">
           <div class="fill">
             <div class="container">
-              <a href="#!/" class="navbar-brand">ngTable</a>
               <ul class="nav">
                 <li><a href="#!/">Getting Started</a></li>
                 <li class="dropdown">
@@ -56,30 +81,6 @@
             </ul>
             </div>
           </div>
-        </div>
-        <div class="bs-masthead" ng-show="showHeader">
-
-            <h1>ngTable</h1>
-            <p class="lead">Angular Table directive</p>
-            <p>
-                <a href="https://github.com/esvit/ng-table/archive/master.zip" class="btn btn-large" onclick="_gaq.push(['_trackEvent', 'Jumbotron actions', 'Download', 'Download']);">Download ngTable</a>
-                <a target="_blank" href="https://github.com/esvit/ng-table" class="btn btn-large">Project GitHub</a>
-            </p>
-
-            <p>
-                    
-                <ul class="ng-cloak" ng-social-buttons
-                     data-url="'http://esvit.github.io/ng-table/'"
-                     data-title="'ngTable: cool directive for simple and easy work with table on AngularJS'"
-                     data-description="'Angular Table directive'">
-                    <li class="ng-social-facebook">Facebook</li>
-                    <li class="ng-social-google-plus">Google+</li>
-                    <li class="ng-social-twitter">Twitter</li>
-                    <li class="ng-social-github" user="esvit" repository="ng-table">GitHub</li>
-                    <li class="ng-social-github-forks" user="esvit" repository="ng-table">Forks</li>
-                </ul>
-            </p>
-            <p><a href="https://github.com/esvit/angular-social" target="_blank">&uarr; Another my project Angular Share buttons &uarr;</a></p>
         </div>
         <div class="container" id="ng-view" data-ng-view></div>
         <footer class="bs-footer">

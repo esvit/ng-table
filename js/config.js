@@ -12,13 +12,17 @@ requirejs.config({
         'angular-mocks': '../bower_components/angular-mocks/angular-mocks',
         
         'ngTable': '../bower_components/ng-table/ng-table',
-        'ngSocial': '../bower_components/angular-social/angular-social',
+        'ngSocial': '../bower_components/angular-social/angular-social.src',
+        'Editr': '../editr/editr',
 
         'prettify': '../bower_components/google-code-prettify/src/prettify',
         'lang-css': '../bower_components/google-code-prettify/src/lang-css',
 
         // bootstrap
-        'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap'
+        'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap',
+        
+        'ace': '//cdn.jsdelivr.net/ace/1.1.01/min/ace',
+        'ace/ext/emmet': '//cdn.jsdelivr.net/ace/1.1.01/min/ext-emmet'
     },
     shim: {
         'angular': { exports: 'angular', deps: ['jquery'] },
@@ -32,7 +36,21 @@ requirejs.config({
         'ngTable': { deps: ['jquery','angular'] },
         'ngSocial': { deps: ['jquery','angular'] },
 
-        'lang-css': { deps: ['prettify'] }
+        'lang-css': { deps: ['prettify'] },
+        
+        'ace/ext/emmet': { deps: ['ace'] },
+        'Editr/libs/parser.coffeescript': { deps: ['ace'] },
+        'Editr/libs/parser.less': { deps: ['ace'] },
+        'Editr/libs/ext.emmet': { deps: [
+            'ace/ext/emmet',
+        ] },
+        
+        'Editr/editr': { deps: [
+            'jquery',
+            'Editr/libs/ext.emmet',
+            'Editr/libs/parser.coffeescript',
+            'Editr/libs/parser.less'
+        ] }
     },
     priority: [
         'jquery', 'angular'

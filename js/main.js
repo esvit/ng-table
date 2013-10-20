@@ -15,6 +15,7 @@ define('main', [
     
     'directives/prettyprint',
     'directives/loadingContainer',
+    'directives/editr',
 
     'controllers/IndexCtrl',
     'controllers/Demo1Ctrl',

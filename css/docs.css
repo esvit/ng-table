@@ -1,13 +1,5 @@
-body {
-    padding-top: 50px;
-}
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
-}
-@media screen and (max-width: 768px) {
-    body{
-        padding-top: 200px;
-    }
 }
 .navbar {
     background-color: #b94a48;
@@ -74,10 +66,9 @@ code.nocode {
 
 .bs-masthead {
   position: relative;
-  margin-bottom: 20px;
   padding: 30px 15px;
   text-align: center;
-  border-bottom: 1px solid #e6cac8;
+  border-top: 10px solid #b94a48;
 }
 .bs-masthead h1 {
   font-size: 50px;
