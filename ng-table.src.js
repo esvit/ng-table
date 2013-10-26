@@ -133,6 +133,11 @@ app.factory('ngTableParams', ['$q', function ($q) {
             return angular.isDefined(page) ? this.parameters({'page': page}) : params.page;
         };
 
+        
+        var isFunction = function(obj) {
+            return !!(obj && obj.constructor && obj.call && obj.apply);
+        };
+
         /**
          * @ngdoc method
          * @name ngTable.factory:ngTableParams#total
@@ -143,9 +148,9 @@ app.factory('ngTableParams', ['$q', function ($q) {
          * @returns {Object|Number} Current page or `this`
          */
         this.total = function (total) {
-            return angular.isDefined(total) ? this.settings({'total': total}) : settings.total;
+            var t = angular.isDefined(total) ? this.settings({'total': total}) : settings.total;
+            return isFunction(t) ? t() : t;
         };
-
         /**
          * @ngdoc method
          * @name ngTable.factory:ngTableParams#count
