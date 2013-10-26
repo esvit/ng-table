@@ -8,12 +8,12 @@
     </div>
     <ul class="pagination">
         <li ng-class="{'disabled': !page.active}" ng-repeat="page in pages" ng-switch="page.type">
-            <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">«</a>
+            <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a>
             <a ng-switch-when="first" ng-click="params.page(page.number)" href="">{{page.number}}</a>
             <a ng-switch-when="page" ng-click="params.page(page.number)" href="">{{page.number}}</a>
-            <a ng-switch-when="more" ng-click="params.page(page.number)" href="">…</a>
+            <a ng-switch-when="more" ng-click="params.page(page.number)" href="">&#8230;</a>
             <a ng-switch-when="last" ng-click="params.page(page.number)" href="">{{page.number}}</a>
-            <a ng-switch-when="next" ng-click="params.page(page.number)" href="">»</a>
+            <a ng-switch-when="next" ng-click="params.page(page.number)" href="">&raquo;</a>
         </li>
     </ul>
 </div>

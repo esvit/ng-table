@@ -35,28 +35,22 @@ bower install ng-table
 
 ## Examples (from simple to complex)
 
-* [Pagination](http://esvit.github.io/ng-table/#!/demo1)
-* [Sorting](http://esvit.github.io/ng-table/#!/demo3)
-* [Filtering](http://esvit.github.io/ng-table/#!/demo4)
-* [Cell template](http://esvit.github.io/ng-table/#!/demo8)
-* [Row template](http://esvit.github.io/ng-table/#!/demo9)
-* [Params in url](http://esvit.github.io/ng-table/#!/demo5)
-* [Ajax](http://esvit.github.io/ng-table/#!/demo6)
-* [Custom template(pagination)](http://esvit.github.io/ng-table/#!/demo2)
-* [Custom filters](http://esvit.github.io/ng-table/#!/demo11)
-* [Table with checkboxes](http://esvit.github.io/ng-table/#!/demo10)
+* [Pagination](http://bazalt-cms.com/ng-table/example/1)
+* [Sorting](http://bazalt-cms.com/ng-table/example/3)
+* [Filtering](http://bazalt-cms.com/ng-table/example/4)
+* [Cell template](http://bazalt-cms.com/ng-table/example/8)
+* [Row template](http://bazalt-cms.com/ng-table/example/9)
+* [Params in url](http://bazalt-cms.com/ng-table/example/5)
+* [Ajax](http://bazalt-cms.com/ng-table/example/6)
+* [Custom template(pagination)](http://bazalt-cms.com/ng-table/example/2)
+* [Custom filters](http://bazalt-cms.com/ng-table/example/11)
+* [Table with checkboxes](http://bazalt-cms.com/ng-table/example/10)
 
-## Usage
-```html
-<table ng-table="tableParams" show-filter="true">
-<tr ng-repeat="user in users">
-    <!-- IMPORTANT: String titles must be in single quotes -->
-    <td data-title="'Name of person'" filter="{ 'name': 'text' }" sortable="name">
-        {{user.name}}
-    </td>
-    <td data-title="'Age'" filter="{ 'action': 'button' }" sortable="age">
-        {{user.age}}
-    </td>
-</tr>
-</table>
-```
+#### PS
+Let me know if you are using **ng-table**. It will motivate me to work harder.
+And if you like **ng-table**, just email me and add your website [here](https://bazalt-cms.com/ng-table/who-is-using)
+Hope you like it, Thanks! :)
+
+---
+
+This project is part of [Bazalt CMS](http://bazalt-cms.com/).
