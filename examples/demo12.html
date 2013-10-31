@@ -10,6 +10,9 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <!--[if lt IE 9]>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <![endif]-->
     <script src="js/angular.min.js"></script>
     <script src="../ng-table.src.js"></script>
     <link rel="stylesheet" href="../ng-table.css">
@@ -18,7 +21,6 @@
 <h1>Table with grouping</h1>
 
 <div ng-controller="DemoCtrl">
-
         <table ng-table="tableParams" class="table ng-table-responsive">
             <tbody ng-repeat="group in $groups">
                 <tr class="ng-table-group">

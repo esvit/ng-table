@@ -9,6 +9,15 @@ Header row with titles and filters automatic generated on compilation step.
 
 <a href='https://pledgie.com/campaigns/22338'><img alt='Click here to lend your support to: ngTable and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/22338.png?skin_name=chrome' border='0' ></a>
 
+## Compatibility
+
+For work in IE < 9 need jQuery, just add:
+```
+<!--[if lt IE 9]>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<![endif]-->
+```
+
 ## Plugins
 
 * [Export to CSV](https://github.com/esvit/ng-table-export)
@@ -57,7 +66,7 @@ bower install ng-table
 
 #### PS
 Let me know if you are using **ng-table**. It will motivate me to work harder.
-And if you like **ng-table**, just email me and add your website [here](https://bazalt-cms.com/ng-table/who-is-using)
+And if you like **ng-table**, just email me and add your website [here](http://bazalt-cms.com/ng-table/who-is-using)
 Hope you like it, Thanks! :)
 
 ---

@@ -24,9 +24,19 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
             scope: true,
             controller: ngTableController,
             compile: function (element) {
-                var columns = [], i = 0;
+                var columns = [], i = 0, row = null;
 
-                angular.forEach(angular.element(element[0].querySelector('tr:not(.ng-table-group)')).find('td'), function (item) {
+                // IE 8 fix :not(.ng-table-group) selector
+                angular.forEach(angular.element(element[0].querySelector('tr')), function(tr) {
+                    tr = angular.element(tr);
+                    if (!tr.hasClass('ng-table-group') && !row) {
+                        row = tr;
+                    }
+                });
+                if (!row) {
+                    return;
+                }
+                angular.forEach(row.find('td'), function (item) {
                     var el = angular.element(item);
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
                         return;
@@ -75,7 +85,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         scope.params = params;
                     }), true);
                     scope.parse = function (text) {
-                        return text(scope);
+                        return angular.isDefined(text) ? text(scope) : '';
                     };
                     if (attrs.showFilter) {
                         scope.$parent.$watch(attrs.showFilter, function (value) {
