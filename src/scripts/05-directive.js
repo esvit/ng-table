@@ -27,7 +27,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 var columns = [], i = 0, row = null;
 
                 // IE 8 fix :not(.ng-table-group) selector
-                angular.forEach(angular.element(element[0].querySelector('tr')), function(tr) {
+                angular.forEach(angular.element(element.find('tr')), function(tr) {
                     tr = angular.element(tr);
                     if (!tr.hasClass('ng-table-group') && !row) {
                         row = tr;
