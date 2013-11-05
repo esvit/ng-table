@@ -27,8 +27,7 @@
     "karma-firefox-launcher": "*",
     "karma-ng-html2js-preprocessor": "*",
     "coveralls": "",
-    "karma-coverage": "~0.1.0",
-    "grunt-docular": "~0.1.2"
+    "karma-coverage": "~0.1.0"
   },
   "scripts": {
     "test": "karma start --single-run --no-auto-watch"
