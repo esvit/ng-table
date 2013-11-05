@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <!--[if lt IE 9]>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <![endif]-->
+    <script src="js/angular.min.js"></script>
+    <script src="../ng-table.src.js"></script>
+    <link rel="stylesheet" href="../ng-table.css">
+</head>
+<body ng-app="main">
+<h1>Example with custom start & end symbols (for Twig, Django, etc...)</h1>
+
+<div ng-controller="DemoCtrl">
+
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="user in $data">
+            <td data-title="'Name'">
+                {[user.name]}
+            </td>
+            <td data-title="'Age'" width="200">
+                {[user.age]}
+            </td>
+            <td data-title="'With default braces'" width="200">
+                {{user.age}}
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        var app = angular.module('main', ['ngTable'])
+                .config(function($interpolateProvider){
+                    $interpolateProvider.startSymbol('{[').endSymbol(']}');
+                })
+                .controller('DemoCtrl', function($scope, ngTableParams, $sce) {
+                    var data = [{name: "Moroni", age: 50},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34}];
+
+                    $scope.tableParams = new ngTableParams({
+                        page: 1,            // show first page
+                        count: 10           // count per page
+                    }, {
+                        total: data.length, // length of data
+                        getData: function($defer, params) {
+                            $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                        }
+                    });
+                });
+    </script>
+
+</div>
+
+
+</body>
+</html>
