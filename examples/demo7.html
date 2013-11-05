@@ -22,7 +22,7 @@
 <div ng-controller="DemoCtrl">
 
         <table ng-table="tableParams" class="table">
-            <tr ng-repeat="user in users">
+            <tr ng-repeat="user in $data">
                 <td data-title="'Name'">
                     {{user.name}}
                 </td>

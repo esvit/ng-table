@@ -25,51 +25,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
         $scope.params.settings().$scope = $scope;
         $scope.params.reload();
     }, true);
-/*
-    var updateParams = function (newParams) {
-        newParams = angular.extend($scope.params, newParams);
-        $scope.$groups = $scope.params.getGroups($scope.params.settings().groupBy);
-        if ($scope.paramsModel) {
-            $scope.paramsModel.assign($scope.$parent, new ngTableParams(newParams));
-        }
-        $scope.params = angular.copy(newParams);
-    };
 
-    // update result every time filter changes
-    $scope.$watch('params.filter', function (value) {
-        if ($scope.params.$liveFiltering) {
-            updateParams({
-                filter: value
-            });
-            $scope.goToPage(1);
-        }
-    }, true);
-    $scope.$watch('params.sorting', (function (value) {
-        updateParams({
-            sorting: value
-        });
-    }), true);
-
-    // goto page
-    $scope.goToPage = function (page) {
-        if (page > 0 && $scope.params.page !== page && $scope.params.count * (page - 1) <= $scope.params.total) {
-            updateParams({
-                page: page
-            });
-        }
-    };
-    // change items per page
-    $scope.changeCount = function (count) {
-        updateParams({
-            page: 1,
-            count: count
-        });
-    };
-    $scope.doFilter = function () {
-        updateParams({
-            page: 1
-        });
-    };*/
     $scope.sortBy = function (column) {
         var sorting, sortingParams;
         if (!column.sortable) {

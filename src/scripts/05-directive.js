@@ -26,6 +26,9 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
             compile: function (element) {
                 var columns = [], i = 0, row = null;
 
+                // custom header
+                var thead = element.find('thead');
+
                 // IE 8 fix :not(.ng-table-group) selector
                 angular.forEach(angular.element(element.find('tr')), function(tr) {
                     tr = angular.element(tr);
@@ -120,7 +123,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             header: (attrs.templateHeader ? attrs.templateHeader : 'ng-table/header.html'),
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
-                        var headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
+                        var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
                         var paginationTemplate = angular.element(document.createElement('div')).attr('ng-include', 'templates.pagination');
                         element.find('thead').remove();
                         var tbody = element.find('tbody');

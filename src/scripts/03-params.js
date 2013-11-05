@@ -142,6 +142,20 @@ app.factory('ngTableParams', ['$q', function ($q) {
 
         /**
          * @ngdoc method
+         * @name ngTable.factory:ngTableParams#isSortBy
+         * @methodOf ngTable.factory:ngTableParams
+         * @description Checks sort field
+         *
+         * @param {string} field     Field name
+         * @param {string} direction Direction of sorting 'asc' or 'desc'
+         * @returns {Array} Return true if field sorted by direction
+         */
+        this.isSortBy = function (field, direction) {
+            return angular.isDefined(params.sorting[field]) && params.sorting[field] == direction;
+        };
+
+        /**
+         * @ngdoc method
          * @name ngTable.factory:ngTableParams#orderBy
          * @methodOf ngTable.factory:ngTableParams
          * @description Return object of sorting parameters for angular filter
