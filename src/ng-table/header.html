@@ -1,9 +1,9 @@
 <tr>
     <th ng-repeat="column in $columns"
         ng-class="{
-                    'sortable': column.sortable,
-                    'sort-asc': params.sorting()[column.sortable]=='asc',
-                    'sort-desc': params.sorting()[column.sortable]=='desc',
+                    'sortable': parse(column.sortable),
+                    'sort-asc': params.sorting()[parse(column.sortable)]=='asc',
+                    'sort-desc': params.sorting()[parse(column.sortable)]=='desc',
                     column.class: true
                   }"
         ng-click="sortBy(column)"

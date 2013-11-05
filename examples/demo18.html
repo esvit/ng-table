@@ -47,10 +47,10 @@
         </thead>
         <tbody>
             <tr ng-repeat="user in $data">
-                <td data-title="'Name'" sortable="name">
+                <td data-title="'Name'" sortable="'name'">
                     {{user.name}}
                 </td>
-                <td data-title="'Age'" width="200">
+                <td data-title="'Age'" width="200" sortable="'age'">
                     {{user.age}}
                 </td>
                 <td data-title="'With default braces'" width="200">

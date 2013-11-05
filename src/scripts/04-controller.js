@@ -27,13 +27,13 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
     }, true);
 
     $scope.sortBy = function (column) {
-        var sorting, sortingParams;
-        if (!column.sortable) {
+        var parsedSortable = $scope.parse(column.sortable);
+        if (!parsedSortable) {
             return;
         }
-        sorting = $scope.params.sorting() && $scope.params.sorting()[column.sortable] && ($scope.params.sorting()[column.sortable] === "desc");
-        sortingParams = {};
-        sortingParams[column.sortable] = (sorting ? 'asc' : 'desc');
+        var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === "desc");
+        var sortingParams = {};
+        sortingParams[parsedSortable] = (sorting ? 'asc' : 'desc');
         $scope.params.parameters({
             sorting: sortingParams
         });

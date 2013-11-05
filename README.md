@@ -24,6 +24,9 @@ For work in IE < 9 need jQuery, just add:
 
 ## Updates
 
+### v0.3.1 (master)
+- Allow expressions in the sortable & filter attribute (Issue #93)
+
 ### v0.3.0
 - I abandoned from CoffeeScript in favor of a javascript, fully agree with http://blog.ponyfoo.com/2013/09/28/we-dont-want-your-coffee & (rus) http://habrahabr.ru/post/195944/
 - added examples of table with grouping

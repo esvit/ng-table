@@ -44,27 +44,30 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
                         return;
                     }
-                    var parsedTitle = function (scope) {
-                        return $parse(el.attr('x-data-title') || el.attr('data-title') || el.attr('title'))(scope, {
-                            $columns: columns
-                        }) || ' ';
+                    var parsedAttribute = function(attr, defaultValue) {
+                        return function(scope) {
+                            return $parse(el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr))(scope, {
+                                $columns: columns
+                            }) || defaultValue;
+                        };
                     };
-                    el.attr('data-title-text', parsedTitle());
-                    var headerTemplateURL = function (scope) {
-                        return $parse(el.attr("x-data-header") || el.attr("data-header") || el.attr("header"))(scope, {
-                            $columns: columns
-                        }) || false;
-                    };
-                    var filter = el.attr("filter") ? $parse(el.attr("filter"))() : false;
-                    var filterTemplateURL = false;
+
+                    var parsedTitle = parsedAttribute('title', ' '),
+                        headerTemplateURL = parsedAttribute('header', false)(),
+                        filter = parsedAttribute('filter', false)(),
+                        filterTemplateURL = false;
+
                     if (filter && filter.templateURL) {
                         filterTemplateURL = filter.templateURL;
                         delete filter.templateURL;
                     }
+
+                    // this used in responsive table
+                    el.attr('data-title-text', parsedTitle());
                     columns.push({
                         id: i++,
                         title: parsedTitle,
-                        sortable: (el.attr("sortable") ? el.attr("sortable") : false),
+                        sortable: parsedAttribute('sortable', false),
                         filter: filter,
                         filterTemplateURL: filterTemplateURL,
                         headerTemplateURL: headerTemplateURL,
