@@ -7,7 +7,7 @@ Code licensed under New BSD License.
 This directive allow to liven your tables. It support sorting, filtering and pagination.
 Header row with titles and filters automatic generated on compilation step.
 
-<a href='https://pledgie.com/campaigns/22338'><img alt='Click here to lend your support to: ngTable and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/22338.png?skin_name=chrome' border='0' ></a>
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z98GNW52E7XSS)
 
 ## Compatibility
 
