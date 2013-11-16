@@ -1,0 +1,20 @@
+<table class="noborder">
+    <tr>
+        <td rowspan="2">ID: {{p.id}}<input type="hidden" name="id" value="{{p.id}}"></td>
+        <td>Firstname:</td>
+        <td><input type="text" name="fn" class="w100" value="{{p.fn}}"></td>
+        <td>Description: </td>
+        <td>Email:</td>
+        <td><input type="text" name="em" class="w180" value="{{p.em}}"></td>
+        <td><input type="button" value=" save " onclick="alert('Save :)')"></td>
+    </tr>
+    <tr>
+        <td>Lastname:</td>
+        <td><input type="text" name="ln" class="w100" value="{{p.ln}}"></td>
+        <td><input type="text" name="dc" class="w180" value="{{p.dc}}"></td>
+        <td>Phone: </td>
+        <td><input type="text" name="ph" class="w120" value="{{p.ph}}"></td>
+        <td><input type="button" value=" cancel" ng-click="setEditId(-1)"></td>
+    </tr>
+</table>
+<!--  class="editRowTd" -->
