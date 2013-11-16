@@ -1,6 +1,6 @@
 (function(angular, factory) {
     if (typeof define === 'function' && define.amd) {
-        define('ngTable', ['jquery', 'angular'], function($, angular) {
+        define(['angular'], function($, angular) {
             return factory(angular);
         });
     } else {
@@ -387,7 +387,6 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             $log.debug('ngTable: reload data');
             $defer.promise.then(function(data) {
                 settings.$loading = false;
-                settings.$scope = settings.$scope || {};
                 $log.debug('ngTable: current scope', settings.$scope);
                 if (settings.groupBy) {
                     settings.$scope.$groups = data;

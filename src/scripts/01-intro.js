@@ -1,6 +1,6 @@
 (function(angular, factory) {
     if (typeof define === 'function' && define.amd) {
-        define('ngTable', ['jquery', 'angular'], function($, angular) {
+        define(['angular'], function($, angular) {
             return factory(angular);
         });
     } else {
