@@ -137,6 +137,12 @@ app.factory('ngTableParams', ['$q', function ($q) {
          * @returns {Object} Current sorting or `this`
          */
         this.sorting = function (sorting) {
+            if (arguments.length == 2){
+                var sortArray = {};
+                sortArray[sorting] = arguments[1];
+                this.parameters({'sorting': sortArray});
+                return this;
+            }
             return angular.isDefined(sorting) ? this.parameters({'sorting': sorting}) : params.sorting;
         };
 

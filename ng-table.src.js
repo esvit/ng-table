@@ -183,6 +183,12 @@ app.factory('ngTableParams', ['$q', function ($q) {
          * @returns {Object} Current sorting or `this`
          */
         this.sorting = function (sorting) {
+            if (arguments.length == 2){
+                var sortArray = {};
+                sortArray[sorting] = arguments[1];
+                this.parameters({'sorting': sortArray});
+                return this;
+            }
             return angular.isDefined(sorting) ? this.parameters({'sorting': sorting}) : params.sorting;
         };
 
@@ -385,6 +391,11 @@ app.factory('ngTableParams', ['$q', function ($q) {
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
             });
         };
+        
+        this.reloadPages = function () {
+            var self = this;
+            settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+        };
 
         var params = this.$params = {
             page: 1,
@@ -409,6 +420,7 @@ app.factory('ngTableParams', ['$q', function ($q) {
     };
     return ngTableParams;
 }]);
+
 /**
  * ngTable: Table + Angular JS
  *
