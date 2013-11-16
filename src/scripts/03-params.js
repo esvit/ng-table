@@ -11,7 +11,7 @@
  * @name ngTable.factory:ngTableParams
  * @description Parameters manager for ngTable
  */
-app.factory('ngTableParams', ['$q', function ($q) {
+app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
     var isNumber = function (n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
@@ -52,6 +52,7 @@ app.factory('ngTableParams', ['$q', function ($q) {
                         params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
                     }
                 }
+                $log.debug('ngTable: set parameters', params);
                 return this;
             }
             return params;
@@ -69,6 +70,7 @@ app.factory('ngTableParams', ['$q', function ($q) {
         this.settings = function (newSettings) {
             if (angular.isDefined(newSettings)) {
                 settings = angular.extend(settings, newSettings);
+                $log.debug('ngTable: set settings', params);
                 return this;
             }
             return settings;
@@ -214,6 +216,7 @@ app.factory('ngTableParams', ['$q', function ($q) {
                 for (var i in groups) {
                     result.push(groups[i]);
                 }
+                $log.debug('ngTable: refresh groups', result);
                 $defer.resolve(result);
             });
             this.getData(defer, self);
@@ -335,8 +338,10 @@ app.factory('ngTableParams', ['$q', function ($q) {
             } else {
                 settings.getData($defer, this);
             }
+            $log.debug('ngTable: reload data');
             $defer.promise.then(function(data) {
                 settings.$loading = false;
+                $log.debug('ngTable: current scope', settings.$scope);
                 if (settings.groupBy) {
                     settings.$scope.$groups = data;
                 } else {
