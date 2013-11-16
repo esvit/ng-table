@@ -339,6 +339,11 @@ app.factory('ngTableParams', ['$q', function ($q) {
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
             });
         };
+        
+        this.reloadPages = function () {
+            var self = this;
+            settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+        };
 
         var params = this.$params = {
             page: 1,
