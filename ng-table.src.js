@@ -386,7 +386,11 @@ app.factory('ngTableParams', ['$q', function ($q) {
                 if (settings.groupBy) {
                     settings.$scope.$groups = data;
                 } else {
-                    settings.$scope.$data = data;
+                    if ( settings.dataName)
+                    {
+                        settings.$scope[settings.dataName]= data;
+                    }
+                    else settings.$scope.$data = data;
                 }
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
             });
