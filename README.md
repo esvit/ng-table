@@ -1,6 +1,6 @@
 Table + AngularJS
 =================
-[![Build Status](https://travis-ci.org/esvit/ng-table.png)](https://travis-ci.org/esvit/ng-table) [![Coverage Status](https://coveralls.io/repos/esvit/ng-table/badge.png)](https://coveralls.io/r/esvit/ng-table)
+[![Build Status](https://travis-ci.org/esvit/ng-table.png)](https://travis-ci.org/esvit/ng-table) [![Coverage Status](https://coveralls.io/repos/esvit/ng-table/badge.png)](https://coveralls.io/r/esvit/ng-table) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/esvit/ng-table/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Code licensed under New BSD License.
 
