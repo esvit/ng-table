@@ -28,6 +28,7 @@
     </label>
 
     <table ng-table="tableParams" show-filter="true" class="table">
+        <thead>
         <tr>
             <th ng-repeat="column in columns" ng-show="column.visible"
                 class="text-center sortable" ng-class="{
@@ -38,11 +39,14 @@
                 {{column.title}}
             </th>
         </tr>
+        </thead>
+        <tbody>
         <tr ng-repeat="user in $data">
             <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.field">
                 {{user[column.field]}}
             </td>
         </tr>
+        </tbody>
     </table>
 
     <script>
