@@ -10,17 +10,17 @@
         ng-show="column.show(this)"
         ng-init="template = column.headerTemplateURL(this)"
         class="header">
-        <div ng-if="!template" ng-bind="parse(column.title)"></div>
-        <div ng-if="template"><div ng-include="template"></div></div>
+        <div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)"></div>
+        <div ng-if="template" ng-show="template"><div ng-include="template"></div></div>
     </th>
 </tr>
 <tr ng-show="show_filter" class="ng-table-filters">
     <th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter">
         <div ng-repeat="(name, filter) in column.filter">
-            <div ng-if="column.filterTemplateURL">
+            <div ng-if="column.filterTemplateURL" ng-show="column.filterTemplateURL">
                 <div ng-include="column.filterTemplateURL"></div>
             </div>
-            <div ng-if="!column.filterTemplateURL">
+            <div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL">
                 <div ng-include="'ng-table/filters/' + filter + '.html'"></div>
             </div>
         </div>
