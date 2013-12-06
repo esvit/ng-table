@@ -64,6 +64,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
     var ngTableParams = function (baseParameters, baseSettings) {
         var self = this;
 
+        this.data = [];
+
         /**
          * @ngdoc method
          * @name ngTable.factory:ngTableParams#parameters
@@ -389,9 +391,9 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 settings.$loading = false;
                 $log.debug('ngTable: current scope', settings.$scope);
                 if (settings.groupBy) {
-                    settings.$scope.$groups = data;
+                    self.data = settings.$scope.$groups = data;
                 } else {
-                    settings.$scope.$data = data;
+                    self.data = settings.$scope.$data = data;
                 }
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
             });
