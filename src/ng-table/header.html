@@ -3,13 +3,12 @@
         ng-class="{
                     'sortable': parse(column.sortable),
                     'sort-asc': params.sorting()[parse(column.sortable)]=='asc',
-                    'sort-desc': params.sorting()[parse(column.sortable)]=='desc',
-                    column.class: true
+                    'sort-desc': params.sorting()[parse(column.sortable)]=='desc'
                   }"
         ng-click="sortBy(column)"
         ng-show="column.show(this)"
         ng-init="template = column.headerTemplateURL(this)"
-        class="header">
+        class="header {{column.class}}">
         <div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)"></div>
         <div ng-if="template" ng-show="template"><div ng-include="template"></div></div>
     </th>

@@ -62,12 +62,12 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         delete filter.templateURL;
                     }
 
-                    // this used in responsive table
-                    el.attr('data-title-text', parsedTitle());
+                    el.attr('data-title-text', parsedTitle()); // this used in responsive table
                     columns.push({
                         id: i++,
                         title: parsedTitle,
                         sortable: parsedAttribute('sortable', false),
+                        class: el.attr('x-data-header-class') || el.attr('data-header-class') || el.attr("header-class"),
                         filter: filter,
                         filterTemplateURL: filterTemplateURL,
                         headerTemplateURL: headerTemplateURL,
