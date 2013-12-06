@@ -22,7 +22,10 @@ For work in IE < 9 need jQuery, just add:
 
 ## Updates
 
-### v0.3.1 (master)
+### v0.3.1
+- add support of `header-class` attribute
+- add fixes for compatibility with early versions of AngularJS
+- add `data` field to ngTableParams
 - Allow expressions in the sortable & filter attribute (Issue #93)
 
 ### v0.3.0
