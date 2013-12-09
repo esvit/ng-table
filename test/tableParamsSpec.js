@@ -112,7 +112,7 @@ describe('ngTableParams', function () {
             'page': '1',
             'count': '1',
             'filter[name]': 'test',
-            'filter[age]': '20',
+            'filter[age]': 20,
             'sorting[age]': 'desc'
         });
         expect(params.url(true)).toEqual([
