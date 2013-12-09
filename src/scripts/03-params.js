@@ -306,9 +306,9 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                             if (!angular.isUndefined(item[subkey]) && item[subkey] !== "") {
                                 var pname = name + "[" + encodeURIComponent(subkey) + "]";
                                 if (asString) {
-                                    pairs.push(pname + "=" + encodeURIComponent(item[subkey]));
+                                    pairs.push(pname + "=" + item[subkey]);
                                 } else {
-                                    pairs[pname] = encodeURIComponent(item[subkey]);
+                                    pairs[pname] = item[subkey];
                                 }
                             }
                         }
