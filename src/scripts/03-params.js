@@ -71,6 +71,10 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          */
         this.settings = function (newSettings) {
             if (angular.isDefined(newSettings)) {
+                if (angular.isArray(newSettings.data)) {
+                	//auto-set the total from passed in data
+                    newSettings.total = newSettings.data.length;
+                }
                 settings = angular.extend(settings, newSettings);
                 $log.debug && $log.debug('ngTable: set settings', params);
                 return this;
@@ -190,7 +194,11 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @param {Object} params New parameters
          */
         this.getData = function ($defer, params) {
-            $defer.resolve([]);
+            if (angular.isArray(this.data)) {
+                $defer.resolve(this.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            } else {            
+	            $defer.resolve([]);
+            }
         };
 
         /**
@@ -369,6 +377,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
         var settings = {
             $scope: null, // set by ngTable controller
             $loading: false,
+            data: null, //allows data to be set when table is initialized
             total: 0,
             counts: [10, 25, 50, 100],
             getGroups: this.getGroups,
