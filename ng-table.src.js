@@ -122,7 +122,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                     newSettings.total = newSettings.data.length;
                 }
                 settings = angular.extend(settings, newSettings);
-                $log.debug && $log.debug('ngTable: set settings', params);
+                $log.debug && $log.debug('ngTable: set settings', settings);
                 return this;
             }
             return settings;
@@ -240,7 +240,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @param {Object} params New parameters
          */
         this.getData = function ($defer, params) {
-            if (angular.isArray(this.data)) {
+            if (angular.isArray(this.data) && angular.isObject(params)) {
                 $defer.resolve(this.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             } else {            
 	            $defer.resolve([]);
