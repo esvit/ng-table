@@ -10,9 +10,9 @@ Header row with titles and filters automatic generated on compilation step.
 ## Compatibility
 
 For work in IE < 9 need jQuery, just add:
-```
+```html
 <!--[if lt IE 9]>
-<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <![endif]-->
 ```
 
@@ -35,7 +35,7 @@ For work in IE < 9 need jQuery, just add:
 
 ### v0.2.2
 In functions that return data for the filters were removed `.promise`
-```
+```javascript
 $scope.names = function(column) {
     ...
     def.resolve(names);
