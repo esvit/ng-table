@@ -139,7 +139,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @ngdoc method
          * @name ngTable.factory:ngTableParams#sorting
          * @methodOf ngTable.factory:ngTableParams
-         * @description If parameter page not set return current sorting else set current sorting
+         * @description If 'sorting' parameter is not set, return current sorting. Otherwise set current sorting.
          *
          * @param {string} sorting New sorting
          * @returns {Object} Current sorting or `this`
