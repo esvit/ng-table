@@ -97,7 +97,7 @@
                         total: function () { return $scope.rows.length; }, // length of data
                         getData: function($defer, params) {
                             var orderedData = params.sorting() ?
-                                    $filter('orderBy')($scope.rows, $scope.tableParams.orderBy()) :   $scope.rows;
+                                    $filter('orderBy')($scope.rows, $scope.tableParams.sorting()) :   $scope.rows;
 
                             $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                         }
