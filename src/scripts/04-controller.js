@@ -27,42 +27,15 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
     }, true);
 
     $scope.sortBy = function (column) {
-        var i;
-        var parsedSortables = $scope.parse(column.sortable);
-        if (!parsedSortables) {
+        var parsedSortable = $scope.parse(column.sortable);
+        if (!parsedSortable) {
             return;
         }
-        parsedSortables = Array.prototype.concat.apply(parsedSortables);
-
-        for (i = 0; i < $scope.$columns.length; i++) {
-          $scope.$columns[i].sorting = null;
-        }
-
-        var oldSortables = $scope.params.sorting();
-        var indexedSortables = {};
-        for (i in oldSortables) {
-            indexedSortables[oldSortables[i].substr(1)] = oldSortables[i][0];
-        }
-        
-        var sortable, direction;
-        for (i = 0; i < parsedSortables.length; i++) {
-            sortable = parsedSortables[i];
-            if (sortable[0] == '-' || sortable[0] == '+') {
-              direction = sortable[0];
-              sortable = sortable.substr(1);
-            }
-            if (indexedSortables[sortable]) {
-              direction = indexedSortables[sortable] == '+' ? '-' : '+';
-            }
-            if (!direction) {
-              direction = "+";
-            }
-            parsedSortables[i] = direction + sortable;
-        }
-
-        column.sorting = parsedSortables[0][0];
-
-        $scope.params.sorting(parsedSortables);
+        var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === "desc");
+        var sortingParams = {};
+        sortingParams[parsedSortable] = (sorting ? 'asc' : 'desc');
+        $scope.params.parameters({
+            sorting: sortingParams
+        });
     };
-
 }];

@@ -46,15 +46,12 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                                 value[lastKey = name] = (isNumber(v) ? parseFloat(v) : v);
                             }
                         }
+                        if (lastKey === 'sorting') {
+                            params[lastKey] = {};
+                        }
                         params[lastKey] = angular.extend(params[lastKey] || {}, value[lastKey]);
                     } else {
-                        if (key == 'sorting' && angular.isString(newParameters.sorting)) {
-                          params.sorting = newParameters.sorting.split(',');
-                        } else if (isNumber(newParameters[key])) {
-                          params[key] = parseFloat(newParameters[key]);
-                        } else {
-                          params[key] = newParameters[key];
-                        }
+                        params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
                     }
                 }
                 $log.debug && $log.debug('ngTable: set parameters', params);
@@ -142,23 +139,19 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @ngdoc method
          * @name ngTable.factory:ngTableParams#sorting
          * @methodOf ngTable.factory:ngTableParams
-         * @description If 'sorting' parameter is not set, return current sorting. Otherwise set current sorting.
+         * @description If parameter page not set return current sorting else set current sorting
          *
-         * @param {string|array} sorting New sorting.
-         * @returns {Object} Current sorting (compatible with angular's orderBy filter) or `this`
+         * @param {string} sorting New sorting
+         * @returns {Object} Current sorting or `this`
          */
-        this.sorting = function () {
-            if (arguments.length == 0) {
-                return params.sorting;
+        this.sorting = function (sorting) {
+            if (arguments.length == 2){
+                var sortArray = {};
+                sortArray[sorting] = arguments[1];
+                this.parameters({'sorting': sortArray});
+                return this;
             }
-
-            var sorting = Array.prototype.concat.apply([], arguments);
-            for (var i = 0; i < sorting.length; i += 1) {
-                if (sorting[i][0] !== '+' && sorting[i][0] !== '-') {
-                    sorting[i] = '+' + sorting[i];
-                }
-            }
-            return this.parameters({'sorting': sorting});
+            return angular.isDefined(sorting) ? this.parameters({'sorting': sorting}) : params.sorting;
         };
 
         /**
@@ -173,6 +166,22 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          */
         this.isSortBy = function (field, direction) {
             return angular.isDefined(params.sorting[field]) && params.sorting[field] == direction;
+        };
+
+        /**
+         * @ngdoc method
+         * @name ngTable.factory:ngTableParams#orderBy
+         * @methodOf ngTable.factory:ngTableParams
+         * @description Return object of sorting parameters for angular filter
+         *
+         * @returns {Array} Array like: [ '-name', '+age' ]
+         */
+        this.orderBy = function () {
+            var sorting = [];
+            for (var column in params.sorting) {
+                sorting.push((params.sorting[column] === "asc" ? "+" : "-") + column);
+            }
+            return sorting;
         };
 
         /**
@@ -300,13 +309,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 if (params.hasOwnProperty(key)) {
                     var item = params[key],
                         name = encodeURIComponent(key);
-                    if (angular.isArray(item)) {
-                      if (asString) {
-                        pairs.push(name + "=" + item.join(','));
-                      } else {
-                        pairs[name] = item.join(',');
-                      }
-                    } else if (typeof item === "object") {
+                    if (typeof item === "object") {
                         for (var subkey in item) {
                             if (!angular.isUndefined(item[subkey]) && item[subkey] !== "") {
                                 var pname = name + "[" + encodeURIComponent(subkey) + "]";

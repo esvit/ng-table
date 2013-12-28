@@ -76,7 +76,7 @@
                                     $filter('filter')(data, params.filter()) :
                                     data;
                             var orderedData = params.sorting() ?
-                                    $filter('orderBy')(filteredData, params.sorting()) :
+                                    $filter('orderBy')(filteredData, params.orderBy()) :
                                     data;
 
                             params.total(orderedData.length); // set total for recalc pagination

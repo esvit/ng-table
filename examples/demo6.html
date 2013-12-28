@@ -118,7 +118,7 @@
 
                     var params = new ngTableParams(requestParams);
                     data = params.filter() ? $filter('filter')(data, params.filter()) : data;
-                    data = params.sorting() ? $filter('orderBy')(data, params.sorting()) : data;
+                    data = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
 
                     var total = data.length;
                     data = data.slice((params.page() - 1) * params.count(), params.page() * params.count());
