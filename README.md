@@ -22,6 +22,9 @@ For work in IE < 9 need jQuery, just add:
 
 ## Updates
 
+### v0.3.2 (master)
+- add multisorting (click on header with Ctrl-key)
+
 ### v0.3.1
 - add support of `header-class` attribute
 - add fixes for compatibility with early versions of AngularJS
