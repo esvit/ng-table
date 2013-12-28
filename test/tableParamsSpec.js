@@ -144,6 +144,7 @@ describe('ngTableParams', function () {
         expect(params.settings()).toEqual({
             $scope: null,
             $loading: false,
+            data: null,
             total: 0,
             counts: [10, 25, 50, 100],
             getData: params.getData,
@@ -159,6 +160,7 @@ describe('ngTableParams', function () {
         expect(params.settings()).toEqual({
             $scope: null,
             $loading: false,
+            data: null,
             total: 100,
             counts: [10, 25, 50, 100],
             getData: params.getData,
