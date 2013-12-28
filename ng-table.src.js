@@ -396,7 +396,10 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                     self.data = settings.$scope.$data = data;
                 }
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
-            });
+            }, function () {
+                settings.$loading = false;
+                $log.debug && $log.debug('ngTable: reload data rejects');
+			});
         };
         
         this.reloadPages = function () {
