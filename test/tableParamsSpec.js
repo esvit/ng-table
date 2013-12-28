@@ -137,9 +137,7 @@ describe('ngTableParams', function () {
     }));
 
     it('ngTableParams test settings', inject(function (ngTableParams) {
-        var params = new ngTableParams({
-            'sorting[name]': 'asc'
-        });
+        var params = new ngTableParams();
 
         expect(params.settings()).toEqual({
             $scope: null,
@@ -150,11 +148,7 @@ describe('ngTableParams', function () {
             getGroups: params.getGroups
         });
 
-        params = new ngTableParams({
-            'sorting[name]': 'asc'
-        }, {
-            total: 100
-        });
+        params = new ngTableParams({}, { total: 100 });
 
         expect(params.settings()).toEqual({
             $scope: null,
@@ -167,9 +161,7 @@ describe('ngTableParams', function () {
     }));
 
     it('ngTableParams test getData', inject(function ($q, ngTableParams) {
-        var params = new ngTableParams({
-            'sorting[name]': 'asc'
-        });
+        var params = new ngTableParams();
         $defer = $q.defer();
         $defer.promise.then(function(data) {
             expect(data).toEqual([]);
@@ -178,9 +170,7 @@ describe('ngTableParams', function () {
     }));
 
     it('ngTableParams test grouping', inject(function ($q, ngTableParams) {
-        var params = new ngTableParams({
-            'sorting[name]': 'asc'
-        });
+        var params = new ngTableParams();
         params.getData = function ($defer) {
             $defer.resolve(data);
         };
