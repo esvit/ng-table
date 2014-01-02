@@ -5,7 +5,7 @@
                     'sort-asc': column.sorting == '+',
                     'sort-desc': column.sorting == '-'
                   }"
-        ng-click="sortBy(column)"
+        ng-click="sortBy(column, $event)"
         ng-show="column.show(this)"
         ng-init="template = column.headerTemplateURL(this)"
         class="header {{column.class}}">

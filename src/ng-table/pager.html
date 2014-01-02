@@ -1,5 +1,5 @@
-<div class="ng-cloak">
-    <div ng-if="params.settings().counts.length" class="btn-group pull-right">
+<div class="ng-cloak pager">
+    <div ng-if="params.settings().counts.length" class="page-count-control btn-group pull-right">
         <button ng-repeat="count in params.settings().counts" type="button"
                 ng-class="{'active':params.count() == count}"
                 ng-click="params.count(count)" class="btn btn-default btn-xs">

@@ -74,8 +74,12 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          */
         this.settings = function (newSettings) {
             if (angular.isDefined(newSettings)) {
+                if (angular.isArray(newSettings.data)) {
+                	//auto-set the total from passed in data
+                    newSettings.total = newSettings.data.length;
+                }
                 settings = angular.extend(settings, newSettings);
-                $log.debug && $log.debug('ngTable: set settings', params);
+                $log.debug && $log.debug('ngTable: set settings', settings);
                 return this;
             }
             return settings;
@@ -181,7 +185,11 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @param {Object} params New parameters
          */
         this.getData = function ($defer, params) {
-            $defer.resolve([]);
+            if (angular.isArray(this.data) && angular.isObject(params)) {
+                $defer.resolve(this.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            } else {            
+	            $defer.resolve([]);
+            }
         };
 
         /**
@@ -246,7 +254,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 minPage = Math.max(2, currentPage - maxPivotPages);
                 maxPage = Math.min(numPages - 1, currentPage + maxPivotPages * 2 - (currentPage - minPage));
                 minPage = Math.max(2, minPage - (maxPivotPages * 2 - (maxPage - minPage)));
-                i = minPage;
+                var i = minPage;
                 while (i <= maxPage) {
                     if ((i === minPage && i !== 2) || (i === maxPage && i !== numPages - 1)) {
                         pages.push({
@@ -366,6 +374,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
         var settings = {
             $scope: null, // set by ngTable controller
             $loading: false,
+            data: null, //allows data to be set when table is initialized
             total: 0,
             counts: [10, 25, 50, 100],
             getGroups: this.getGroups,

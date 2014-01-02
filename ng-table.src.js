@@ -120,8 +120,12 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          */
         this.settings = function (newSettings) {
             if (angular.isDefined(newSettings)) {
+                if (angular.isArray(newSettings.data)) {
+                	//auto-set the total from passed in data
+                    newSettings.total = newSettings.data.length;
+                }
                 settings = angular.extend(settings, newSettings);
-                $log.debug && $log.debug('ngTable: set settings', params);
+                $log.debug && $log.debug('ngTable: set settings', settings);
                 return this;
             }
             return settings;
@@ -227,7 +231,11 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @param {Object} params New parameters
          */
         this.getData = function ($defer, params) {
-            $defer.resolve([]);
+            if (angular.isArray(this.data) && angular.isObject(params)) {
+                $defer.resolve(this.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            } else {            
+	            $defer.resolve([]);
+            }
         };
 
         /**
@@ -292,7 +300,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 minPage = Math.max(2, currentPage - maxPivotPages);
                 maxPage = Math.min(numPages - 1, currentPage + maxPivotPages * 2 - (currentPage - minPage));
                 minPage = Math.max(2, minPage - (maxPivotPages * 2 - (maxPage - minPage)));
-                i = minPage;
+                var i = minPage;
                 while (i <= maxPage) {
                     if ((i === minPage && i !== 2) || (i === maxPage && i !== numPages - 1)) {
                         pages.push({
@@ -412,6 +420,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
         var settings = {
             $scope: null, // set by ngTable controller
             $loading: false,
+            data: null, //allows data to be set when table is initialized
             total: 0,
             counts: [10, 25, 50, 100],
             getGroups: this.getGroups,
@@ -642,8 +651,8 @@ angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in column.data" multiple ng-multiple="true" ng-model="params.filter()[name]" ng-show="filter==\'select-multiple\'" class="filter filter-select-multiple form-control"> </select>');
 	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in column.data" ng-model="params.filter()[name]" ng-show="filter==\'select\'" class="filter filter-select form-control"> </select>');
 	$templateCache.put('ng-table/filters/text.html', '<input type="text" ng-model="params.filter()[name]" ng-if="filter==\'text\'" class="input-filter form-control"/>');
-	$templateCache.put('ng-table/header.html', '<tr> <th ng-repeat="column in $columns" ng-class="{ \'sortable\': parse(column.sortable), \'sort-asc\': column.sorting==\'+\', \'sort-desc\': column.sorting==\'-\' }" ng-click="sortBy(column)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header {{column.class}}"> <div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)"></div> <div ng-if="template" ng-show="template"><div ng-include="template"></div></div> </th> </tr> <tr ng-show="show_filter" class="ng-table-filters"> <th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter"> <div ng-repeat="(name, filter) in column.filter"> <div ng-if="column.filterTemplateURL" ng-show="column.filterTemplateURL"> <div ng-include="column.filterTemplateURL"></div> </div> <div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL"> <div ng-include="\'ng-table/filters/\' + filter + \'.html\'"></div> </div> </div> </th> </tr> ');
-	$templateCache.put('ng-table/pager.html', '<div class="ng-cloak"> <div ng-if="params.settings().counts.length" class="btn-group pull-right"> <button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default btn-xs"> <span ng-bind="count"></span> </button> </div> <ul class="pagination"> <li ng-class="{\'disabled\': !page.active}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="page" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="">&#8230;</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">&raquo;</a> </li> </ul> </div>');
+	$templateCache.put('ng-table/header.html', '<tr> <th ng-repeat="column in $columns" ng-class="{ \'sortable\': parse(column.sortable), \'sort-asc\': column.sorting==\'+\', \'sort-desc\': column.sorting==\'-\' }" ng-click="sortBy(column, $event)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header {{column.class}}"> <div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)"></div> <div ng-if="template" ng-show="template"><div ng-include="template"></div></div> </th> </tr> <tr ng-show="show_filter" class="ng-table-filters"> <th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter"> <div ng-repeat="(name, filter) in column.filter"> <div ng-if="column.filterTemplateURL" ng-show="column.filterTemplateURL"> <div ng-include="column.filterTemplateURL"></div> </div> <div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL"> <div ng-include="\'ng-table/filters/\' + filter + \'.html\'"></div> </div> </div> </th> </tr> ');
+	$templateCache.put('ng-table/pager.html', '<div class="ng-cloak pager"> <div ng-if="params.settings().counts.length" class="page-count-control btn-group pull-right"> <button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default btn-xs"> <span ng-bind="count"></span> </button> </div> <ul class="pagination"> <li ng-class="{\'disabled\': !page.active}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="page" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="">&#8230;</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">&raquo;</a> </li> </ul> </div> ');
 }]);
     return app;
 }));
