@@ -457,9 +457,9 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
         }
         return -1;
     };
-    var __arrayPrefixMatch = function(template, test) {
+    var sortablePrefixMatch = function(template, test) {
         for (var i = 0, l = template.length; i < l; i++) {
-            if (!(i in test) || template[i] != test[i]) return false;
+            if (!(i in test) || template[i].substr(1) != test[i].substr(1)) return false;
         }
         return true;
     };
@@ -491,7 +491,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
             var columnSortables = $scope.parse($scope.$columns[i].sortable);
             if (!columnSortables) continue;
             columnSortables = normalizeSortables(columnSortables);
-            if (__arrayPrefixMatch(columnSortables, initialSortables)) {
+            if (sortablePrefixMatch(columnSortables, initialSortables)) {
                 $scope.$columns[i].sorting = initialSortables[0][0];
             }
         }
