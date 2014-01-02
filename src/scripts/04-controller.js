@@ -14,6 +14,29 @@
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
 var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTableParams, $q) {
+    // Some helper functions:
+    var __indexOf = [].indexOf || function(item) {
+        for (var i = 0, l = this.length; i < l; i++) {
+            if (i in this && this[i] === item) return i;
+        }
+        return -1;
+    };
+    var __arrayPrefixMatch = function(template, test) {
+        for (var i = 0, l = template.length; i < l; i++) {
+            if (!(i in test) || template[i] != test[i]) return false;
+        }
+        return true;
+    };
+    var normalizeSortables = function(sortables) {
+        sortables = Array.prototype.concat.call([], sortables);
+        for (var i = 0; i < sortables.length; i++) {
+            if (sortables[i][0] != '+' && sortables[i][0] != '-') {
+                sortables[i] = '+' + sortables[i];
+            }
+        }
+        return sortables;
+    };
+
     $scope.$loading = false;
 
     if (!$scope.params) {
@@ -24,17 +47,28 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
     $scope.$watch('params.$params', function(params) {
         $scope.params.settings().$scope = $scope;
         $scope.params.reload();
+
+        // Set initial sort column, if there is one
+        var initialSortables = $scope.params.sorting();
+        if (!initialSortables) return;
+        for(var i = 0; i < $scope.$columns.length; i++) {
+            var columnSortables = $scope.parse($scope.$columns[i].sortable);
+            if (!columnSortables) continue;
+            columnSortables = normalizeSortables(columnSortables);
+            if (__arrayPrefixMatch(columnSortables, initialSortables)) {
+                $scope.$columns[i].sorting = initialSortables[0][0];
+            }
+        }
     }, true);
 
     $scope.sortBy = function (column) {
-        var i;
         var parsedSortables = $scope.parse(column.sortable);
         if (!parsedSortables) {
             return;
         }
-        parsedSortables = Array.prototype.concat.apply(parsedSortables);
+        parsedSortables = normalizeSortables(parsedSortables);
 
-        for (i = 0; i < $scope.$columns.length; i++) {
+        for (var i = 0; i < $scope.$columns.length; i++) {
           $scope.$columns[i].sorting = null;
         }
 
@@ -53,9 +87,6 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
             }
             if (indexedSortables[sortable]) {
               direction = indexedSortables[sortable] == '+' ? '-' : '+';
-            }
-            if (!direction) {
-              direction = "+";
             }
             parsedSortables[i] = direction + sortable;
         }
