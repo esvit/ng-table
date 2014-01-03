@@ -24,6 +24,7 @@ For work in IE < 9 need jQuery, just add:
 
 ### v0.3.2 (master)
 - add multisorting (click on header with Ctrl-key)
+- add css classes (ng-table-pager, ng-table-pagination, ng-table-counts)
 
 ### v0.3.1
 - add support of `header-class` attribute

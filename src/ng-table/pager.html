@@ -1,12 +1,12 @@
-<div class="ng-cloak pager">
-    <div ng-if="params.settings().counts.length" class="page-count-control btn-group pull-right">
+<div class="ng-cloak ng-table-pager">
+    <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right">
         <button ng-repeat="count in params.settings().counts" type="button"
                 ng-class="{'active':params.count() == count}"
-                ng-click="params.count(count)" class="btn btn-default btn-xs">
+                ng-click="params.count(count)" class="btn btn-default">
             <span ng-bind="count"></span>
         </button>
     </div>
-    <ul class="pagination">
+    <ul class="pagination ng-table-pagination">
         <li ng-class="{'disabled': !page.active}" ng-repeat="page in pages" ng-switch="page.type">
             <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a>
             <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>
