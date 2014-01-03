@@ -427,7 +427,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             total: 0,
             counts: [10, 25, 50, 100],
             getGroups: this.getGroups,
-            getData: this.getData
+            getData: this.getData,
+            filterDelay: 750
         };
 
         this.settings(baseSettings);
@@ -460,9 +461,24 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
     }
     $scope.params.settings().$scope = $scope;
 
-    $scope.$watch('params.$params', function(params) {
+    var delayFilter = (function(){
+        var timer = 0;
+        return function(callback, ms){
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
+    $scope.$watch('params.$params', function(newParams, oldParams) {
         $scope.params.settings().$scope = $scope;
-        $scope.params.reload();
+
+        if (!angular.equals(newParams.filter, oldParams.filter)) {
+            delayFilter(function () {
+                $scope.params.reload();
+            }, $scope.params.settings().filterDelay);
+        } else {
+            $scope.params.reload();
+        }
     }, true);
 
     $scope.sortBy = function (column, event) {

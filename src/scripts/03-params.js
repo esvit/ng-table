@@ -381,7 +381,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             total: 0,
             counts: [10, 25, 50, 100],
             getGroups: this.getGroups,
-            getData: this.getData
+            getData: this.getData,
+            filterDelay: 750
         };
 
         this.settings(baseSettings);
