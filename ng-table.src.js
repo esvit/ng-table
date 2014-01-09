@@ -418,7 +418,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             filter: {},
             sorting: {},
             group: {},
-            groupBy: null
+            groupBy: null,
+            defaultSort: 'desc'
         };
         var settings = {
             $scope: null, // set by ngTable controller
@@ -470,9 +471,11 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
         if (!parsedSortable) {
             return;
         }
-        var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === "desc");
+        var defaultSort = $scope.params.$params.defaultSort;
+        var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
+        var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
         var sortingParams = event.ctrlKey ? $scope.params.sorting() : {};
-        sortingParams[parsedSortable] = (sorting ? 'asc' : 'desc');
+        sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
         $scope.params.parameters({
             sorting: sortingParams
         });
