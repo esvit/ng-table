@@ -30,7 +30,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 var thead = element.find('thead');
 
                 // IE 8 fix :not(.ng-table-group) selector
-                angular.forEach(angular.element(element.find('tr')), function(tr) {
+                angular.forEach(angular.element(element.find('tr')), function (tr) {
                     tr = angular.element(tr);
                     if (!tr.hasClass('ng-table-group') && !row) {
                         row = tr;
@@ -44,8 +44,8 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
                         return;
                     }
-                    var parsedAttribute = function(attr, defaultValue) {
-                        return function(scope) {
+                    var parsedAttribute = function (attr, defaultValue) {
+                        return function (scope) {
                             return $parse(el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr))(scope, {
                                 $columns: columns
                             }) || defaultValue;
@@ -55,8 +55,13 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     var parsedTitle = parsedAttribute('title', ' '),
                         headerTemplateURL = parsedAttribute('header', false),
                         filter = parsedAttribute('filter', false)(),
-                        filterTemplateURL = false;
+                        filterTemplateURL = false,
+                        filterName = false;
 
+                    if (filter && filter.name) {
+                        filterName = filter.name;
+                        delete filter.name;
+                    }
                     if (filter && filter.templateURL) {
                         filterTemplateURL = filter.templateURL;
                         delete filter.templateURL;
@@ -67,9 +72,10 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         id: i++,
                         title: parsedTitle,
                         sortable: parsedAttribute('sortable', false),
-                        'class': el.attr('x-data-header-class') || el.attr('data-header-class') || el.attr("header-class"),
+                        'class': el.attr('x-data-header-class') || el.attr('data-header-class') || el.attr('header-class'),
                         filter: filter,
                         filterTemplateURL: filterTemplateURL,
+                        filterName: filterName,
                         headerTemplateURL: headerTemplateURL,
                         filterData: (el.attr("filter-data") ? el.attr("filter-data") : null),
                         show: (el.attr("ng-show") ? function (scope) {
@@ -109,7 +115,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         if (!(angular.isObject(def) && angular.isObject(def.promise))) {
                             throw new Error('Function ' + column.filterData + ' must be instance of $q.defer()');
                         }
-                        delete column['filterData'];
+                        delete column.filterData;
                         return def.promise.then(function (data) {
                             if (!angular.isArray(data)) {
                                 data = [];

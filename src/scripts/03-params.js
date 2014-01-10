@@ -212,16 +212,15 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
 
             defer.promise.then(function(data) {
                 var groups = {};
-                for (var k in data) {
-                    var item = data[k],
-                        groupName = angular.isFunction(column) ? column(item) : item[column];
+                angular.forEach(data, function(item) {
+                    var groupName = angular.isFunction(column) ? column(item) : item[column];
 
                     groups[groupName] = groups[groupName] || {
                         data: []
                     };
                     groups[groupName]['value'] = groupName;
                     groups[groupName].data.push(item);
-                }
+                });
                 var result = [];
                 for (var i in groups) {
                     result.push(groups[i]);
