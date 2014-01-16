@@ -62,7 +62,13 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
     var ngTableParams = function (baseParameters, baseSettings) {
-        var self = this;
+        var self = this,
+
+            log = function() {
+                if (settings.debugMode && $log.debug) {
+                    $log.debug.apply(this, arguments);
+                }
+            };
 
         this.data = [];
 
@@ -100,7 +106,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                         params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
                     }
                 }
-                $log.debug && $log.debug('ngTable: set parameters', params);
+                log('ngTable: set parameters', params);
                 return this;
             }
             return params;
@@ -118,7 +124,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
         this.settings = function (newSettings) {
             if (angular.isDefined(newSettings)) {
                 settings = angular.extend(settings, newSettings);
-                $log.debug && $log.debug('ngTable: set settings', params);
+                log('ngTable: set settings', params);
                 return this;
             }
             return settings;
@@ -264,7 +270,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 for (var i in groups) {
                     result.push(groups[i]);
                 }
-                $log.debug && $log.debug('ngTable: refresh groups', result);
+                log('ngTable: refresh groups', result);
                 $defer.resolve(result);
             });
             this.getData(defer, self);
@@ -386,10 +392,10 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             } else {
                 settings.getData($defer, this);
             }
-            $log.debug && $log.debug('ngTable: reload data');
+            log('ngTable: reload data');
             $defer.promise.then(function(data) {
                 settings.$loading = false;
-                $log.debug && $log.debug('ngTable: current scope', settings.$scope);
+                log('ngTable: current scope', settings.$scope);
                 if (settings.groupBy) {
                     self.data = settings.$scope.$groups = data;
                 } else {
@@ -398,7 +404,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
             });
         };
-        
+
         this.reloadPages = function () {
             var self = this;
             settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
