@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         cmpnt: grunt.file.readJSON('bower.json'),
-        banner: '/*! ngTable v<%= cmpnt.version %> by Vitalii Savchuk(esvit666@gmail.com) - ' + 
+        banner: '/*! ngTable v<%= cmpnt.version %> by Vitalii Savchuk(esvit666@gmail.com) - ' +
                 'https://github.com/esvit/ng-table - New BSD License */\n',
         clean: {
             working: {
@@ -20,11 +20,11 @@ module.exports = function(grunt) {
         uglify: {
             js: {
                 src: ['ng-table.src.js'],
-                dest: 'ng-table.js',
+                dest: 'ng-table.min.js',
                 options: {
                     banner: '<%= banner %>',
                     sourceMap: function(fileName) {
-                        return fileName.replace(/\.js$/, '.map');
+                        return fileName.replace(/\.min\.js$/, '.map');
                     }
                 }
             }
@@ -46,14 +46,14 @@ module.exports = function(grunt) {
         less: {
             css: {
                 files: {
-                    'ng-table.css': 'src/styles/ng-table.less'
+                    'ng-table.min.css': 'src/styles/ng-table.less'
                 }
             }
         },
         cssmin: {
             css: {
                 files: {
-                    'ng-table.css': 'ng-table.css'
+                    'ng-table.min.css': 'ng-table.min.css'
                 },
                 options: {
                     banner: '<%= banner %>'
