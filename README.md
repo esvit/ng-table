@@ -1,3 +1,5 @@
+[![Ukraine](http://www.idss.org.ua/logo/ua.png)](http://i.dailymail.co.uk/i/pix/2013/12/02/article-2516473-19C22A9E00000578-178_964x642.jpg) Sorry, to February 1, 2014 I will not be able to update the code through a revolution in my country. Once freedom is liberated I'll release the new version and the answer to all questions
+
 Table + AngularJS
 =================
 [![Build Status](https://travis-ci.org/esvit/ng-table.png)](https://travis-ci.org/esvit/ng-table) [![Coverage Status](https://coveralls.io/repos/esvit/ng-table/badge.png)](https://coveralls.io/r/esvit/ng-table) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/esvit/ng-table/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
