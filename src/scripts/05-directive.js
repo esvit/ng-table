@@ -133,14 +133,22 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
                         var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
-                        var paginationTemplate = angular.element(document.createElement('div')).attr('ng-include', 'templates.pagination');
                         element.find('thead').remove();
                         var tbody = element.find('tbody');
                         element.prepend(headerTemplate);
                         $compile(headerTemplate)(scope);
-                        $compile(paginationTemplate)(scope);
                         element.addClass('ng-table');
-                        return element.after(paginationTemplate);
+                        if ("paginationBottom" in attrs || !("paginationTop" in attrs)) {
+                            var paginationTemplate = angular.element(document.createElement('div')).attr('ng-include', 'templates.pagination');
+                            $compile(paginationTemplate)(scope);
+                            element.after(paginationTemplate);
+                        }
+                        if ("paginationTop" in attrs) {
+                            var paginationTemplate = angular.element(document.createElement('div')).attr('ng-include', 'templates.pagination');
+                            $compile(paginationTemplate)(scope);
+                            element.before(paginationTemplate);
+                        }
+                        return element;
                     }
                 };
             }
