@@ -619,7 +619,13 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
                         element.addClass('ng-table');
-                        return element.after(paginationTemplate);
+                        
+                        if (attrs.paginationTargetId) {
+                          angular.element(document.getElementById(attrs.paginationTargetId)).append(paginationTemplate);
+                        } else {
+                          element.after(paginationTemplate);
+                        }
+                        return element;
                     }
                 };
             }
