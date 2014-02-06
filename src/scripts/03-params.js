@@ -243,7 +243,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @returns {Array} Array of pages
          */
         this.generatePagesArray = function (currentPage, totalItems, pageSize) {
-            var maxBlocks, maxPage, maxPivotPages, minPage, numPages, pages;
+            var maxBlocks, maxPage, maxPivotPages, minPage, numPages, pages, i,
             maxBlocks = 11;
             pages = [];
             numPages = Math.ceil(totalItems / pageSize);
@@ -303,7 +303,9 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          */
         this.url = function (asString) {
             asString = asString || false;
-            var pairs = (asString ? [] : {});
+            var pairs = (asString ? [] : {}),
+                key;
+                
             for (key in params) {
                 if (params.hasOwnProperty(key)) {
                     var item = params[key],
