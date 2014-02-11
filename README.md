@@ -23,7 +23,8 @@ For work in IE < 9 need jQuery, just add:
 ## Updates
 
 ### v0.3.2 (master)
-- add filterDelay parameter
+- add defaultSort setting
+- add filterDelay setting
 - add multisorting (click on header with Ctrl-key)
 - add css classes (ng-table-pager, ng-table-pagination, ng-table-counts)
 
@@ -56,7 +57,7 @@ bower install ng-table
 ```
 
 ## Development
-We use Karma and jshint to ensure the quality of the code. The easiest way to run these checks is to use grunt:
+We use Karma to ensure the quality of the code. The easiest way to run these checks is to use grunt:
 
 ```sh
 npm install -g grunt-cli
@@ -64,7 +65,7 @@ npm install && bower install
 grunt
 ```
 
-The karma task will try to open Firefox and Chrome as browser in which to run the tests.  Make sure this is available or change the configuration in `test\karma.conf.js`
+The karma task will try to open Firefox and Chrome as browser in which to run the tests. Make sure this is available or change the configuration in `karma.conf.js`
 
 ## Examples (from simple to complex)
 
