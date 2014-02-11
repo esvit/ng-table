@@ -1,4 +1,6 @@
 (function(angular, factory) {
+    'use strict';
+
     if (typeof define === 'function' && define.amd) {
         define(['angular'], function(angular) {
             return factory(angular);
@@ -7,6 +9,7 @@
         return factory(angular);
     }
 }(angular || null, function(angular) {
+    'use strict';
 /**
  * ngTable: Table + Angular JS
  *
@@ -20,28 +23,28 @@
  * @name ngTable
  * @description ngTable: Table + Angular JS
  * @example
-   <doc:example>
-     <doc:source>
-        <script>
-        var app = angular.module('myApp', ['ngTable']);
-        app.controller('MyCtrl', function($scope) {
-            $scope.users = [
-                {name: "Moroni", age: 50},
-                {name: "Tiancum", age: 43},
-                {name: "Jacob", age: 27},
-                {name: "Nephi", age: 29},
-                {name: "Enos", age: 34}
-            ];
-        });
-        </script>
-        <table ng-table class="table">
-        <tr ng-repeat="user in users">
-            <td data-title="'Name'">{{user.name}}</td>
-            <td data-title="'Age'">{{user.age}}</td>
-        </tr>
-        </table>
-     </doc:source>
-   </doc:example>
+ <doc:example>
+ <doc:source>
+ <script>
+ var app = angular.module('myApp', ['ngTable']);
+ app.controller('MyCtrl', function($scope) {
+                    $scope.users = [
+                        {name: "Moroni", age: 50},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34}
+                    ];
+                });
+ </script>
+ <table ng-table class="table">
+ <tr ng-repeat="user in users">
+ <td data-title="'Name'">{{user.name}}</td>
+ <td data-title="'Age'">{{user.age}}</td>
+ </tr>
+ </table>
+ </doc:source>
+ </doc:example>
  */
 var app = angular.module('ngTable', []);
 /**
@@ -118,7 +121,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
         this.settings = function (newSettings) {
             if (angular.isDefined(newSettings)) {
                 if (angular.isArray(newSettings.data)) {
-                	//auto-set the total from passed in data
+                    //auto-set the total from passed in data
                     newSettings.total = newSettings.data.length;
                 }
                 settings = angular.extend(settings, newSettings);
@@ -191,7 +194,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @returns {Object} Current sorting or `this`
          */
         this.sorting = function (sorting) {
-            if (arguments.length == 2){
+            if (arguments.length == 2) {
                 var sortArray = {};
                 sortArray[sorting] = arguments[1];
                 this.parameters({'sorting': sortArray});
@@ -242,8 +245,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
         this.getData = function ($defer, params) {
             if (angular.isArray(this.data) && angular.isObject(params)) {
                 $defer.resolve(this.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            } else {            
-	            $defer.resolve([]);
+            } else {
+                $defer.resolve([]);
             }
         };
 
@@ -256,9 +259,9 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
         this.getGroups = function ($defer, column) {
             var defer = $q.defer();
 
-            defer.promise.then(function(data) {
+            defer.promise.then(function (data) {
                 var groups = {};
-                angular.forEach(data, function(item) {
+                angular.forEach(data, function (item) {
                     var groupName = angular.isFunction(column) ? column(item) : item[column];
 
                     groups[groupName] = groups[groupName] || {
@@ -350,7 +353,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
         this.url = function (asString) {
             asString = asString || false;
             var pairs = (asString ? [] : {});
-            for (key in params) {
+            for (var key in params) {
                 if (params.hasOwnProperty(key)) {
                     var item = params[key],
                         name = encodeURIComponent(key);
@@ -383,7 +386,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @methodOf ngTable.factory:ngTableParams
          * @description Reload table data
          */
-        this.reload = function() {
+        this.reload = function () {
             var $defer = $q.defer(),
                 self = this;
 
@@ -394,7 +397,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 settings.getData($defer, this);
             }
             $log.debug && $log.debug('ngTable: reload data');
-            $defer.promise.then(function(data) {
+            $defer.promise.then(function (data) {
                 settings.$loading = false;
                 $log.debug && $log.debug('ngTable: current scope', settings.$scope);
                 if (settings.groupBy) {
@@ -405,7 +408,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
             });
         };
-        
+
         this.reloadPages = function () {
             var self = this;
             settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
@@ -424,6 +427,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             $loading: false,
             data: null, //allows data to be set when table is initialized
             total: 0,
+            filterDelay: 750,
             counts: [10, 25, 50, 100],
             getGroups: this.getGroups,
             getData: this.getData
@@ -451,7 +455,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
  * @description
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
-var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTableParams, $q) {
+var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTableParams, $q) {
     $scope.$loading = false;
 
     if (!$scope.params) {
@@ -459,9 +463,24 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
     }
     $scope.params.settings().$scope = $scope;
 
-    $scope.$watch('params.$params', function(params) {
+    var delayFilter = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
+    $scope.$watch('params.$params', function (newParams, oldParams) {
         $scope.params.settings().$scope = $scope;
-        $scope.params.reload();
+
+        if (!angular.equals(newParams.filter, oldParams.filter)) {
+            delayFilter(function () {
+                $scope.params.reload();
+            }, $scope.params.settings().filterDelay);
+        } else {
+            $scope.params.reload();
+        }
     }, true);
 
     $scope.sortBy = function (column, event) {

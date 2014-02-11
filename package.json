@@ -1,36 +1,37 @@
 {
-  "name": "ng-table",
-  "version": "0.3.1",
-  "author": "Vitalii Savchuk <esvit666@gmail.com>",
-  "license": "BSD",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/esvit/ng-table.git"
-  },
-  "devDependencies": {
-    "coffee-script": "~1.6.2",
-    "grunt-regarde": "~0.1.1",
-    "grunt-contrib-jade": "~0.5.0",
-    "grunt-hustler": "0.11.2",
-    "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-coffee": "~0.7.0",
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-requirejs": "~0.4.0",
-    "grunt-contrib-uglify": "~0.2.1",
-    "grunt": "~0.4.2",
-    "grunt-contrib-less": "~0.5.2",
-    "grunt-contrib-cssmin": "~0.6.1",
-    "karma": "~0.10",
-    "karma-jasmine": "*",
-    "karma-chrome-launcher": "*",
-    "karma-firefox-launcher": "*",
-    "karma-ng-html2js-preprocessor": "*",
-    "coveralls": "",
-    "karma-coverage": "~0.1.0",
-    "grunt-coffee-build": "~1.4.12"
-  },
-  "scripts": {
-    "test": "karma start --single-run --no-auto-watch"
-  }
+    "name": "ng-table",
+    "version": "0.3.1",
+    "author": "Vitalii Savchuk <esvit666@gmail.com>",
+    "license": "BSD",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/esvit/ng-table.git"
+    },
+    "devDependencies": {
+        "coffee-script": "~1.6.2",
+        "grunt-regarde": "~0.1.1",
+        "grunt-contrib-jade": "~0.5.0",
+        "grunt-hustler": "0.11.2",
+        "grunt-contrib-copy": "~0.4.1",
+        "grunt-contrib-coffee": "~0.7.0",
+        "grunt-contrib-clean": "~0.4.0",
+        "grunt-contrib-concat": "~0.3.0",
+        "grunt-contrib-requirejs": "~0.4.0",
+        "grunt-contrib-uglify": "~0.2.1",
+        "grunt": "~0.4.2",
+        "grunt-contrib-less": "~0.5.2",
+        "grunt-contrib-cssmin": "~0.6.1",
+        "load-grunt-tasks": "~0.2.0",
+        "karma": "~0.10",
+        "karma-jasmine": "*",
+        "karma-chrome-launcher": "*",
+        "karma-firefox-launcher": "*",
+        "karma-ng-html2js-preprocessor": "*",
+        "coveralls": "",
+        "karma-coverage": "~0.1.0",
+        "grunt-coffee-build": "~1.4.12"
+    },
+    "scripts": {
+        "test": "karma start --single-run --no-auto-watch"
+    }
 }

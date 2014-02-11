@@ -1,38 +1,38 @@
 // Karma configuration file
 // See http://karma-runner.github.io/0.10/config/configuration-file.html
-module.exports = function(config) {
-  config.set({
-    basePath: '',
+module.exports = function (config) {
+    config.set({
+        basePath: '',
 
-    frameworks: ['jasmine'],
+        frameworks: ['jasmine'],
 
-    // list of files / patterns to load in the browser
-    files: [
-      // libraries
-      'bower_components/angular/angular.js',
-      'bower_components/angular-mocks/angular-mocks.js',
+        // list of files / patterns to load in the browser
+        files: [
+            // libraries
+            'bower_components/angular/angular.js',
+            'bower_components/angular-mocks/angular-mocks.js',
 
-      // directive
-      'ng-table.src.js',
+            // directive
+            'ng-table.src.js',
 
-      // tests
-      'test/*.js'
-      //'test/tableParamsSpec.js'
-      //'test/tableControllerSpec.js'
-    ],
+            // tests
+            'test/*.js'
+            //'test/tableParamsSpec.js'
+            //'test/tableControllerSpec.js'
+        ],
 
-    // generate js files from html templates
-    preprocessors: {
-      '*.js': 'coverage'
-    },
+        // generate js files from html templates
+        preprocessors: {
+            '*.js': 'coverage'
+        },
 
-    reporters: ['progress', 'coverage'],
+        reporters: ['progress', 'coverage'],
 
-    autoWatch: true,
-    browsers: ['PhantomJS'],
-    coverageReporter: {
-        type: 'lcov',
-        dir : 'out/coverage'
-    }
-  });
+        autoWatch: true,
+        browsers: ['Chrome'],
+        coverageReporter: {
+            type: 'lcov',
+            dir: 'out/coverage'
+        }
+    });
 };

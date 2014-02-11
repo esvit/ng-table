@@ -1,9 +1,25 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
+
+    require('load-grunt-tasks')(grunt);
+
+    grunt.registerTask('dev', [
+        'clean',
+        'ngTemplateCache',
+        'concat',
+        'less',
+        'copy'
+    ]);
+
+    grunt.registerTask('default', [
+        'dev',
+        'uglify',
+        'cssmin'
+    ]);
 
     grunt.initConfig({
         cmpnt: grunt.file.readJSON('bower.json'),
         banner: '/*! ngTable v<%= cmpnt.version %> by Vitalii Savchuk(esvit666@gmail.com) - ' +
-                'https://github.com/esvit/ng-table - New BSD License */\n',
+            'https://github.com/esvit/ng-table - New BSD License */\n',
         clean: {
             working: {
                 src: ['ng-table.*', './.temp/views', './.temp/']
@@ -11,10 +27,12 @@ module.exports = function(grunt) {
         },
         copy: {
             styles: {
-                files: [{
-                    src: './src/styles/ng-table.less',
-                    dest: './ng-table.less'
-                }]
+                files: [
+                    {
+                        src: './src/styles/ng-table.less',
+                        dest: './ng-table.less'
+                    }
+                ]
             }
         },
         uglify: {
@@ -23,7 +41,7 @@ module.exports = function(grunt) {
                 dest: 'ng-table.min.js',
                 options: {
                     banner: '<%= banner %>',
-                    sourceMap: function(fileName) {
+                    sourceMap: function (fileName) {
                         return fileName.replace(/\.min\.js$/, '.map');
                     }
                 }
@@ -72,27 +90,4 @@ module.exports = function(grunt) {
             }
         }
     });
-
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-hustler');
-
-    grunt.registerTask('dev', [
-        'clean',
-        'ngTemplateCache',
-        'concat',
-        'less',
-        'copy'
-    ]);
-
-    grunt.registerTask('default', [
-        'dev',
-        'uglify',
-        'cssmin'
-    ]);
-
 };
