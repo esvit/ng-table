@@ -23,6 +23,7 @@ For work in IE < 9 need jQuery, just add:
 ## Updates
 
 ### v0.3.2 (master)
+- add debugMode setting
 - add defaultSort setting
 - add filterDelay setting
 - add multisorting (click on header with Ctrl-key)
