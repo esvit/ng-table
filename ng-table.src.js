@@ -420,7 +420,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             filter: {},
             sorting: {},
             group: {},
-            groupBy: null
+            groupBy: null,
+            defaultSort: 'desc'
         };
         var settings = {
             $scope: null, // set by ngTable controller
