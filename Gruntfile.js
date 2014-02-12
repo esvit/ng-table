@@ -1,6 +1,11 @@
+var mountFolder = function (connect, dir) {
+    return connect.static(require('path').resolve(dir));
+};
 module.exports = function (grunt) {
 
     require('load-grunt-tasks')(grunt);
+
+    grunt.registerTask('serve', ['connect:serve', 'watch']);
 
     grunt.registerTask('dev', [
         'clean',
@@ -21,6 +26,7 @@ module.exports = function (grunt) {
         banner: '/*! ngTable v<%= cmpnt.version %> by Vitalii Savchuk(esvit666@gmail.com) - ' +
             'https://github.com/esvit/ng-table - New BSD License */\n',
         clean: {
+
             working: {
                 src: ['ng-table.*', './.temp/views', './.temp/']
             }
@@ -64,17 +70,55 @@ module.exports = function (grunt) {
         less: {
             css: {
                 files: {
-                    'ng-table.min.css': 'src/styles/ng-table.less'
+                    'ng-table.css': 'src/styles/ng-table.less'
                 }
             }
         },
         cssmin: {
             css: {
                 files: {
-                    'ng-table.min.css': 'ng-table.min.css'
+                    'ng-table.min.css': 'ng-table.css'
                 },
                 options: {
                     banner: '<%= banner %>'
+                }
+            }
+        },
+        watch: {
+            css: {
+                files: 'src/styles/*.less',
+                tasks: ['less'],
+                options: {
+                    livereload: true
+                }
+            },
+            js: {
+                files: 'src/scripts/*.js',
+                tasks: ['concat'],
+                options: {
+                    livereload: true
+                }
+            },
+            html: {
+                files: 'src/ng-table/*.html',
+                tasks: ['ngTemplateCache', 'concat'],
+                options: {
+                    livereload: true
+                }
+            }
+        },
+        connect: {
+            options: {
+                port: 8000,
+                hostname: 'localhost'
+            },
+            serve: {
+                options: {
+                    middleware: function (connect) {
+                        return [
+                            mountFolder(connect, '.')
+                        ];
+                    }
                 }
             }
         },

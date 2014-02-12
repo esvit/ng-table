@@ -58,9 +58,9 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         filterTemplateURL = false,
                         filterName = false;
 
-                    if (filter && filter.name) {
-                        filterName = filter.name;
-                        delete filter.name;
+                    if (filter && filter.$$name) {
+                        filterName = filter.$$name;
+                        delete filter.$$name;
                     }
                     if (filter && filter.templateURL) {
                         filterTemplateURL = filter.templateURL;
