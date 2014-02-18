@@ -497,7 +497,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTa
         var defaultSort = $scope.params.$params.defaultSort;
         var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
         var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
-        var sortingParams = event.ctrlKey ? $scope.params.sorting() : {};
+        var sortingParams = (event.ctrlKey || event.metaKey) ? $scope.params.sorting() : {};
         sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
         $scope.params.parameters({
             sorting: sortingParams
