@@ -482,6 +482,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTa
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
             delayFilter(function () {
+                $scope.params.$params.page = 1;
                 $scope.params.reload();
             }, $scope.params.settings().filterDelay);
         } else {
@@ -494,10 +495,11 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTa
         if (!parsedSortable) {
             return;
         }
+
         var defaultSort = $scope.params.$params.defaultSort;
         var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
         var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
-        var sortingParams = event.ctrlKey ? $scope.params.sorting() : {};
+        var sortingParams = (event.ctrlKey || event.metaKey) ? $scope.params.sorting() : {};
         sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
         $scope.params.parameters({
             sorting: sortingParams
@@ -639,14 +641,14 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
                         var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
-                        var paginationTemplate = angular.element(document.createElement('div')).attr('ng-include', 'templates.pagination');
+                        var paginationTemplate = angular.element(document.createElement('tfoot')).attr('ng-include', 'templates.pagination');
                         element.find('thead').remove();
                         var tbody = element.find('tbody');
                         element.prepend(headerTemplate);
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
                         element.addClass('ng-table');
-                        return element.after(paginationTemplate);
+                        tbody.after(paginationTemplate);
                     }
                 };
             }
