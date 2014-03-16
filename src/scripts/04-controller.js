@@ -34,6 +34,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTa
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
             delayFilter(function () {
+                $scope.params.$params.page = 1;
                 $scope.params.reload();
             }, $scope.params.settings().filterDelay);
         } else {
