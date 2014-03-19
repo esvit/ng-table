@@ -133,7 +133,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
                         var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
-                        var paginationTemplate = angular.element(document.createElement('tfoot')).attr('ng-include', 'templates.pagination');
+                        var paginationTemplate = angular.element('<tfoot />').append(angular.element('<tr />').append(angular.element('<td />').attr({ 'ng-include': 'templates.pagination', 'colspan': columns.length })));
                         element.find('thead').remove();
                         var tbody = element.find('tbody');
                         element.prepend(headerTemplate);
