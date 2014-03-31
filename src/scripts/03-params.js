@@ -170,7 +170,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @returns {Array} Return true if field sorted by direction
          */
         this.isSortBy = function (field, direction) {
-            return angular.isDefined(params.sorting[field]) && angular.isEqual(params.sorting[field], direction);
+            return angular.isDefined(params.sorting[field]) && angular.equals(params.sorting[field], direction);
         };
 
         /**
