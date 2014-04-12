@@ -362,6 +362,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                     self.data = settings.$scope.$data = data;
                 }
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+                settings.$scope.$emit('ngTableAfterReloadData');
             });
         };
 

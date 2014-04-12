@@ -13,7 +13,7 @@
  * @description
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
-var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTableParams, $q) {
+var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope, ngTableParams, $timeout) {
     $scope.$loading = false;
 
     if (!$scope.params) {
@@ -24,8 +24,8 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTa
     var delayFilter = (function () {
         var timer = 0;
         return function (callback, ms) {
-            clearTimeout(timer);
-            timer = setTimeout(callback, ms);
+            $timeout.cancel(timer);
+            timer = $timeout(callback, ms);
         };
     })();
 

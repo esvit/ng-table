@@ -411,6 +411,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                     self.data = settings.$scope.$data = data;
                 }
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+                settings.$scope.$emit('ngTableAfterReloadData');
             });
         };
 
@@ -461,7 +462,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
  * @description
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
-var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTableParams, $q) {
+var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope, ngTableParams, $timeout) {
     $scope.$loading = false;
 
     if (!$scope.params) {
@@ -472,8 +473,8 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTa
     var delayFilter = (function () {
         var timer = 0;
         return function (callback, ms) {
-            clearTimeout(timer);
-            timer = setTimeout(callback, ms);
+            $timeout.cancel(timer);
+            timer = $timeout(callback, ms);
         };
     })();
 
@@ -690,7 +691,7 @@ app.directive('ngTablePagination', ['$compile',
             replace: false,
             link: function (scope, element, attrs) {
 
-                scope.$watch('params.$params', function (newParams, oldParams) {
+                scope.params.settings().$scope.$on('ngTableAfterReloadData', function () {
                     scope.pages = scope.params.generatePagesArray(scope.params.page(), scope.params.total(), scope.params.count());
                 }, true);
 
