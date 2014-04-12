@@ -136,7 +136,8 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         var paginationRow = angular.element(document.createElement('tr'))
                                 .append(angular.element(document.createElement('td'))
                                     .attr({
-                                        'ng-include': 'templates.pagination',
+                                        'ng-table-pagination': 'params',
+                                        'template-url': 'templates.pagination',
                                         'colspan': columns.length
                                     })),
                             paginationTemplate = angular.element(document.createElement('tfoot')).append(paginationRow);

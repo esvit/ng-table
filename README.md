@@ -23,6 +23,7 @@ For work in IE < 9 need jQuery, just add:
 ## Updates
 
 ### v0.3.2 (master)
+- add pagination directive ngTablePagination [(see usage)](https://github.com/esvit/ng-table/blob/master/examples/demo28.html)
 - rename filter.name to filter.$$name according to issue #196
 - add debugMode setting
 - add defaultSort setting

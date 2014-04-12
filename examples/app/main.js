@@ -2,7 +2,7 @@ require.config({
     paths: {
         jquery: '../js/jquery-1.9.1.min',
         angular: '../js/angular.min',
-        ngTable: '../../ng-table.src'
+        ngTable: '../../ng-table'
     },
     shim: {
         'angular' : {'exports' : 'angular'}

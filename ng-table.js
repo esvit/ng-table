@@ -640,18 +640,73 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
                         var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
-                        var paginationTemplate = angular.element('<tfoot />').append(angular.element('<tr />').append(angular.element('<td />').attr({ 'ng-include': 'templates.pagination', 'colspan': columns.length })));
+                        var paginationRow = angular.element(document.createElement('tr'))
+                                .append(angular.element(document.createElement('td'))
+                                    .attr({
+                                        'ng-table-pagination': 'params',
+                                        'template-url': 'templates.pagination',
+                                        'colspan': columns.length
+                                    })),
+                            paginationTemplate = angular.element(document.createElement('tfoot')).append(paginationRow);
+
                         element.find('thead').remove();
-                        var tbody = element.find('tbody');
-                        element.prepend(headerTemplate);
+
+                        element.addClass('ng-table')
+                            .prepend(headerTemplate)
+                            .append(paginationTemplate);
+
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
-                        element.addClass('ng-table');
-                        tbody.after(paginationTemplate);
                     }
                 };
             }
         }
+    }
+]);
+
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+/**
+ * @ngdoc directive
+ * @name ngTable.directive:ngTablePagination
+ * @restrict A
+ */
+app.directive('ngTablePagination', ['$compile',
+    function ($compile) {
+        'use strict';
+
+        return {
+            restrict: 'A',
+            scope: {
+                'params': '=ngTablePagination',
+                'templateUrl': '='
+            },
+            replace: false,
+            link: function (scope, element, attrs) {
+
+                scope.$watch('params.$params', function (newParams, oldParams) {
+                    scope.pages = scope.params.generatePagesArray(scope.params.page(), scope.params.total(), scope.params.count());
+                }, true);
+
+                scope.$watch('templateUrl', function(templateUrl) {
+                    if (angular.isUndefined(templateUrl)) {
+                        return;
+                    }
+                    var template = angular.element(document.createElement('div'))
+                    template.attr({
+                        'ng-include': 'templateUrl'
+                    });
+                    element.append(template);
+                    $compile(template)(scope);
+                });
+            }
+        };
     }
 ]);
 
