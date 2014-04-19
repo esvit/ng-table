@@ -24,6 +24,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             };
 
         this.data = [];
+        this.filterData = [];
 
         /**
          * @ngdoc method
@@ -208,6 +209,23 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
 
         /**
          * @ngdoc method
+         * @name ngTable.factory:ngTableParams#getFilterData
+         * @methodOf ngTable.factory:ngTableParams
+         * @description Called when updated some of parameters for get new filter-data for column select filters
+         *
+         * @param {Object} $defer promise object
+         * @param {Object} params New parameters
+         */
+        this.getFilterData = function ($defer, params) {
+            if (angular.isArray(this.filterData) && angular.isObject(params)) {
+                $defer.resolve(this.filterData);
+            } else {
+                $defer.resolve([]);
+            }
+        };
+
+        /**
+         * @ngdoc method
          * @name ngTable.factory:ngTableParams#getGroups
          * @methodOf ngTable.factory:ngTableParams
          * @description Return groups for table grouping
@@ -343,24 +361,27 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @description Reload table data
          */
         this.reload = function () {
-            var $defer = $q.defer(),
+            var $deferColumns = $q.defer();
+            var $deferData = $q.defer(),
                 self = this;
 
             settings.$loading = true;
             if (settings.groupBy) {
-                settings.getGroups($defer, settings.groupBy, this);
+                settings.getGroups($deferData, settings.groupBy, this);
             } else {
-                settings.getData($defer, this);
+                settings.getData($deferData, this);
             }
+            settings.getFilterData($deferColumns, this);
             log('ngTable: reload data');
-            $defer.promise.then(function (data) {
+            $q.all([$deferData.promise, $deferColumns.promise]).then(function(data){
                 settings.$loading = false;
                 log('ngTable: current scope', settings.$scope);
                 if (settings.groupBy) {
-                    self.data = settings.$scope.$groups = data;
+                    self.data = settings.$scope.$groups = data[0];
                 } else {
-                    self.data = settings.$scope.$data = data;
+                    self.data = settings.$scope.$data = data[0];
                 }
+                self.filterData = data[1];
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
                 settings.$scope.$emit('ngTableAfterReloadData');
             });
@@ -387,6 +408,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             defaultSort: 'desc',
             filterDelay: 750,
             counts: [10, 25, 50, 100],
+            getFilterData: this.getFilterData,
             getGroups: this.getGroups,
             getData: this.getData
         };
