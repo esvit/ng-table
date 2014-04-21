@@ -538,7 +538,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 var thead = element.find('thead');
 
                 // IE 8 fix :not(.ng-table-group) selector
-                angular.forEach(angular.element(element.find('tr')), function (tr) {
+                angular.forEach(angular.element(element.find('tbody').find('tr')), function (tr) {
                     tr = angular.element(tr);
                     if (!tr.hasClass('ng-table-group') && !row) {
                         row = tr;
