@@ -28,6 +28,7 @@
 
         <table ng-table="tableParams" class="table ng-table-responsive">
             <tr ng-repeat="user in $data">
+                <td data-title="'#'">{{ getRowNumber($index) }}</td>
                 <td data-title="'Name'">
                     {{user.name}}
                 </td>
