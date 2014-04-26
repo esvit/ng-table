@@ -505,6 +505,10 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
             sorting: sortingParams
         });
     };
+    
+    $scope.getRowNumber = function (index){
+       return ($scope.params.page()-1) * $scope.params.count() + (index + 1);
+    }
 }];
 /**
  * ngTable: Table + Angular JS
