@@ -61,16 +61,16 @@ describe('ng-table', function () {
         expect(thead.length).toBe(1);
 
         var rows = thead.find('tr');
-        expect(rows.length).toBe(2);
+        expect(rows.length).toBe(3);
 
-        var titles = angular.element(rows[0]).find('th');
+        var titles = angular.element(rows[1]).find('th');
 
         expect(titles.length).toBe(3);
         expect(angular.element(titles[0]).text().trim()).toBe('Name of person');
         expect(angular.element(titles[1]).text().trim()).toBe('Age');
         expect(angular.element(titles[2]).text().trim()).toBe('Money');
 
-        var filters = angular.element(rows[1]).find('th');
+        var filters = angular.element(rows[2]).find('th');
         expect(filters.length).toBe(3);
     }));
 
