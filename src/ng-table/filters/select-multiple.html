@@ -1,4 +1,4 @@
-<select ng-options="data.id as data.title for data in column.data"
+<select ng-options="data.id as data.title for data in params.filterData[name]"
         multiple ng-multiple="true"
         ng-model="params.filter()[name]"
         ng-show="filter == 'select-multiple'"

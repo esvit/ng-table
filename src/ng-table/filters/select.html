@@ -1,4 +1,4 @@
-<select ng-options="data.id as data.title for data in column.data"
+<select ng-options="data.id as data.title for data in params.filterData[name]"
         ng-model="params.filter()[name]"
         ng-show="filter == 'select'"
         class="filter filter-select form-control" name="{{column.filterName}}">

@@ -29,7 +29,7 @@
             <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
                 <input type="checkbox" ng-model="checkboxes.items[user.id]" />
             </td>
-            <td data-title="'Name'" filter="{ 'name': 'select' }" filter-data="names($column)">
+            <td data-title="'Name'" filter="{ 'name': 'select' }">
                 {{user.name}}
             </td>
             <td data-title="'Money'" sortable="'money'">
@@ -67,6 +67,21 @@
             count: 10           // count per page
         }, {
             total: data.length, // length of data
+            getFilterData: function($defer, params) {
+                var arr = [],
+                    names = [];
+                angular.forEach(data, function(item){
+                    if (inArray(item.name, arr) === -1) {
+                        arr.push(item.name);
+                        names.push({
+                            'id': item.name,
+                            'title': item.name
+                        });
+                    }
+                });
+                $defer.resolve({'name': names});
+                return $defer;
+            },
             getData: function($defer, params) {
                 // use build-in angular filter
                 var orderedData = params.sorting() ?
@@ -92,22 +107,6 @@
                     }
                     return -1
                 };
-        $scope.names = function(column) {
-            var def = $q.defer(),
-                arr = [],
-                names = [];
-            angular.forEach(data, function(item){
-                if (inArray(item.name, arr) === -1) {
-                    arr.push(item.name);
-                    names.push({
-                        'id': item.name,
-                        'title': item.name
-                    });
-                }
-            });
-            def.resolve(names);
-            return def;
-        };
 
         $scope.checkboxes = { 'checked': false, items: {} };
 

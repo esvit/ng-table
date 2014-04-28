@@ -104,29 +104,6 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             scope.show_filter = value;
                         });
                     }
-                    angular.forEach(columns, function (column) {
-                        var def;
-                        if (!column.filterData) {
-                            return;
-                        }
-                        def = $parse(column.filterData)(scope, {
-                            $column: column
-                        });
-                        if (!(angular.isObject(def) && angular.isObject(def.promise))) {
-                            throw new Error('Function ' + column.filterData + ' must be instance of $q.defer()');
-                        }
-                        delete column.filterData;
-                        return def.promise.then(function (data) {
-                            if (!angular.isArray(data)) {
-                                data = [];
-                            }
-                            data.unshift({
-                                title: '-',
-                                id: ''
-                            });
-                            column.data = data;
-                        });
-                    });
                     if (!element.hasClass('ng-table')) {
                         scope.templates = {
                             header: (attrs.templateHeader ? attrs.templateHeader : 'ng-table/header.html'),
