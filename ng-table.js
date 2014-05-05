@@ -590,7 +590,9 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             return $parse(el.attr("ng-show"))(scope);
                         } : function () {
                             return true;
-                        })
+                        }),
+                        allOptionTitle: el.attr('data-all-option-title') ? el.attr('data-all-option-title') : null,
+                        allOptionId : el.attr('data-all-option-id') ? el.attr('data-all-option-id') : null
                     });
                 });
                 return function (scope, element, attrs) {
@@ -628,9 +630,11 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             if (!angular.isArray(data)) {
                                 data = [];
                             }
+			    			var allOptionTitle = column.allOptionTitle === null ? '-' : column.allOptionTitle;
+  			    			var allOptionId = column.allOptionId === null ? '' : (column.allOptionId === '<null>' ? null : column.allOptionId);
                             data.unshift({
-                                title: '-',
-                                id: ''
+                                title: allOptionTitle,
+                                id: allOptionId
                             });
                             column.data = data;
                         });
