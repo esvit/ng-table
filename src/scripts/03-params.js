@@ -261,7 +261,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 pages.push({
                     type: 'first',
                     number: 1,
-                    active: currentPage > 1
+                    active: currentPage > 1,
+                    current: currentPage === 1
                 });
                 maxPivotPages = Math.round((maxBlocks - 5) / 2);
                 minPage = Math.max(2, currentPage - maxPivotPages);
@@ -278,7 +279,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                         pages.push({
                             type: 'page',
                             number: i,
-                            active: currentPage !== i
+                            active: currentPage !== i,
+                            current: currentPage === i
                         });
                     }
                     i++;
@@ -286,7 +288,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 pages.push({
                     type: 'last',
                     number: numPages,
-                    active: currentPage !== numPages
+                    active: currentPage !== numPages,
+                    current: currentPage === numPages
                 });
                 pages.push({
                     type: 'next',
