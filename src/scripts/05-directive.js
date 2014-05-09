@@ -55,6 +55,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     var parsedTitle = parsedAttribute('title', ' '),
                         headerTemplateURL = parsedAttribute('header', false),
                         filter = parsedAttribute('filter', false)(),
+                        placeholder = parsedAttribute('placeholder', false)(),
                         filterTemplateURL = false,
                         filterName = false;
 
@@ -74,6 +75,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         sortable: parsedAttribute('sortable', false),
                         'class': el.attr('x-data-header-class') || el.attr('data-header-class') || el.attr('header-class'),
                         filter: filter,
+                        placeholder: placeholder,
                         filterTemplateURL: filterTemplateURL,
                         filterName: filterName,
                         headerTemplateURL: headerTemplateURL,
@@ -153,6 +155,6 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     }
                 };
             }
-        }
+        };
     }
 ]);

@@ -41,7 +41,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 for (var key in newParameters) {
                     var value = newParameters[key];
                     if (parseParamsFromUrl && key.indexOf('[') >= 0) {
-                        var keys = key.split(/\[(.*)\]/).reverse()
+                        var keys = key.split(/\[(.*)\]/).reverse();
                         var lastKey = '';
                         for (var i = 0, len = keys.length; i < len; i++) {
                             var name = keys[i];
