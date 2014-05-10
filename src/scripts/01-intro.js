@@ -8,5 +8,5 @@
     } else {
         return factory(angular);
     }
-}(angular || null, function(angular) {
+}(typeof(angular) === 'undefined' ? null : angular, function(angular) {
     'use strict';
