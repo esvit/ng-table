@@ -1,4 +1,9 @@
 <tr>
+    <th colspan="{{$columns.length}}" ng-show="params.settings().filterSwitch">
+        <span class="pull-right text-info"><a href ng-click="show_filter = !show_filter"><i class="glyphicon glyphicon-filter"></i>Filters</a></span>
+    </th>
+</tr> 
+<tr>
     <th ng-repeat="column in $columns"
         ng-class="{
                     'sortable': parse(column.sortable),

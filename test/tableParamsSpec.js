@@ -148,7 +148,8 @@ describe('ngTableParams', function () {
             counts: [10, 25, 50, 100],
             getData: params.getData,
             getGroups: params.getGroups,
-            filterDelay: 750
+            filterDelay: 750,
+            filterSwitch: false
         });
 
         params = new ngTableParams({}, { total: 100 });
@@ -162,7 +163,8 @@ describe('ngTableParams', function () {
             counts: [10, 25, 50, 100],
             getData: params.getData,
             getGroups: params.getGroups,
-            filterDelay: 750
+            filterDelay: 750,
+            filterSwitch: false
         });
     }));
 
