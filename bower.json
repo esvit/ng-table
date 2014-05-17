@@ -1,18 +1,18 @@
 {
   "name": "ng-table",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "main": [
-    "ng-table.js",
-    "ng-table.css"
+    "dist/ng-table.min.js",
+    "dist/ng-table.min.css"
   ],
   "ignore": [
     "examples",
     "src"
   ],
   "dependencies": {
-    "angular": "~1.2.9"
+    "angular": "~1.2.16"
   },
   "devDependencies": {
-    "angular-mocks": "~1.2.9"
+    "angular-mocks": "~1.2.16"
   }
 }

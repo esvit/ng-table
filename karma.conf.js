@@ -1,4 +1,3 @@
-// Karma configuration file
 // See http://karma-runner.github.io/0.10/config/configuration-file.html
 module.exports = function (config) {
     config.set({
@@ -13,10 +12,10 @@ module.exports = function (config) {
             'bower_components/angular-mocks/angular-mocks.js',
 
             // directive
-            'ng-table.js',
+            'dist/ng-table.min.js',
 
             // tests
-            'test/*.js'
+            'test/*Spec.js'
             //'test/tableParamsSpec.js'
             //'test/tableControllerSpec.js'
         ],

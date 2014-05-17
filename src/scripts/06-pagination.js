@@ -23,7 +23,7 @@ app.directive('ngTablePagination', ['$compile',
             },
             replace: false,
             link: function (scope, element, attrs) {
-
+console.info(scope.params.settings());
                 scope.params.settings().$scope.$on('ngTableAfterReloadData', function () {
                     scope.pages = scope.params.generatePagesArray(scope.params.page(), scope.params.total(), scope.params.count());
                 }, true);
