@@ -34,13 +34,13 @@ For work in IE < 9 need jQuery, just add:
 ### v0.3.1
 - add support of `header-class` attribute
 - add fixes for compatibility with early versions of AngularJS
-- add `data` field to ngTableParams
+- add `data` field to NgTableParams
 - Allow expressions in the sortable & filter attribute (Issue #93)
 
 ### v0.3.0
 - I abandoned from CoffeeScript in favor of a javascript, fully agree with http://blog.ponyfoo.com/2013/09/28/we-dont-want-your-coffee & (rus) http://habrahabr.ru/post/195944/
 - added examples of table with grouping
-- fully rewrited interface of ngTableParams
+- fully rewrited interface of NgTableParams
 
 ### v0.2.2
 In functions that return data for the filters were removed `.promise`
@@ -89,7 +89,7 @@ The karma task will try to open Firefox and Chrome as browser in which to run th
 * [Export to CSV](http://bazalt-cms.com/ng-table/example/15)
 
 ## Configuring ng-table
-For a list of configuration options available, see [Configuring your table with ngTableParams](https://github.com/esvit/ng-table/wiki/Configuring-your-table-with-ngTableParams)
+For a list of configuration options available, see [Configuring your table with NgTableParams](https://github.com/esvit/ng-table/wiki/Configuring-your-table-with-NgTableParams)
 
 #### PS
 Let me know if you are using **ng-table**. It will motivate me to work harder.
