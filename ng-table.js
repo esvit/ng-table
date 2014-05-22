@@ -298,6 +298,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          */
         this.generatePagesArray = function (currentPage, totalItems, pageSize) {
             var maxBlocks, maxPage, maxPivotPages, minPage, numPages, pages;
+            if (angular.isFunction(totalItems))
+                totalItems = totalItems();
             maxBlocks = 11;
             pages = [];
             numPages = Math.ceil(totalItems / pageSize);
