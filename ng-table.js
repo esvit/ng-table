@@ -159,7 +159,14 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @returns {Object|Number} Current page or `this`
          */
         this.total = function (total) {
-            return angular.isDefined(total) ? this.settings({'total': total}) : settings.total;
+            //return angular.isDefined(total) ? this.settings({ 'total': total }) : settings.total;
+            if (angular.isDefined(total)) {
+                return this.settings({ 'total': total });
+            }
+            if (angular.isFunction(settings.total))
+                return settings.total();
+            else
+                return settings.total;
         };
 
         /**
@@ -298,8 +305,6 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          */
         this.generatePagesArray = function (currentPage, totalItems, pageSize) {
             var maxBlocks, maxPage, maxPivotPages, minPage, numPages, pages;
-            if (angular.isFunction(totalItems))
-                totalItems = totalItems();
             maxBlocks = 11;
             pages = [];
             numPages = Math.ceil(totalItems / pageSize);
