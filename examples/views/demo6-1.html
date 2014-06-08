@@ -1,44 +1,57 @@
 <div class="page-header">
-    <h1>Export to CSV</h1>
+<h1>Basic summary row example</h1>
 </div>
 
 <script data-run-script>
-    window.DemoCtrl = function($scope, ngTableParams, $sce) {
-        var data = [{name: "Moroni", age: 50},
-            {name: "Tiancum", age: 43},
-            {name: "Jacob", age: 27},
-            {name: "Nephi", age: 29},
-            {name: "Enos", age: 34},
-            {name: "Tiancum", age: 43},
-            {name: "Jacob", age: 27},
-            {name: "Nephi", age: 29},
-            {name: "Enos", age: 34},
-            {name: "Tiancum", age: 43},
-            {name: "Jacob", age: 27},
-            {name: "Nephi", age: 29},
-            {name: "Enos", age: 34},
-            {name: "Tiancum", age: 43},
-            {name: "Jacob", age: 27},
-            {name: "Nephi", age: 29},
-            {name: "Enos", age: 34}];
+window.DemoCtrl = function($scope, ngTableParams) {
+    var data = [
+        {name: "Moroni", age: 50},
+        {name: "Tiancum", age: 43},
+        {name: "Jacob", age: 27},
+        {name: "Nephi", age: 29},
+        {name: "Enos", age: 34},
+        {name: "Tiancum", age: 43},
+        {name: "Jacob", age: 27},
+        {name: "Nephi", age: 29},
+        {name: "Enos", age: 34},
+        {name: "Tiancum", age: 43},
+        {name: "Jacob", age: 27},
+        {name: "Nephi", age: 29},
+        {name: "Enos", age: 34},
+        {name: "Tiancum", age: 43},
+        {name: "Jacob", age: 27},
+        {name: "Nephi", age: 29},
+        {name: "Enos", age: 34}
+    ];
 
-        $scope.tableParams = new ngTableParams({
-            page: 1,            // show first page
-            count: 10           // count per page
-        }, {
-            total: data.length, // length of data
-            getData: function($defer, params) {
-                $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            }
-        });
-    }
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10           // count per page
+    }, {
+        total: data.length, // length of data
+        getData: function ($defer, params) {
+            var pageData = data.slice((params.page() - 1) * params.count(), params.page() * params.count()),
+                sum = 0;
+
+            // calculate summary
+            angular.forEach(pageData, function(item) {
+                sum += item.age;
+            });
+            $scope.sum = sum;
+            $defer.resolve(pageData);
+        }
+    })
+}
 </script>
 
 <div ng-controller="DemoCtrl">
 
-    <a class="btn btn-primary" ng-mousedown="csv.generate()" ng-href="{{ csv.link() }}" download="test.csv">Export to CSV</a>
+    <p><strong>Page:</strong> {{tableParams.page()}}
 
-    <table ng-table="tableParams" class="table" export-csv="csv">
+    <p><strong>Count per page:</strong> {{tableParams.count()}}
+
+    <table ng-table="tableParams" class="table">
+    <tbody>
         <tr ng-repeat="user in $data">
             <td data-title="'Name'">
                 {{user.name}}
@@ -47,6 +60,12 @@
                 {{user.age}}
             </td>
         </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td class="text-success text-right"><strong>Summary:</strong></td>
+            <td>{{sum}}</td>
+        </tr>
+    </tfoot>
     </table>
-
 </div>

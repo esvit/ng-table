@@ -641,20 +641,16 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
                         var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
-                        var paginationRow = angular.element(document.createElement('tr'))
-                                .append(angular.element(document.createElement('td'))
-                                    .attr({
-                                        'ng-table-pagination': 'params',
-                                        'template-url': 'templates.pagination',
-                                        'colspan': columns.length
-                                    })),
-                            paginationTemplate = angular.element(document.createElement('tfoot')).append(paginationRow);
+                        var paginationTemplate = angular.element(document.createElement('div')).attr({
+                            'ng-table-pagination': 'params',
+                            'template-url': 'templates.pagination'
+                        });
 
                         element.find('thead').remove();
 
                         element.addClass('ng-table')
                             .prepend(headerTemplate)
-                            .append(paginationTemplate);
+                            .after(paginationTemplate);
 
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
