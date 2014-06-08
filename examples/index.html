@@ -11,6 +11,7 @@
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <![endif]-->
     <script src="js/angular.min.js"></script>
+    <script src="js/angular-resource.min.js"></script>
     <script src="js/angular-route.min.js"></script>
     <script src="../dist/ng-table.js"></script>
 
@@ -55,6 +56,7 @@
                     <ul class="nav">
                         <li><a href="#/demo/0-1">HTML Markup</a></li>
                         <li><a href="#/demo/0-2">ngTableParams (javascript part)</a></li>
+                        <li><a href="#/demo/0-3">Full-feature demo</a></li>
                     </ul>
                 </li>
                 <li class="active">
@@ -127,7 +129,7 @@
 </footer>
 
 <script>
-    var app = angular.module('main', ['ngRoute', 'ngSocial', 'ngTable', 'ngTableExport'])
+    var app = angular.module('main', ['ngRoute', 'ngResource', 'ngSocial', 'ngTable', 'ngTableExport'])
             .config(['$routeProvider',
                 function($routeProvider) {
                     var getTemplatePath = function($routeParams) {
@@ -159,6 +161,16 @@
                                 }
                             });
                 }])
+            .factory('IssueService', ['$resource', function($resource) {
+                return $resource('https://api.github.com/repos/:username/:repo/issues', {
+                    state: 'open'
+                }, {
+                    query: {
+                        method: 'GET',
+                        isArray: true
+                    }
+                });
+            }])
             .run(['$rootScope', function($rootScope) {
                 $rootScope.tabState = 'example';
             }])
