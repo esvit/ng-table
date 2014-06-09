@@ -76,9 +76,9 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
 
         this.maxCount = function(count){
             var total = this.total();
-            if (total > 0 && count < total) return true;
-            if (total > this.settings().counts[this.settings().counts.length-1]) return true;
-            if (total < count && total > this.settings().counts[this.settings().counts.indexOf(count)-1]) return true;
+            if (total > 0 && count <= total) return true;
+            if (total => this.settings().counts[this.settings().counts.length-1]) return true;
+            if (total <= count && total > this.settings().counts[this.settings().counts.indexOf(count)-1]) return true;
         };
 
         this.showingMin = function(){
