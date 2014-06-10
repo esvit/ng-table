@@ -620,20 +620,30 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         def = $parse(column.filterData)(scope, {
                             $column: column
                         });
-                        if (!(angular.isObject(def) && angular.isObject(def.promise))) {
-                            throw new Error('Function ' + column.filterData + ' must be instance of $q.defer()');
-                        }
-                        delete column.filterData;
-                        return def.promise.then(function (data) {
-                            if (!angular.isArray(data)) {
-                                data = [];
-                            }
-                            data.unshift({
-                                title: '-',
-                                id: ''
+                        // if we're working with a deferred object, let's wait for the promise
+                        if((angular.isObject(def) && angular.isObject(def.promise))){
+                            delete column.filterData;
+                            return def.promise.then(function (data) {
+                                // our deferred can eventually return arrays, functions and objects
+                                if (!angular.isArray(data) && !angular.isFunction(data) && !angular.isObject(data)) {
+                                    // if none of the above was found - we just want an empty array
+                                    data = [];
+                                }
+
+                                else if(angular.isArray(data)) {
+                                    data.unshift({
+                                        title: '-',
+                                        id: ''
+                                    });
+                                }
+
+                                column.data = data;
                             });
-                            column.data = data;
-                        });
+                        }
+                        // otherwise, we just return what the user gave us. It could be a function, array, object, whatever
+                        else {
+                            return column.data = def;
+                        }
                     });
                     if (!element.hasClass('ng-table')) {
                         scope.templates = {
