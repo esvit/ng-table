@@ -5,7 +5,7 @@ define([
     'use strict';
 
     var app = angular.module('main', ['ngTable']).
-    controller('DemoCtrl', function($scope, $filter, $q, ngTableParams) {
+    controller('DemoCtrl', function($scope, $filter, $q, NgTableParams) {
         var data = [{name: "Moroni", age: 50, money: -10},
                     {name: "Tiancum", age: 43,money: 120},
                     {name: "Jacob", age: 27, money: 5.5},
@@ -24,7 +24,7 @@ define([
                     {name: "Nephi", age: 29, money: 100},
                     {name: "Enos", age: 34, money: -100}];
 
-        $scope.tableParams = new ngTableParams({
+        $scope.tableParams = new NgTableParams({
             $liveFiltering: true,
             page: 1,            // show first page
             total: data.length, // length of data
@@ -50,10 +50,10 @@ define([
 
         $scope.$watch('tableParams', function(params) {
             // use build-in angular filter
-            var orderedData = params.sorting ? 
+            var orderedData = params.sorting ?
                                 $filter('orderBy')(data, params.orderBy()) :
                                 data;
-            orderedData = params.filter ? 
+            orderedData = params.filter ?
                                 $filter('filter')(orderedData, params.filter) :
                                 orderedData;
 
