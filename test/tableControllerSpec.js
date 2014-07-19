@@ -1,4 +1,4 @@
-describe('ngTableParams', function () {
+describe('NgTableParams', function () {
     var scope, ctrl, params, data = [
         {name: "Moroni", age: 50, role: 'Administrator'},
         {name: "Tiancum", age: 43, role: 'Administrator'},
@@ -20,16 +20,16 @@ describe('ngTableParams', function () {
     ];
     beforeEach(module('ngTable'));
 
-    /*beforeEach(inject(function ($controller, $rootScope, ngTableParams) {
+    /*beforeEach(inject(function ($controller, $rootScope, NgTableParams) {
         scope = $rootScope.$new();
-        params = scope.params = new ngTableParams();
+        params = scope.params = new NgTableParams();
         ctrl = $controller(ngTableController, {
             $scope: scope
         });
     }));
 
-    it('ngTableController should have parameters', inject(function (ngTableParams) {
-        var params = new ngTableParams();
-        expect(ngTableParams).toBeDefined();
+    it('ngTableController should have parameters', inject(function (NgTableParams) {
+        var params = new NgTableParams();
+        expect(NgTableParams).toBeDefined();
     }));*/
 });
