@@ -1,4 +1,4 @@
-(function(angular, factory) {
+(function(root, factory) {
     'use strict';
 
     if (typeof define === 'function' && define.amd) {
@@ -6,9 +6,9 @@
             return factory(angular);
         });
     } else {
-        return factory(angular);
+        return factory(root.angular);
     }
-}(angular || null, function(angular) {
+}(this, function(angular) {
     'use strict';
 /**
  * ngTable: Table + Angular JS
