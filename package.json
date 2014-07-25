@@ -31,7 +31,8 @@
         "karma-ng-html2js-preprocessor": "*",
         "coveralls": "",
         "karma-coverage": "~0.1.0",
-        "grunt-coffee-build": "~1.4.12"
+        "grunt-coffee-build": "~1.4.12",
+        "grunt-ngdocs": "~0.2.2"
     },
     "scripts": {
         "test": "karma start --single-run --no-auto-watch"

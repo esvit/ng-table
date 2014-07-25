@@ -5,6 +5,8 @@ module.exports = function (grunt) {
 
     require('load-grunt-tasks')(grunt);
 
+    grunt.loadNpmTasks('grunt-ngdocs');
+
     grunt.registerTask('serve', ['connect:serve', 'watch']);
 
     grunt.registerTask('dev', [
@@ -23,6 +25,13 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         cmpnt: grunt.file.readJSON('bower.json'),
+        ngdocs: {
+            options:{ dest: 'docs' },
+            api:{
+                src:['src/**/*.js'],
+                title:'API Documentation'
+            }
+        },
         banner: '/*! ngTable v<%= cmpnt.version %> by Vitalii Savchuk(esvit666@gmail.com) - ' +
             'https://github.com/esvit/ng-table - New BSD License */\n',
         clean: {
