@@ -7,7 +7,7 @@
  */
 
 /**
- * @ngdoc module
+ * @ngdoc overview
  * @name ngTable
  * @description ngTable: Table + Angular JS
  * @example
