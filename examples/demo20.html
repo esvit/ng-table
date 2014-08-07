@@ -22,6 +22,8 @@
 
 <div ng-controller="DemoCtrl">
 
+    <p><strong>Filter:</strong> {{tableParams.filter()|json}}
+
     Columns:
     <label class="checkbox" ng-repeat="column in columns">
         <input type="checkbox" ng-model="column.visible" /> {{column.title}}
@@ -36,7 +38,19 @@
                     'sort-desc': tableParams.isSortBy(column.field, 'desc')
                   }"
                 ng-click="tableParams.sorting(column.field, tableParams.isSortBy(column.field, 'asc') ? 'desc' : 'asc')">
-                {{column.title}}
+                <div>{{column.title}}</div>
+            </th>
+        </tr>
+        <tr class="ng-table-filters" ng-init="tableParams">
+            <th ng-repeat="column in columns" ng-show="column.visible" class="filter">
+                <div ng-repeat="(name, filter) in column.filter">
+                    <div ng-if="column.filterTemplateURL" ng-show="column.filterTemplateURL">
+                        <div ng-include="column.filterTemplateURL"></div>
+                    </div>
+                    <div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL">
+                        <div ng-include="'ng-table/filters/' + filter + '.html'"></div>
+                    </div>
+                </div>
             </th>
         </tr>
         </thead>
@@ -87,6 +101,12 @@
                                     $filter('orderBy')(data, params.orderBy()) :
                                     data;
 
+                            orderedData = params.filter() ?
+                                    $filter('filter')(orderedData, params.filter()) :
+                                    orderedData;
+
+                            console.info(orderedData.length);
+                            params.total(orderedData.length);
                             $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                         }
                     });

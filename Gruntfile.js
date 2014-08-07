@@ -43,7 +43,7 @@ module.exports = function (grunt) {
         },
         uglify: {
             js: {
-                src: ['ng-table.src.js'],
+                src: ['ng-table.js'],
                 dest: 'ng-table.min.js',
                 options: {
                     banner: '<%= banner %>',
@@ -61,10 +61,11 @@ module.exports = function (grunt) {
                     'src/scripts/03-*.js',
                     'src/scripts/04-*.js',
                     'src/scripts/05-*.js',
+                    'src/scripts/06-*.js',
                     './.temp/scripts/views.js',
-                    'src/scripts/06-*.js'
+                    'src/scripts/07-*.js'
                 ],
-                dest: 'ng-table.src.js'
+                dest: 'ng-table.js'
             }
         },
         less: {

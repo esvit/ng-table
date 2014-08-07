@@ -1,6 +1,6 @@
 Table + AngularJS
 =================
-[![Build Status](https://travis-ci.org/esvit/ng-table.png)](https://travis-ci.org/esvit/ng-table) [![Coverage Status](https://coveralls.io/repos/esvit/ng-table/badge.png)](https://coveralls.io/r/esvit/ng-table) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/esvit/ng-table/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Build Status](https://travis-ci.org/esvit/ng-table.png)](https://travis-ci.org/esvit/ng-table) [![Coverage Status](https://coveralls.io/repos/esvit/ng-table/badge.png)](https://coveralls.io/r/esvit/ng-table)
 
 Code licensed under New BSD License.
 
@@ -23,6 +23,7 @@ For work in IE < 9 need jQuery, just add:
 ## Updates
 
 ### v0.3.2 (master)
+- add pagination directive ngTablePagination [(see usage)](https://github.com/esvit/ng-table/blob/master/examples/demo28.html)
 - rename filter.name to filter.$$name according to issue #196
 - add debugMode setting
 - add defaultSort setting
@@ -86,6 +87,9 @@ The karma task will try to open Firefox and Chrome as browser in which to run th
 * [Table with grouping with callback](http://bazalt-cms.com/ng-table/example/13)
 * [Table with external control of data](http://bazalt-cms.com/ng-table/example/14)
 * [Export to CSV](http://bazalt-cms.com/ng-table/example/15)
+
+## Configuring ng-table
+For a list of configuration options available, see [Configuring your table with ngTableParams](https://github.com/esvit/ng-table/wiki/Configuring-your-table-with-ngTableParams)
 
 #### PS
 Let me know if you are using **ng-table**. It will motivate me to work harder.

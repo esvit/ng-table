@@ -411,6 +411,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                     self.data = settings.$scope.$data = data;
                 }
                 settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+                settings.$scope.$emit('ngTableAfterReloadData');
             });
         };
 
@@ -461,7 +462,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
  * @description
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
-var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTableParams, $q) {
+var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope, ngTableParams, $timeout) {
     $scope.$loading = false;
 
     if (!$scope.params) {
@@ -472,8 +473,8 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTa
     var delayFilter = (function () {
         var timer = 0;
         return function (callback, ms) {
-            clearTimeout(timer);
-            timer = setTimeout(callback, ms);
+            $timeout.cancel(timer);
+            timer = $timeout(callback, ms);
         };
     })();
 
@@ -482,6 +483,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTa
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
             delayFilter(function () {
+                $scope.params.$params.page = 1;
                 $scope.params.reload();
             }, $scope.params.settings().filterDelay);
         } else {
@@ -497,7 +499,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function ($scope, ngTa
         var defaultSort = $scope.params.settings().defaultSort;
         var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
         var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
-        var sortingParams = event.ctrlKey ? $scope.params.sorting() : {};
+        var sortingParams = (event.ctrlKey || event.metaKey) ? $scope.params.sorting() : {};
         sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
         $scope.params.parameters({
             sorting: sortingParams
@@ -639,18 +641,69 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
                         var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
-                        var paginationTemplate = angular.element(document.createElement('div')).attr('ng-include', 'templates.pagination');
+                        var paginationTemplate = angular.element(document.createElement('div')).attr({
+                            'ng-table-pagination': 'params',
+                            'template-url': 'templates.pagination'
+                        });
+
                         element.find('thead').remove();
-                        var tbody = element.find('tbody');
-                        element.prepend(headerTemplate);
+
+                        element.addClass('ng-table')
+                            .prepend(headerTemplate)
+                            .after(paginationTemplate);
+
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
-                        element.addClass('ng-table');
-                        return element.after(paginationTemplate);
                     }
                 };
             }
         }
+    }
+]);
+
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+/**
+ * @ngdoc directive
+ * @name ngTable.directive:ngTablePagination
+ * @restrict A
+ */
+app.directive('ngTablePagination', ['$compile',
+    function ($compile) {
+        'use strict';
+
+        return {
+            restrict: 'A',
+            scope: {
+                'params': '=ngTablePagination',
+                'templateUrl': '='
+            },
+            replace: false,
+            link: function (scope, element, attrs) {
+
+                scope.params.settings().$scope.$on('ngTableAfterReloadData', function () {
+                    scope.pages = scope.params.generatePagesArray(scope.params.page(), scope.params.total(), scope.params.count());
+                }, true);
+
+                scope.$watch('templateUrl', function(templateUrl) {
+                    if (angular.isUndefined(templateUrl)) {
+                        return;
+                    }
+                    var template = angular.element(document.createElement('div'))
+                    template.attr({
+                        'ng-include': 'templateUrl'
+                    });
+                    element.append(template);
+                    $compile(template)(scope);
+                });
+            }
+        };
     }
 ]);
 
