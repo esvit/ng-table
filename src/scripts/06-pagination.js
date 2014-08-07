@@ -32,12 +32,18 @@ app.directive('ngTablePagination', ['$compile',
                     if (angular.isUndefined(templateUrl)) {
                         return;
                     }
-                    var template = angular.element(document.createElement('div'))
+                    var line = angular.element(document.createElement('tr'));
+
+                    var template = angular.element(document.createElement('td'));
+                    
                     template.attr({
-                        'ng-include': 'templateUrl'
+                        'ng-include': 'templateUrl',
+                        'colspan': scope.$parent.$columns.length
                     });
-                    element.append(template);
-                    $compile(template)(scope);
+
+                    line.append(template);
+                    element.append(line);
+                    $compile(line)(scope);
                 });
             }
         };
