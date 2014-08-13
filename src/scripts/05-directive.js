@@ -78,6 +78,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         filterName: filterName,
                         headerTemplateURL: headerTemplateURL,
                         filterData: (el.attr("filter-data") ? el.attr("filter-data") : null),
+                        //TODO - Implement get filterTemplates
                         show: (el.attr("ng-show") ? function (scope) {
                             return $parse(el.attr("ng-show"))(scope);
                         } : function () {
@@ -95,6 +96,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         }
                         scope.paramsModel = $parse(attrs.ngTable);
                         scope.params = params;
+                        console.log('params set'  );
                     }), true);
                     scope.parse = function (text) {
                         return angular.isDefined(text) ? text(scope) : '';

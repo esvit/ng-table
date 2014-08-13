@@ -586,6 +586,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         filterName: filterName,
                         headerTemplateURL: headerTemplateURL,
                         filterData: (el.attr("filter-data") ? el.attr("filter-data") : null),
+                        //TODO - Implement get filterTemplates
                         show: (el.attr("ng-show") ? function (scope) {
                             return $parse(el.attr("ng-show"))(scope);
                         } : function () {
@@ -603,6 +604,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         }
                         scope.paramsModel = $parse(attrs.ngTable);
                         scope.params = params;
+                        console.log('params set'  );
                     }), true);
                     scope.parse = function (text) {
                         return angular.isDefined(text) ? text(scope) : '';
@@ -660,7 +662,6 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
         }
     }
 ]);
-
 /**
  * ngTable: Table + Angular JS
  *
@@ -708,7 +709,7 @@ app.directive('ngTablePagination', ['$compile',
 ]);
 
 angular.module('ngTable').run(['$templateCache', function ($templateCache) {
-	$templateCache.put('ng-table/filters/number.html', '<input valid-number type="number" name="{{column.filterName}}" ng-pattern="/^\D+$/" ng-model="params.filter()[name]" ng-if="filter==\'number\'" class="input-filter form-control"/>');
+	$templateCache.put('ng-table/filters/number.html', '<form><input type="number" name="number" ng-pattern="/^\D+$/" ng-model="params.filter()[name]" ng-if="filter==\'number\'" class="input-filter form-control"/><form> ');
 	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in column.data" multiple ng-multiple="true" ng-model="params.filter()[name]" ng-show="filter==\'select-multiple\'" class="filter filter-select-multiple form-control" name="{{column.filterName}}"> </select>');
 	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in column.data" ng-model="params.filter()[name]" ng-show="filter==\'select\'" class="filter filter-select form-control" name="{{column.filterName}}"> </select>');
 	$templateCache.put('ng-table/filters/text.html', '<input type="text" name="{{column.filterName}}" ng-model="params.filter()[name]" ng-if="filter==\'text\'" class="input-filter form-control"/>');
