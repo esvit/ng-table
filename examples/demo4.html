@@ -21,7 +21,7 @@
 <h1>Table with filters</h1>
 
 <div ng-controller="DemoCtrl">
-        <p>Type something in filter and press <strong>Enter</strong> or <strong>Filter</strong> button</p>
+        <p>Type something in either filter, they data will be filtered as the filter changes</p>
         <p><strong>Filter:</strong> {{tableParams.filter()|json}}
 
         <table ng-table="tableParams" show-filter="true" class="table">
@@ -29,7 +29,7 @@
                 <td data-title="'Name'" filter="{ 'name': 'text' }">
                     {{user.name}}
                 </td>
-                <td data-title="'Age'">
+                <td data-title="'Age'" filter="{ 'age': 'number' }">
                     {{user.age}}
                 </td>
             </tr>
@@ -65,9 +65,17 @@
             }, {
                 total: data.length, // length of data
                 getData: function($defer, params) {
+                    
+                    var filters={}
+                    angular.forEach(params.filter(),function(v,k){
+                        if(v!==null && v!==''){
+                            filters[k]=v
+                        }
+                    });
+
                     // use build-in angular filter
-                    var orderedData = params.filter() ?
-                           $filter('filter')(data, params.filter()) :
+                    var orderedData = filters ?
+                           $filter('filter')(data, filters) :
                            data;
 
                     $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
