@@ -60,7 +60,7 @@ var app = angular.module('ngTable', []);
  * @name ngTable.factory:ngTableParams
  * @description Parameters manager for ngTable
  */
-app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
+app.factory('ngTableParams', ['$q', '$log','$filter', function ($q, $log,$filter) {
     var isNumber = function (n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
@@ -249,7 +249,14 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          */
         this.getData = function ($defer, params) {
             if (angular.isArray(this.data) && angular.isObject(params)) {
-                $defer.resolve(this.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                var filters={}
+                angular.forEach(params.filter(),function(v,k){if(v!==null && v!==''){filters[k]=v}});
+
+                // use build-in angular filter
+                var filteredData = filters ? $filter('filter')(this.data, filters) : this.data;
+                var orderedData = params.sorting ? $filter('orderBy')(filteredData, params.orderBy()) : filteredData;
+
+                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             } else {
                 $defer.resolve([]);
             }

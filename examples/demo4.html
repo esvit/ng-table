@@ -16,79 +16,55 @@
         <script src="../ng-table.js"></script>
         <link rel="stylesheet" href="../ng-table.css">
     </head>
-<body ng-app="main">
+    <body ng-app="main">
+        <h1>Table with filters + sorting</h1>
+        <div ng-controller="DemoCtrl">
+            <p>Type something in either filter, they data will be filtered as the filter changes</p>
+            <p><strong>Filter:</strong> {{tableParams.filter()|json}}
+            <p><strong>Sort:</strong> {{tableParams.orderBy()|json}}
 
-<h1>Table with filters</h1>
+            <table ng-table="tableParams" show-filter="true" class="table">
+                <tr ng-repeat="user in $data">
+                    <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="'name'">
+                        {{user.name}}
+                    </td>
+                    <td data-title="'Age'" filter="{ 'age': 'number' }" sortable="'age'">
+                        {{user.age}}
+                    </td>
+                </tr>
+            </table>
 
-<div ng-controller="DemoCtrl">
-        <p>Type something in either filter, they data will be filtered as the filter changes</p>
-        <p><strong>Filter:</strong> {{tableParams.filter()|json}}
+            <script>
+            var app = angular.module('main', ['ngTable']).
+            controller('DemoCtrl', function($scope, $filter, ngTableParams) {
+                var data = [{name: "Moroni", age: 50},
+                            {name: "Tiancum", age: 43},
+                            {name: "Jacob", age: 27},
+                            {name: "Nephi", age: 29},
+                            {name: "Enos", age: 34},
+                            {name: "Tiancum", age: 43},
+                            {name: "Jacob", age: 27},
+                            {name: "Nephi", age: 29},
+                            {name: "Enos", age: 34},
+                            {name: "Tiancum", age: 43},
+                            {name: "Jacob", age: 27},
+                            {name: "Nephi", age: 29},
+                            {name: "Enos", age: 34},
+                            {name: "Tiancum", age: 43},
+                            {name: "Jacob", age: 27},
+                            {name: "Nephi", age: 29},
+                            {name: "Enos", age: 34}];
 
-        <table ng-table="tableParams" show-filter="true" class="table">
-            <tr ng-repeat="user in $data">
-                <td data-title="'Name'" filter="{ 'name': 'text' }">
-                    {{user.name}}
-                </td>
-                <td data-title="'Age'" filter="{ 'age': 'number' }">
-                    {{user.age}}
-                </td>
-            </tr>
-        </table>
-
-        <script>
-        var app = angular.module('main', ['ngTable']).
-        controller('DemoCtrl', function($scope, $filter, ngTableParams) {
-            var data = [{name: "Moroni", age: 50},
-                        {name: "Tiancum", age: 43},
-                        {name: "Jacob", age: 27},
-                        {name: "Nephi", age: 29},
-                        {name: "Enos", age: 34},
-                        {name: "Tiancum", age: 43},
-                        {name: "Jacob", age: 27},
-                        {name: "Nephi", age: 29},
-                        {name: "Enos", age: 34},
-                        {name: "Tiancum", age: 43},
-                        {name: "Jacob", age: 27},
-                        {name: "Nephi", age: 29},
-                        {name: "Enos", age: 34},
-                        {name: "Tiancum", age: 43},
-                        {name: "Jacob", age: 27},
-                        {name: "Nephi", age: 29},
-                        {name: "Enos", age: 34}];
-
-            $scope.tableParams = new ngTableParams({
-                page: 1,            // show first page
-                count: 10,          // count per page
-                filter: {
-                    name: 'M'       // initial filter
-                }
-            }, {
-                total: data.length, // length of data
-                getData: function($defer, params) {
-                    
-                    var filters={}
-                    angular.forEach(params.filter(),function(v,k){
-                        if(v!==null && v!==''){
-                            filters[k]=v
-                        }
-                    });
-
-                    // use build-in angular filter
-                    var orderedData = filters ?
-                           $filter('filter')(data, filters) :
-                           data;
-
-                    $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-
-                    params.total(orderedData.length); // set total for recalc pagination
-                    $defer.resolve($scope.users);
-                }
-            });
-        })
-        </script>
-
-</div>
-
-
+                $scope.tableParams = new ngTableParams({
+                    page: 1,            // show first page
+                    count: 10,          // count per page
+                    filter: {}          // initial filter                
+                }, {
+                    total: data.length, // length of data
+                    data: data,
+                });
+            })
+            </script>
+        </div>
     </body>
 </html>
