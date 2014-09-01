@@ -76,6 +76,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         filter: filter,
                         filterTemplateURL: filterTemplateURL,
                         filterName: filterName,
+                        filterPlaceholder : el.attr('filter-placeholder'),
                         headerTemplateURL: headerTemplateURL,
                         filterData: (el.attr("filter-data") ? el.attr("filter-data") : null),
                         show: (el.attr("ng-show") ? function (scope) {
