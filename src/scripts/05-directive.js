@@ -71,6 +71,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     columns.push({
                         id: i++,
                         title: parsedTitle,
+                        headerTitle: el.attr('x-data-header-title') || el.attr('data-header-title') || el.attr('header-title') || parsedTitle(),
                         sortable: parsedAttribute('sortable', false),
                         'class': el.attr('x-data-header-class') || el.attr('data-header-class') || el.attr('header-class'),
                         filter: filter,
