@@ -186,7 +186,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          * @returns {Object} Current filter or `this`
          */
         this.filter = function (filter) {
-            return angular.isDefined(filter) ? this.parameters({'filter': filter}) : params.filter;
+            return angular.isDefined(filter) ? this.parameters({'filter': filter, 'page': 1}) : params.filter;
         };
 
         /**
