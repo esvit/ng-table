@@ -34,10 +34,10 @@
     <tr ng-repeat="user in $data"
         ng-click="user.$selected = !user.$selected; changeSelection(user)"
         ng-class="{'active': user.$selected}">
-        <td data-title="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
+        <td data-title="'Name'" data-sortable="'name'" filter="{ 'name': 'text' }">
             {{user.name}}
         </td>
-        <td data-title="'Age'" sortable="'age'" filter="{ 'age': 'text' }">
+        <td data-title="'Age'" data-sortable="'age'" filter="{ 'age': 'text' }">
             {{user.age}}
         </td>
     </tr>

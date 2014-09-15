@@ -56,7 +56,7 @@
         </thead>
         <tbody>
         <tr ng-repeat="user in $data">
-            <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.field">
+            <td ng-repeat="column in columns" ng-show="column.visible" data-sortable="column.field">
                 {{user[column.field]}}
             </td>
         </tr>

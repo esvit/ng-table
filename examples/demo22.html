@@ -25,12 +25,12 @@
     <table ng-table="tableParams" class="table">
         <tbody ng-repeat="p in $data">
         <tr id="tr{{p.id}}" ng-class-odd="'odd'" ng-class-even="'even'">
-            <td class="rowTd" data-title="'ID'"          sortable="'id'">{{p.id}}</td>
-            <td class="rowTd" data-title="'Firstname'"   sortable="'fn'">{{p.fn}}</td>
-            <td class="rowTd" data-title="'Lastname'"    sortable="'ln'">{{p.ln}}</td>
-            <td class="rowTd" data-title="'Description'" sortable="'dc'">{{p.dc}}</td>
-            <td class="rowTd" data-title="'Email'"       sortable="'em'">{{p.em}}</td>
-            <td class="rowTd" data-title="'Phone'"       sortable="'ph'">{{p.ph}}</td>
+            <td class="rowTd" data-title="'ID'"          data-sortable="'id'">{{p.id}}</td>
+            <td class="rowTd" data-title="'Firstname'"   data-sortable="'fn'">{{p.fn}}</td>
+            <td class="rowTd" data-title="'Lastname'"    data-sortable="'ln'">{{p.ln}}</td>
+            <td class="rowTd" data-title="'Description'" data-sortable="'dc'">{{p.dc}}</td>
+            <td class="rowTd" data-title="'Email'"       data-sortable="'em'">{{p.em}}</td>
+            <td class="rowTd" data-title="'Phone'"       data-sortable="'ph'">{{p.ph}}</td>
             <td class="rowTd" ><input type=button id="editRowBtn{{p.id}}" value="edit"
                                       ng-click="setEditId(p.id)"></td>
         </tr>

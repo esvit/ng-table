@@ -29,10 +29,10 @@
 
     <table ng-table="tableParams" show-filter="true" class="table">
         <tr ng-repeat="user in $data">
-            <td data-title="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
+            <td data-title="'Name'" data-sortable="'name'" filter="{ 'name': 'text' }">
                 {{user.name}}
             </td>
-            <td data-title="'Age'" sortable="'age'" filter="{ 'age': 'text' }">
+            <td data-title="'Age'" data-sortable="'age'" filter="{ 'age': 'text' }">
                 {{user.age}}
             </td>
         </tr>
