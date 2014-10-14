@@ -16,7 +16,7 @@
 var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope, ngTableParams, $timeout) {
     $scope.$loading = false;
 
-    if (!$scope.params) {
+    if (!$scope.hasOwnProperty("params")) {
         $scope.params = new ngTableParams();
     }
     $scope.params.settings().$scope = $scope;
