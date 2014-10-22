@@ -1,7 +1,7 @@
 (function(angular, factory) {
     'use strict';
 
-    if (typeof define === 'function' && define.amd) {
+    if (angular==null && typeof define === 'function' && define.amd) {
         define(['angular'], function(angular) {
             return factory(angular);
         });
