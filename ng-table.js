@@ -653,7 +653,8 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
 
                         if(attrs.pagerTarget) {
                             var target = angular.element(attrs.pagerTarget);
-                            target.replaceWith(paginationTemplate);
+                            if(target)
+                                target.replaceWith(paginationTemplate);
                         } else {
                             switch(attrs.pagerPosition) {
                                 case 'top':
