@@ -649,8 +649,22 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         element.find('thead').remove();
 
                         element.addClass('ng-table')
-                            .prepend(headerTemplate)
-                            .after(paginationTemplate);
+                            .prepend(headerTemplate);
+
+                        if(attrs.pagerTarget) {
+                            var target = angular.element(attrs.pagerTarget);
+                            target.replaceWith(paginationTemplate);
+                        } else {
+                            switch(attrs.pagerPosition) {
+                                case 'top':
+                                    element.before(paginationTemplate);
+                                    break;
+                                default:
+                                case 'bottom':
+                                    element.after(paginationTemplate);
+                            }
+                        }
+                        
 
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
