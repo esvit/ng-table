@@ -45,7 +45,7 @@
 
         <script>
         var app = angular.module('main', ['ngTable']).
-        controller('DemoCtrl', function($scope, $filter, ngTableParams) {
+        controller('DemoCtrl', function($scope, $filter, NgTableParams) {
             var data = [{name: "Moroni", age: 50, role: 'Administrator'},
                         {name: "Tiancum", age: 43, role: 'Administrator'},
                         {name: "Jacob", age: 27, role: 'Administrator'},
@@ -64,7 +64,7 @@
                         {name: "Nephi", age: 29, role: 'User'},
                         {name: "Enos", age: 34, role: 'User'}];
 
-            $scope.tableParams = new ngTableParams({
+            $scope.tableParams = new NgTableParams({
                 page: 1,            // show first page
                 count: 10          // count per page
             }, {

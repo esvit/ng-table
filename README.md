@@ -89,7 +89,7 @@ The karma task will try to open Firefox and Chrome as browser in which to run th
 * [Export to CSV](http://bazalt-cms.com/ng-table/example/15)
 
 ## Configuring ng-table
-For a list of configuration options available, see [Configuring your table with ngTableParams](https://github.com/esvit/ng-table/wiki/Configuring-your-table-with-ngTableParams)
+For a list of configuration options available, see [Configuring your table with NgTableParams](https://github.com/esvit/ng-table/wiki/Configuring-your-table-with-ngTableParams)
 
 #### PS
 Let me know if you are using **ng-table**. It will motivate me to work harder.
