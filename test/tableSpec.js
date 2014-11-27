@@ -74,7 +74,7 @@ describe('ng-table', function () {
         expect(filters.length).toBe(3);
     }));
 
-    it('should show scope data', inject(function ($compile, $rootScope, ngTableParams) {
+    it('should show scope data', inject(function ($compile, $rootScope, NgTableParams) {
         debugger;
         var tbody = elm.find('tbody');
         expect(tbody.length).toBe(1);
@@ -82,7 +82,7 @@ describe('ng-table', function () {
         var rows = tbody.find('tr');
         expect(rows.length).toBe(0);
 
-        var params = new ngTableParams({
+        var params = new NgTableParams({
             page: 1,            // show first page
             count: 10           // count per page
         }, {
@@ -99,7 +99,7 @@ describe('ng-table', function () {
 
         scope.tableParams.page(2);
         scope.$digest();
-        
+
         rows = tbody.find('tr');
         expect(rows.length).toBe(7);
 
