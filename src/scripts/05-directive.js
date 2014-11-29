@@ -21,14 +21,16 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
         return {
             restrict: 'A',
             priority: 1001,
-            scope: true,
+            scope: {
+                'params': '=ngTable'
+            },
             controller: ngTableController,
             compile: function (element) {
                 var columns = [], i = 0, row = null;
 
                 // custom header
                 var thead = element.find('thead');
-
+                var tbodyTemplate = angular.element(document.createElement('tbody'));
                 // IE 8 fix :not(.ng-table-group) selector
                 angular.forEach(angular.element(element.find('tr')), function (tr) {
                     tr = angular.element(tr);
@@ -39,6 +41,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 if (!row) {
                     return;
                 }
+                tbodyTemplate = tbodyTemplate.append(row.clone());
                 angular.forEach(row.find('td'), function (item) {
                     var el = angular.element(item);
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
@@ -47,8 +50,8 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     var parsedAttribute = function (attr, defaultValue) {
                         return function (scope) {
                             return $parse(el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr))(scope, {
-                                $columns: columns
-                            }) || defaultValue;
+                                    $columns: columns
+                                }) || defaultValue;
                         };
                     };
 
@@ -109,7 +112,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         if (!column.filterData) {
                             return;
                         }
-                        def = $parse(column.filterData)(scope, {
+                        def = $parse(column.filterData)(scope.$parent, {
                             $column: column
                         });
                         if (!(angular.isObject(def) && angular.isObject(def.promise))) {
@@ -139,13 +142,15 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         });
 
                         element.find('thead').remove();
-
+                        element.find('tbody').remove();
                         element.addClass('ng-table')
                             .prepend(headerTemplate)
+                            .append(tbodyTemplate)
                             .after(paginationTemplate);
 
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
+                        $compile(tbodyTemplate)(scope);
                     }
                 };
             }
