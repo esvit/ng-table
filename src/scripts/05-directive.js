@@ -32,7 +32,10 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 var thead = element.find('thead');
                 var tbodyTemplate = angular.element(document.createElement('tbody'));
                 // IE 8 fix :not(.ng-table-group) selector
-                angular.forEach(angular.element(element.find('tr')), function (tr) {
+                var tmpTbody = element.find('tbody');
+                tmpTbody = tmpTbody.length > 0 ? tmpTbody : element;
+
+                angular.forEach(angular.element(tmpTbody.find('tr')), function (tr) {
                     tr = angular.element(tr);
                     if (!tr.hasClass('ng-table-group') && !row) {
                         row = tr;
@@ -41,7 +44,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 if (!row) {
                     return;
                 }
-                if(element.find('tbody').length != 0){
+                if(tmpTbody.length != 0){
                     for (var i = 0, atts = element.find('tbody')[0].attributes, n = atts.length, arr = []; i < n; i++){
                         tbodyTemplate.attr(atts[i].nodeName, atts[i].nodeValue);
                     }
