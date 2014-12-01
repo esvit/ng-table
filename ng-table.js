@@ -549,6 +549,12 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 if (!row) {
                     return;
                 }
+                if(element.find('tbody').length != 0){
+                    for (var i = 0, atts = element.find('tbody')[0].attributes, n = atts.length, arr = []; i < n; i++){
+                        tbodyTemplate.attr(atts[i].nodeName, atts[i].nodeValue);
+                    }
+                    element.find('tbody')[0].remove();
+                }
                 tbodyTemplate = tbodyTemplate.append(row.clone());
                 angular.forEach(row.find('td'), function (item) {
                     var el = angular.element(item);
