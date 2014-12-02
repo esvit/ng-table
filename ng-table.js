@@ -658,6 +658,15 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             'template-url': 'templates.pagination'
                         });
 
+                        angular.forEach(scope.$parent, function (val, index) {
+
+                            if(index.indexOf('$')!==-1 || typeof val !== 'function'){
+                                return;
+                            }
+                            scope[index] = scope.$parent[index].bind(scope.$parent);
+
+                        });
+
                         element.find('thead').remove();
                         element.find('tbody').remove();
                         element.addClass('ng-table')
