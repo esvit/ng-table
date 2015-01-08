@@ -24,7 +24,7 @@
         "grunt-contrib-cssmin": "~0.6.1",
         "load-grunt-tasks": "~0.2.0",
         "grunt-contrib-watch": "~0.5.3",
-        "karma": "~0.10",
+        "karma": "~0.12",
         "karma-jasmine": "*",
         "karma-chrome-launcher": "*",
         "karma-firefox-launcher": "*",
