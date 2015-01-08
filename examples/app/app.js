@@ -51,7 +51,7 @@ define([
         $scope.$watch('tableParams', function(params) {
             // use build-in angular filter
             var orderedData = params.sorting ? 
-                                $filter('orderBy')(data, params.orderBy()) :
+                                $filter('orderBy')(data, params.sorting()) :
                                 data;
             orderedData = params.filter ? 
                                 $filter('filter')(orderedData, params.filter) :

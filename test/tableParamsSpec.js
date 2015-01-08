@@ -88,8 +88,7 @@ describe('ngTableParams', function () {
 
     it('ngTableParams parse url parameters', inject(function (ngTableParams) {
         var params = new ngTableParams({
-            'sorting[name]': 'asc',
-            'sorting[age]': 'desc',
+            'sorting': '+name,-age',
             'filter[name]': 'test',
             'filter[age]': 20
         });
@@ -97,14 +96,13 @@ describe('ngTableParams', function () {
         expect(params.filter()).toEqual({ 'name': 'test', 'age': 20 });
         expect(params.filter({})).toEqual(params);
 
-        expect(params.sorting()).toEqual({ 'age': 'desc' }); // sorting only by one column
+        expect(params.sorting()).toEqual([ '+name', '-age' ]);
         expect(params.sorting({})).toEqual(params);
     }));
 
     it('ngTableParams return url parameters', inject(function (ngTableParams) {
         var params = new ngTableParams({
-            'sorting[name]': 'asc',
-            'sorting[age]': 'desc',
+            'sorting': ['+name', '-age'],
             'filter[name]': 'test',
             'filter[age]': 20
         });
@@ -113,27 +111,27 @@ describe('ngTableParams', function () {
             'count': '1',
             'filter[name]': 'test',
             'filter[age]': 20,
-            'sorting[age]': 'desc'
+            'sorting': '+name,-age'
         });
         expect(params.url(true)).toEqual([
             'page=1',
             'count=1',
             'filter[name]=test',
             'filter[age]=20',
-            'sorting[age]=desc'
+            'sorting=+name,-age'
         ]);
     }));
 
-    it('ngTableParams test orderBy', inject(function (ngTableParams) {
+    it('ngTableParams test sorting', inject(function (ngTableParams) {
         var params = new ngTableParams({
-            'sorting[name]': 'asc'
+            'sorting': '+name'
         });
 
-        expect(params.orderBy()).toEqual([ '+name' ]); // for angular sorting function
+        expect(params.sorting()).toEqual([ '+name' ]); // for angular sorting function
 
-        params.sorting({ name: 'desc', age: 'asc' });
+        params.sorting('-name', '+age');
 
-        expect(params.orderBy()).toEqual([ '-name', '+age' ]);
+        expect(params.sorting()).toEqual([ '-name', '+age' ]);
     }));
 
     it('ngTableParams test settings', inject(function (ngTableParams) {
