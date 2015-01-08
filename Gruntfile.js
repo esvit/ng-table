@@ -36,15 +36,15 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: './src/styles/ng-table.less',
-                        dest: './ng-table.less'
+                        dest: './dist/ng-table.less'
                     }
                 ]
             }
         },
         uglify: {
             js: {
-                src: ['ng-table.js'],
-                dest: 'ng-table.min.js',
+                src: ['dist/ng-table.js'],
+                dest: 'dist/ng-table.min.js',
                 options: {
                     banner: '<%= banner %>',
                     sourceMap: function (fileName) {
@@ -56,29 +56,25 @@ module.exports = function (grunt) {
         concat: {
             js: {
                 src: [
-                    'src/scripts/01-*.js',
-                    'src/scripts/02-*.js',
-                    'src/scripts/03-*.js',
-                    'src/scripts/04-*.js',
-                    'src/scripts/05-*.js',
-                    'src/scripts/06-*.js',
+                    'src/intro.prefix',
+                    'src/scripts/*.js',
                     './.temp/scripts/views.js',
-                    'src/scripts/07-*.js'
+                    'src/outro.postfix'
                 ],
-                dest: 'ng-table.js'
+                dest: 'dist/ng-table.js'
             }
         },
         less: {
             css: {
                 files: {
-                    'ng-table.css': 'src/styles/ng-table.less'
+                    'dist/ng-table.css': 'src/styles/ng-table.less'
                 }
             }
         },
         cssmin: {
             css: {
                 files: {
-                    'ng-table.min.css': 'ng-table.css'
+                    'dist/ng-table.min.css': 'dist/ng-table.css'
                 },
                 options: {
                     banner: '<%= banner %>'
@@ -115,6 +111,7 @@ module.exports = function (grunt) {
             },
             serve: {
                 options: {
+                    open: 'http://localhost:8000/examples/',
                     middleware: function (connect) {
                         return [
                             mountFolder(connect, '.')

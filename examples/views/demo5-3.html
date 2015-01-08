@@ -1,0 +1,51 @@
+<div class="page-header">
+    <h1>Table with hidden pagination</h1>
+</div>
+
+<script data-run-script>
+    window.DemoCtrl = function($scope, ngTableParams) {
+        var data = [{name: "Moroni", age: 50},
+            {name: "Tiancum", age: 43},
+            {name: "Jacob", age: 27},
+            {name: "Nephi", age: 29},
+            {name: "Enos", age: 34},
+            {name: "Tiancum", age: 43},
+            {name: "Jacob", age: 27},
+            {name: "Nephi", age: 29},
+            {name: "Enos", age: 34},
+            {name: "Tiancum", age: 43},
+            {name: "Jacob", age: 27},
+            {name: "Nephi", age: 29},
+            {name: "Enos", age: 34},
+            {name: "Tiancum", age: 43},
+            {name: "Jacob", age: 27},
+            {name: "Nephi", age: 29},
+            {name: "Enos", age: 34}];
+
+        $scope.tableParams = new ngTableParams({
+            page: 1,   // show first page
+            total: 1,  // value less than count hide pagination
+            count: 5  // count per page
+        }, {
+            counts: [], // hide page counts control
+            getData: function($defer, params) {
+                $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
+    }
+</script>
+
+<div ng-controller="DemoCtrl">
+
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="user in $data">
+            <td data-title="'Name'">
+                {{user.name}}
+            </td>
+            <td data-title="'Age'">
+                {{user.age}}
+            </td>
+        </tr>
+    </table>
+
+</div>

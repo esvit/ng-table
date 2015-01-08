@@ -2,7 +2,7 @@
     'use strict';
 
     if (typeof define === 'function' && define.amd) {
-        define(['angular'], function(angular) {
+        define(['.'], function(angular) {
             return factory(angular);
         });
     } else {

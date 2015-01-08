@@ -43,25 +43,6 @@
 
 <div ng-controller="DemoCtrl">
 
-    <button ng-click="tableParams.reload()" class="btn pull-right">Reload</button>
-    <button ng-click="tableParams.sorting({})" class="btn pull-right">Clear sorting</button>
-    <div class="clearfix"></div>
-
-        <div loading-container="tableParams.settings().$loading">
-            <table ng-table="tableParams" show-filter="true" class="table">
-                <tr ng-repeat="user in $data">
-                    <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="'name'">
-                        {{user.name}}
-                        {{$loading}}
-                    </td>
-                    <td data-title="'Age'" sortable="'age'">
-                        {{user.age}}
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-
         <script>
         function isNumber(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
