@@ -29,8 +29,8 @@
             total: data.length, // length of data
             getData: function($defer, params) {
                 // use build-in angular filter
-                var orderedData = params.sorting ?
-                        $filter('orderBy')(data, params.orderBy()) :
+                var orderedData = params.sorting() ?
+                        $filter('orderBy')(data, params.sorting()) :
                         data;
                 orderedData = params.filter ?
                         $filter('filter')(orderedData, params.filter()) :
@@ -76,7 +76,7 @@
 <div ng-controller="DemoCtrl">
 
     <div class="clearfix">
-        <button ng-click="tableParams.sorting({})" class="btn btn-default pull-right">Clear sorting</button>
+        <button ng-click="tableParams.sorting([])" class="btn btn-default pull-right">Clear sorting</button>
     </div>
 
     <table ng-table="tableParams" show-filter="true" class="table ng-table-responsive">

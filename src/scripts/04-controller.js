@@ -13,7 +13,7 @@
  * @description
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
-var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTableParams, $q) {
+var ngTableController = ['$scope', 'ngTableParams', '$q', '$timeout', function($scope, ngTableParams, $q, $timeout) {
     // Some helper functions:
     var __indexOf = [].indexOf || function(item) {
         for (var i = 0, l = this.length; i < l; i++) {
@@ -79,8 +79,8 @@ var ngTableController = ['$scope', 'ngTableParams', '$q', function($scope, ngTab
     }, true);
 
     $scope.sortBy = function (column, event) {
-        var parsedSortable = $scope.parse(column.sortable);
-        if (!parsedSortable) {
+        var parsedSortables = $scope.parse(column.sortable);
+        if (!parsedSortables) {
             return;
         }
         parsedSortables = normalizeSortables(parsedSortables);

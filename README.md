@@ -23,7 +23,7 @@ For work in IE < 9 need jQuery, just add:
 ## Updates
 
 ### v0.4.0
-
+- add multi-column sorting from @demands (issue #160)
 - compiled scripts moves into `dist` folder
 
 ### v0.3.2

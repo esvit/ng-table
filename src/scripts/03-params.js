@@ -372,7 +372,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             page: 1,
             count: 1,
             filter: {},
-            sorting: {},
+            sorting: [],
             group: {},
             groupBy: null
         };

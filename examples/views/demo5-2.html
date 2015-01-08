@@ -9,9 +9,7 @@
         $scope.tableParams = new ngTableParams({
             page: 1,            // show first page
             count: 10,          // count per page
-            sorting: {
-                name: 'asc'     // initial sorting
-            }
+            sorting: ['+name']  // initial sorting
         }, {
             total: 0,           // length of data
             getData: function($defer, params) {
@@ -30,7 +28,7 @@
 </script>
 
 <button ng-click="tableParams.reload()" class="btn pull-right">Reload</button>
-<button ng-click="tableParams.sorting({})" class="btn pull-right">Clear sorting</button>
+<button ng-click="tableParams.sorting([])" class="btn pull-right">Clear sorting</button>
 <div class="clearfix"></div>
 
 <div loading-container="tableParams.settings().$loading">
