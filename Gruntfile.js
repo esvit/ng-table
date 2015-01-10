@@ -36,19 +36,19 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: './src/styles/ng-table.less',
-                        dest: './ng-table.less'
+                        dest: './dist/ng-table.less'
                     }
                 ]
             }
         },
         uglify: {
             js: {
-                src: ['ng-table.js'],
-                dest: 'ng-table.min.js',
+                src: ['./dist/ng-table.js'],
+                dest: './dist/ng-table.min.js',
                 options: {
                     banner: '<%= banner %>',
                     sourceMap: function (fileName) {
-                        return fileName.replace(/\.min\.js$/, '.map');
+                        return fileName.replace(/$/, '.map');
                     }
                 }
             }
@@ -65,20 +65,20 @@ module.exports = function (grunt) {
                     './.temp/scripts/views.js',
                     'src/scripts/07-*.js'
                 ],
-                dest: 'ng-table.js'
+                dest: './dist/ng-table.js'
             }
         },
         less: {
             css: {
                 files: {
-                    'ng-table.css': 'src/styles/ng-table.less'
+                    './dist/ng-table.css': 'src/styles/ng-table.less'
                 }
             }
         },
         cssmin: {
             css: {
                 files: {
-                    'ng-table.min.css': 'ng-table.css'
+                    './dist/ng-table.min.css': './dist/ng-table.css'
                 },
                 options: {
                     banner: '<%= banner %>'

@@ -13,7 +13,7 @@ module.exports = function (config) {
             'bower_components/angular-mocks/angular-mocks.js',
 
             // directive
-            'ng-table.js',
+            './dist/ng-table.js',
 
             // tests
             'test/*.js'

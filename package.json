@@ -1,6 +1,6 @@
 {
     "name": "ng-table",
-    "version": "0.3.1",
+    "version": "0.3.3",
     "author": "Vitalii Savchuk <esvit666@gmail.com>",
     "license": "BSD",
     "repository": {
@@ -8,8 +8,9 @@
         "url": "git://github.com/esvit/ng-table.git"
     },
     "devDependencies": {
-        "coffee-script": "~1.6.2",
-        "grunt-regarde": "~0.1.1",
+
+        "grunt": "~0.4.2",
+        "grunt-contrib-watch": "~0.6.x",
         "grunt-contrib-jade": "~0.5.0",
         "grunt-hustler": "0.11.2",
         "grunt-contrib-copy": "~0.4.1",
@@ -19,19 +20,18 @@
         "grunt-contrib-requirejs": "~0.4.0",
         "grunt-contrib-uglify": "~0.2.1",
         "grunt-contrib-connect": "~0.5.0",
-        "grunt": "~0.4.2",
         "grunt-contrib-less": "~0.5.2",
         "grunt-contrib-cssmin": "~0.6.1",
         "load-grunt-tasks": "~0.2.0",
-        "grunt-contrib-watch": "~0.5.3",
-        "karma": "~0.10",
-        "karma-jasmine": "*",
-        "karma-chrome-launcher": "*",
-        "karma-firefox-launcher": "*",
-        "karma-ng-html2js-preprocessor": "*",
-        "coveralls": "",
-        "karma-coverage": "~0.1.0",
-        "grunt-coffee-build": "~1.4.12"
+
+        "karma": "~0.12.0",
+        "karma-jasmine": "~0.1.0",
+        "karma-chrome-launcher": "~0.1.0",
+        "karma-firefox-launcher": "~0.1.0",
+        "karma-ng-html2js-preprocessor": "~0.1.0",
+        "coveralls": "~2.11.0",
+        "karma-coverage": "~0.2.0"
+
     },
     "scripts": {
         "test": "karma start --single-run --no-auto-watch"

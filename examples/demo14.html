@@ -14,8 +14,8 @@
         <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
         <![endif]-->
         <script src="js/angular.min.js"></script>
-        <script src="../ng-table.js"></script>
-        <link rel="stylesheet" href="../ng-table.css">
+        <script src="../dist/ng-table.js"></script>
+        <link rel="stylesheet" href="../dist/ng-table.css">
     </head>
 <body ng-app="main">
 
@@ -57,7 +57,7 @@
                         {name: "Fourteen", age: 43},
                         {name: "Fifteen", age: 27},
                         {name: "Sixteen", age: 29}];
-			
+
 			var data2 = [{name: "Jacob", age: 50},
                         {name: "Jacob", age: 43},
                         {name: "Jacob", age: 27},
@@ -75,13 +75,13 @@
                         {name: "Jacob", age: 27},
                         {name: "Nephi", age: 29},
                         {name: "Enos", age: 34}];
-			
+
 			var getData = function() {
 				return $scope.dataset === "1" ? data1 : data2;
 			};
 			$scope.$watch("dataset", function () {
 				$scope.tableParams.reload();
-			});			
+			});
             $scope.tableParams = new ngTableParams({
                 page: 1,            // show first page
                 count: 10,          // count per page

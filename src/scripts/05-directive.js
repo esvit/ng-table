@@ -88,6 +88,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 return function (scope, element, attrs) {
                     scope.$loading = false;
                     scope.$columns = columns;
+                    scope.$filterRow = {};
 
                     scope.$watch(attrs.ngTable, (function (params) {
                         if (angular.isUndefined(params)) {
@@ -102,6 +103,11 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     if (attrs.showFilter) {
                         scope.$parent.$watch(attrs.showFilter, function (value) {
                             scope.show_filter = value;
+                        });
+                    }
+                    if (attrs.disableFilter) {
+                        scope.$parent.$watch(attrs.disableFilter, function (value) {
+                            scope.$filterRow.disabled = value;
                         });
                     }
                     angular.forEach(columns, function (column) {
