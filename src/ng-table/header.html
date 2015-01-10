@@ -10,7 +10,7 @@
         ng-init="template = column.headerTemplateURL(this)"
         class="header {{column.class}}">
         <div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)"></div>
-        <div ng-if="template" ng-show="template"><div ng-include="template"></div></div>
+        <div ng-if="template" ng-show="template" ng-include="template"></div>
     </th>
 </tr>
 <tr ng-show="show_filter" class="ng-table-filters">
