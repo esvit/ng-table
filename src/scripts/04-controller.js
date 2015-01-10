@@ -14,10 +14,12 @@
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
 var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope, ngTableParams, $timeout) {
+    var isFirstTimeLoad = true;
     $scope.$loading = false;
 
-    if (!$scope.params) {
+    if (!$scope.hasOwnProperty("params")) {
         $scope.params = new ngTableParams();
+        $scope.params.isNullInstance = true;
     }
     $scope.params.settings().$scope = $scope;
 
@@ -29,17 +31,27 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
         };
     })();
 
+    function resetPage() {
+        $scope.params.$params.page = 1;
+    }
+
     $scope.$watch('params.$params', function (newParams, oldParams) {
         $scope.params.settings().$scope = $scope;
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
+            var maybeResetPage = isFirstTimeLoad ? angular.noop : resetPage;
             delayFilter(function () {
-                $scope.params.$params.page = 1;
+                maybeResetPage();
                 $scope.params.reload();
             }, $scope.params.settings().filterDelay);
         } else {
             $scope.params.reload();
         }
+
+        if (!$scope.params.isNullInstance) {
+            isFirstTimeLoad = false;
+        }
+
     }, true);
 
     $scope.sortBy = function (column, event) {
