@@ -7,7 +7,7 @@
         </button>
     </div>
     <ul class="pagination ng-table-pagination">
-        <li ng-class="{'disabled': !page.active}" ng-repeat="page in pages" ng-switch="page.type">
+        <li ng-class="{'disabled': !page.active && !page.current, 'active': page.current}" ng-repeat="page in pages" ng-switch="page.type">
             <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a>
             <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>
             <a ng-switch-when="page" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>
