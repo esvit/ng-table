@@ -3,6 +3,7 @@
     "version": "0.4.1",
     "author": "Vitalii Savchuk <esvit666@gmail.com>",
     "license": "BSD",
+    "main": "ng-table.js",
     "repository": {
         "type": "git",
         "url": "git://github.com/esvit/ng-table.git"
