@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <!--[if lt IE 9]>
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <![endif]-->
+        <script src="js/angular.min.js"></script>
+        <script src="../dist/ng-table.js"></script>
+        <link rel="stylesheet" href="../dist/ng-table.css">
+    </head>
+<body ng-app="main">
+
+<h1>Table with optional filters</h1>
+
+<div ng-controller="DemoCtrl">
+        <h4><u>Type something in filter and press <strong>Enter</strong> or <strong>Filter</strong> button</u></h4>
+        <h4><strong>Filter:</strong> {{tableParams.filter()|json}}</h4>
+        <br/>
+
+        <h4><u>Adapt the filter to your needs:</u></h4>
+        <form class="form-horizontal">
+          <div class="form-group">
+            <div class="col-sm-9">
+              <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="showCheckbox" ng-init="showCheckbox=true"> Show All Filters
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-9">
+              <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="disableCheckbox"> Disable All Filters
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <table ng-table="tableParams" show-filter="showCheckbox" disable-filter="disableCheckbox" class="table">
+            <tr ng-repeat="user in $data">
+                <td data-title="'Name'" filter="{ 'name': 'text' }">
+                    {{user.name}}
+                </td>
+                <td data-title="'Age'" filter="{ 'age': 'text' }">
+                    {{user.age}}
+                </td>
+            </tr>
+        </table>
+
+        <script>
+        var app = angular.module('main', ['ngTable']).
+        controller('DemoCtrl', function($scope, $filter, ngTableParams) {
+            var data = [{"age":28,"name":"Mercado Beasley"},{"age":35,"name":"Gladys Good"},{"age":37,"name":"Barton Alexander"},{"age":24,"name":"Petersen Weiss"},{"age":29,"name":"May Mcdaniel"},{"age":49,"name":"Padilla Wooten"},{"age":21,"name":"Katina Norris"},{"age":27,"name":"Dana Buckner"},{"age":35,"name":"Graham Burt"},{"age":40,"name":"Brittany Weber"},{"age":27,"name":"Solomon Bond"},{"age":33,"name":"Randolph Kirk"},{"age":33,"name":"Eugenia Cook"},{"age":33,"name":"Harrell Mcknight"},{"age":22,"name":"Schwartz House"},{"age":20,"name":"Marcie Ashley"},{"age":44,"name":"Ernestine Christian"},{"age":44,"name":"Susanna Todd"},{"age":36,"name":"Chan Acevedo"},{"age":31,"name":"Sutton White"},{"age":26,"name":"Carey Camacho"},{"age":40,"name":"Cantrell Gallegos"},{"age":28,"name":"Cox Nguyen"},{"age":35,"name":"Sara Hicks"},{"age":22,"name":"Pollard Lucas"},{"age":21,"name":"Mcfarland Higgins"},{"age":28,"name":"Sylvia Wiley"}];
+
+            $scope.tableParams = new ngTableParams({
+                page: 1,            // show first page
+                count: 10,          // count per page
+                filter: {           // initial filter
+                    name: 'M',
+                    age: ''
+                }
+            }, {
+                total: data.length, // length of data
+                getData: function($defer, params) {
+                    // use build-in angular filter
+                    var gridData = params.filter() ?
+                           $filter('filter')(data, params.filter()) :
+                           data;
+
+                    $scope.users = gridData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+
+                    params.total(gridData.length); // set total for recalc pagination
+                    $defer.resolve($scope.users);
+                }
+            });
+        })
+        </script>
+
+</div>
+
+
+    </body>
+</html>

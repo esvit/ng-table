@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <!--[if lt IE 9]>
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <![endif]-->
+        <script src="js/angular.min.js"></script>
+        <script src="../dist/ng-table.js"></script>
+        <link rel="stylesheet" href="../dist/ng-table.css">
+        <style type="text/css">
+            .nestedTblGutter {
+                padding-left: 40px;
+            }
+        </style>
+    </head>
+<body ng-app="main">
+<h1>Nested tables</h1>
+
+<div ng-controller="DemoCtrl">
+
+    <p><strong>Parent Table Page:</strong> {{parentTableParams.page()}}
+    <p><strong>Parent Table Count per page:</strong> {{parentTableParams.count()}}
+
+
+        <table ng-table="parentTableParams" class="table ng-table-responsive table-condensed table-hover">
+            <tbody>
+                <tr ng-repeat-start="parent in $data">
+                    <td data-title="'Name'" ng-bind="parent.name"></td>
+                    <td data-title="'Age'" ng-bind="parent.age"></td>
+                    <td data-title="'Children'">
+                        <button type="button" class="btn btn-default btn-xs" ng-click="selectedParent = (selectedParent == null ? parent : null)" ng-disabled="!parent.children.length">
+                            <i class="glyphicon glyphicon-chevron-down" ng-hide="selectedParent != null"></i>
+                            <i class="glyphicon glyphicon-chevron-up" ng-show="selectedParent != null"></i>
+                        </button>
+                        <span class="badge" ng-bind="parent.children.length || 0"></span>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-if="selectedParent === parent">
+                    <td colspan="3" ng-controller="DemoChildrenCtrl">
+                        <div class="nestedTblGutter">
+                            <table ng-table="childrenTableParams" class="table ng-table-responsive table-condensed table-bordered table-hover">
+                                <tr ng-repeat="child in $data">
+                                    <td data-title="'Name'" ng-bind="child.name"></td>
+                                    <td data-title="'Phone'" ng-bind="child.phone"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script>
+        var app = angular.module('main', ['ngTable']).
+        controller('DemoCtrl', function($scope, ngTableParams) {
+            var data = [
+                {"age":25,"name":"Calderon Morgan","children":[{"name":"Nelda Austin","phone":"+44 (927) 594-2107"},{"name":"Sweeney Guthrie","phone":"+44 (951) 510-3876"},{"name":"Lancaster Crosby","phone":"+44 (971) 428-3827"},{"name":"Sondra Townsend","phone":"+44 (807) 408-3891"},{"name":"Suzette Reeves","phone":"+44 (929) 527-3758"},{"name":"Sawyer Holman","phone":"+44 (977) 430-3533"},{"name":"Beryl Santiago","phone":"+44 (927) 429-3182"}]},
+                {"age":33,"name":"Landry Gordon","children":[{"name":"Monica Dodson","phone":"+44 (877) 537-2803"},{"name":"Waller Hurst","phone":"+44 (935) 500-2716"},{"name":"Muriel Paul","phone":"+44 (831) 461-2731"},{"name":"Heidi Peterson","phone":"+44 (958) 405-3224"},{"name":"Cheri Gibson","phone":"+44 (954) 546-3877"},{"name":"Washington Quinn","phone":"+44 (927) 505-3180"},{"name":"Sue Sims","phone":"+44 (880) 533-3517"},{"name":"Conley Johnston","phone":"+44 (973) 557-2208"},{"name":"Jessica Nunez","phone":"+44 (844) 407-3919"},{"name":"Bradley Barton","phone":"+44 (898) 445-2625"},{"name":"Larsen Calhoun","phone":"+44 (994) 473-2005"}]},
+                {"age":23,"name":"Erna Giles","children":[{"name":"Harrison Jensen","phone":"+44 (845) 476-3133"},{"name":"Logan Carver","phone":"+44 (883) 405-2463"},{"name":"Perkins Foley","phone":"+44 (929) 451-2479"},{"name":"Bender Cook","phone":"+44 (989) 510-3676"},{"name":"Bell Woodward","phone":"+44 (806) 450-3693"},{"name":"Davidson Williamson","phone":"+44 (866) 516-3319"},{"name":"Cunningham Spears","phone":"+44 (839) 538-2570"},{"name":"Nelson Hardin","phone":"+44 (810) 404-2708"},{"name":"Mabel Downs","phone":"+44 (897) 572-3480"},{"name":"Valerie Turner","phone":"+44 (956) 439-3501"},{"name":"Puckett Nguyen","phone":"+44 (939) 555-3731"},{"name":"Marcella Holder","phone":"+44 (852) 408-3264"},{"name":"Katharine Mendez","phone":"+44 (810) 448-3309"},{"name":"Clark Herman","phone":"+44 (887) 545-3149"},{"name":"Jeannine Craig","phone":"+44 (903) 544-3107"},{"name":"Fischer Christensen","phone":"+44 (953) 515-2112"},{"name":"Stout Gates","phone":"+44 (973) 476-3344"},{"name":"Rollins Sharp","phone":"+44 (966) 500-2568"}]},
+                {"age":24,"name":"Gilda Duran","children":[{"name":"Eleanor Hicks","phone":"+44 (882) 528-2750"},{"name":"Margo Morse","phone":"+44 (911) 471-2991"},{"name":"Hilda Ferguson","phone":"+44 (915) 455-3989"},{"name":"Gwendolyn Ward","phone":"+44 (896) 581-2088"},{"name":"Alissa Carr","phone":"+44 (937) 558-3173"},{"name":"Maldonado Montgomery","phone":"+44 (821) 594-2515"},{"name":"William Grimes","phone":"+44 (958) 497-2033"}]},
+                {"age":35,"name":"Potts Mccormick","children":[{"name":"Lilly Mathis","phone":"+44 (806) 417-3880"},{"name":"Myrna Velazquez","phone":"+44 (826) 590-3036"},{"name":"Candace Solomon","phone":"+44 (982) 485-2997"},{"name":"Meyers Langley","phone":"+44 (834) 482-2887"},{"name":"Darla Haynes","phone":"+44 (973) 550-2098"},{"name":"Sandy Holden","phone":"+44 (936) 447-3267"},{"name":"Tasha Mcknight","phone":"+44 (803) 545-2552"},{"name":"Suzanne Franco","phone":"+44 (846) 554-2985"},{"name":"Tonia Poole","phone":"+44 (812) 460-3517"},{"name":"Freeman Wilcox","phone":"+44 (862) 499-3667"},{"name":"Joy Mueller","phone":"+44 (819) 589-3150"},{"name":"Duncan Kirkland","phone":"+44 (906) 548-3718"},{"name":"Liza Santos","phone":"+44 (850) 548-2603"},{"name":"Noble Terry","phone":"+44 (815) 549-3415"},{"name":"Charity Jones","phone":"+44 (968) 535-3093"},{"name":"Hyde Rivera","phone":"+44 (970) 418-2657"},{"name":"Colleen Hopkins","phone":"+44 (838) 551-2836"},{"name":"Norma Tate","phone":"+44 (816) 542-3417"},{"name":"Long Galloway","phone":"+44 (891) 559-3152"},{"name":"Ladonna Buckner","phone":"+44 (846) 594-3424"},{"name":"Beverley Michael","phone":"+44 (801) 600-3493"},{"name":"Morales Leonard","phone":"+44 (911) 519-2131"},{"name":"Billie Mckay","phone":"+44 (838) 541-3724"},{"name":"Jocelyn Burns","phone":"+44 (929) 477-2494"},{"name":"Lena Osborne","phone":"+44 (926) 573-2417"}]},
+                {"age":28,"name":"Gonzales Shields","children":[{"name":"Fern Walters","phone":"+44 (904) 457-2436"},{"name":"Sharlene Duke","phone":"+44 (978) 541-2208"},{"name":"Hughes Saunders","phone":"+44 (996) 588-2292"},{"name":"Cardenas Munoz","phone":"+44 (819) 400-2457"},{"name":"Cox Golden","phone":"+44 (849) 579-3363"},{"name":"Caldwell Mooney","phone":"+44 (833) 582-2598"},{"name":"Underwood Joyce","phone":"+44 (889) 400-2425"},{"name":"Huff Blevins","phone":"+44 (855) 577-2209"},{"name":"Mildred Carpenter","phone":"+44 (870) 469-3581"},{"name":"Carlene Clark","phone":"+44 (920) 592-3148"},{"name":"Tessa Cotton","phone":"+44 (883) 418-2241"},{"name":"Ballard Hensley","phone":"+44 (976) 464-3610"},{"name":"Beth Ayala","phone":"+44 (875) 490-3251"},{"name":"Eunice Greer","phone":"+44 (935) 527-3619"},{"name":"Griffin Curry","phone":"+44 (812) 555-2359"},{"name":"Deana Dillon","phone":"+44 (963) 548-2406"},{"name":"Eaton Puckett","phone":"+44 (915) 419-2765"},{"name":"Little Charles","phone":"+44 (922) 539-2681"},{"name":"Nunez Grant","phone":"+44 (819) 553-2966"},{"name":"Allison Wilder","phone":"+44 (972) 484-3245"},{"name":"Pamela Wiley","phone":"+44 (969) 580-2637"},{"name":"Tanisha Holland","phone":"+44 (954) 466-3938"},{"name":"Vickie Holt","phone":"+44 (815) 580-3774"},{"name":"Garrett Lott","phone":"+44 (848) 540-3399"},{"name":"Torres Fleming","phone":"+44 (810) 434-2801"},{"name":"Willa Lawson","phone":"+44 (826) 541-2603"},{"name":"Kerr Hayden","phone":"+44 (876) 561-3911"}]},
+                {"age":24,"name":"Sargent Dickson","children":[{"name":"Ferguson Anderson","phone":"+44 (985) 452-3793"},{"name":"Amy Bailey","phone":"+44 (950) 444-3973"},{"name":"Kemp Salas","phone":"+44 (845) 466-3482"},{"name":"Luz Leon","phone":"+44 (939) 484-2323"},{"name":"Dominguez Acevedo","phone":"+44 (945) 473-2170"},{"name":"Ada Delacruz","phone":"+44 (995) 426-2979"},{"name":"Buckley Jenkins","phone":"+44 (983) 583-2263"},{"name":"Marla Evans","phone":"+44 (905) 482-3954"},{"name":"Carole Rojas","phone":"+44 (941) 518-2141"},{"name":"Esther Mcleod","phone":"+44 (821) 600-2659"},{"name":"Mari Dejesus","phone":"+44 (812) 543-2477"}]},
+                {"age":39,"name":"Wilkinson Vinson","children":[{"name":"Acevedo Frazier","phone":"+44 (908) 499-2824"},{"name":"Jo Hickman","phone":"+44 (829) 411-3060"},{"name":"Helena Watts","phone":"+44 (826) 520-2889"},{"name":"Buchanan Stanton","phone":"+44 (989) 471-2643"},{"name":"Verna Foreman","phone":"+44 (843) 447-2688"},{"name":"Petersen Hampton","phone":"+44 (976) 415-2130"},{"name":"Annette Hayes","phone":"+44 (828) 412-3253"},{"name":"Isabel Shannon","phone":"+44 (991) 496-2642"},{"name":"Houston Wagner","phone":"+44 (929) 495-2305"},{"name":"Florence Warner","phone":"+44 (988) 483-3235"},{"name":"Guadalupe Fisher","phone":"+44 (889) 443-3874"},{"name":"Schwartz Pierce","phone":"+44 (823) 440-2716"},{"name":"Lydia Hobbs","phone":"+44 (948) 430-3884"},{"name":"Elise Ewing","phone":"+44 (971) 551-2930"},{"name":"Angeline Castaneda","phone":"+44 (956) 407-3357"},{"name":"Maxine Martin","phone":"+44 (934) 444-2375"},{"name":"Robinson Witt","phone":"+44 (915) 441-3283"},{"name":"Delgado Thornton","phone":"+44 (901) 569-3502"},{"name":"Alisa Atkins","phone":"+44 (874) 512-3805"},{"name":"Mayo Yang","phone":"+44 (908) 580-3540"},{"name":"Ingrid Carter","phone":"+44 (901) 458-2779"}]},
+                {"age":38,"name":"Roy Mcguire","children":[{"name":"Franklin Shepard","phone":"+44 (871) 554-2231"},{"name":"Patton Ratliff","phone":"+44 (980) 479-2830"},{"name":"Meredith Price","phone":"+44 (955) 471-2248"},{"name":"Dominique Bond","phone":"+44 (873) 429-2422"},{"name":"Alicia Marquez","phone":"+44 (912) 405-2769"},{"name":"Peterson Williams","phone":"+44 (953) 532-2995"},{"name":"Petra Dalton","phone":"+44 (873) 432-3866"},{"name":"Natalie English","phone":"+44 (947) 471-3114"},{"name":"Haynes Dunn","phone":"+44 (923) 534-3707"},{"name":"Alvarez Haney","phone":"+44 (871) 593-2125"},{"name":"Rachel Stuart","phone":"+44 (886) 410-3003"},{"name":"Millicent Frank","phone":"+44 (943) 464-3517"},{"name":"Hess Taylor","phone":"+44 (844) 409-2232"},{"name":"Burch Wood","phone":"+44 (865) 518-2784"},{"name":"Chris Hall","phone":"+44 (828) 531-2718"},{"name":"Savannah Rollins","phone":"+44 (843) 413-2099"},{"name":"Queen Lancaster","phone":"+44 (966) 494-3085"},{"name":"Alison Lynn","phone":"+44 (959) 470-2558"},{"name":"Rose Monroe","phone":"+44 (848) 522-3124"},{"name":"Priscilla Vazquez","phone":"+44 (961) 533-3308"},{"name":"Kay Ramsey","phone":"+44 (876) 542-3623"},{"name":"Odessa Gamble","phone":"+44 (994) 484-3334"},{"name":"Bonnie Welch","phone":"+44 (853) 537-3190"},{"name":"Vicky Beasley","phone":"+44 (824) 498-2204"},{"name":"Spears Moss","phone":"+44 (912) 466-3611"}]},
+                {"age":30,"name":"Castro Bates","children":[{"name":"Imelda Rodriguez","phone":"+44 (807) 499-3836"},{"name":"Hunter Eaton","phone":"+44 (826) 536-2359"},{"name":"Finley Lambert","phone":"+44 (878) 430-2649"},{"name":"Ina Johnson","phone":"+44 (802) 441-3519"},{"name":"Robertson Massey","phone":"+44 (855) 450-2811"},{"name":"Lila Rasmussen","phone":"+44 (924) 530-3616"},{"name":"Lily Mcconnell","phone":"+44 (836) 578-3237"},{"name":"Malinda Green","phone":"+44 (972) 448-2318"},{"name":"Campos Padilla","phone":"+44 (813) 400-2254"},{"name":"Deena Benson","phone":"+44 (807) 406-3504"},{"name":"Battle Park","phone":"+44 (942) 481-3753"},{"name":"Huber Whitney","phone":"+44 (914) 583-3024"},{"name":"Bernice Thomas","phone":"+44 (976) 549-2743"},{"name":"Cain Brown","phone":"+44 (977) 554-3566"},{"name":"Diaz Wolfe","phone":"+44 (884) 538-2319"},{"name":"Roxie Sanders","phone":"+44 (865) 589-3820"},{"name":"Rowland Fulton","phone":"+44 (948) 438-2482"}]},
+                {"age":32,"name":"Goldie Calderon","children":[{"name":"Spencer Mcmahon","phone":"+44 (920) 473-3284"},{"name":"Dorsey Wall","phone":"+44 (965) 557-2237"},{"name":"Santos Ballard","phone":"+44 (948) 493-2541"},{"name":"Lamb Sampson","phone":"+44 (979) 456-3610"},{"name":"Delia Mosley","phone":"+44 (988) 509-2251"},{"name":"Petty Trevino","phone":"+44 (884) 419-3230"}]},
+                {"age":24,"name":"Fran Hebert","children":[{"name":"Eula Kirk","phone":"+44 (985) 589-3864"},{"name":"Lott Bryan","phone":"+44 (909) 484-2627"},{"name":"Etta Salinas","phone":"+44 (930) 418-3081"},{"name":"Hattie Odom","phone":"+44 (991) 418-2877"},{"name":"Harriett Pruitt","phone":"+44 (941) 532-2301"},{"name":"Deanne Daugherty","phone":"+44 (999) 428-2491"},{"name":"Sabrina Dickerson","phone":"+44 (982) 434-2650"},{"name":"Franco Jackson","phone":"+44 (949) 429-3448"},{"name":"Carrillo Burnett","phone":"+44 (921) 426-2570"},{"name":"Holloway Lucas","phone":"+44 (938) 427-2125"},{"name":"Selma Chaney","phone":"+44 (888) 418-2020"},{"name":"Aileen Bartlett","phone":"+44 (930) 593-2776"},{"name":"Hammond Jennings","phone":"+44 (847) 424-3309"},{"name":"Dee Anthony","phone":"+44 (819) 510-2132"},{"name":"Bass Joyner","phone":"+44 (986) 486-2185"},{"name":"Anderson Fernandez","phone":"+44 (895) 483-3998"},{"name":"Peters Meadows","phone":"+44 (953) 439-3275"},{"name":"Joanna Clarke","phone":"+44 (890) 415-3175"},{"name":"Diann Stout","phone":"+44 (863) 557-2460"},{"name":"Mcmillan Chambers","phone":"+44 (822) 455-2586"}]},
+                {"age":33,"name":"Sandoval Tyson"},
+                {"age":33,"name":"Morgan Hoffman","children":[{"name":"Fanny Perry","phone":"+44 (992) 556-2176"},{"name":"Loraine Holmes","phone":"+44 (921) 512-2623"},{"name":"Aguirre Mayer","phone":"+44 (870) 456-3067"},{"name":"Francisca Bradley","phone":"+44 (912) 509-2037"},{"name":"Edna Finley","phone":"+44 (904) 553-3863"},{"name":"Corrine Gilmore","phone":"+44 (988) 439-2880"},{"name":"Alma Dyer","phone":"+44 (806) 585-3068"},{"name":"Karina Griffin","phone":"+44 (978) 573-2536"},{"name":"Bentley Potter","phone":"+44 (821) 563-2387"},{"name":"Latasha Nichols","phone":"+44 (932) 466-3313"},{"name":"King Hooper","phone":"+44 (837) 541-3030"},{"name":"Candice Berger","phone":"+44 (909) 436-3150"},{"name":"Kasey Carlson","phone":"+44 (918) 516-3382"},{"name":"Davenport Tanner","phone":"+44 (938) 492-2140"}]},
+                {"age":30,"name":"Socorro Higgins","children":[{"name":"Higgins Sweet","phone":"+44 (889) 470-2907"},{"name":"Young Horton","phone":"+44 (842) 591-3586"},{"name":"Alexandria Cooke","phone":"+44 (852) 477-3460"},{"name":"Katelyn Byers","phone":"+44 (942) 582-2720"},{"name":"Sykes Romero","phone":"+44 (983) 401-3373"},{"name":"Trevino Pace","phone":"+44 (947) 461-2786"},{"name":"Valeria Todd","phone":"+44 (931) 430-2499"},{"name":"Rosario Pearson","phone":"+44 (837) 555-2749"},{"name":"Lester Cannon","phone":"+44 (903) 590-3066"},{"name":"Sheppard Harris","phone":"+44 (976) 508-2441"},{"name":"Rojas Mcintyre","phone":"+44 (834) 432-3090"}]},
+                {"age":37,"name":"Shepherd Morris","children":[{"name":"Reynolds Cardenas","phone":"+44 (917) 447-3160"},{"name":"Della Bird","phone":"+44 (819) 451-3761"},{"name":"Bond Larsen","phone":"+44 (913) 461-3470"},{"name":"Chapman Salazar","phone":"+44 (814) 473-2016"},{"name":"Gill Mccarthy","phone":"+44 (841) 464-2840"},{"name":"Wallace Patrick","phone":"+44 (929) 442-2112"},{"name":"Cornelia Knowles","phone":"+44 (978) 589-3747"},{"name":"Valentine Richmond","phone":"+44 (921) 565-3020"},{"name":"Olson Manning","phone":"+44 (834) 404-3276"},{"name":"Knox Dale","phone":"+44 (960) 437-2852"},{"name":"Macias Barnett","phone":"+44 (994) 479-2837"},{"name":"Sofia Justice","phone":"+44 (810) 465-2580"},{"name":"Dickson Shaffer","phone":"+44 (910) 504-2954"},{"name":"Glass Parker","phone":"+44 (836) 547-3305"}]},
+                {"age":20,"name":"Alice Murphy","children":[{"name":"Yvette Hess","phone":"+44 (948) 562-3007"},{"name":"Callahan Cole","phone":"+44 (867) 469-2788"},{"name":"Alta Casey","phone":"+44 (999) 541-3713"},{"name":"Sara Blackwell","phone":"+44 (964) 421-2541"},{"name":"Estes Shelton","phone":"+44 (894) 580-3876"},{"name":"Hester Estrada","phone":"+44 (803) 505-2550"},{"name":"Zelma Kerr","phone":"+44 (894) 567-2038"},{"name":"Rosetta Koch","phone":"+44 (962) 586-3436"},{"name":"Nichole Patton","phone":"+44 (867) 445-3027"},{"name":"Wendy Hendricks","phone":"+44 (954) 439-2120"},{"name":"Vicki Freeman","phone":"+44 (989) 498-2883"},{"name":"Elvira Wallace","phone":"+44 (947) 588-2232"},{"name":"Lee Gomez","phone":"+44 (936) 561-2497"},{"name":"Christie Hines","phone":"+44 (972) 462-2531"},{"name":"Ayala Mcfarland","phone":"+44 (933) 443-2215"},{"name":"Estelle Parrish","phone":"+44 (912) 513-2904"},{"name":"Joann Edwards","phone":"+44 (869) 484-2233"},{"name":"Cynthia Levy","phone":"+44 (817) 497-3968"},{"name":"Dalton Riddle","phone":"+44 (956) 599-2038"},{"name":"Darlene Garcia","phone":"+44 (930) 448-2809"},{"name":"Francine Vega","phone":"+44 (840) 459-2714"}]},
+                {"age":23,"name":"Anastasia Morton","children":[{"name":"Goodwin Barrera","phone":"+44 (826) 534-2629"},{"name":"Cecile Walker","phone":"+44 (948) 492-2021"},{"name":"Meghan Dominguez","phone":"+44 (836) 581-2305"},{"name":"Hays Parsons","phone":"+44 (973) 448-2430"},{"name":"Debora Burks","phone":"+44 (970) 536-3859"},{"name":"Spence Wilkins","phone":"+44 (866) 454-3010"},{"name":"Burgess Sullivan","phone":"+44 (955) 453-2572"},{"name":"Leblanc Roberts","phone":"+44 (865) 481-3486"},{"name":"Latoya Drake","phone":"+44 (905) 566-3637"},{"name":"Oneill Landry","phone":"+44 (921) 502-3414"}]},
+                {"age":22,"name":"Sullivan Cruz","children":[{"name":"Kimberley Brennan","phone":"+44 (976) 520-2823"},{"name":"Freda Luna","phone":"+44 (862) 495-3767"},{"name":"Barber Fox","phone":"+44 (804) 450-2199"},{"name":"Keri Pratt","phone":"+44 (832) 593-2457"},{"name":"Dana Griffith","phone":"+44 (904) 498-2734"},{"name":"Deann Harvey","phone":"+44 (929) 514-2794"},{"name":"Carney Ferrell","phone":"+44 (922) 498-2671"},{"name":"Kathryn Carroll","phone":"+44 (939) 504-2780"},{"name":"Slater Brewer","phone":"+44 (952) 429-3176"},{"name":"Leila Frye","phone":"+44 (837) 505-2332"},{"name":"Kristin Hammond","phone":"+44 (814) 498-3722"},{"name":"Mcpherson Reed","phone":"+44 (933) 535-3728"},{"name":"Belinda Davidson","phone":"+44 (858) 578-3005"},{"name":"Dawson Hodge","phone":"+44 (891) 408-3216"},{"name":"Tami Fletcher","phone":"+44 (930) 455-2312"},{"name":"Sharpe Diaz","phone":"+44 (966) 575-3987"},{"name":"Eugenia Joseph","phone":"+44 (982) 561-2740"},{"name":"Hodge Love","phone":"+44 (862) 475-3131"},{"name":"Mcneil Huber","phone":"+44 (844) 523-2195"},{"name":"Mariana Collins","phone":"+44 (869) 487-3782"},{"name":"Chambers Baxter","phone":"+44 (949) 523-2588"},{"name":"Nannie Atkinson","phone":"+44 (981) 556-2080"},{"name":"Crane Marsh","phone":"+44 (835) 497-2118"}]}
+            ];
+
+            $scope.parentTableParams = new ngTableParams({
+                page: 1,    // show first page
+                count: 10    // count per page
+            }, {
+                total: data.length,    // length of data
+                getData: function($defer, params) {
+                    $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                }
+            });
+
+        }).controller("DemoChildrenCtrl", function($scope, ngTableParams){
+
+            //Children Table
+            $scope.childrenTableParams = new ngTableParams({
+                page: 1,    // show first page
+                count: 10    // count per page
+            }, {
+                total: 0, // length of data
+                getData: function($defer, params){
+                    $defer.resolve($scope.selectedParent.children.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                }
+            });
+        });
+        </script>
+
+</div>
+
+
+    </body>
+</html>
