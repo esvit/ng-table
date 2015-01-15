@@ -487,7 +487,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
         $scope.params.$params.page = 1;
     }
 
-    $scope.$watch('params.$params', function (newParams, oldParams) {
+    $scope.$watch('[params.$params, params.data]', function (newParams, oldParams) {
         $scope.params.settings().$scope = $scope;
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
@@ -521,6 +521,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
         });
     };
 }];
+
 /**
  * ngTable: Table + Angular JS
  *
