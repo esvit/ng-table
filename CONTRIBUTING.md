@@ -17,4 +17,4 @@ Here's a quick guide:
 
 7. Make the test pass.
 
-8. Push to your fork and submit a pull request.
+8. Push ONLY source files to your fork and submit a pull request.
