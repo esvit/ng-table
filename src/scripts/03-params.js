@@ -6,12 +6,22 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+ /**
+ * @ngdoc value
+ * @name ngTable.value:ngTableDefaultParams
+ * @description Default Parameters for ngTable
+ */
+app.value('ngTableDefaults',{
+    params: {},
+    settings: {}
+});
+
 /**
  * @ngdoc service
  * @name ngTable.factory:ngTableParams
  * @description Parameters manager for ngTable
  */
-app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
+app.factory('ngTableParams', ['$q', '$log', 'ngTableDefaults', function ($q, $log, ngTableDefaults) {
     var isNumber = function (n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
@@ -382,6 +392,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             group: {},
             groupBy: null
         };
+        angular.extend(params, ngTableDefaults.params);
+
         var settings = {
             $scope: null, // set by ngTable controller
             $loading: false,
@@ -393,6 +405,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             getGroups: this.getGroups,
             getData: this.getData
         };
+        angular.extend(settings, ngTableDefaults.settings);
 
         this.settings(baseSettings);
         this.parameters(baseParameters, true);

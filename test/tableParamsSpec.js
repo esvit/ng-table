@@ -270,4 +270,21 @@ describe('ngTableParams', function () {
         });
         params.getGroups($defer, 'age');
     }));
+
+    it('ngTableParams test defaults', inject(function ($q, ngTableParams, ngTableDefaults) {
+        ngTableDefaults.params = {
+            count: 2
+        };
+        ngTableDefaults.settings = {
+            counts: []
+        };
+        var params = new ngTableParams();
+
+        expect(params.count()).toEqual(2);
+        expect(params.page()).toEqual(1);
+
+        var settings = params.settings()
+        expect(settings.counts.length).toEqual(0);
+        expect(settings.filterDelay).toEqual(750);
+    }));
 });
