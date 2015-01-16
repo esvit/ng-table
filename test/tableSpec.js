@@ -75,7 +75,6 @@ describe('ng-table', function () {
     }));
 
     it('should show scope data', inject(function ($compile, $rootScope, ngTableParams) {
-        debugger;
         var tbody = elm.find('tbody');
         expect(tbody.length).toBe(1);
 
@@ -99,7 +98,7 @@ describe('ng-table', function () {
 
         scope.tableParams.page(2);
         scope.$digest();
-        
+
         rows = tbody.find('tr');
         expect(rows.length).toBe(7);
 
