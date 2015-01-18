@@ -15,7 +15,7 @@
  * Directive that instantiates {@link ngTable.directive:ngTable.ngTableController ngTableController}.
  */
 app.directive('ngTable', ['$compile', '$q', '$parse',
-    function ($compile, $q, $parse) {
+    function($compile, $q, $parse) {
         'use strict';
 
         return {
@@ -23,14 +23,16 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
             priority: 1001,
             scope: true,
             controller: ngTableController,
-            compile: function (element) {
-                var columns = [], i = 0, row = null;
+            compile: function(element) {
+                var columns = [],
+                    i = 0,
+                    row = null;
 
                 // custom header
                 var thead = element.find('> thead');
 
                 // IE 8 fix :not(.ng-table-group) selector
-                angular.forEach(angular.element(element.find('tr')), function (tr) {
+                angular.forEach(angular.element(element.find('tr')), function(tr) {
                     tr = angular.element(tr);
                     if (!tr.hasClass('ng-table-group') && !row) {
                         row = tr;
@@ -39,13 +41,13 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 if (!row) {
                     return;
                 }
-                angular.forEach(row.find('td'), function (item) {
+                angular.forEach(row.find('td'), function(item) {
                     var el = angular.element(item);
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
                         return;
                     }
-                    var parsedAttribute = function (attr, defaultValue) {
-                        return function (scope) {
+                    var parsedAttribute = function(attr, defaultValue) {
+                        return function(scope) {
                             return $parse(el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr))(scope, {
                                 $columns: columns
                             }) || defaultValue;
@@ -78,39 +80,39 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         filterName: filterName,
                         headerTemplateURL: headerTemplateURL,
                         filterData: (el.attr("filter-data") ? el.attr("filter-data") : null),
-                        show: (el.attr("ng-show") ? function (scope) {
+                        show: (el.attr("ng-show") ? function(scope) {
                             return $parse(el.attr("ng-show"))(scope);
-                        } : function () {
+                        } : function() {
                             return true;
                         })
                     });
                 });
-                return function (scope, element, attrs) {
+                return function(scope, element, attrs) {
                     scope.$loading = false;
                     scope.$columns = columns;
                     scope.$filterRow = {};
 
-                    scope.$watch(attrs.ngTable, (function (params) {
+                    scope.$watch(attrs.ngTable, (function(params) {
                         if (angular.isUndefined(params)) {
                             return;
                         }
                         scope.paramsModel = $parse(attrs.ngTable);
                         scope.params = params;
                     }), true);
-                    scope.parse = function (text) {
+                    scope.parse = function(text) {
                         return angular.isDefined(text) ? text(scope) : '';
                     };
                     if (attrs.showFilter) {
-                        scope.$parent.$watch(attrs.showFilter, function (value) {
+                        scope.$parent.$watch(attrs.showFilter, function(value) {
                             scope.show_filter = value;
                         });
                     }
                     if (attrs.disableFilter) {
-                        scope.$parent.$watch(attrs.disableFilter, function (value) {
+                        scope.$parent.$watch(attrs.disableFilter, function(value) {
                             scope.$filterRow.disabled = value;
                         });
                     }
-                    angular.forEach(columns, function (column) {
+                    angular.forEach(columns, function(column) {
                         var def;
                         if (!column.filterData) {
                             return;
@@ -119,15 +121,14 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             $column: column
                         });
                         // if we're working with a deferred object, let's wait for the promise
-                        if((angular.isObject(def) && angular.isObject(def.promise))){
+                        if ((angular.isObject(def) && angular.isObject(def.promise))) {
                             delete column.filterData;
-                            return def.promise.then(function (data) {
+                            return def.promise.then(function(data) {
                                 // our deferred can eventually return arrays, functions and objects
                                 if (!angular.isArray(data) && !angular.isFunction(data) && !angular.isObject(data)) {
                                     // if none of the above was found - we just want an empty array
                                     data = [];
-                                }
-                                else if(angular.isArray(data)) {
+                                } else if (angular.isArray(data)) {
                                     data.unshift({
                                         title: '-',
                                         id: ''

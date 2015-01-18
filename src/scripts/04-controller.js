@@ -13,7 +13,7 @@
  * @description
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
-var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope, ngTableParams, $timeout) {
+var ngTableController = ['$scope', 'ngTableParams', '$timeout', function($scope, ngTableParams, $timeout) {
     var isFirstTimeLoad = true;
     $scope.$loading = false;
 
@@ -23,9 +23,9 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
     }
     $scope.params.settings().$scope = $scope;
 
-    var delayFilter = (function () {
+    var delayFilter = (function() {
         var timer = 0;
-        return function (callback, ms) {
+        return function(callback, ms) {
             $timeout.cancel(timer);
             timer = $timeout(callback, ms);
         };
@@ -35,7 +35,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
         $scope.params.$params.page = 1;
     }
 
-    $scope.$watch('params.$params', function (newParams, oldParams) {
+    $scope.$watch('params.$params', function(newParams, oldParams) {
 
         if (newParams === oldParams) {
             return;
@@ -45,7 +45,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
             var maybeResetPage = isFirstTimeLoad ? angular.noop : resetPage;
-            delayFilter(function () {
+            delayFilter(function() {
                 maybeResetPage();
                 $scope.params.reload();
             }, $scope.params.settings().filterDelay);
@@ -59,7 +59,7 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
 
     }, true);
 
-    $scope.sortBy = function (column, event) {
+    $scope.sortBy = function(column, event) {
         var parsedSortable = $scope.parse(column.sortable);
         if (!parsedSortable) {
             return;

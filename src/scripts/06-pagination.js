@@ -12,7 +12,7 @@
  * @restrict A
  */
 app.directive('ngTablePagination', ['$compile',
-    function ($compile) {
+    function($compile) {
         'use strict';
 
         return {
@@ -22,9 +22,9 @@ app.directive('ngTablePagination', ['$compile',
                 'templateUrl': '='
             },
             replace: false,
-            link: function (scope, element, attrs) {
+            link: function(scope, element, attrs) {
 
-                scope.params.settings().$scope.$on('ngTableAfterReloadData', function () {
+                scope.params.settings().$scope.$on('ngTableAfterReloadData', function() {
                     scope.pages = scope.params.generatePagesArray(scope.params.page(), scope.params.total(), scope.params.count());
                 }, true);
 
