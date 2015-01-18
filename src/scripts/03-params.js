@@ -214,6 +214,7 @@ app.factory('ngTableParams', ['$q', '$log', 'ngTableDefaults', function ($q, $lo
             } else {
                 $defer.resolve([]);
             }
+            return $defer.promise;
         };
 
         /**
@@ -243,7 +244,7 @@ app.factory('ngTableParams', ['$q', '$log', 'ngTableDefaults', function ($q, $lo
                 log('ngTable: refresh groups', result);
                 $defer.resolve(result);
             });
-            this.getData(defer, self);
+            return this.getData(defer, self);
         };
 
         /**
@@ -357,25 +358,39 @@ app.factory('ngTableParams', ['$q', '$log', 'ngTableDefaults', function ($q, $lo
          */
         this.reload = function () {
             var $defer = $q.defer(),
-                self = this;
+                self = this,
+                pData = null;
+
+            if (!settings.$scope) {
+                return;
+            }
 
             settings.$loading = true;
             if (settings.groupBy) {
-                settings.getGroups($defer, settings.groupBy, this);
+                pData = settings.getGroups($defer, settings.groupBy, this);
             } else {
-                settings.getData($defer, this);
+                pData = settings.getData($defer, this);
             }
             log('ngTable: reload data');
-            $defer.promise.then(function (data) {
+
+            if (!pData) {
+                // If getData resolved the $defer, and didn't promise us data,
+                //   create a promise from the $defer. We need to return a promise.
+                pData = $defer.promise;
+            }
+            return pData.then(function (data) {
                 settings.$loading = false;
                 log('ngTable: current scope', settings.$scope);
                 if (settings.groupBy) {
-                    self.data = settings.$scope.$groups = data;
+                    self.data = data;
+                    if (settings.$scope) settings.$scope.$groups = data;
                 } else {
-                    self.data = settings.$scope.$data = data;
+                    self.data = data;
+                    if (settings.$scope) settings.$scope.$data = data;
                 }
-                settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+                if (settings.$scope) settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
                 settings.$scope.$emit('ngTableAfterReloadData');
+                return data;
             });
         };
 

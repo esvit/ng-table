@@ -55,12 +55,22 @@ var app = angular.module('ngTable', []);
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+ /**
+ * @ngdoc value
+ * @name ngTable.value:ngTableDefaultParams
+ * @description Default Parameters for ngTable
+ */
+app.value('ngTableDefaults',{
+    params: {},
+    settings: {}
+});
+
 /**
  * @ngdoc service
  * @name ngTable.factory:ngTableParams
  * @description Parameters manager for ngTable
  */
-app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
+app.factory('ngTableParams', ['$q', '$log', 'ngTableDefaults', function ($q, $log, ngTableDefaults) {
     var isNumber = function (n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
@@ -253,6 +263,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             } else {
                 $defer.resolve([]);
             }
+            return $defer.promise;
         };
 
         /**
@@ -282,7 +293,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
                 log('ngTable: refresh groups', result);
                 $defer.resolve(result);
             });
-            this.getData(defer, self);
+            return this.getData(defer, self);
         };
 
         /**
@@ -396,25 +407,39 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
          */
         this.reload = function () {
             var $defer = $q.defer(),
-                self = this;
+                self = this,
+                pData = null;
+
+            if (!settings.$scope) {
+                return;
+            }
 
             settings.$loading = true;
             if (settings.groupBy) {
-                settings.getGroups($defer, settings.groupBy, this);
+                pData = settings.getGroups($defer, settings.groupBy, this);
             } else {
-                settings.getData($defer, this);
+                pData = settings.getData($defer, this);
             }
             log('ngTable: reload data');
-            $defer.promise.then(function (data) {
+
+            if (!pData) {
+                // If getData resolved the $defer, and didn't promise us data,
+                //   create a promise from the $defer. We need to return a promise.
+                pData = $defer.promise;
+            }
+            return pData.then(function (data) {
                 settings.$loading = false;
                 log('ngTable: current scope', settings.$scope);
                 if (settings.groupBy) {
-                    self.data = settings.$scope.$groups = data;
+                    self.data = data;
+                    if (settings.$scope) settings.$scope.$groups = data;
                 } else {
-                    self.data = settings.$scope.$data = data;
+                    self.data = data;
+                    if (settings.$scope) settings.$scope.$data = data;
                 }
-                settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+                if (settings.$scope) settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
                 settings.$scope.$emit('ngTableAfterReloadData');
+                return data;
             });
         };
 
@@ -431,6 +456,8 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             group: {},
             groupBy: null
         };
+        angular.extend(params, ngTableDefaults.params);
+
         var settings = {
             $scope: null, // set by ngTable controller
             $loading: false,
@@ -442,6 +469,7 @@ app.factory('ngTableParams', ['$q', '$log', function ($q, $log) {
             getGroups: this.getGroups,
             getData: this.getData
         };
+        angular.extend(settings, ngTableDefaults.settings);
 
         this.settings(baseSettings);
         this.parameters(baseParameters, true);
@@ -487,7 +515,12 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
         $scope.params.$params.page = 1;
     }
 
-    $scope.$watch('[params.$params, params.data]', function (newParams, oldParams) {
+    $scope.$watch('params.$params', function (newParams, oldParams) {
+
+        if (newParams === oldParams) {
+            return;
+        }
+
         $scope.params.settings().$scope = $scope;
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
@@ -642,20 +675,28 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         def = $parse(column.filterData)(scope, {
                             $column: column
                         });
-                        if (!(angular.isObject(def) && angular.isObject(def.promise))) {
-                            throw new Error('Function ' + column.filterData + ' must be instance of $q.defer()');
-                        }
-                        delete column.filterData;
-                        return def.promise.then(function (data) {
-                            if (!angular.isArray(data)) {
-                                data = [];
-                            }
-                            data.unshift({
-                                title: '-',
-                                id: ''
+                        // if we're working with a deferred object, let's wait for the promise
+                        if((angular.isObject(def) && angular.isObject(def.promise))){
+                            delete column.filterData;
+                            return def.promise.then(function (data) {
+                                // our deferred can eventually return arrays, functions and objects
+                                if (!angular.isArray(data) && !angular.isFunction(data) && !angular.isObject(data)) {
+                                    // if none of the above was found - we just want an empty array
+                                    data = [];
+                                }
+                                else if(angular.isArray(data)) {
+                                    data.unshift({
+                                        title: '-',
+                                        id: ''
+                                    });
+                                }
+                                column.data = data;
                             });
-                            column.data = data;
-                        });
+                        }
+                        // otherwise, we just return what the user gave us. It could be a function, array, object, whatever
+                        else {
+                            return column.data = def;
+                        }
                     });
                     if (!element.hasClass('ng-table')) {
                         scope.templates = {
