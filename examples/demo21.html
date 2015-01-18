@@ -61,7 +61,7 @@
 
     <script>
         var app = angular.module('main', ['ngTable']).
-                controller('DemoCtrl', function($scope, $filter, ngTableParams) {
+                controller('DemoCtrl', function($scope, $filter, NgTableParams) {
                     $scope.rows = [{name: "Moroni", age: 50, role: 'Administrator', date: '00/00/01'},
                         {name: "Tiancum", age: 43, role: 'Administrator', date: '00/00/01'},
                         {name: "Jacob", age: 27, role: 'Administrator', date: '00/00/01'},
@@ -89,7 +89,7 @@
                     $scope.groupby = 'role'; //Default order IF null get table without groups(not possible ?)
 
                     //dinamic grouping
-                    $scope.tableParams = new ngTableParams({
+                    $scope.tableParams = new NgTableParams({
                         page: 1,            // show first page
                         count: 100          // count per page
                     }, {

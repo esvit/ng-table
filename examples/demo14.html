@@ -38,7 +38,8 @@
 
         <script>
         var app = angular.module('main', ['ngTable']).
-        controller('DemoCtrl', function($interval, $http, $scope, $filter, ngTableParams) {
+
+        controller('DemoCtrl', function($interval, $http, $scope, $filter, NgTableParams) {
 			$scope.datasets = ["1","2", "3"];
 			$scope.dataset = "1";
             var self = this;
@@ -86,7 +87,6 @@
                     // $scope.tableParams.reload();
                 });
             }, 5000);
-            
 
 			var getData = function() {
 				return self['data' + $scope.dataset]; 
@@ -95,8 +95,8 @@
 			$scope.$watch("dataset", function () {
 				$scope.tableParams.reload();
 			});
-            
-            $scope.tableParams = new ngTableParams({
+
+            $scope.tableParams = new NgTableParams({
                 page: 1,            // show first page
                 count: 10,          // count per page
                 sorting: {
@@ -116,9 +116,6 @@
             });
         })
         </script>
-
-</div>
-
-
+    </div>
     </body>
 </html>
