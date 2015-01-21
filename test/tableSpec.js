@@ -112,10 +112,10 @@ describe('ng-table', function() {
             '<script type="text/ng-template" id="ng-table/filters/money.html"></script>' +
             '<table ng-table="tableParams" show-filter="true">' +
             '<tr ng-repeat="user in $data">' +
-            '<td data-title="\'Name of person\'" filter="{ \'name\': \'text\' }" sortable="name">' +
+            '<td data-title="\'Name of person\'" filter="{ \'name\': \'text\' }" sortable="\'name\'">' +
             '{{user.name}}' +
             '</td>' +
-            '<td x-data-title="\'Age\'" sortable="age">' +
+            '<td x-data-title="\'Age\'" sortable="\'age\'">' +
             '{{user.age}}' +
             '</td>' +
             '<td title="\'Money\'" filter="{ \'action\': \'money\' }" filter-data="money($column)">' +
@@ -157,6 +157,20 @@ describe('ng-table', function() {
 
         var filters = angular.element(rows[1]).find('th');
         expect(filters.length).toBe(3);
+    }));
+
+    it('should create table header classes', inject(function($compile, $rootScope) {
+
+        var thead = elm.find('thead');
+        var rows = thead.find('tr');
+        var titles = angular.element(rows[0]).find('th');
+
+        expect(angular.element(titles[0]).hasClass('header')).toBeTruthy();
+        expect(angular.element(titles[1]).hasClass('header')).toBeTruthy();
+        expect(angular.element(titles[2]).hasClass('header')).toBeTruthy();
+        expect(angular.element(titles[0]).hasClass('sortable')).toBeTruthy();
+        expect(angular.element(titles[1]).hasClass('sortable')).toBeTruthy();
+        expect(angular.element(titles[2]).hasClass('sortable')).toBeFalsy();
     }));
 
 
