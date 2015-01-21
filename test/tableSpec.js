@@ -112,13 +112,13 @@ describe('ng-table', function() {
             '<script type="text/ng-template" id="ng-table/filters/money.html"></script>' +
             '<table ng-table="tableParams" show-filter="true">' +
             '<tr ng-repeat="user in $data">' +
-            '<td data-title="\'Name of person\'" filter="{ \'name\': \'text\' }" sortable="\'name\'">' +
+            '<td data-title="\'Name of person\'" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="customClass">' +
             '{{user.name}}' +
             '</td>' +
-            '<td x-data-title="\'Age\'" sortable="\'age\'">' +
+            '<td x-data-title="\'Age\'" sortable="\'age\'" x-data-header-class="customClass">' +
             '{{user.age}}' +
             '</td>' +
-            '<td title="\'Money\'" filter="{ \'action\': \'money\' }" filter-data="money($column)">' +
+            '<td title="\'Money\'" filter="{ \'action\': \'money\' }" filter-data="money($column)" header-class="customClass">' +
             '{{user.money}}' +
             '</td>' +
             '</tr>' +
@@ -168,9 +168,14 @@ describe('ng-table', function() {
         expect(angular.element(titles[0]).hasClass('header')).toBeTruthy();
         expect(angular.element(titles[1]).hasClass('header')).toBeTruthy();
         expect(angular.element(titles[2]).hasClass('header')).toBeTruthy();
+
         expect(angular.element(titles[0]).hasClass('sortable')).toBeTruthy();
         expect(angular.element(titles[1]).hasClass('sortable')).toBeTruthy();
         expect(angular.element(titles[2]).hasClass('sortable')).toBeFalsy();
+
+        expect(angular.element(titles[0]).hasClass('customClass')).toBeTruthy();
+        expect(angular.element(titles[1]).hasClass('customClass')).toBeTruthy();
+        expect(angular.element(titles[2]).hasClass('customClass')).toBeTruthy();
     }));
 
 
