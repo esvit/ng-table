@@ -22,7 +22,7 @@
 </head>
 <body ng-app="main">
 
-<h1>Table with custom header class</h1>
+<h1>Table with Resizable Columns</h1>
 
 <div ng-controller="DemoCtrl">
 
@@ -30,10 +30,10 @@
         <tr ng-repeat="user in $data"
             ng-click="user.$selected = !user.$selected; changeSelection(user)"
             ng-class="{'active': user.$selected}">
-            <td data-title="'Name'" header-class="text-left" sortable="'name'" filter="{ 'name': 'text' }">
+            <td data-title="'Name'" header-class="'text-left'" sortable="'name'" filter="{ 'name': 'text' }">
                 {{user.name}}
             </td>
-            <td data-title="'Age'" header-class="text-right" class="text-right" sortable="'age'" filter="{ 'age': 'text' }">
+            <td data-title="'Age'" header-class="'text-right'" class="text-right" sortable="'age'" filter="{ 'age': 'text' }">
                 {{user.age}}
             </td>
         </tr>
