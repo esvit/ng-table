@@ -73,6 +73,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     columns.push({
                         id: i++,
                         title: parsedTitle,
+                        headerTitle: parsedAttribute('header-title', ' '),
                         sortable: parsedAttribute('sortable', false),
                         'class': parsedAttribute('header-class', ''),
                         filter: filter,

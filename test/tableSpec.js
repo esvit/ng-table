@@ -112,13 +112,13 @@ describe('ng-table', function() {
             '<script type="text/ng-template" id="ng-table/filters/money.html"></script>' +
             '<table ng-table="tableParams" show-filter="true">' +
             '<tr ng-repeat="user in $data">' +
-            '<td data-title="\'Name of person\'" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="getCustomClass(column)">' +
+            '<td data-header-title="\'Sort by Name\'" data-title="\'Name of person\'" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="getCustomClass(column)">' +
             '{{user.name}}' +
             '</td>' +
-            '<td x-data-title="\'Age\'" sortable="\'age\'" x-data-header-class="getCustomClass(column)">' +
+            '<td x-data-header-title="\'Sort by Age\'" x-data-title="\'Age\'" sortable="\'age\'" x-data-header-class="getCustomClass(column)">' +
             '{{user.age}}' +
             '</td>' +
-            '<td title="\'Money\'" filter="{ \'action\': \'money\' }" filter-data="money($column)" header-class="getCustomClass(column)">' +
+            '<td header-title="\'Sort by Money\'" title="\'Money\'" filter="{ \'action\': \'money\' }" filter-data="money($column)" header-class="getCustomClass(column)">' +
             '{{user.money}}' +
             '</td>' +
             '</tr>' +
@@ -185,6 +185,17 @@ describe('ng-table', function() {
         expect(angular.element(titles[0]).hasClass('customClass')).toBeTruthy();
         expect(angular.element(titles[1]).hasClass('customClass')).toBeTruthy();
         expect(angular.element(titles[2]).hasClass('moneyHeaderClass')).toBeTruthy();
+    }));
+
+    it('should create table header titles', inject(function($compile, $rootScope) {
+
+        var thead = elm.find('thead');
+        var rows = thead.find('tr');
+        var titles = angular.element(rows[0]).find('th');
+
+        expect(angular.element(titles[0]).attr('title').trim()).toBe('Sort by Name');
+        expect(angular.element(titles[1]).attr('title').trim()).toBe('Sort by Age');
+        expect(angular.element(titles[2]).attr('title').trim()).toBe('Sort by Money');
     }));
 
 
