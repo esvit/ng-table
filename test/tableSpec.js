@@ -234,4 +234,33 @@ describe('ng-table', function() {
         expect(rows.length).toBe(7);
     }));
 
+    it('should show data-title-text', inject(function($compile, $rootScope, NgTableParams) {
+        var tbody = elm.find('tbody');
+
+        var params = new NgTableParams({
+            page: 1, // show first page
+            count: 10 // count per page
+        }, {
+            total: data.length, // length of data
+            getData: function($defer, params) {
+                $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
+        scope.tableParams = params;
+        scope.$digest();
+
+        var filterRow = angular.element(elm.find('thead').find('tr')[1]);
+        var filterCells = filterRow.find('th');
+        expect(angular.element(filterCells[0]).attr('data-title-text').trim()).toBe('Name of person');
+        expect(angular.element(filterCells[1]).attr('data-title-text').trim()).toBe('Age');
+        expect(angular.element(filterCells[2]).attr('data-title-text').trim()).toBe('Money');
+
+        var dataRows = elm.find('tbody').find('tr');
+        var row = angular.element(dataRows[0]);
+        var cells = row.find('td');
+        expect(angular.element(cells[0]).attr('data-title-text').trim()).toBe('Name of person');
+        expect(angular.element(cells[1]).attr('data-title-text').trim()).toBe('Age');
+        expect(angular.element(cells[2]).attr('data-title-text').trim()).toBe('Money');
+    }));
+
 });

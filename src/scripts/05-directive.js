@@ -46,9 +46,15 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
                         return;
                     }
+
+                    var getAttrValue = function(attr){
+                        return el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr);
+                    };
+
                     var parsedAttribute = function(attr, defaultValue) {
                         return function(scope) {
-                            return $parse(el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr))(scope, {
+                            var expr = getAttrValue(attr);
+                            return $parse(expr)(scope, {
                                 $columns: columns
                             }) || defaultValue;
                         };
@@ -69,7 +75,10 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         delete filter.templateURL;
                     }
 
-                    el.attr('data-title-text', parsedTitle()); // this used in responsive table
+                    var titleExpr = getAttrValue('title');
+                    if (titleExpr){
+                        el.attr('data-title-text', '{{' + titleExpr + '}}'); // this used in responsive table
+                    }
                     columns.push({
                         id: i++,
                         title: parsedTitle,
