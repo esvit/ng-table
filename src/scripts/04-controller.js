@@ -34,11 +34,30 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         };
     })();
 
+    function getParamsWatchState(params) {
+        if (!params) {
+            return params;
+        }
+
+        var allKeys = Object.keys(params);
+        var observedKeys = allKeys.filter(function (key) {
+            return key !== "data";
+        });
+        var state = {};
+        for (var i = 0; i < observedKeys.length; i++) {
+            var propName = observedKeys[i];
+            state[propName] = params[propName];
+        }
+        return state;
+    }
+
     function resetPage() {
         $scope.params.$params.page = 1;
     }
 
-    $scope.$watch('params.$params', function(newParams, oldParams) {
+    $scope.$watch(function() {
+        return getParamsWatchState($scope.params.$params)
+    }, function(newParams, oldParams) {
 
         if (newParams === oldParams) {
             return;
@@ -129,11 +148,14 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
         // note: this we're setting up watches to simulate angular's isolated scope bindings
 
-        $scope.$watch(tableParamsExpr, (function (params) {
+        var tableParamsGetter = $parse(tableParamsExpr);
+        $scope.$watch(function () {
+            return getParamsWatchState(tableParamsGetter($scope));
+        }, (function (params) {
             if (angular.isUndefined(params)) {
                 return;
             }
-            $scope.paramsModel = $parse(tableParamsExpr);
+            $scope.paramsModel = tableParamsGetter;
             $scope.params = params;
         }), true);
 
