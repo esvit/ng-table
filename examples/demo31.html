@@ -21,18 +21,16 @@
 </head>
 <body ng-app="main">
 
-<h1>Table with custom header sort titles</h1>
+<h1>Table with custom header titles</h1>
 
 <div ng-controller="DemoCtrl">
 
-    <table ng-table="tableParams" show-filter="true" class="table ng-table-rowselected">
-        <tr ng-repeat="user in $data"
-            ng-click="user.$selected = !user.$selected; changeSelection(user)"
-            ng-class="{'active': user.$selected}">
-            <td header-title="'Sort by Name'" data-title="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="user in $data">
+            <td header-title="'This is the Name of the person'" data-title="'Name'">
                 {{user.name}}
             </td>
-            <td header-title="'Sort by Age'" data-title="'Age'" class="text-right" sortable="'age'" filter="{ 'age': 'text' }">
+            <td header-title="'This is the Age of the person'" data-title="'Age'">
                 {{user.age}}
             </td>
         </tr>
@@ -46,51 +44,19 @@
                     {name: "Moroni", age: 50},
                     {name: "Tiancum", age: 43},
                     {name: "Jacob", age: 27},
-                    {name: "Nephi", age: 29},
-                    {name: "Enos", age: 34},
-                    {name: "Tiancum", age: 43},
-                    {name: "Jacob", age: 27},
-                    {name: "Nephi", age: 29},
-                    {name: "Enos", age: 34},
-                    {name: "Tiancum", age: 43},
-                    {name: "Jacob", age: 27},
-                    {name: "Nephi", age: 29},
-                    {name: "Enos", age: 34},
-                    {name: "Tiancum", age: 43},
-                    {name: "Jacob", age: 27},
-                    {name: "Nephi", age: 29},
-                    {name: "Enos", age: 34}
+                    {name: "Nephi", age: 29}
                 ];
                 $scope.data = data;
 
                 $scope.tableParams = new NgTableParams({
                     page: 1,            // show first page
-                    count: 10,          // count per page
-                    filter: {
-                        //name: 'M'       // initial filter
-                    },
-                    sorting: {
-                        //name: 'asc'     // initial sorting
-                    }
+                    count: 2           // count per page
                 }, {
                     total: data.length, // length of data
                     getData: function ($defer, params) {
-                        // use build-in angular filter
-                        var filteredData = params.filter() ?
-                                $filter('filter')(data, params.filter()) :
-                                data;
-                        var orderedData = params.sorting() ?
-                                $filter('orderBy')(filteredData, params.orderBy()) :
-                                data;
-
-                        params.total(orderedData.length); // set total for recalc pagination
-                        $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                        $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                     }
                 });
-
-                $scope.changeSelection = function(user) {
-                    // console.info(user);
-                }
             })
 </script>
 

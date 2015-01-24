@@ -25,10 +25,8 @@
 
 <div ng-controller="DemoCtrl">
 
-    <table ng-table="tableParams" show-filter="true" class="table ng-table-rowselected">
-        <tr ng-repeat="user in $data"
-            ng-click="user.$selected = !user.$selected; changeSelection(user)"
-            ng-class="{'active': user.$selected}">
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="user in $data">
             <td data-title="'Name'" header-class="'text-left'" sortable="'name'" filter="{ 'name': 'text' }">
                 {{user.name}}
             </td>
@@ -73,32 +71,18 @@
 
                 $scope.tableParams = new NgTableParams({
                     page: 1,            // show first page
-                    count: 10,          // count per page
-                    filter: {
-                        //name: 'M'       // initial filter
-                    },
-                    sorting: {
-                        //name: 'asc'     // initial sorting
-                    }
+                    count: 10           // count per page
                 }, {
                     total: data.length, // length of data
                     getData: function ($defer, params) {
-                        // use build-in angular filter
-                        var filteredData = params.filter() ?
-                                $filter('filter')(data, params.filter()) :
-                                data;
                         var orderedData = params.sorting() ?
-                                $filter('orderBy')(filteredData, params.orderBy()) :
+                                $filter('orderBy')(data, params.orderBy()) :
                                 data;
 
                         params.total(orderedData.length); // set total for recalc pagination
                         $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                     }
                 });
-
-                $scope.changeSelection = function(user) {
-                    // console.info(user);
-                }
             })
 </script>
 

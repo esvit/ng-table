@@ -26,27 +26,16 @@
 
 <div ng-controller="DemoCtrl">
 
-    <table ng-table="tableParams" show-filter="true" class="table ng-table-resizable-columns ng-table-rowselected">
-        <tr ng-repeat="user in $data"
-            ng-click="user.$selected = !user.$selected; changeSelection(user)"
-            ng-class="{'active': user.$selected}">
+    <table ng-table="tableParams" show-filter="true" class="table ng-table-resizable-columns">
+        <tr ng-repeat="user in $data">
             <td data-title="'Name'" header-class="'text-left'" sortable="'name'" filter="{ 'name': 'text' }">
                 {{user.name}}
             </td>
-            <td data-title="'Age'" header-class="'text-right'" class="text-right" sortable="'age'" filter="{ 'age': 'text' }">
+            <td data-title="'Age'" header-class="'text-right'" sortable="'age'" filter="{ 'age': 'text' }">
                 {{user.age}}
             </td>
         </tr>
     </table>
-
-<style>
-.ng-table th.text-right {
-    text-align: right;
-}
-.ng-table th.text-left {
-    text-align: left;
-}
-</style>
 
 <script>
     var app = angular.module('main', ['ngTable', 'ngTableResizableColumns']).
@@ -74,13 +63,7 @@
 
                 $scope.tableParams = new NgTableParams({
                     page: 1,            // show first page
-                    count: 10,          // count per page
-                    filter: {
-                        //name: 'M'       // initial filter
-                    },
-                    sorting: {
-                        //name: 'asc'     // initial sorting
-                    }
+                    count: 10           // count per page
                 }, {
                     total: data.length, // length of data
                     getData: function ($defer, params) {
@@ -96,10 +79,6 @@
                         $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                     }
                 });
-
-                $scope.changeSelection = function(user) {
-                    // console.info(user);
-                }
             })
 </script>
 
