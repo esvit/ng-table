@@ -331,7 +331,7 @@ describe('ng-table', function() {
                 expect(inputs.eq(1).attr('ng-model')).not.toBeUndefined();
             });
 
-            it('should databind ngTableParams.filter filter inputs', function () {
+            it('should databind ngTableParams.filter to filter inputs', function () {
                 scope.tableParams.filter()['name'] = 'my name is...';
                 scope.tableParams.filter()['age'] = '10';
                 scope.$digest();
