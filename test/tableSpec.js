@@ -268,7 +268,7 @@ describe('ng-table', function() {
             });
         });
 
-        describe('filter def with optional templateURL', function(){
+        describe('filter def with fully qualified url', function(){
 
             var elm;
             beforeEach(inject(function($compile, NgTableParams) {
@@ -278,7 +278,7 @@ describe('ng-table', function() {
                         '<table ng-table="tableParams" show-filter="true">' +
                         '<tr ng-repeat="user in $data">' +
                         '<td header-class="captureColumn(column)" title="\'Age\'" ' +
-                            'filter="{ \'age\': \'number\', templateURL: \'ng-table/filters/customNum.html\' }">{{user.age}}</td>' +
+                            'filter="{ \'age\': \'ng-table/filters/customNum.html\' }">{{user.age}}</td>' +
                         '</tr>' +
                         '</table>' +
                         '</div>');
@@ -288,16 +288,12 @@ describe('ng-table', function() {
                 scope.$digest();
             }));
 
-            it('should render filter template specified by templateURL', function() {
+            it('should render filter template specified by url', function() {
                 var inputs = elm.find('thead').find('tr').eq(1).find('th').find('input');
                 expect(inputs.length).toBe(1);
 
                 expect(inputs.eq(0).attr('type')).toBe('number');
                 expect(inputs.eq(0).attr('id')).toBe('age');
-            });
-
-            it('should set $column.filterTemplateURL to templateURL value', function () {
-                expect(columnDef.filterTemplateURL).toBe('ng-table/filters/customNum.html');
             });
         });
 

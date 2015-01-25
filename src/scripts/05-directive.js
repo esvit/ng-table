@@ -63,16 +63,11 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     var parsedTitle = parsedAttribute('title', ' '),
                         headerTemplateURL = parsedAttribute('header', false),
                         filter = parsedAttribute('filter', false)(),
-                        filterTemplateURL = false,
                         filterName = false;
 
                     if (filter && filter.$$name) {
                         filterName = filter.$$name;
                         delete filter.$$name;
-                    }
-                    if (filter && filter.templateURL) {
-                        filterTemplateURL = filter.templateURL;
-                        delete filter.templateURL;
                     }
 
                     var titleExpr = getAttrValue('title');
@@ -86,7 +81,6 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         sortable: parsedAttribute('sortable', false),
                         'class': parsedAttribute('header-class', ''),
                         filter: filter,
-                        filterTemplateURL: filterTemplateURL,
                         filterName: filterName,
                         headerTemplateURL: headerTemplateURL,
                         filterData: (el.attr("filter-data") ? el.attr("filter-data") : null),
