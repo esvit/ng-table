@@ -94,9 +94,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         scope.paramsModel = $parse(attrs.ngTable);
                         scope.params = params;
                     }), true);
-                    scope.parse = function(text) {
-                        return angular.isDefined(text) ? text(scope) : '';
-                    };
+
                     if (attrs.showFilter) {
                         scope.$parent.$watch(attrs.showFilter, function(value) {
                             scope.show_filter = value;

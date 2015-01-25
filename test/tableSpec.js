@@ -186,6 +186,29 @@ describe('ng-table', function() {
         }));
     });
 
+    describe('sorting', function() {
+
+        it('should provide column definition', inject(function($compile) {
+            var columnDef;
+            var elm = angular.element(
+                    '<table ng-table="tableParams">' +
+                    '<tr ng-repeat="user in $data">' +
+                    '<td title="\'Age\'" sortable="captureColumn(column)">{{user.age}}</td>' +
+                    '</tr>' +
+                    '</table>');
+
+            scope.captureColumn = function(col){
+                columnDef = col;
+                return 'age'
+            };
+
+            $compile(elm)(scope);
+            scope.$digest();
+
+            expect(columnDef).toBeDefined();
+        }));
+    });
+
     describe('filters', function(){
 
         var columnDef;

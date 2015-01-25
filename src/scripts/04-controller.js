@@ -60,7 +60,7 @@ app.controller('ngTableController', ['$scope', 'NgTableParams', '$timeout', func
     }, true);
 
     $scope.sortBy = function(column, event) {
-        var parsedSortable = $scope.parse(column.sortable);
+        var parsedSortable = column.sortable && column.sortable($scope);
         if (!parsedSortable) {
             return;
         }
