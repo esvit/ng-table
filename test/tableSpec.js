@@ -205,7 +205,7 @@ describe('ng-table', function() {
                         '<table ng-table="tableParams" show-filter="true">' +
                         '<tr ng-repeat="user in $data">' +
                         '<td header-class="captureColumn(column)" title="\'Name\'" ' +
-                            'filter="{ \'name\': \'text\' }">{{user.name}}</td>' +
+                            'filter="{ \'username\': \'text\' }">{{user.name}}</td>' +
                         '</tr>' +
                         '</table>' +
                         '</div>');
@@ -222,10 +222,11 @@ describe('ng-table', function() {
                 expect(inputs.length).toBe(1);
                 expect(inputs.eq(0).attr('type')).toBe('text');
                 expect(inputs.eq(0).attr('ng-model')).not.toBeUndefined();
+                expect(inputs.eq(0).attr('name')).toBe('username');
             });
 
             it('should databind ngTableParams.filter to filter input', function () {
-                scope.tableParams.filter()['name'] = 'my name is...';
+                scope.tableParams.filter()['username'] = 'my name is...';
                 scope.$digest();
 
                 var input = elm.find('thead').find('tr').eq(1).find('th').find('input');
@@ -235,36 +236,7 @@ describe('ng-table', function() {
             it('should make filter def available on $column', function () {
                 expect(columnDef).toBeDefined();
                 expect(columnDef.filter).toBeDefined();
-                expect(columnDef.filter['name']).toBe('text');
-            });
-        });
-
-        describe('filter def with optional $$name', function(){
-
-            var elm;
-            beforeEach(inject(function($compile, NgTableParams) {
-                elm = angular.element(
-                        '<div>' +
-                        '<table ng-table="tableParams" show-filter="true">' +
-                        '<tr ng-repeat="user in $data">' +
-                        '<td header-class="captureColumn(column)" title="\'Name\'" ' +
-                            'filter="{ \'name\': \'text\', $$name: \'username\' }">{{user.name}}</td>' +
-                        '</tr>' +
-                        '</table>' +
-                        '</div>');
-
-                $compile(elm)(scope);
-                scope.tableParams = new NgTableParams({}, {});
-                scope.$digest();
-            }));
-
-            it('should render filter input with name set to $$name value', function() {
-                var input = elm.find('thead').find('tr').eq(1).find('th').find('input');
-                expect(input.attr('name')).toBe('username');
-            });
-
-            it('should set $column.filterName to $$name value', function () {
-                expect(columnDef.filterName).toBe('username');
+                expect(columnDef.filter['username']).toBe('text');
             });
         });
 
