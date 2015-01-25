@@ -22,7 +22,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
             restrict: 'A',
             priority: 1001,
             scope: true,
-            controller: ngTableController,
+            controller: 'ngTableController',
             compile: function(element) {
                 var columns = [],
                     i = 0,

@@ -13,7 +13,7 @@
  * @description
  * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
  */
-var ngTableController = ['$scope', 'NgTableParams', '$timeout', function($scope, NgTableParams, $timeout) {
+app.controller('ngTableController', ['$scope', 'NgTableParams', '$timeout', function($scope, NgTableParams, $timeout) {
     var isFirstTimeLoad = true;
     $scope.$loading = false;
 
@@ -73,4 +73,4 @@ var ngTableController = ['$scope', 'NgTableParams', '$timeout', function($scope,
             sorting: sortingParams
         });
     };
-}];
+}]);
