@@ -52,32 +52,30 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     };
 
                     var parsedAttribute = function(attr, defaultValue) {
-                        return function(scope) {
+                        return function(scope, locals) {
                             var expr = getAttrValue(attr);
-                            return $parse(expr)(scope, {
+                            return $parse(expr)(scope, angular.extend(locals || {}, {
                                 $columns: columns
-                            }) || defaultValue;
+                            })) || defaultValue;
                         };
                     };
 
-                    var parsedTitle = parsedAttribute('title', ' '),
-                        headerTemplateURL = parsedAttribute('header', false);
                     var titleExpr = getAttrValue('title');
                     if (titleExpr){
                         el.attr('data-title-text', '{{' + titleExpr + '}}'); // this used in responsive table
                     }
                     columns.push({
                         id: i++,
-                        title: parsedTitle,
+                        title: parsedAttribute('title', ' '),
                         headerTitle: parsedAttribute('header-title', ' '),
                         sortable: parsedAttribute('sortable', false),
                         'class': parsedAttribute('header-class', ''),
                         filter: parsedAttribute('filter', false),
-                        headerTemplateURL: headerTemplateURL,
-                        filterData: (el.attr("filter-data") ? el.attr("filter-data") : null),
-                        show: (el.attr("ng-show") ? function(scope) {
+                        headerTemplateURL: parsedAttribute('header', false),
+                        filterData: parsedAttribute('filter-data', null),
+                        show: (el.attr("ng-show") ? function (scope) {
                             return $parse(el.attr("ng-show"))(scope);
-                        } : function() {
+                        } : function () {
                             return true;
                         })
                     });
@@ -107,12 +105,14 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     }
                     angular.forEach(columns, function(column) {
                         var def;
-                        if (!column.filterData) {
-                            return;
-                        }
-                        def = $parse(column.filterData)(scope, {
+                        def = column.filterData(scope, {
                             $column: column
                         });
+                        if (!def) {
+                            delete column.filterData;
+                            return;
+                        }
+
                         // if we're working with a deferred object, let's wait for the promise
                         if ((angular.isObject(def) && angular.isObject(def.promise))) {
                             delete column.filterData;
