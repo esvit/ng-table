@@ -61,9 +61,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     };
 
                     var parsedTitle = parsedAttribute('title', ' '),
-                        headerTemplateURL = parsedAttribute('header', false),
-                        filter = parsedAttribute('filter', false)();
-
+                        headerTemplateURL = parsedAttribute('header', false);
                     var titleExpr = getAttrValue('title');
                     if (titleExpr){
                         el.attr('data-title-text', '{{' + titleExpr + '}}'); // this used in responsive table
@@ -74,7 +72,7 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         headerTitle: parsedAttribute('header-title', ' '),
                         sortable: parsedAttribute('sortable', false),
                         'class': parsedAttribute('header-class', ''),
-                        filter: filter,
+                        filter: parsedAttribute('filter', false),
                         headerTemplateURL: headerTemplateURL,
                         filterData: (el.attr("filter-data") ? el.attr("filter-data") : null),
                         show: (el.attr("ng-show") ? function(scope) {

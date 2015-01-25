@@ -196,7 +196,7 @@ describe('ng-table', function() {
             };
         }));
 
-        describe('filter def as key/value pair', function(){
+        describe('filter specified as alias', function(){
 
             var elm;
             beforeEach(inject(function($compile, NgTableParams) {
@@ -205,7 +205,7 @@ describe('ng-table', function() {
                         '<table ng-table="tableParams" show-filter="true">' +
                         '<tr ng-repeat="user in $data">' +
                         '<td header-class="captureColumn(column)" title="\'Name\'" ' +
-                            'filter="{ \'username\': \'text\' }">{{user.name}}</td>' +
+                            'filter="usernameFilter">{{user.name}}</td>' +
                         '</tr>' +
                         '</table>' +
                         '</div>');
@@ -213,6 +213,7 @@ describe('ng-table', function() {
                 $compile(elm)(scope);
                 scope.$digest();
 
+                scope.usernameFilter = {username: 'text'};
                 scope.tableParams = new NgTableParams({}, {});
                 scope.$digest();
             }));
@@ -236,11 +237,11 @@ describe('ng-table', function() {
             it('should make filter def available on $column', function () {
                 expect(columnDef).toBeDefined();
                 expect(columnDef.filter).toBeDefined();
-                expect(columnDef.filter['username']).toBe('text');
+                expect(columnDef.filter(scope)['username']).toBe('text');
             });
         });
 
-        describe('filter def with fully qualified url', function(){
+        describe('filter specified with url', function(){
 
             var elm;
             beforeEach(inject(function($compile, NgTableParams) {
@@ -312,8 +313,70 @@ describe('ng-table', function() {
             it('should make filter def available on $column', function () {
                 expect(columnDef).toBeDefined();
                 expect(columnDef.filter).toBeDefined();
-                expect(columnDef.filter['name']).toBe('text');
-                expect(columnDef.filter['age']).toBe('text');
+                expect(columnDef.filter(scope)['name']).toBe('text');
+                expect(columnDef.filter(scope)['age']).toBe('text');
+            });
+        });
+        describe('dynamic filter', function(){
+
+            var elm, ageFilter;
+            beforeEach(inject(function($compile, NgTableParams) {
+
+                ageFilter = {age: 'text'};
+
+                elm = angular.element(
+                        '<div>' +
+                        '<script type="text/ng-template" id="ng-table/filters/number.html"><input type="number" name="{{name}}"/></script>' +
+                        '<table ng-table="tableParams" show-filter="true">' +
+                        '<tr ng-repeat="user in $data">' +
+                        '<td title="\'Name\'" filter="getFilter(column)">{{user.name}}</td>' +
+                        '<td title="\'Age\'" filter="getFilter(column)">{{user.age}}</td>' +
+                        '</tr>' +
+                        '</table>' +
+                        '</div>');
+
+                $compile(elm)(scope);
+                scope.$digest();
+
+                scope.getFilter = function(colDef){
+                    if (colDef.id === 0) {
+                        return {username: 'text'};
+                    } else if (colDef.id === 1) {
+                        return ageFilter;
+                    }
+                };
+                scope.tableParams = new NgTableParams({}, {});
+                scope.$digest();
+            }));
+
+            it('should render named filter template', function() {
+                var usernameInput = elm.find('thead').find('tr').eq(1).find('th').eq(0).find('input');
+                expect(usernameInput.attr('type')).toBe('text');
+                expect(usernameInput.attr('name')).toBe('username');
+
+                var ageInput = elm.find('thead').find('tr').eq(1).find('th').eq(1).find('input');
+                expect(ageInput.attr('type')).toBe('text');
+                expect(ageInput.attr('name')).toBe('age');
+            });
+
+            it('should databind ngTableParams.filter to filter input', function () {
+                scope.tableParams.filter()['username'] = 'my name is...';
+                scope.tableParams.filter()['age'] = '10';
+                scope.$digest();
+
+                var usernameInput = elm.find('thead').find('tr').eq(1).find('th').eq(0).find('input');
+                expect(usernameInput.val()).toBe('my name is...');
+                var ageInput = elm.find('thead').find('tr').eq(1).find('th').eq(1).find('input');
+                expect(ageInput.val()).toBe('10');
+            });
+
+            it('should render new template as filter changes', function() {
+                ageFilter.age = 'number';
+                scope.$digest();
+
+                var ageInput = elm.find('thead').find('tr').eq(1).find('th').eq(1).find('input');
+                expect(ageInput.attr('type')).toBe('number');
+                expect(ageInput.attr('name')).toBe('age');
             });
         });
     });
