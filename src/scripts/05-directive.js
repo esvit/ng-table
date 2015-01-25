@@ -14,8 +14,8 @@
  * @description
  * Directive that instantiates {@link ngTable.directive:ngTable.ngTableController ngTableController}.
  */
-app.directive('ngTable', ['$compile', '$q', '$parse',
-    function($compile, $q, $parse) {
+app.directive('ngTable', ['$q', '$parse',
+    function($q, $parse) {
         'use strict';
 
         return {
@@ -27,9 +27,6 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                 var columns = [],
                     i = 0,
                     row = null;
-
-                // custom header
-                var thead = element.find('> thead');
 
                 // IE 8 fix :not(.ng-table-group) selector
                 angular.forEach(angular.element(element.find('tr')), function(tr) {
@@ -51,12 +48,15 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                         return el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr);
                     };
 
-                    var parsedAttribute = function(attr, defaultValue) {
+                    var parsedAttribute = function(attr) {
+                        var expr = getAttrValue(attr);
+                        if (!expr){
+                            return undefined;
+                        }
                         return function(scope, locals) {
-                            var expr = getAttrValue(attr);
                             return $parse(expr)(scope, angular.extend(locals || {}, {
                                 $columns: columns
-                            })) || defaultValue;
+                            }));
                         };
                     };
 
@@ -64,102 +64,28 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                     if (titleExpr){
                         el.attr('data-title-text', '{{' + titleExpr + '}}'); // this used in responsive table
                     }
+                    // NOTE TO MAINTAINERS: if you add extra fields to a column be sure to extend ngTableColumn with
+                    // a corresponding "safe" default
                     columns.push({
                         id: i++,
-                        title: parsedAttribute('title', ' '),
-                        headerTitle: parsedAttribute('header-title', ' '),
-                        sortable: parsedAttribute('sortable', false),
-                        'class': parsedAttribute('header-class', ''),
-                        filter: parsedAttribute('filter', false),
-                        headerTemplateURL: parsedAttribute('header', false),
-                        filterData: parsedAttribute('filter-data', null),
+                        title: parsedAttribute('title'),
+                        headerTitle: parsedAttribute('header-title'),
+                        sortable: parsedAttribute('sortable'),
+                        'class': parsedAttribute('header-class'),
+                        filter: parsedAttribute('filter'),
+                        headerTemplateURL: parsedAttribute('header'),
+                        filterData: parsedAttribute('filter-data'),
                         show: (el.attr("ng-show") ? function (scope) {
                             return $parse(el.attr("ng-show"))(scope);
-                        } : function () {
-                            return true;
-                        })
+                        } : undefined)
                     });
                 });
-                return function(scope, element, attrs) {
-                    scope.$loading = false;
-                    scope.$columns = columns;
-                    scope.$filterRow = {};
+                return function(scope, element, attrs, controller) {
+                    scope.$columns = columns = controller.buildColumns(columns);
 
-                    scope.$watch(attrs.ngTable, (function(params) {
-                        if (angular.isUndefined(params)) {
-                            return;
-                        }
-                        scope.paramsModel = $parse(attrs.ngTable);
-                        scope.params = params;
-                    }), true);
-
-                    if (attrs.showFilter) {
-                        scope.$parent.$watch(attrs.showFilter, function(value) {
-                            scope.show_filter = value;
-                        });
-                    }
-                    if (attrs.disableFilter) {
-                        scope.$parent.$watch(attrs.disableFilter, function(value) {
-                            scope.$filterRow.disabled = value;
-                        });
-                    }
-                    angular.forEach(columns, function(column) {
-                        var def;
-                        def = column.filterData(scope, {
-                            $column: column
-                        });
-                        if (!def) {
-                            delete column.filterData;
-                            return;
-                        }
-
-                        // if we're working with a deferred object, let's wait for the promise
-                        if ((angular.isObject(def) && angular.isObject(def.promise))) {
-                            delete column.filterData;
-                            return def.promise.then(function(data) {
-                                // our deferred can eventually return arrays, functions and objects
-                                if (!angular.isArray(data) && !angular.isFunction(data) && !angular.isObject(data)) {
-                                    // if none of the above was found - we just want an empty array
-                                    data = [];
-                                } else if (angular.isArray(data)) {
-                                    data.unshift({
-                                        title: '-',
-                                        id: ''
-                                    });
-                                }
-                                column.data = data;
-                            });
-                        }
-                        // otherwise, we just return what the user gave us. It could be a function, array, object, whatever
-                        else {
-                            return column.data = def;
-                        }
-                    });
-                    if (!element.hasClass('ng-table')) {
-                        scope.templates = {
-                            header: (attrs.templateHeader ? attrs.templateHeader : 'ng-table/header.html'),
-                            pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
-                        };
-
-                        element.addClass('ng-table');
-
-                        var headerTemplate = null;
-                        if (thead.length === 0){
-                            headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
-                            element.prepend(headerTemplate);
-                        }
-
-                        var paginationTemplate = angular.element(document.createElement('div')).attr({
-                            'ng-table-pagination': 'params',
-                            'template-url': 'templates.pagination'
-                        });
-                        element.after(paginationTemplate);
-
-                        if (headerTemplate) {
-                            $compile(headerTemplate)(scope);
-                        }
-                        $compile(paginationTemplate)(scope);
-                    }
+                    controller.setupBindingsToInternalScope(attrs.ngTable);
+                    controller.loadFilterData(columns);
+                    controller.compileDirectiveTemplates();
                 };
             }
         }
