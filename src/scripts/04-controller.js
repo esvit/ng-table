@@ -37,30 +37,11 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         };
     })();
 
-    function getParamsWatchState(params) {
-        if (!params) {
-            return params;
-        }
-
-        var allKeys = Object.keys(params);
-        var observedKeys = allKeys.filter(function (key) {
-            return key !== "data";
-        });
-        var state = {};
-        for (var i = 0; i < observedKeys.length; i++) {
-            var propName = observedKeys[i];
-            state[propName] = params[propName];
-        }
-        return state;
-    }
-
     function resetPage() {
         $scope.params.$params.page = 1;
     }
 
-    $scope.$watch(function() {
-        return getParamsWatchState($scope.params.$params)
-    }, function(newParams, oldParams) {
+    $scope.$watch('params.$params', function(newParams, oldParams) {
 
         if (newParams === oldParams) {
             return;
@@ -151,16 +132,17 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
         // note: this we're setting up watches to simulate angular's isolated scope bindings
 
+        // note: is REALLY important to watch for a change to the ngTableParams *reference* rather than
+        // $watch for value equivalence. This is because ngTableParams references the current page of data as
+        // a field and it's important not to watch this
         var tableParamsGetter = $parse(tableParamsExpr);
-        $scope.$watch(function () {
-            return getParamsWatchState(tableParamsGetter($scope));
-        }, (function (params) {
+        $scope.$watch(tableParamsGetter, (function (params) {
             if (angular.isUndefined(params)) {
                 return;
             }
             $scope.paramsModel = tableParamsGetter;
             $scope.params = params;
-        }), true);
+        }), false);
 
         if ($attrs.showFilter) {
             $scope.$parent.$watch($attrs.showFilter, function(value) {
