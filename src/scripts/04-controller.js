@@ -20,7 +20,10 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
     $scope.$filterRow = {};
     $scope.$loading = false;
 
-    if (!($scope.params instanceof NgTableParams)) {
+    // until such times as the directive uses an isolated scope, we need to ensure that the check for
+    // the params field only consults the "own properties" of the $scope. This is to avoid seeing the params
+    // field on a $scope higher up in the prototype chain
+    if (!$scope.hasOwnProperty("params")) {
         $scope.params = new NgTableParams();
         $scope.params.isNullInstance = true;
     }
