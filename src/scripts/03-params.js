@@ -221,7 +221,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
          * @description toggle the sort of a column (less boilerplate in template)         * 
          */
         this.toggleSort= function(val){
-            this.sorting( val , $scope.tableParams.isSortBy( val , 'asc') ? 'desc' : 'asc')
+            this.sorting( val , $scope.tableParams.isSortBy( val , 'asc') ? 'desc' : 'asc');
         },
 
         /**
