@@ -216,6 +216,16 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
+         * @name ngTable.factory:NgTableParams#toggleSort
+         * @methodOf ngTable.factory:NgTableParams
+         * @description toggle the sort of a column (less boilerplate in template)         * 
+         */
+        this.toggleSort= function(val){
+            this.sorting( val , $scope.tableParams.isSortBy( val , 'asc') ? 'desc' : 'asc')
+        },
+
+        /**
+         * @ngdoc method
          * @name ngTable.factory:NgTableParams#getData
          * @methodOf ngTable.factory:NgTableParams
          * @description Called when updated some of parameters for get new data
@@ -362,7 +372,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     }
                 }
             }
-            return pairs;
+            return pairsso;
         };
 
         /**
