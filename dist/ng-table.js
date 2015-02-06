@@ -716,19 +716,26 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             header: (attrs.templateHeader ? attrs.templateHeader : 'ng-table/header.html'),
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
-                        var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
+                        //var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
                         var paginationTemplate = angular.element(document.createElement('div')).attr({
                             'ng-table-pagination': 'params',
                             'template-url': 'templates.pagination'
                         });
+                        
+                        var headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
+                        
+                        if(thead.length > 0) {
+                             element.addClass('ng-table')
+                             .after(paginationTemplate);
+                        	
+                        } else {
+                             element.find('> thead').remove();
+                             element.addClass('ng-table')
+                             .prepend(headerTemplate)
+                             .after(paginationTemplate);
+                            $compile(headerTemplate)(scope);
+                        }
 
-                        element.find('> thead').remove();
-
-                        element.addClass('ng-table')
-                            .prepend(headerTemplate)
-                            .after(paginationTemplate);
-
-                        $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
                     }
                 };
