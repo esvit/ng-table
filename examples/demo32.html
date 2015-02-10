@@ -77,10 +77,10 @@
 
     <table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped">
         <tr ng-repeat="user in $data">
-            <td data-title="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
+            <td title="'Full Name'" title-alt="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
                 {{user.name}}
             </td>
-            <td data-title="'Age'" sortable="'age'" filter="{ 'age': 'text' }">
+            <td title="'Age'" sortable="'age'" filter="{ 'age': 'text' }">
                 {{user.age}}
             </td>
         </tr>

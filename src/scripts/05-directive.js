@@ -60,7 +60,7 @@ app.directive('ngTable', ['$q', '$parse',
                         };
                     };
 
-                    var titleExpr = getAttrValue('title');
+                    var titleExpr = getAttrValue('title-alt') || getAttrValue('title');
                     if (titleExpr){
                         el.attr('data-title-text', '{{' + titleExpr + '}}'); // this used in responsive table
                     }
@@ -69,6 +69,7 @@ app.directive('ngTable', ['$q', '$parse',
                     columns.push({
                         id: i++,
                         title: parsedAttribute('title'),
+                        titleAlt: parsedAttribute('title-alt'),
                         headerTitle: parsedAttribute('header-title'),
                         sortable: parsedAttribute('sortable'),
                         'class': parsedAttribute('header-class'),

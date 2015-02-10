@@ -190,7 +190,8 @@ app.factory('ngTableColumn', [function () {
         headerTitle: function(){ return ' '; },
         sortable: function(){ return false; },
         show: function(){ return true; },
-        title: function(){ return ' '; }
+        title: function(){ return ' '; },
+        titleAlt: function(){ return ''; }
     };
 
     function buildColumn(column){
