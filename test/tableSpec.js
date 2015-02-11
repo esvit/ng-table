@@ -33,21 +33,31 @@ describe('ng-table', function() {
                     '<div>' +
                     '<table ng-table="tableParams" show-filter="true">' +
                     '<tr ng-repeat="user in $data">' +
-                    '<td data-header-title="\'Sort by Name\'" data-title="\'Name of person\'" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="getCustomClass(column)">' +
+                    '<td data-header-title="\'Sort by Name\'" data-title="nameTitle()" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="getCustomClass(column)">' +
                     '{{user.name}}' +
                     '</td>' +
-                    '<td x-data-header-title="\'Sort by Age\'" x-data-title="\'Age\'" sortable="\'age\'" x-data-header-class="getCustomClass(column)">' +
+                    '<td x-data-header-title="\'Sort by Age\'" x-data-title="ageTitle()" sortable="\'age\'" x-data-header-class="getCustomClass(column)">' +
                     '{{user.age}}' +
                     '</td>' +
-                    '<td header-title="\'Sort by Money\'" title="\'Money\'" filter="{ \'action\': \'select\' }" filter-data="money($column)" header-class="getCustomClass(column)">' +
+                    '<td header-title="\'Sort by Money\'" title="moneyTitle()" filter="{ \'action\': \'select\' }" filter-data="money($column)" header-class="getCustomClass(column)">' +
                     '{{user.money}}' +
                     '</td>' +
                     '</tr>' +
                     '</table>' +
                     '</div>');
 
+            scope.nameTitle = function(){
+                return 'Name of person';
+            };
+            scope.ageTitle = function(){
+                return 'Age';
+            };
+            scope.moneyTitle = function(){
+                return 'Money';
+            };
+
             scope.getCustomClass = function(column){
-                if (column.title(scope).indexOf('Money') !== -1){
+                if (column.title().indexOf('Money') !== -1){
                     return 'moneyHeaderClass';
                 } else{
                     return 'customClass';
@@ -305,7 +315,7 @@ describe('ng-table', function() {
             it('should make filter def available on $column', function () {
                 expect(columnDef).toBeDefined();
                 expect(columnDef.filter).toBeDefined();
-                expect(columnDef.filter(scope)['username']).toBe('text');
+                expect(columnDef.filter()['username']).toBe('text');
             });
         });
 
@@ -381,8 +391,8 @@ describe('ng-table', function() {
             it('should make filter def available on $column', function () {
                 expect(columnDef).toBeDefined();
                 expect(columnDef.filter).toBeDefined();
-                expect(columnDef.filter(scope)['name']).toBe('text');
-                expect(columnDef.filter(scope)['age']).toBe('text');
+                expect(columnDef.filter()['name']).toBe('text');
+                expect(columnDef.filter()['age']).toBe('text');
             });
         });
         describe('dynamic filter', function(){

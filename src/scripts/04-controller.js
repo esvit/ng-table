@@ -125,7 +125,9 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
     };
 
     this.buildColumns = function (columns) {
-        return columns.map(ngTableColumn.buildColumn)
+        return columns.map(function(col){
+            return ngTableColumn.buildColumn(col, $scope)
+        })
     };
 
     this.setupBindingsToInternalScope = function(tableParamsExpr){
@@ -157,7 +159,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
     };
 
     $scope.sortBy = function(column, event) {
-        var parsedSortable = column.sortable && column.sortable($scope);
+        var parsedSortable = column.sortable && column.sortable();
         if (!parsedSortable) {
             return;
         }
@@ -194,7 +196,7 @@ app.factory('ngTableColumn', [function () {
         titleAlt: function(){ return ''; }
     };
 
-    function buildColumn(column){
+    function buildColumn(column, defaultScope){
         // note: we're not modifying the original column object. This helps to avoid unintended side affects
         var extendedCol = Object.create(column);
         for (var prop in defaults) {
@@ -212,6 +214,17 @@ app.factory('ngTableColumn', [function () {
                     };
                 })(prop);
             }
+            (function(prop1){
+                // satisfy the arguments expected by the function returned by parsedAttribute in the ngTable directive
+                var getterFn = extendedCol[prop1];
+                extendedCol[prop1] = function(){
+                    if (arguments.length === 0){
+                        return getterFn.call(column, defaultScope);
+                    } else {
+                        return getterFn.apply(column, arguments);
+                    }
+                };
+            })(prop);
         }
         return extendedCol;
     }
