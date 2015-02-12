@@ -39,7 +39,7 @@ describe('ng-table-dynamic', function() {
                     '</div>');
 
             function getCustomClass(parmasScope){
-                if (parmasScope.column.title().indexOf('Money') !== -1){
+                if (parmasScope.$column.title().indexOf('Money') !== -1){
                     return 'moneyHeaderClass';
                 } else{
                     return 'customClass';
@@ -289,9 +289,9 @@ describe('ng-table-dynamic', function() {
 
                 ageFilter = { age: 'text'};
                 function getFilter(paramsScope){
-                    if (paramsScope.column.title() === 'Name of user') {
+                    if (paramsScope.$column.title() === 'Name of user') {
                         return {username: 'text'};
-                    } else if (paramsScope.column.title() === 'Age') {
+                    } else if (paramsScope.$column.title() === 'Age') {
                         return ageFilter;
                     }
                 }
@@ -313,7 +313,6 @@ describe('ng-table-dynamic', function() {
                 expect(usernameInput.attr('name')).toBe('username');
 
                 var ageInput = elm.find('thead').find('tr').eq(1).find('th').eq(1).find('input');
-                console.log(elm.find('thead').find('tr').eq(1).find('th'));
                 expect(ageInput.attr('type')).toBe('text');
                 expect(ageInput.attr('name')).toBe('age');
             });

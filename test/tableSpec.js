@@ -33,13 +33,13 @@ describe('ng-table', function() {
                     '<div>' +
                     '<table ng-table="tableParams" show-filter="true">' +
                     '<tr ng-repeat="user in $data">' +
-                    '<td data-header-title="\'Sort by Name\'" data-title="nameTitle()" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="getCustomClass(column)">' +
+                    '<td data-header-title="\'Sort by Name\'" data-title="nameTitle()" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="getCustomClass($column)">' +
                     '{{user.name}}' +
                     '</td>' +
-                    '<td x-data-header-title="\'Sort by Age\'" x-data-title="ageTitle()" sortable="\'age\'" x-data-header-class="getCustomClass(column)">' +
+                    '<td x-data-header-title="\'Sort by Age\'" x-data-title="ageTitle()" sortable="\'age\'" x-data-header-class="getCustomClass($column)">' +
                     '{{user.age}}' +
                     '</td>' +
-                    '<td header-title="\'Sort by Money\'" title="moneyTitle()" filter="{ \'action\': \'select\' }" filter-data="money($column)" header-class="getCustomClass(column)">' +
+                    '<td header-title="\'Sort by Money\'" title="moneyTitle()" filter="{ \'action\': \'select\' }" filter-data="money($column)" header-class="getCustomClass($column)">' +
                     '{{user.money}}' +
                     '</td>' +
                     '</tr>' +
@@ -56,8 +56,8 @@ describe('ng-table', function() {
                 return 'Money';
             };
 
-            scope.getCustomClass = function(column){
-                if (column.title().indexOf('Money') !== -1){
+            scope.getCustomClass = function($column){
+                if ($column.title().indexOf('Money') !== -1){
                     return 'moneyHeaderClass';
                 } else{
                     return 'customClass';
@@ -243,17 +243,17 @@ describe('ng-table', function() {
 
     describe('sorting', function() {
 
-        it('should provide column definition', inject(function($compile) {
+        it('should provide $column definition', inject(function($compile) {
             var columnDef;
             var elm = angular.element(
                     '<table ng-table="tableParams">' +
                     '<tr ng-repeat="user in $data">' +
-                    '<td title="\'Age\'" sortable="captureColumn(column)">{{user.age}}</td>' +
+                    '<td title="\'Age\'" sortable="captureColumn($column)">{{user.age}}</td>' +
                     '</tr>' +
                     '</table>');
 
-            scope.captureColumn = function(col){
-                columnDef = col;
+            scope.captureColumn = function($column){
+                columnDef = $column;
                 return 'age'
             };
 
@@ -266,11 +266,11 @@ describe('ng-table', function() {
 
     describe('filters', function(){
 
-        var columnDef;
+        var $capturedColumn;
         beforeEach(inject(function() {
-            // stash a reference to column definition so that its available in asserts
-            scope.captureColumn = function (col) {
-                columnDef = col;
+            // stash a reference to $column definition so that its available in asserts
+            scope.captureColumn = function ($column) {
+                $capturedColumn = $column;
             };
         }));
 
@@ -282,7 +282,7 @@ describe('ng-table', function() {
                         '<div>' +
                         '<table ng-table="tableParams" show-filter="true">' +
                         '<tr ng-repeat="user in $data">' +
-                        '<td header-class="captureColumn(column)" title="\'Name\'" ' +
+                        '<td header-class="captureColumn($column)" title="\'Name\'" ' +
                             'filter="usernameFilter">{{user.name}}</td>' +
                         '</tr>' +
                         '</table>' +
@@ -313,9 +313,9 @@ describe('ng-table', function() {
             });
 
             it('should make filter def available on $column', function () {
-                expect(columnDef).toBeDefined();
-                expect(columnDef.filter).toBeDefined();
-                expect(columnDef.filter()['username']).toBe('text');
+                expect($capturedColumn).toBeDefined();
+                expect($capturedColumn.filter).toBeDefined();
+                expect($capturedColumn.filter()['username']).toBe('text');
             });
         });
 
@@ -328,7 +328,7 @@ describe('ng-table', function() {
                         '<script type="text/ng-template" id="ng-table/filters/customNum.html"><input type="number" id="{{name}}"/></script>' +
                         '<table ng-table="tableParams" show-filter="true">' +
                         '<tr ng-repeat="user in $data">' +
-                        '<td header-class="captureColumn(column)" title="\'Age\'" ' +
+                        '<td header-class="captureColumn($column)" title="\'Age\'" ' +
                             'filter="{ \'age\': \'ng-table/filters/customNum.html\' }">{{user.age}}</td>' +
                         '</tr>' +
                         '</table>' +
@@ -356,7 +356,7 @@ describe('ng-table', function() {
                         '<div>' +
                         '<table ng-table="tableParams" show-filter="true">' +
                         '<tr ng-repeat="user in $data">' +
-                        '<td header-class="captureColumn(column)" title="\'Name\'" ' +
+                        '<td header-class="captureColumn($column)" title="\'Name\'" ' +
                         'filter="{ \'name\': \'text\', \'age\': \'text\' }">{{user.name}}</td>' +
                         '</tr>' +
                         '</table>' +
@@ -389,10 +389,10 @@ describe('ng-table', function() {
             });
 
             it('should make filter def available on $column', function () {
-                expect(columnDef).toBeDefined();
-                expect(columnDef.filter).toBeDefined();
-                expect(columnDef.filter()['name']).toBe('text');
-                expect(columnDef.filter()['age']).toBe('text');
+                expect($capturedColumn).toBeDefined();
+                expect($capturedColumn.filter).toBeDefined();
+                expect($capturedColumn.filter()['name']).toBe('text');
+                expect($capturedColumn.filter()['age']).toBe('text');
             });
         });
         describe('dynamic filter', function(){
@@ -407,8 +407,8 @@ describe('ng-table', function() {
                         '<script type="text/ng-template" id="ng-table/filters/number.html"><input type="number" name="{{name}}"/></script>' +
                         '<table ng-table="tableParams" show-filter="true">' +
                         '<tr ng-repeat="user in $data">' +
-                        '<td title="\'Name\'" filter="getFilter(column)">{{user.name}}</td>' +
-                        '<td title="\'Age\'" filter="getFilter(column)">{{user.age}}</td>' +
+                        '<td title="\'Name\'" filter="getFilter($column)">{{user.name}}</td>' +
+                        '<td title="\'Age\'" filter="getFilter($column)">{{user.age}}</td>' +
                         '</tr>' +
                         '</table>' +
                         '</div>');

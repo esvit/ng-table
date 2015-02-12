@@ -1,22 +1,22 @@
 <tr>
-    <th title="{{column.headerTitle(this)}}"
-        ng-repeat="column in $columns"
+    <th title="{{$column.headerTitle(this)}}"
+        ng-repeat="$column in $columns"
         ng-class="{
-                    'sortable': column.sortable(this),
-                    'sort-asc': params.sorting()[column.sortable(this)]=='asc',
-                    'sort-desc': params.sorting()[column.sortable(this)]=='desc'
+                    'sortable': $column.sortable(this),
+                    'sort-asc': params.sorting()[$column.sortable(this)]=='asc',
+                    'sort-desc': params.sorting()[$column.sortable(this)]=='desc'
                   }"
-        ng-click="sortBy(column, $event)"
-        ng-show="column.show(this)"
-        ng-init="template = column.headerTemplateURL(this)"
-        class="header {{column.class(this)}}">
-        <div ng-if="!template" ng-show="!template" ng-bind="column.title(this)"></div>
+        ng-click="sortBy($column, $event)"
+        ng-show="$column.show(this)"
+        ng-init="template = $column.headerTemplateURL(this)"
+        class="header {{$column.class(this)}}">
+        <div ng-if="!template" ng-show="!template" ng-bind="$column.title(this)"></div>
         <div ng-if="template" ng-show="template" ng-include="template"></div>
     </th>
 </tr>
 <tr ng-show="show_filter" class="ng-table-filters">
-    <th data-title-text="{{column.titleAlt(this) || column.title(this)}}" ng-repeat="column in $columns" ng-show="column.show(this)" class="filter">
-        <div ng-repeat="(name, filter) in column.filter(this)">
+    <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-show="$column.show(this)" class="filter">
+        <div ng-repeat="(name, filter) in $column.filter(this)">
             <div ng-if="filter.indexOf('/') !== -1" ng-include="filter"></div>
             <div ng-if="filter.indexOf('/') === -1" ng-include="'ng-table/filters/' + filter + '.html'"></div>
         </div>

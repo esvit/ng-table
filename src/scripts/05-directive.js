@@ -64,7 +64,7 @@ app.directive('ngTable', ['$q', '$parse',
                     if (titleExpr){
                         el.attr('data-title-text', '{{' + titleExpr + '}}'); // this used in responsive table
                     }
-                    // NOTE TO MAINTAINERS: if you add extra fields to a column be sure to extend ngTableColumn with
+                    // NOTE TO MAINTAINERS: if you add extra fields to a $column be sure to extend ngTableColumn with
                     // a corresponding "safe" default
                     columns.push({
                         id: i++,

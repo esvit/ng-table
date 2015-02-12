@@ -89,20 +89,20 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         }
     };
 
-    this.loadFilterData = function (columns) {
-        angular.forEach(columns, function (column) {
+    this.loadFilterData = function ($columns) {
+        angular.forEach($columns, function ($column) {
             var def;
-            def = column.filterData($scope, {
-                $column: column
+            def = $column.filterData($scope, {
+                $column: $column
             });
             if (!def) {
-                delete column.filterData;
+                delete $column.filterData;
                 return;
             }
 
             // if we're working with a deferred object, let's wait for the promise
             if ((angular.isObject(def) && angular.isObject(def.promise))) {
-                delete column.filterData;
+                delete $column.filterData;
                 return def.promise.then(function(data) {
                     // our deferred can eventually return arrays, functions and objects
                     if (!angular.isArray(data) && !angular.isFunction(data) && !angular.isObject(data)) {
@@ -114,12 +114,12 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
                             id: ''
                         });
                     }
-                    column.data = data;
+                    $column.data = data;
                 });
             }
             // otherwise, we just return what the user gave us. It could be a function, array, object, whatever
             else {
-                return column.data = def;
+                return $column.data = def;
             }
         });
     };
@@ -158,8 +158,8 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         }
     };
 
-    $scope.sortBy = function(column, event) {
-        var parsedSortable = column.sortable && column.sortable();
+    $scope.sortBy = function($column, event) {
+        var parsedSortable = $column.sortable && $column.sortable();
         if (!parsedSortable) {
             return;
         }
@@ -180,7 +180,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
  * @name ngTable.factory:ngTableColumn
  *
  * @description
- * Service to construct a column definition used by {@link ngTable.directive:ngTable ngTable} directive
+ * Service to construct a $column definition used by {@link ngTable.directive:ngTable ngTable} directive
  */
 app.factory('ngTableColumn', [function () {
 
@@ -196,6 +196,16 @@ app.factory('ngTableColumn', [function () {
         titleAlt: function(){ return ''; }
     };
 
+    /**
+     * @ngdoc method
+     * @name ngTable.factory:ngTableColumn#buildColumn
+     * @methodOf ngTable.factory:ngTableColumn
+     * @description Creates a $column for use within a header template
+     *
+     * @param {Object} column an existing $column or simple column data object
+     * @param {Scope} defaultScope the $scope to supply to the $column getter methods when not supplied by caller
+     * @returns {Object} a $column object
+     */
     function buildColumn(column, defaultScope){
         // note: we're not modifying the original column object. This helps to avoid unintended side affects
         var extendedCol = Object.create(column);
