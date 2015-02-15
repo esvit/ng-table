@@ -291,6 +291,7 @@ describe('ng-table', function() {
                 $compile(elm)(scope);
                 scope.$digest();
 
+                // 'text' is a shortcut alias for the template ng-table/filters/text
                 scope.usernameFilter = {username: 'text'};
                 scope.tableParams = new NgTableParams({}, {});
                 scope.$digest();
@@ -317,6 +318,24 @@ describe('ng-table', function() {
                 expect($capturedColumn.filter).toBeDefined();
                 expect($capturedColumn.filter()['username']).toBe('text');
             });
+
+            it('when filter changes should reset page number to 1', inject(function ($timeout) {
+                // trigger initial load of data so that subsequent changes to filter will trigger reset of page #
+                scope.tableParams.filter()['username'] = 'initial value';
+                scope.$digest();
+                $timeout.flush(); // trigger delayed filter
+
+                // set page to something other than 1
+                scope.tableParams.page(5);
+                expect(scope.tableParams.page()).toBe(5); // checking assumptions
+
+                // when
+                scope.tableParams.filter()['username'] = 'new value';
+                scope.$digest();
+                $timeout.flush();  // trigger delayed filter
+
+                expect(scope.tableParams.page()).toBe(1);
+            }));
         });
 
         describe('filter specified with url', function(){
