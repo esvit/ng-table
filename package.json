@@ -1,6 +1,6 @@
 {
     "name": "ng-table",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "author": "Vitalii Savchuk <esvit666@gmail.com>",
     "license": "BSD",
     "repository": {
@@ -17,7 +17,7 @@
         "grunt-contrib-clean": "~0.4.0",
         "grunt-contrib-concat": "~0.3.0",
         "grunt-contrib-requirejs": "~0.4.0",
-        "grunt-contrib-uglify": "~0.2.1",
+        "grunt-contrib-uglify": "0.8.x",
         "grunt-contrib-connect": "~0.5.0",
         "grunt-contrib-less": "~0.5.2",
         "grunt-contrib-cssmin": "~0.6.1",

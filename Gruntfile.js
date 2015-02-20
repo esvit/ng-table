@@ -1,7 +1,7 @@
-var mountFolder = function (connect, dir) {
+var mountFolder = function(connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
@@ -17,7 +17,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'dev',
-        'uglify',
+    'uglify',
         'cssmin'
     ]);
 
@@ -33,12 +33,10 @@ module.exports = function (grunt) {
         },
         copy: {
             styles: {
-                files: [
-                    {
-                        src: './src/styles/ng-table.less',
-                        dest: './dist/ng-table.less'
-                    }
-                ]
+                files: [{
+                    src: './src/styles/ng-table.less',
+                    dest: './dist/ng-table.less'
+                }]
             }
         },
         uglify: {
@@ -47,9 +45,7 @@ module.exports = function (grunt) {
                 dest: './dist/ng-table.min.js',
                 options: {
                     banner: '<%= banner %>',
-                    sourceMap: function (fileName) {
-                        return fileName.replace(/$/, '.map');
-                    }
+                    sourceMap: true
                 }
             }
         },
@@ -115,7 +111,7 @@ module.exports = function (grunt) {
             },
             serve: {
                 options: {
-                    middleware: function (connect) {
+                    middleware: function(connect) {
                         return [
                             mountFolder(connect, '.')
                         ];
