@@ -417,6 +417,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
         var params = this.$params = {
             page: 1,
             count: 1,
+            footer:true,
             filter: {},
             sorting: {},
             group: {},
