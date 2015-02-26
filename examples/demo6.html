@@ -50,7 +50,7 @@
         <div loading-container="tableParams.settings().$loading">
             <table ng-table="tableParams" show-filter="true" class="table">
                 <tr ng-repeat="user in $data">
-                    <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="'name'">
+                    <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="'name'" sort-indicator="'span'">
                         {{user.name}}
                         {{$loading}}
                     </td>
