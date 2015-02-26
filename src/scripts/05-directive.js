@@ -50,6 +50,7 @@ app.directive('ngTable', ['$q', '$parse',
 
                     var parsedAttribute = function(attr) {
                         var expr = getAttrValue(attr);
+                        console.log(expr);
                         if (!expr){
                             return undefined;
                         }
@@ -66,11 +67,14 @@ app.directive('ngTable', ['$q', '$parse',
                     }
                     // NOTE TO MAINTAINERS: if you add extra fields to a $column be sure to extend ngTableColumn with
                     // a corresponding "safe" default
+
+
                     columns.push({
                         id: i++,
                         title: parsedAttribute('title'),
                         titleAlt: parsedAttribute('title-alt'),
                         headerTitle: parsedAttribute('header-title'),
+                        sortIndicator: parsedAttribute('sort-indicator'),
                         sortable: parsedAttribute('sortable'),
                         'class': parsedAttribute('header-class'),
                         filter: parsedAttribute('filter'),
@@ -80,6 +84,7 @@ app.directive('ngTable', ['$q', '$parse',
                             return $parse(el.attr("ng-show"))(scope);
                         } : undefined)
                     });
+
                 });
                 return function(scope, element, attrs, controller) {
                     scope.$columns = columns = controller.buildColumns(columns);
