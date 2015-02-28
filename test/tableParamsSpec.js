@@ -146,6 +146,7 @@ describe('NgTableParams', function () {
             total: 0,
             defaultSort : 'desc',
             counts: [10, 25, 50, 100],
+            sortingIndicator : 'span',
             getData: params.getData,
             getGroups: params.getGroups,
             filterDelay: 750
@@ -160,6 +161,7 @@ describe('NgTableParams', function () {
             total: 100,
             defaultSort : 'desc',
             counts: [10, 25, 50, 100],
+            sortingIndicator : 'span',
             getData: params.getData,
             getGroups: params.getGroups,
             filterDelay: 750
