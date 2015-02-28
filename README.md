@@ -22,36 +22,7 @@ For work in IE < 9 need jQuery, just add:
 
 ## Updates
 
-### v0.3.2 (master)
-- add pagination directive ngTablePagination [(see usage)](https://github.com/esvit/ng-table/blob/master/examples/demo28.html)
-- rename filter.name to filter.$$name according to issue #196
-- add debugMode setting
-- add defaultSort setting
-- add filterDelay setting
-- add multisorting (click on header with Ctrl-key)
-- add css classes (ng-table-pager, ng-table-pagination, ng-table-counts)
-
-### v0.3.1
-- add support of `header-class` attribute
-- add fixes for compatibility with early versions of AngularJS
-- add `data` field to ngTableParams
-- Allow expressions in the sortable & filter attribute (Issue #93)
-
-### v0.3.0
-- I abandoned from CoffeeScript in favor of a javascript, fully agree with http://blog.ponyfoo.com/2013/09/28/we-dont-want-your-coffee & (rus) http://habrahabr.ru/post/195944/
-- added examples of table with grouping
-- fully rewrited interface of ngTableParams
-
-### v0.2.2
-In functions that return data for the filters were removed `.promise`
-```javascript
-$scope.names = function(column) {
-    ...
-    def.resolve(names);
-    // return def.promise; - old code
-    return def;
-};
-```
+See CHANGELOG.md
 
 
 ## Installing via Bower
