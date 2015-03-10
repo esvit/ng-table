@@ -7,6 +7,7 @@
     "type": "git",
     "url": "git://github.com/esvit/ng-table.git"
   },
+  "main": "dist/ng-table.js",
   "devDependencies": {
     "coveralls": "~2.11.0",
     "grunt": "~0.4.2",
