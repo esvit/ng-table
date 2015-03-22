@@ -19,60 +19,12 @@
     <link rel="stylesheet" href="../dist/ng-table.css">
 
     <style>
-        /* original source: http://elvery.net/demo/responsive-tables/ */
-        @media only screen and (max-width: 800px){
-            .demo-reponsiveTable table,
-            .demo-reponsiveTable thead,
-            .demo-reponsiveTable tbody,
-            .demo-reponsiveTable th,
-            .demo-reponsiveTable td,
-            .demo-reponsiveTable tr {
-                display: block;
-            }
-            /* Hide table sorting (but not display: none;, for accessibility) */
-            /* Note: we're hiding the sorting because it looks terrible! Making this pretty is an exercise for the reader*/
-            .demo-reponsiveTable thead tr:first-child {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-            .demo-reponsiveTable tr {
-                border: 1px solid #ccc;
-            }
-            .demo-reponsiveTable table>tbody>tr>td,
-            .demo-reponsiveTable table>thead>tr>th {
-                /* Behave  like a "row" */
-                border: none;
-                border-bottom: 1px solid #eee;
-                position: relative;
-                padding-left: 50%;
-                white-space: normal;
-                text-align: left;
-            }
-            .demo-reponsiveTable table>tbody>tr>td:before,
-            .demo-reponsiveTable table>thead>tr>th:before {
-                /* Now like a table header */
-                position: absolute;
-                /* Top/left values mimic padding */
-                top: 6px;
-                left: 6px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                text-align: left;
-                font-weight: bold;
-                /* Label the data */
-                content: attr(data-title-text);
-            }
-        }
         .externalSearch{float: left; width: 30%; margin-bottom: 20px;}
     </style>
 </head>
 <body ng-app="main">
 
-<h1>Responsive table</h1>
-
-<p><strong>Resize the the width of browser window to see table switch to <em>'card view'</em></strong></p>
+<h1>External Search</h1>
 
 <div ng-controller="DemoCtrl" class="demo-reponsiveTable clearfix">
     <div class="externalSearch">
