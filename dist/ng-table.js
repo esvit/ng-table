@@ -8,7 +8,7 @@
     } else {
         return factory(angular);
     }
-}(angular || null, function(angular) {
+}(window.angular || null, function(angular) {
     'use strict';
 /**
  * ngTable: Table + Angular JS
