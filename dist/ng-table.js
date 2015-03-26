@@ -10,6 +10,7 @@
     }
 }(window.angular || null, function(angular) {
     'use strict';
+
 /**
  * ngTable: Table + Angular JS
  *
@@ -694,10 +695,10 @@ app.factory('ngTableColumn', [function () {
         filter: function(){ return false; },
         filterData: angular.noop,
         headerTemplateURL: function(){ return false; },
-        headerTitle: function(){ return ' '; },
+        headerTitle: function(){ return ''; },
         sortable: function(){ return false; },
         show: function(){ return true; },
-        title: function(){ return ' '; },
+        title: function(){ return ''; },
         titleAlt: function(){ return ''; }
     };
 
