@@ -1,5 +1,5 @@
 <div class="page-header">
-<h1>Table with sorting</h1>
+<h1>Table with multi-column sorting</h1>
 </div>
 
 <script data-run-script>
@@ -25,7 +25,7 @@ window.DemoCtrl = function($scope, $filter, ngTableParams) {
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
         count: 10,          // count per page
-        sorting: ['+name']  // initial sorting
+        sorting: ['+name', '+age']  // initial sorting
     }, {
         total: data.length, // length of data
         getData: function($defer, params) {
@@ -48,10 +48,10 @@ window.DemoCtrl = function($scope, $filter, ngTableParams) {
 
     <table ng-table="tableParams" class="table">
         <tr ng-repeat="user in $data">
-            <td data-title="'Name'" sortable="'name'">
+            <td data-title="'Name'" sortable="['name','age']">
                 {{user.name}}
             </td>
-            <td data-title="'Age'" sortable="'age'">
+            <td data-title="'Age'" sortable="['age','name']">
                 {{user.age}}
             </td>
         </tr>

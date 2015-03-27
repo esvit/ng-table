@@ -37,7 +37,7 @@
             getData: function($defer, params) {
                 // use build-in angular filter
                 var orderedData = params.sorting() ?
-                        $filter('orderBy')(data, params.orderBy()) :
+                        $filter('orderBy')(data, params.sorting()) :
                         data;
 
                 $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
@@ -48,7 +48,7 @@
 
 <div ng-controller="DemoCtrl">
 
-    <button ng-click="tableParams.sorting({})" class="btn btn-default pull-right">Clear sorting</button>
+    <button ng-click="tableParams.sorting([])" class="btn btn-default pull-right">Clear sorting</button>
 
     <table ng-table="tableParams" class="table">
         <tr ng-repeat="user in $data" ng-class="{ 'emphasis': user.money > 500 }">

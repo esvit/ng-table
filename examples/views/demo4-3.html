@@ -39,19 +39,21 @@
             total: function () { return $scope.rows.length; }, // length of data
             getData: function($defer, params) {
                 var orderedData = params.sorting() ?
-                        $filter('orderBy')($scope.rows, $scope.tableParams.orderBy()) :   $scope.rows;
+                        $filter('orderBy')($scope.rows, params.sorting()) : $scope.rows;
 
                 $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             }
         });
 
-        $scope.$watch('groupby', function(value){
-            $scope.tableParams.settings().groupBy = value;
-            console.log('Scope Value', $scope.groupby);
-            console.log('Watch value', this.last);
-            console.log('new table',$scope.tableParams);
-            $scope.tableParams.reload();
-        });
+        setTimeout(function(){
+            $scope.$watch('groupby', function(value){
+                $scope.tableParams.settings().groupBy = value;
+                console.log('Scope Value', $scope.groupby);
+                console.log('Watch value', this.last);
+                console.log('new table',$scope.tableParams);
+                $scope.tableParams.reload();
+            });
+        }, 500); // fixes reload() being run before settings.$scope
     }
 </script>
 

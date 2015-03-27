@@ -9,27 +9,25 @@
             {name: "Jacob", age: 27},
             {name: "Nephi", age: 29},
             {name: "Enos", age: 34},
-            {name: "Tiancum", age: 43},
+            {name: "Tiancum", age: 30},
+            {name: "Jacob", age: 28},
+            {name: "Nephi", age: 30},
+            {name: "Enos", age: 33},
+            {name: "Tiancum", age: 34},
+            {name: "Jacob", age: 28},
+            {name: "Nephi", age: 31},
+            {name: "Enos", age: 32},
+            {name: "Tiancum", age: 50},
             {name: "Jacob", age: 27},
             {name: "Nephi", age: 29},
-            {name: "Enos", age: 34},
-            {name: "Tiancum", age: 43},
-            {name: "Jacob", age: 27},
-            {name: "Nephi", age: 29},
-            {name: "Enos", age: 34},
-            {name: "Tiancum", age: 43},
-            {name: "Jacob", age: 27},
-            {name: "Nephi", age: 29},
-            {name: "Enos", age: 34}];
+            {name: "Enos", age: 31}];
 
         $scope.tableParams = new ngTableParams(
                 // merge default params with url
                 angular.extend({
                             page: 1,            // show first page
                             count: 10,          // count per page
-                            sorting: {
-                                name: 'asc'     // initial sorting
-                            }
+                            sorting: ['+name']  // initial sorting
                         },
                         $location.search()), {
                     total: data.length, // length of data
@@ -38,7 +36,7 @@
 
                         // use build-in angular filter
                         var orderedData = params.sorting ?
-                                $filter('orderBy')(data, params.orderBy()) :
+                                $filter('orderBy')(data, params.sorting()) :
                                 data;
 
                         $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));

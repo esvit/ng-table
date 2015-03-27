@@ -30,7 +30,7 @@
             getData: function($defer, params) {
                 // use build-in angular filter
                 var orderedData = params.sorting() ?
-                        $filter('orderBy')(data, params.orderBy()) :
+                        $filter('orderBy')(data, params.sorting()) :
                         data;
 
                 $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
@@ -40,6 +40,7 @@
 </script>
 
 <div ng-controller="DemoCtrl">
+    <p><strong>Sorting:</strong> {{tableParams.sorting()|json}}
 
     <table ng-table="tableParams" class="table">
         <thead>
@@ -48,7 +49,7 @@
                     'sort-asc': tableParams.isSortBy('name', 'asc'),
                     'sort-desc': tableParams.isSortBy('name', 'desc')
                   }"
-                ng-click="tableParams.sorting({'name' : tableParams.isSortBy('name', 'asc') ? 'desc' : 'asc'})" rowspan="2">
+                ng-click="sortBy('name', $event)" rowspan="2">
                 <div><i class="glyphicon glyphicon-user"></i> Name</div>
             </th>
             <th colspan="2" class="text-center">Data</th>
@@ -58,7 +59,7 @@
                     'sort-asc': tableParams.isSortBy('age', 'asc'),
                     'sort-desc': tableParams.isSortBy('age', 'desc')
                   }"
-                ng-click="tableParams.sorting({'age' : tableParams.isSortBy('age', 'asc') ? 'desc' : 'asc'})">
+                ng-click="sortBy('age', $event)">
                 <div>Age</div>
             </th>
             <th class="text-center">etc...</th>
