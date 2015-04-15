@@ -7,6 +7,23 @@ Code licensed under New BSD License.
 This directive allow to liven your tables. It support sorting, filtering and pagination.
 Header row with titles and filters automatic generated on compilation step.
 
+## submitting an issue
+
+Please be responsible, the open source community is not there to guess your problem or to do your job. When submitting an issue try as much as possible to:
+
+1. search in the already existing issues or on [stackoverflow](http://stackoverflow.com/questions/tagged/ngtable?sort=newest&pageSize=30) if your issue has not been raised before.
+
+2. give a precise description mentionning angular version, ng-table version.
+
+3. give a way to reproduce your issue, the best would be with a <strong>running example</strong>, you can use [plunkr](http://plnkr.co/). Note if you want to mimic ajax loading behaviour you can use [$timeout](https://docs.angularjs.org/api/ng/service/$timeout) angular service or [$httpBackend](https://docs.angularjs.org/api/ng/service/$httpBackend).
+
+4. isolate your code sample on the probable issue to avoid pollution and noise.
+
+5. Close your issue when a solution has been found (and share it with the community)
+
+Note that 80% of the open issues are actually not issues but "problem" due to developpers laziness or lack of investigation. These "issues" are a waste of time for us and especially if we have to setup a sample to reproduce the issue which those developpers could have done. Any open issue which does not fulfill this contract will be closed without investigation.
+
+
 ## Compatibility
 
 For work in IE < 9 need jQuery, just add:
