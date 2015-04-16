@@ -403,8 +403,10 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     self.data = data;
                     if (settings.$scope) settings.$scope.$data = data;
                 }
-                if (settings.$scope) settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
-                settings.$scope.$emit('ngTableAfterReloadData');
+                if (settings.$scope) {
+                    settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+                    settings.$scope.$emit('ngTableAfterReloadData');
+                }
                 return data;
             });
         };

@@ -40,7 +40,7 @@
         var app = angular.module('main', ['ngTable']).
 
         controller('DemoCtrl', function($interval, $http, $scope, $filter, NgTableParams) {
-			$scope.datasets = ["1","2", "3"];
+			$scope.datasets = ["1","2"];
 			$scope.dataset = "1";
             var self = this;
             self.data1 = [{name: "One", age: 50},
@@ -78,20 +78,6 @@
                         {name: "Nephi", age: 29},
                         {name: "Enos", age: 34}];
 
-            self.data3 = [];
-
-            $interval(function() {
-                $http.jsonp("http://www.filltext.com/?callback=JSON_CALLBACK&rows=5&name={firstName}&age={number|80}")
-                .success(function (data) {
-                    self.data3 = data;
-                    // $scope.tableParams.reload();
-                });
-            }, 5000);
-
-			var getData = function() {
-				return self['data' + $scope.dataset]; 
-			};
-
 			$scope.$watch("dataset", function () {
 				$scope.tableParams.reload();
 			});
@@ -103,16 +89,18 @@
                     name: 'asc'     // initial sorting
                 }
             }, {
-                total: function () { return getData().length; }, // length of data
+                total: 0, // we should calc it inside getData because data length is dynamic
                 getData: function($defer, params) {
-                    var filteredData = getData();
+
+                    var data = self["data" + $scope.dataset];
+
+                    var filteredData = data;
                     var orderedData = params.sorting() ?
                                         $filter('orderBy')(filteredData, params.orderBy()) :
                                         filteredData;
-
+                    params.total(self["data" + $scope.dataset].length);
                     $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                },
-				$scope: { $data: {} }
+                }
             });
         })
         </script>
