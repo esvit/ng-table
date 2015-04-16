@@ -271,11 +271,13 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
          * @param {boolean} currentPage which page must be active
          * @param {boolean} totalItems  Total quantity of items
          * @param {boolean} pageSize    Quantity of items on page
+         * @param {number} maxBlocks    Quantity of blocks for pagination
          * @returns {Array} Array of pages
          */
-        this.generatePagesArray = function(currentPage, totalItems, pageSize) {
-            var maxBlocks, maxPage, maxPivotPages, minPage, numPages, pages;
-            maxBlocks = 11;
+        this.generatePagesArray = function(currentPage, totalItems, pageSize, maxBlocks) {
+            var maxPage, maxPivotPages, minPage, numPages, pages;
+            maxBlocks = maxBlocks && maxBlocks < 6 ? 6 : maxBlocks;
+
             pages = [];
             numPages = Math.ceil(totalItems / pageSize);
             if (numPages > 1) {
@@ -434,6 +436,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
             defaultSort: 'desc',
             filterDelay: 750,
             counts: [10, 25, 50, 100],
+            paginationMaxBlocks: 11,
             sortingIndicator: 'span',
             getGroups: this.getGroups,
             getData: this.getData

@@ -24,11 +24,13 @@ app.directive('ngTablePagination', ['$compile',
             replace: false,
             link: function(scope, element, attrs) {
 
-                scope.params.settings().$scope.$on('ngTableAfterReloadData', function() {
+                var settings = scope.params.settings();
+                settings.$scope.$on('ngTableAfterReloadData', function() {
                     var page = scope.params.page(),
                         total = scope.params.total(),
-                        count = scope.params.count();
-                    scope.pages = scope.params.generatePagesArray(page, total, count);
+                        count = scope.params.count(),
+                        maxBlocks = settings.paginationMaxBlocks;
+                    scope.pages = scope.params.generatePagesArray(page, total, count, maxBlocks);
                 }, true);
 
                 scope.$watch('templateUrl', function(templateUrl) {

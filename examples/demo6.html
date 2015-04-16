@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width">
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <!--[if lt IE 9]>
-        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-        <![endif]-->
-        <script src="js/angular.min.js"></script>
-        <script src="js/angular-resource.min.js"></script>
-        <script src="js/angular-mocks.js"></script>
-        <script src="../dist/ng-table.js"></script>
-        <link rel="stylesheet" href="../dist/ng-table.css">
-        <style>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!--[if lt IE 9]>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <![endif]-->
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-resource.min.js"></script>
+    <script src="js/angular-mocks.js"></script>
+    <script src="../dist/ng-table.js"></script>
+    <link rel="stylesheet" href="../dist/ng-table.css">
+    <style>
         .loading-container {
             position: relative;
         }
+
         .loading-container .loading:before, .loading-container .loading:after {
             content: " ";
             position: absolute;
@@ -31,15 +36,17 @@
             min-height: 50px;
             min-width: 50px;
         }
+
         .loading-container .loading:before {
             background-color: white;
             opacity: 0.5;
         }
-        </style>
-    </head>
+    </style>
+</head>
 <body ng-app="main">
 
 <h1>AJAX Data Loading</h1>
+<p> + pagination counts and max blocks settings</p>
 
 <div ng-controller="DemoCtrl">
 
@@ -47,29 +54,28 @@
     <button ng-click="tableParams.sorting({})" class="btn pull-right">Clear sorting</button>
     <div class="clearfix"></div>
 
-        <div loading-container="tableParams.settings().$loading">
-            <table ng-table="tableParams" show-filter="true" class="table">
-                <tr ng-repeat="user in $data">
-                    <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="'name'" sort-indicator="'span'">
-                        {{user.name}}
-                        {{$loading}}
-                    </td>
-                    <td data-title="'Age'" sortable="'age'">
-                        {{user.age}}
-                    </td>
-                </tr>
-            </table>
-        </div>
+    <div loading-container="tableParams.settings().$loading">
+        <table ng-table="tableParams" show-filter="true" class="table">
+            <tr ng-repeat="user in $data">
+                <td data-title="'Name'" filter="{ 'name': 'text' }" sortable="'name'" sort-indicator="'span'">
+                    {{user.name}}
+                </td>
+                <td data-title="'Age'" sortable="'age'">
+                    {{user.age}}
+                </td>
+            </tr>
+        </table>
+    </div>
 
 
-        <script>
+    <script>
         function isNumber(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
         }
         var app = angular.module('main', ['ngTable', 'ngResource', 'ngMockE2E']).
-            run(function($httpBackend, $filter, $log, NgTableParams) {
+            run(function ($httpBackend, $filter, $log, NgTableParams) {
                 // emulation of api server
-                $httpBackend.whenGET(/data.*/).respond(function(method, url, data, headers) {
+                $httpBackend.whenGET(/data.*/).respond(function (method, url, data, headers) {
                     var query = url.split('?')[1],
                         requestParams = {};
 
@@ -85,7 +91,7 @@
                         if (key.indexOf('[') >= 0) {
                             var params = key.split(/\[(.*)\]/), value = requestParams[key], lastKey = '';
 
-                            angular.forEach(params.reverse(), function(name) {
+                            angular.forEach(params.reverse(), function (name) {
                                 if (name != '') {
                                     var v = value;
                                     value = {};
@@ -99,22 +105,22 @@
                     }
 
                     data = [{name: "Moroni", age: 50},
-                            {name: "Tiancum", age: 43},
-                            {name: "Jacob", age: 27},
-                            {name: "Nephi", age: 29},
-                            {name: "Enos", age: 34},
-                            {name: "Tiancum", age: 43},
-                            {name: "Jacob", age: 27},
-                            {name: "Nephi", age: 29},
-                            {name: "Enos", age: 34},
-                            {name: "Tiancum", age: 43},
-                            {name: "Jacob", age: 27},
-                            {name: "Nephi", age: 29},
-                            {name: "Enos", age: 34},
-                            {name: "Tiancum", age: 43},
-                            {name: "Jacob", age: 27},
-                            {name: "Nephi", age: 29},
-                            {name: "Enos", age: 34}];
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 32},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos S.", age: 65},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 76}];
 
                     var params = new NgTableParams(requestParams);
                     data = params.filter() ? $filter('filter')(data, params.filter()) : data;
@@ -134,44 +140,46 @@
                 return {
                     restrict: 'A',
                     scope: false,
-                    link: function(scope, element, attrs) {
+                    link: function (scope, element, attrs) {
                         var loadingLayer = angular.element('<div class="loading"></div>');
                         element.append(loadingLayer);
                         element.addClass('loading-container');
-                        scope.$watch(attrs.loadingContainer, function(value) {
+                        scope.$watch(attrs.loadingContainer, function (value) {
                             loadingLayer.toggleClass('ng-hide', !value);
                         });
                     }
                 };
             })
-        .controller('DemoCtrl', function($scope, $timeout, $resource, NgTableParams) {
-            var Api = $resource('/data');
+            .controller('DemoCtrl', function ($scope, $timeout, $resource, NgTableParams) {
+                var Api = $resource('/data');
 
-            $scope.tableParams = new NgTableParams({
-                page: 1,            // show first page
-                count: 10,          // count per page
-                sorting: {
-                    name: 'asc'     // initial sorting
-                }
-            }, {
-                total: 0,           // length of data
-                getData: function($defer, params) {
-                    // ajax request to api
-                    Api.get(params.url(), function(data) {
-                        $timeout(function() {
-                            // update table params
-                            params.total(data.total);
-                            // set new data
-                            $defer.resolve(data.result);
-                        }, 500);
-                    });
-                }
-            });
-        })
-        </script>
+                $scope.tableParams = new NgTableParams({
+                    page: 1,            // show first page
+                    count: 5,          // count per page
+                    sorting: {
+                        name: 'asc'     // initial sorting
+                    }
+                }, {
+                    counts: [5, 10, 15],
+                    paginationMaxBlocks: 9,
+                    total: 0,           // length of data
+                    getData: function ($defer, params) {
+                        // ajax request to api
+                        Api.get(params.url(), function (data) {
+                            $timeout(function () {
+                                // update table params
+                                params.total(data.total);
+                                // set new data
+                                $defer.resolve(data.result);
+                            }, 500);
+                        });
+                    }
+                });
+            })
+    </script>
 
 </div>
 
 
-    </body>
+</body>
 </html>
