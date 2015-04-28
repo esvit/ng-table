@@ -197,6 +197,23 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
         this.isSortBy = function(field, direction) {
             return angular.isDefined(params.sorting[field]) && angular.equals(params.sorting[field], direction);
         };
+        
+         /**
+         * @ngdoc method
+         * @name ngTable.factory:NgTableParams#getSortClass
+         * @methodOf ngTable.factory:NgTableParams
+         * @description shorthand so you don't have to clutter the template with this
+         *
+         * @param {string} field     Field name
+         */
+        this.getSortClass = function( val )
+        {
+            return {
+                'sort-desc': $scope.tableParams.isSortBy( val , 'asc'),
+                'sort-asc': $scope.tableParams.isSortBy( val , 'desc')
+            }
+        };
+        
 
         /**
          * @ngdoc method
@@ -213,6 +230,16 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
             }
             return sorting;
         };
+
+        /**
+         * @ngdoc method
+         * @name ngTable.factory:NgTableParams#toggleSort
+         * @methodOf ngTable.factory:NgTableParams
+         * @description toggle the sort of a column (less boilerplate in template)         * 
+         */
+        this.toggleSort= function(val){
+            this.sorting( val , $scope.tableParams.isSortBy( val , 'asc') ? 'desc' : 'asc');
+        },
 
         /**
          * @ngdoc method
@@ -364,7 +391,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     }
                 }
             }
-            return pairs;
+            return pairsso;
         };
 
         /**
