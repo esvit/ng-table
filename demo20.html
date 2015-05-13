@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!--[if lt IE 9]>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <![endif]-->
+    <script src="js/angular.min.js"></script>
+    <script src="../ng-table.js"></script>
+    <link rel="stylesheet" href="../ng-table.css">
+</head>
+<body ng-app="main">
+
+<h1>Dynamic columns</h1>
+
+<div ng-controller="DemoCtrl">
+
+    <p><strong>Filter:</strong> {{tableParams.filter()|json}}
+
+    Columns:
+    <label class="checkbox" ng-repeat="column in columns">
+        <input type="checkbox" ng-model="column.visible" /> {{column.title}}
+    </label>
+
+    <table ng-table="tableParams" show-filter="true" class="table">
+        <thead>
+        <tr>
+            <th ng-repeat="column in columns" ng-show="column.visible"
+                class="text-center sortable" ng-class="{
+                    'sort-asc': tableParams.isSortBy(column.field, 'asc'),
+                    'sort-desc': tableParams.isSortBy(column.field, 'desc')
+                  }"
+                ng-click="tableParams.sorting(column.field, tableParams.isSortBy(column.field, 'asc') ? 'desc' : 'asc')">
+                <div>{{column.title}}</div>
+            </th>
+        </tr>
+        <tr class="ng-table-filters" ng-init="tableParams">
+            <th ng-repeat="column in columns" ng-show="column.visible" class="filter">
+                <div ng-repeat="(name, filter) in column.filter">
+                    <div ng-if="column.filterTemplateURL" ng-show="column.filterTemplateURL">
+                        <div ng-include="column.filterTemplateURL"></div>
+                    </div>
+                    <div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL">
+                        <div ng-include="'ng-table/filters/' + filter + '.html'"></div>
+                    </div>
+                </div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="user in $data">
+            <td ng-repeat="column in columns" ng-show="column.visible" sortable="column.field">
+                {{user[column.field]}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <script>
+        var app = angular.module('main', ['ngTable']).
+                controller('DemoCtrl', function($scope, $filter, ngTableParams) {
+                    var data = [{name: "Moroni", age: 50},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34}];
+                    $scope.columns = [
+                        { title: 'Name', field: 'name', visible: true, filter: { 'name': 'text' } },
+                        { title: 'Age', field: 'age', visible: true }
+                    ];
+                    $scope.tableParams = new ngTableParams({
+                        page: 1,            // show first page
+                        count: 10,          // count per page
+                        filter: {
+                            name: 'M'       // initial filter
+                        }
+                    }, {
+                        total: data.length, // length of data
+                        getData: function($defer, params) {
+                            // use build-in angular filter
+                            var orderedData = params.sorting() ?
+                                    $filter('orderBy')(data, params.orderBy()) :
+                                    data;
+
+                            orderedData = params.filter() ?
+                                    $filter('filter')(orderedData, params.filter()) :
+                                    orderedData;
+
+                            console.info(orderedData.length);
+                            params.total(orderedData.length);
+                            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                        }
+                    });
+                })
+    </script>
+
+</div>
+
+
+</body>
+</html>

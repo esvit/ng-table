@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <!--[if lt IE 9]>
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <![endif]-->
+        <script src="js/angular.min.js"></script>
+        <script src="../ng-table.js"></script>
+        <link rel="stylesheet" href="../ng-table.css">
+    </head>
+<body ng-app="main">
+
+<h1>Table with external control of data</h1>
+
+<div ng-controller="DemoCtrl">
+
+		<h2>Dataset: <select ng-model="dataset" ng-options="ds for ds in datasets"></select></h2>
+
+        <table ng-table="tableParams" class="table">
+            <tr ng-repeat="user in $data">
+                <td data-title="'Name'" sortable="'name'">
+                    {{user.name}}
+                </td>
+                <td data-title="'Age'" sortable="'age'">
+                    {{user.age}}
+                </td>
+            </tr>
+        </table>
+
+        <script>
+        var app = angular.module('main', ['ngTable']).
+        controller('DemoCtrl', function($scope, $filter, ngTableParams) {
+			$scope.datasets = ["1","2"];
+			$scope.dataset = "1";
+            var data1 = [{name: "One", age: 50},
+                        {name: "Two", age: 43},
+                        {name: "Three", age: 27},
+                        {name: "Four", age: 29},
+                        {name: "Five", age: 34},
+                        {name: "Six", age: 43},
+                        {name: "Seven", age: 27},
+                        {name: "Eight", age: 29},
+                        {name: "Nine", age: 34},
+                        {name: "Ten", age: 43},
+                        {name: "Eleven", age: 27},
+                        {name: "Twelve", age: 29},
+                        {name: "Thirteen", age: 34},
+                        {name: "Fourteen", age: 43},
+                        {name: "Fifteen", age: 27},
+                        {name: "Sixteen", age: 29}];
+			
+			var data2 = [{name: "Jacob", age: 50},
+                        {name: "Jacob", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34},
+                        {name: "Tiancum", age: 43},
+                        {name: "Jacob", age: 27},
+                        {name: "Nephi", age: 29},
+                        {name: "Enos", age: 34}];
+			
+			var getData = function() {
+				return $scope.dataset === "1" ? data1 : data2;
+			};
+			$scope.$watch("dataset", function () {
+				$scope.tableParams.reload();
+			});			
+            $scope.tableParams = new ngTableParams({
+                page: 1,            // show first page
+                count: 10,          // count per page
+                sorting: {
+                    name: 'asc'     // initial sorting
+                }
+            }, {
+                total: function () { return getData().length; }, // length of data
+                getData: function($defer, params) {
+                    var filteredData = getData();
+                    var orderedData = params.sorting() ?
+                                        $filter('orderBy')(filteredData, params.orderBy()) :
+                                        filteredData;
+
+                    $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                },
+				$scope: { $data: {} }
+            });
+        })
+        </script>
+
+</div>
+
+
+    </body>
+</html>
