@@ -1,0 +1,840 @@
+
+
+<!-- todo: pass version number of a release to the gulp>dgeni>nunjucks pipeline and make available as 'git.version' -->
+<!--<a href='https://github.com///tree//dist/ng-table.js#L70' class='view-source pull-right btn btn-primary'>
+  <i class="glyphicon glyphicon-zoom-in">&nbsp;</i>View Source
+</a>-->
+
+
+<header class="api-profile-header">
+  <h1 class="api-profile-header-heading">NgTableParams</h1>
+</header>
+
+
+
+<div class="api-profile-description">
+  <p>Parameters manager for ngTable</p>
+
+</div>
+
+
+
+
+<div>
+  
+
+    
+
+  
+
+  
+<h2>Methods</h2>
+<ul class="methods">
+    <li id="count">
+        <div class="method-header">
+            <h3><p><code>count(count);</code></p>
+
+</h3>
+
+            <div><p>If parameter count not set return current count per page else set count per page</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        count
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>Count per number</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-object">Object</a><a href="" class="label type-hint type-hint-number">Number</a></td>
+    <td><p>Count per page or <code>this</code></p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="filter">
+        <div class="method-header">
+            <h3><p><code>filter(filter);</code></p>
+
+</h3>
+
+            <div><p>If parameter page not set return current filter else set current filter</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        filter
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>New filter</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-object">Object</a></td>
+    <td><p>Current filter or <code>this</code></p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="generatePagesArray">
+        <div class="method-header">
+            <h3><p><code>generatePagesArray(currentPage, totalItems, pageSize, maxBlocks);</code></p>
+
+</h3>
+
+            <div><p>Generate array of pages</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        currentPage
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-boolean">boolean</a>
+      </td>
+      <td>
+        <p>which page must be active</p>
+
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        totalItems
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-boolean">boolean</a>
+      </td>
+      <td>
+        <p>Total quantity of items</p>
+
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        pageSize
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-boolean">boolean</a>
+      </td>
+      <td>
+        <p>Quantity of items on page</p>
+
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        maxBlocks
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-number">number</a>
+      </td>
+      <td>
+        <p>Quantity of blocks for pagination</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-array">Array</a></td>
+    <td><p>Array of pages</p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="getData">
+        <div class="method-header">
+            <h3><p><code>getData($defer, params);</code></p>
+
+</h3>
+
+            <div><p>Called when updated some of parameters for get new data</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        $defer
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-object">Object</a>
+      </td>
+      <td>
+        <p>promise object</p>
+
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        params
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-object">Object</a>
+      </td>
+      <td>
+        <p>New parameters</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+
+    </li>
+    
+    <li id="getGroups">
+        <div class="method-header">
+            <h3><p><code>getGroups();</code></p>
+
+</h3>
+
+            <div><p>Return groups for table grouping</p>
+</div>
+        </div>
+
+        
+
+        
+
+        
+
+    </li>
+    
+    <li id="isSortBy">
+        <div class="method-header">
+            <h3><p><code>isSortBy(field, direction);</code></p>
+
+</h3>
+
+            <div><p>Checks sort field</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        field
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>Field name</p>
+
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        direction
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>Direction of sorting &#39;asc&#39; or &#39;desc&#39;</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-array">Array</a></td>
+    <td><p>Return true if field sorted by direction</p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="orderBy">
+        <div class="method-header">
+            <h3><p><code>orderBy();</code></p>
+
+</h3>
+
+            <div><p>Return object of sorting parameters for angular filter</p>
+</div>
+        </div>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-array">Array</a></td>
+    <td><p>Array like: [ &#39;-name&#39;, &#39;+age&#39; ]</p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="page">
+        <div class="method-header">
+            <h3><p><code>page(page);</code></p>
+
+</h3>
+
+            <div><p>If parameter page not set return current page else set current page</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        page
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>Page number</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-object">Object</a><a href="" class="label type-hint type-hint-number">Number</a></td>
+    <td><p>Current page or <code>this</code></p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="parameters">
+        <div class="method-header">
+            <h3><p><code>parameters(newParameters, parseParamsFromUrl);</code></p>
+
+</h3>
+
+            <div><p>Set new parameters or get current parameters</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        newParameters
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>New parameters</p>
+
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        parseParamsFromUrl
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>Flag if parse parameters like in url</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-object">Object</a></td>
+    <td><p>Current parameters or <code>this</code></p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="reload">
+        <div class="method-header">
+            <h3><p><code>reload();</code></p>
+
+</h3>
+
+            <div><p>Reload table data</p>
+</div>
+        </div>
+
+        
+
+        
+
+        
+
+    </li>
+    
+    <li id="settings">
+        <div class="method-header">
+            <h3><p><code>settings(newSettings);</code></p>
+
+</h3>
+
+            <div><p>Set new settings for table</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        newSettings
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>New settings or undefined</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-object">Object</a></td>
+    <td><p>Current settings or <code>this</code></p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="sorting">
+        <div class="method-header">
+            <h3><p><code>sorting(sorting);</code></p>
+
+</h3>
+
+            <div><p>If &#39;sorting&#39; parameter is not set, return current sorting. Otherwise set current sorting.</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        sorting
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>New sorting</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-object">Object</a></td>
+    <td><p>Current sorting or <code>this</code></p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="total">
+        <div class="method-header">
+            <h3><p><code>total(total);</code></p>
+
+</h3>
+
+            <div><p>If parameter total not set return current quantity else set quantity</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        total
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-string">string</a>
+      </td>
+      <td>
+        <p>Total quantity of items</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-object">Object</a><a href="" class="label type-hint type-hint-number">Number</a></td>
+    <td><p>Current page or <code>this</code></p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    
+    <li id="url">
+        <div class="method-header">
+            <h3><p><code>url(asString);</code></p>
+
+</h3>
+
+            <div><p>Return groups for table grouping</p>
+</div>
+        </div>
+
+        
+        <h4>Parameters</h4>
+        
+<table class="table">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>
+        asString
+        
+        
+      </td>
+      <td>
+        <a href="" class="label type-hint type-hint-boolean">boolean</a>
+      </td>
+      <td>
+        <p>flag indicates return array of string or object</p>
+
+        
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+        
+
+        
+
+        
+        <h4>Returns</h4>
+        <table class="variables-matrix return-arguments">
+  <tr>
+    <td><a href="" class="label type-hint type-hint-array">Array</a></td>
+    <td><p>If asString = true will be return array of url string parameters else key-value object</p>
+</td>
+  </tr>
+</table>
+        
+
+    </li>
+    </ul>
+  
+  
+
+
+
+  
+</div>
+
+
