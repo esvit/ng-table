@@ -8,11 +8,12 @@
 
 /**
  * @ngdoc directive
- * @name ngTable.directive:ngTable
+ * @name ngTable
+ * @module ngTable
  * @restrict A
  *
  * @description
- * Directive that instantiates {@link ngTable.directive:ngTable.ngTableController ngTableController}.
+ * Directive that instantiates {@link ngTableController ngTableController}.
  */
 app.directive('ngTable', ['$q', '$parse',
     function($q, $parse) {
@@ -95,11 +96,12 @@ app.directive('ngTable', ['$q', '$parse',
 
 /**
  * @ngdoc directive
- * @name ngTable.directive:ngTableDynamic
+ * @name ngTableDynamic
+ * @module ngTable
  * @restrict A
  *
  * @description
- * A dynamic version of the {@link ngTable.directive:ngTable ngTable} directive that accepts a dynamic list of columns
+ * A dynamic version of the {@link ngTable ngTable} directive that accepts a dynamic list of columns
  * definitions to render
  */
 app.directive('ngTableDynamic', ['$parse', function ($parse){

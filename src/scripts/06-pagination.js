@@ -8,7 +8,8 @@
 
 /**
  * @ngdoc directive
- * @name ngTable.directive:ngTablePagination
+ * @name ngTablePagination
+ * @module ngTable
  * @restrict A
  */
 app.directive('ngTablePagination', ['$compile',
