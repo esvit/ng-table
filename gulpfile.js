@@ -1,4 +1,6 @@
 var gulp = require('gulp');
+require('gulp-grunt')(gulp); // add all the gruntfile tasks to gulp
+
 var Dgeni = require('dgeni');
 var dgeni_config = require('./docs/config');
 var webserver = require("gulp-webserver");
@@ -64,8 +66,10 @@ gulp.task('deploy:docs', function(){
     ))
 });
 
-gulp.task('run:build-sequence', function (callback) {
-    sequence('build:doc-assets', 'run:dgeni', 'compile:doc-src', 'kill-server', 'run:server', 'watch:files')(callback);
+gulp.task('dev', function (callback) {
+    sequence('grunt-default', 'build:doc-assets', 'run:dgeni', 'compile:doc-src', 'kill-server', 'run:server', 'watch:files')(callback);
 });
 
-gulp.task('default', ["build:doc-assets", "run:dgeni", "compile:doc-src", "run:server"]);
+gulp.task('default', function (callback) {
+    sequence('grunt-default', 'build:doc-assets', 'run:dgeni', 'compile:doc-src')(callback);
+});

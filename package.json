@@ -26,6 +26,7 @@
     "grunt-hustler": "0.11.2",
     "gulp-browserify": "~0.5.1",
     "gulp-gh-pages": "^0.5.1",
+    "gulp-grunt": "^0.5.2",
     "gulp-webserver": "^0.9.0",
     "karma": "~0.12.0",
     "karma-chrome-launcher": "~0.1.0",
