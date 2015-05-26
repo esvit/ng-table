@@ -282,7 +282,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     active: currentPage > 1,
                     current: currentPage === 1
                 });
-                maxPivotPages = Math.round((maxBlocks - 5) / 2);
+                maxPivotPages = Math.round((settings.paginationMaxBlocks - settings.paginationMinBlocks) / 2);
                 minPage = Math.max(2, currentPage - maxPivotPages);
                 maxPage = Math.min(numPages - 1, currentPage + maxPivotPages * 2 - (currentPage - minPage));
                 minPage = Math.max(2, minPage - (maxPivotPages * 2 - (maxPage - minPage)));
@@ -425,6 +425,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
             filterDelay: 750,
             counts: [10, 25, 50, 100],
             paginationMaxBlocks: 11,
+            paginationMinBlocks: 5,
             sortingIndicator: 'span',
             getGroups: this.getGroups,
             getData: this.getData

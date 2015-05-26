@@ -23,13 +23,20 @@
 <div ng-controller="DemoCtrl">
 
     Columns:
-    <label class="checkbox" ng-repeat="column in cols">
-        <input type="checkbox" ng-model="column.show" /> {{column.title}}
-    </label>
+    <div ng-repeat="column in cols | orderBy:'position'">
+        <span class="glyphicon glyphicon-arrow-up" ng-click="move(column,-1)"></span>
+        <span class="glyphicon glyphicon-arrow-down" ng-click="move(column,1)"></span>
+
+        <label>
+            <input type="checkbox" ng-model="column.show" /> {{column.title}}
+        </label>
+    </div>
 
     <table ng-table-dynamic="tableParams with cols" show-filter="true" class="table table-bordered table-striped">
         <tr ng-repeat="user in $data">
-            <td ng-repeat="col in $columns">{{user[col.field]}}</td>
+            <td ng-repeat="col in $columns | orderBy:'position'">
+                {{user[$columns[$index].field]}}
+            </td>
         </tr>
     </table>
 
@@ -68,6 +75,7 @@
                         filter: { name: 'select' },
                         filterData: names,
                         show: true,
+                        position: 0,
                         field: 'name'
                     };
                     // alternatively declare some/all column fields as functions
@@ -83,9 +91,26 @@
                             };
                         },
                         show: true,
+                        position: 1,
                         field: 'age'
                     };
                     $scope.cols = [usernameCol, ageCol];
+
+                    $scope.move = function(column, value){
+                        var newPosition = column.position+value;
+
+                        if (newPosition >= $scope.cols.length || newPosition < 0) {
+                            return;
+                        }
+
+                        angular.forEach($scope.cols, function(col){
+                            if (col.position == newPosition) {
+                                col.position = column.position;
+                            }
+                        });
+
+                        column.position = newPosition;
+                    };
 
                     function names() {
                         var def = $q.defer(),
