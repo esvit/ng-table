@@ -34,7 +34,9 @@
 
     <table ng-table-dynamic="tableParams with cols" show-filter="true" class="table table-bordered table-striped">
         <tr ng-repeat="user in $data">
-            <td ng-repeat="col in $columns | orderBy:'position'">{{user[col.field]}}</td>
+            <td ng-repeat="col in $columns | orderBy:'position'">
+                {{user[$columns[$index].field]}}
+            </td>
         </tr>
     </table>
 
