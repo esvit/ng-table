@@ -57,8 +57,9 @@ var app = angular.module('ngTable', []);
  */
 
 /**
- * @ngdoc value
- * @name ngTable.value:ngTableDefaultParams
+ * @ngdoc object
+ * @name ngTableDefaultParams
+ * @module ngTable
  * @description Default Parameters for ngTable
  */
 app.value('ngTableDefaults', {
@@ -68,7 +69,8 @@ app.value('ngTableDefaults', {
 
 /**
  * @ngdoc service
- * @name ngTable.factory:NgTableParams
+ * @name NgTableParams
+ * @module ngTable
  * @description Parameters manager for ngTable
  */
 
@@ -88,8 +90,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#parameters
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#parameters
          * @description Set new parameters or get current parameters
          *
          * @param {string} newParameters      New parameters
@@ -128,8 +129,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#settings
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#settings
          * @description Set new settings for table
          *
          * @param {string} newSettings New settings or undefined
@@ -150,8 +150,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#page
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#page
          * @description If parameter page not set return current page else set current page
          *
          * @param {string} page Page number
@@ -165,8 +164,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#total
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#total
          * @description If parameter total not set return current quantity else set quantity
          *
          * @param {string} total Total quantity of items
@@ -180,8 +178,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#count
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#count
          * @description If parameter count not set return current count per page else set count per page
          *
          * @param {string} count Count per number
@@ -197,8 +194,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#filter
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#filter
          * @description If parameter page not set return current filter else set current filter
          *
          * @param {string} filter New filter
@@ -213,8 +209,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#sorting
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#sorting
          * @description If 'sorting' parameter is not set, return current sorting. Otherwise set current sorting.
          *
          * @param {string} sorting New sorting
@@ -236,8 +231,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#isSortBy
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#isSortBy
          * @description Checks sort field
          *
          * @param {string} field     Field name
@@ -250,8 +244,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#orderBy
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#orderBy
          * @description Return object of sorting parameters for angular filter
          *
          * @returns {Array} Array like: [ '-name', '+age' ]
@@ -266,8 +259,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#getData
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#getData
          * @description Called when updated some of parameters for get new data
          *
          * @param {Object} $defer promise object
@@ -284,8 +276,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#getGroups
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#getGroups
          * @description Return groups for table grouping
          */
         this.getGroups = function($defer, column) {
@@ -314,18 +305,19 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#generatePagesArray
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#generatePagesArray
          * @description Generate array of pages
          *
          * @param {boolean} currentPage which page must be active
          * @param {boolean} totalItems  Total quantity of items
          * @param {boolean} pageSize    Quantity of items on page
+         * @param {number} maxBlocks    Quantity of blocks for pagination
          * @returns {Array} Array of pages
          */
-        this.generatePagesArray = function(currentPage, totalItems, pageSize) {
-            var maxBlocks, maxPage, maxPivotPages, minPage, numPages, pages;
-            maxBlocks = 11;
+        this.generatePagesArray = function(currentPage, totalItems, pageSize, maxBlocks) {
+            var maxPage, maxPivotPages, minPage, numPages, pages;
+            maxBlocks = maxBlocks && maxBlocks < 6 ? 6 : maxBlocks;
+
             pages = [];
             numPages = Math.ceil(totalItems / pageSize);
             if (numPages > 1) {
@@ -340,7 +332,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     active: currentPage > 1,
                     current: currentPage === 1
                 });
-                maxPivotPages = Math.round((maxBlocks - 5) / 2);
+                maxPivotPages = Math.round((settings.paginationMaxBlocks - settings.paginationMinBlocks) / 2);
                 minPage = Math.max(2, currentPage - maxPivotPages);
                 maxPage = Math.min(numPages - 1, currentPage + maxPivotPages * 2 - (currentPage - minPage));
                 minPage = Math.max(2, minPage - (maxPivotPages * 2 - (maxPage - minPage)));
@@ -378,8 +370,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#url
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#url
          * @description Return groups for table grouping
          *
          * @param {boolean} asString flag indicates return array of string or object
@@ -417,8 +408,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
-         * @name ngTable.factory:NgTableParams#reload
-         * @methodOf ngTable.factory:NgTableParams
+         * @name NgTableParams#reload
          * @description Reload table data
          */
         this.reload = function() {
@@ -453,8 +443,10 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     self.data = data;
                     if (settings.$scope) settings.$scope.$data = data;
                 }
-                if (settings.$scope) settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
-                settings.$scope.$emit('ngTableAfterReloadData');
+                if (settings.$scope) {
+                    settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+                    settings.$scope.$emit('ngTableAfterReloadData');
+                }
                 return data;
             });
         };
@@ -482,6 +474,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
             defaultSort: 'desc',
             filterDelay: 750,
             counts: [10, 25, 50, 100],
+            paginationMaxBlocks: 11,
+            paginationMinBlocks: 5,
             sortingIndicator: 'span',
             getGroups: this.getGroups,
             getData: this.getData
@@ -497,7 +491,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
 /**
  * @ngdoc service
- * @name ngTable.factory:ngTableParams
+ * @name ngTableParams
  * @description Backwards compatible shim for lowercase 'n' in NgTableParams
  */
 app.factory('ngTableParams', ['NgTableParams', function(NgTableParams) {
@@ -514,10 +508,10 @@ app.factory('ngTableParams', ['NgTableParams', function(NgTableParams) {
 
 /**
  * @ngdoc object
- * @name ngTable.directive:ngTable.ngTableController
+ * @name ngTableController
  *
  * @description
- * Each {@link ngTable.directive:ngTable ngTable} directive creates an instance of `ngTableController`
+ * Each {@link ngTable ngTable} directive creates an instance of `ngTableController`
  */
 app.controller('ngTableController', ['$scope', 'NgTableParams', '$timeout', '$parse', '$compile', '$attrs', '$element',
     'ngTableColumn',
@@ -683,10 +677,10 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
 /**
  * @ngdoc service
- * @name ngTable.factory:ngTableColumn
- *
+ * @name ngTableColumn
+ * @module ngTable
  * @description
- * Service to construct a $column definition used by {@link ngTable.directive:ngTable ngTable} directive
+ * Service to construct a $column definition used by {@link ngTable ngTable} directive
  */
 app.factory('ngTableColumn', [function () {
 
@@ -704,8 +698,7 @@ app.factory('ngTableColumn', [function () {
 
     /**
      * @ngdoc method
-     * @name ngTable.factory:ngTableColumn#buildColumn
-     * @methodOf ngTable.factory:ngTableColumn
+     * @name ngTableColumn#buildColumn
      * @description Creates a $column for use within a header template
      *
      * @param {Object} column an existing $column or simple column data object
@@ -760,11 +753,12 @@ app.factory('ngTableColumn', [function () {
 
 /**
  * @ngdoc directive
- * @name ngTable.directive:ngTable
+ * @name ngTable
+ * @module ngTable
  * @restrict A
  *
  * @description
- * Directive that instantiates {@link ngTable.directive:ngTable.ngTableController ngTableController}.
+ * Directive that instantiates {@link ngTableController ngTableController}.
  */
 app.directive('ngTable', ['$q', '$parse',
     function($q, $parse) {
@@ -847,11 +841,12 @@ app.directive('ngTable', ['$q', '$parse',
 
 /**
  * @ngdoc directive
- * @name ngTable.directive:ngTableDynamic
+ * @name ngTableDynamic
+ * @module ngTable
  * @restrict A
  *
  * @description
- * A dynamic version of the {@link ngTable.directive:ngTable ngTable} directive that accepts a dynamic list of columns
+ * A dynamic version of the {@link ngTable ngTable} directive that accepts a dynamic list of columns
  * definitions to render
  */
 app.directive('ngTableDynamic', ['$parse', function ($parse){
@@ -927,7 +922,8 @@ app.directive('ngTableDynamic', ['$parse', function ($parse){
 
 /**
  * @ngdoc directive
- * @name ngTable.directive:ngTablePagination
+ * @name ngTablePagination
+ * @module ngTable
  * @restrict A
  */
 app.directive('ngTablePagination', ['$compile',
@@ -943,8 +939,13 @@ app.directive('ngTablePagination', ['$compile',
             replace: false,
             link: function(scope, element, attrs) {
 
-                scope.params.settings().$scope.$on('ngTableAfterReloadData', function() {
-                    scope.pages = scope.params.generatePagesArray(scope.params.page(), scope.params.total(), scope.params.count());
+                var settings = scope.params.settings();
+                settings.$scope.$on('ngTableAfterReloadData', function() {
+                    var page = scope.params.page(),
+                        total = scope.params.total(),
+                        count = scope.params.count(),
+                        maxBlocks = settings.paginationMaxBlocks;
+                    scope.pages = scope.params.generatePagesArray(page, total, count, maxBlocks);
                 }, true);
 
                 scope.$watch('templateUrl', function(templateUrl) {
@@ -962,6 +963,7 @@ app.directive('ngTablePagination', ['$compile',
         };
     }
 ]);
+
 angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" multiple ng-multiple="true" ng-model="params.filter()[name]" ng-show="filter==\'select-multiple\'" class="filter filter-select-multiple form-control" name="{{name}}"> </select>');
 	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" ng-show="filter==\'select\'" class="filter filter-select form-control" name="{{name}}"> </select>');
