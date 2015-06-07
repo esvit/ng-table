@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!--[if lt IE 9]>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <![endif]-->
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../dist/ng-table.js"></script>
+    <link rel="stylesheet" href="../dist/ng-table.css">
+</head>
+<body ng-app="main">
+
+<h1>Dynamic columns</h1>
+
+<div ng-controller="DemoCtrl">
+    <div class="clearfix">
+        <button ng-click="changeCols()" class="btn btn-default pull-right">Change Cols</button>
+        <button ng-click="addColumn()" class="btn btn-default pull-right">add Column</button>
+    </div>
+
+    Columns:
+    <label class="checkbox" ng-repeat="column in cols">
+        <input type="checkbox" ng-model="column.show" /> {{column.title}}
+    </label>
+
+    <table ng-table-dynamic="tableParams with cols" show-filter="true" class="table table-bordered table-striped">
+        <tr ng-repeat="user in $data">
+            <td ng-repeat="col in $columns">{{user[col.field]}}</td>
+        </tr>
+    </table>
+
+    <script>
+        var app = angular.module('main', ['ngTable'])
+                .controller('DemoCtrl', function ($scope, $filter, $q, NgTableParams) {
+                    var data = [
+                        {name: "Moroni", age: 50, firstName: "John"},
+                        {name: "Tiancum", age: 43, firstName: "ALice"},
+                        {name: "Jacob", age: 27, firstName: "David"},
+                        {name: "Nephi", age: 29, firstName: "Mary"},
+                        {name: "Enos", age: 34, firstName: "Bea"},
+                        {name: "Tiancum", age: 43, firstName: "ALice"},
+                        {name: "Jacob", age: 27, firstName: "David"},
+                        {name: "Nephi", age: 29, firstName: "Mary"},
+                        {name: "Enos", age: 34, firstName: "Bea"},
+                        {name: "Tiancum", age: 43, firstName: "ALice"},
+                        {name: "Jacob", age: 27, firstName: "David"},
+                        {name: "Nephi", age: 29, firstName: "Mary"},
+                        {name: "Enos", age: 34, firstName: "Bea"},
+                        {name: "Tiancum", age: 43, firstName: "ALice"},
+                        {name: "Jacob", age: 27, firstName: "David"},
+                        {name: "Nephi", age: 29, firstName: "Mary"},
+                        {name: "Enos", age: 34, firstName: "Bea"},
+                    ];
+
+                    $scope.changeNameTitle = function(){
+                        usernameCol.title = "Crap!";
+                    };
+
+                    // terse - just return raw values
+                    var usernameCol = {
+                        title: 'Full Name',
+                        titleAlt: 'Name',
+                        sortable: 'name',
+                        filter: { name: 'select' },
+                        filterData: names,
+                        show: true,
+                        field: 'name'
+                    };
+                    // alternatively declare some/all column fields as functions
+                    // your functions will receive the scope created for the header.html template as a parameter
+                    var ageCol = {
+                        title: 'Age',
+                        sortable: function(/*paramsScope*/){
+                            return 'age';
+                        },
+                        filter: function(/*paramsScope*/){
+                            return {
+                                age: 'text'
+                            };
+                        },
+                        show: true,
+                        field: 'age'
+                    };
+                    var firstNameCol = {
+                        title: 'First Name',
+                        titleAlt: 'Name',
+                        sortable: 'firstName',
+                        filter: { firstName: 'text' },
+                        show: true,
+                        field: 'firstName'
+                    };
+                    $scope.cols = [usernameCol, ageCol];
+
+                    $scope.changeCols = function() {
+                        $scope.cols = [ageCol, usernameCol];
+                    };
+                    $scope.addColumn = function() {
+                        $scope.cols = [ageCol, usernameCol, firstNameCol];
+                    };
+
+                    function names() {
+                        var def = $q.defer(),
+                                arr = [],
+                                names = [];
+                        angular.forEach(data, function(item){
+                            if (arr.indexOf(item.name) === -1) {
+                                arr.push(item.name);
+                                names.push({
+                                    'id': item.name,
+                                    'title': item.name
+                                });
+                            }
+                        });
+                        def.resolve(names);
+                        return def;
+                    }
+
+                    $scope.tableParams = new NgTableParams({
+                        page: 1,            // show first page
+                        count: 10           // count per page
+                    }, {
+                        filterDelay: 0,
+                        total: data.length, // length of data
+                        getData: function ($defer, params) {
+                            // use build-in angular filter
+                            var filteredData = params.filter() ?
+                                    $filter('filter')(data, params.filter()) :
+                                    data;
+                            var orderedData = params.sorting() ?
+                                    $filter('orderBy')(filteredData, params.orderBy()) :
+                                    data;
+
+                            params.total(orderedData.length);
+                            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                        }
+                    });
+                })
+    </script>
+
+</div>
+
+
+</body>
+</html>
