@@ -166,7 +166,94 @@ describe('ng-table-dynamic', function() {
             expect(angular.element(dataCells[2]).attr('data-title-text').trim()).toBe('Money');
         }));
     });
+   describe('add column', function(){
+        var elm;
+        beforeEach(inject(function($compile, $q, NgTableParams) {
+            elm = angular.element(
+                    '<div>' +
+                    '<table ng-table-dynamic="tableParams with cols" show-filter="true">' +
+                    '<tr ng-repeat="user in $data">' +
+                    '<td ng-repeat="col in $columns">{{user[col.field]}}</td>' +
+                    '</tr>' +
+                    '</table>' +
+                    '</div>');
 
+            function getCustomClass(parmasScope){
+                if (parmasScope.$column.title().indexOf('Money') !== -1){
+                    return 'moneyHeaderClass';
+                } else{
+                    return 'customClass';
+                }
+            }
+
+            function money(/*$column*/) {
+                var def = $q.defer();
+                def.resolve([{
+                    'id': 10,
+                    'title': '10'
+                }]);
+                return def;
+            }
+
+            scope.tableParams = new NgTableParams({}, {});
+            scope.cols = [
+                {
+                    'class': getCustomClass,
+                    field: 'name',
+                    filter: { name: 'text' },
+                    headerTitle: 'Sort by Name',
+                    sortable: 'name',
+                    show: true,
+                    title: 'Name of person'
+                },
+                {
+                    'class': getCustomClass,
+                    field: 'age',
+                    headerTitle: 'Sort by Age',
+                    sortable: 'age',
+                    show: true,
+                    title: 'Age'
+                }
+            ];
+
+            $compile(elm)(scope);
+            scope.$digest();
+        }));
+
+        it('should create table header', function() {
+            var newCol =  {
+                 'class': 'moneyadd',
+                 field: 'money',
+                 filter: { action: 'select' },
+                 headerTitle: 'Sort by Money',
+                 show: true,
+                 title: 'Money'
+            };
+            scope.cols.push(newCol);
+            scope.$digest();
+            var thead = elm.find('thead');
+            expect(thead.length).toBe(1);
+
+            var rows = thead.find('tr');
+            expect(rows.length).toBe(2);
+
+            var titles = angular.element(rows[0]).find('th');
+
+            expect(titles.length).toBe(3);
+            expect(angular.element(titles[0]).text().trim()).toBe('Name of person');
+            expect(angular.element(titles[1]).text().trim()).toBe('Age');
+            expect(angular.element(titles[2]).text().trim()).toBe('Money');
+
+            expect(angular.element(rows[1]).hasClass('ng-table-filters')).toBeTruthy();
+            var filters = angular.element(rows[1]).find('th');
+            expect(filters.length).toBe(3);
+            expect(angular.element(filters[0]).hasClass('filter')).toBeTruthy();
+            expect(angular.element(filters[1]).hasClass('filter')).toBeTruthy();
+            expect(angular.element(filters[2]).hasClass('filter')).toBeTruthy();
+
+        });
+
+    });
     describe('title-alt', function() {
 
         var elm;
