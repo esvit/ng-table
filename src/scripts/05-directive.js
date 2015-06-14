@@ -153,10 +153,15 @@ app.directive('ngTableDynamic', ['$parse', function ($parse){
                     el.attr('ng-show', '$columns[$index].show(this)');
                 }
             });
-
-            return function(scope, element, attrs, controller) {
+            return function (scope, element, attrs, controller) {
                 var expr = parseDirectiveExpression(attrs.ngTableDynamic);
-                var columns = $parse(expr.columns)(scope) || [];
+                var columns = [];
+                if ($parse(expr.columns)(scope)) {
+                    scope.$watchCollection(expr.columns, function () {
+                        columns = $parse(expr.columns)(scope);
+                        scope.$columns = controller.buildColumns(columns);
+                    });
+                }
                 scope.$columns = controller.buildColumns(columns);
 
                 controller.setupBindingsToInternalScope(expr.tableParams);
