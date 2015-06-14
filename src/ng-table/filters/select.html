@@ -1,4 +1,4 @@
-<select ng-options="data.id as data.title for data in $column.data"
+<select ng-options="data.id as data.title for data in column.data"
         ng-disabled="$filterRow.disabled"
         ng-model="params.filter()[name]"
         ng-show="filter == 'select'"
