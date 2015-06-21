@@ -58,8 +58,9 @@ module.exports = function(grunt) {
                     'src/scripts/04-*.js',
                     'src/scripts/05-*.js',
                     'src/scripts/06-*.js',
+					'src/scripts/07-*.js',
                     './.temp/scripts/views.js',
-                    'src/scripts/07-*.js'
+                    'src/scripts/08-*.js'
                 ],
                 dest: './dist/ng-table.js'
             }

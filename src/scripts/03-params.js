@@ -434,7 +434,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
             counts: [10, 25, 50, 100],
             sortingIndicator: 'span',
             getGroups: this.getGroups,
-            getData: this.getData
+            getData: this.getData,
+			isPagination: true
         };
         angular.extend(settings, ngTableDefaults.settings);
 
