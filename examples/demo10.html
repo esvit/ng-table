@@ -68,7 +68,7 @@
         }, {
             total: data.length, // length of data
             getData: function($defer, params) {
-                // use build-in angular filter
+                // use built-in angular filter
                 var orderedData = params.sorting() ?
                         $filter('orderBy')(data, params.orderBy()) :
                         data;

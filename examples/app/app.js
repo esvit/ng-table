@@ -49,7 +49,7 @@ define([
         };
 
         $scope.$watch('tableParams', function(params) {
-            // use build-in angular filter
+            // use built-in angular filter
             var orderedData = params.sorting ?
                                 $filter('orderBy')(data, params.orderBy()) :
                                 data;
