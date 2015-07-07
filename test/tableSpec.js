@@ -403,8 +403,8 @@ describe('ng-table', function() {
                 scope.$digest();
 
                 var inputs = elm.find('thead').find('tr').eq(1).find('th').find('input');
-                expect(inputs.eq(1).val()).toBe('my name is...');
-                expect(inputs.eq(0).val()).toBe('10');
+                expect(inputs.eq(0).val()).toBe('my name is...');
+                expect(inputs.eq(1).val()).toBe('10');
             });
 
             it('should make filter def available on $column', function () {
