@@ -343,4 +343,58 @@ describe('ng-table-dynamic', function() {
             }));
         });
     });
+
+    describe('sortable columns', function() {
+        var elm;
+        var getTitles = function () {
+            var thead = elm.find('thead');
+            var rows = thead.find('tr');
+            var titles = angular.element(rows[0]).find('th');
+
+            return angular.element(titles).text().trim().split(/\s+/g)
+        };
+
+        beforeEach(inject(function ($compile, $q, NgTableParams) {
+            elm = angular.element(
+                '<div>' +
+                '<table ng-table-dynamic="tableParams with cols" show-filter="true">' +
+                '<tr ng-repeat="user in $data">' +
+                "<td ng-repeat=\"col in $columns | orderBy:'position'\">{{user[col.field]}}</td>" +
+                '</tr>' +
+                '</table>' +
+                '</div>');
+
+            scope.tableParams = new NgTableParams({}, {});
+            scope.cols = [
+                {
+                    field: 'name',
+                    title: 'Name',
+                    position: 0
+                },
+                {
+                    field: 'age',
+                    title: 'Age',
+                    position: 1
+                },
+                {
+                    field: 'money',
+                    title: 'Money',
+                    position: 2
+                }
+            ];
+
+            $compile(elm)(scope);
+            scope.$digest();
+        }));
+
+        it('should sort table header ordered by position', function () {
+            expect(getTitles()).toEqual([ 'Name', 'Age', 'Money' ]);
+
+            scope.cols[0].position = 1;
+            scope.cols[1].position = 0;
+            scope.$digest();
+
+            expect(getTitles()).toEqual([ 'Age', 'Name', 'Money' ]);
+        });
+    });
 });
