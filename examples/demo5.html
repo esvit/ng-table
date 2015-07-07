@@ -68,7 +68,7 @@
                     getData: function($defer, params) {
                         $location.search(params.url()); // put params in url
 
-                        // use build-in angular filter
+                        // use built-in angular filter
                         var orderedData = params.sorting ?
                                 $filter('orderBy')(data, params.orderBy()) :
                                 data;
