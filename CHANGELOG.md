@@ -1,3 +1,23 @@
+<a name="0.5.5"></a>
+# 0.5.5 (2015-07-09)
+
+
+## Bug Fixes
+
+- **example:** updated code due to documentation total should be a number
+  ([ce15e94a](https://github.com/esvit/ng-table/commit/ce15e94ae0f71b48078e8ece6e917a7c6d9359da))
+
+
+## Features
+
+- **header.html:** allow reordering of columns
+  ([23236e6f](https://github.com/esvit/ng-table/commit/23236e6f6b78e18aab29e4926110d7ad5f26432b))
+- **ngTableDynamic:** add a column on the fly
+  ([01682774](https://github.com/esvit/ng-table/commit/016827745bd618aeafc16f4deaa855b29452626a))
+- **pagination:** add setting paginationMaxBlocks now you can define the count of pagination blocks, minimum is 6
+  ([bbdfaf38](https://github.com/esvit/ng-table/commit/bbdfaf387dd8e47719be54edf1e4d2b43350d274))
+
+
 <a name="v0.5.4"></a>
 # v0.5.4 (2015-02-26)
 
