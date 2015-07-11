@@ -431,7 +431,7 @@ describe('ng-table-dynamic', function() {
         });
     });
 
-    describe('sortable columns', function() {
+    describe('reorder columns', function() {
         var elm;
         var getTitles = function () {
             var thead = elm.find('thead');
@@ -446,7 +446,7 @@ describe('ng-table-dynamic', function() {
                 '<div>' +
                 '<table ng-table-dynamic="tableParams with cols" show-filter="true">' +
                 '<tr ng-repeat="user in $data">' +
-                "<td ng-repeat=\"col in $columns | orderBy:'position'\">{{user[col.field]}}</td>" +
+                "<td ng-repeat=\"col in $columns\">{{user[col.field]}}</td>" +
                 '</tr>' +
                 '</table>' +
                 '</div>');
@@ -455,18 +455,15 @@ describe('ng-table-dynamic', function() {
             scope.cols = [
                 {
                     field: 'name',
-                    title: 'Name',
-                    position: 0
+                    title: 'Name'
                 },
                 {
                     field: 'age',
-                    title: 'Age',
-                    position: 1
+                    title: 'Age'
                 },
                 {
                     field: 'money',
-                    title: 'Money',
-                    position: 2
+                    title: 'Money'
                 }
             ];
 
@@ -474,14 +471,35 @@ describe('ng-table-dynamic', function() {
             scope.$digest();
         }));
 
-        it('should sort table header ordered by position', function () {
+        it('"in place" switch of columns within array should reorder html table columns', function () {
             expect(getTitles()).toEqual([ 'Name', 'Age', 'Money' ]);
 
-            scope.cols[0].position = 1;
-            scope.cols[1].position = 0;
+            var colToSwap = scope.cols[2];
+            scope.cols[2] = scope.cols[1];
+            scope.cols[1] = colToSwap;
             scope.$digest();
 
-            expect(getTitles()).toEqual([ 'Age', 'Name', 'Money' ]);
+            expect(getTitles()).toEqual([ 'Name', 'Money', 'Age' ]);
+        });
+
+        it('"in place" reverse of column array should reorder html table columns', function () {
+            expect(getTitles()).toEqual([ 'Name', 'Age', 'Money' ]);
+
+            scope.cols.reverse();
+            scope.$digest();
+
+            expect(getTitles()).toEqual([ 'Money', 'Age', 'Name' ]);
+        });
+
+        it('html table columns should reflect order of columns in replacement array', function () {
+            expect(getTitles()).toEqual([ 'Name', 'Age', 'Money' ]);
+
+            var newArray = scope.cols.map(angular.identity);
+            newArray.reverse();
+            scope.cols = newArray;
+            scope.$digest();
+
+            expect(getTitles()).toEqual([ 'Money', 'Age', 'Name' ]);
         });
     });
 });
