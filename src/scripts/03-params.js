@@ -39,6 +39,28 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
         this.data = [];
 
         /**
+         * @maxCount method
+         * @name NgTableParams#parameters
+         * @description Determines if a page size button should be visible based on # of rows in table
+         *
+         * @param {count} the current count of the page size button
+         * @returns {boolean} false if the button should be hidden, true if it should be visible
+         */
+        this.maxCount = function(count){
+            var total = this.total();
+            if (total > 0 && count <= total) {
+                return true;
+            }
+            if (total > this.settings().counts[this.settings().counts.length-1]) {
+                return true;
+            }
+            if (total < count && total > this.settings().counts[this.settings().counts.indexOf(count)-1]) {
+                return true;
+            }
+            return false;
+        };
+
+        /**
          * @ngdoc method
          * @name NgTableParams#parameters
          * @description Set new parameters or get current parameters
