@@ -77,8 +77,8 @@ app.directive('ngTable', ['$q', '$parse',
                         filter: parsedAttribute('filter'),
                         headerTemplateURL: parsedAttribute('header'),
                         filterData: parsedAttribute('filter-data'),
-                        show: (el.attr("ng-show") ? function (scope) {
-                            return $parse(el.attr("ng-show"))(scope);
+                        show: (el.attr("ng-if") ? function (scope) {
+                            return $parse(el.attr("ng-if"))(scope);
                         } : undefined)
                     });
                 });
@@ -148,9 +148,9 @@ app.directive('ngTableDynamic', ['$parse', function ($parse){
                 if (!titleExpr){
                     el.attr('data-title-text', '{{$columns[$index].titleAlt(this) || $columns[$index].title(this)}}');
                 }
-                var showExpr = el.attr('ng-show');
+                var showExpr = el.attr('ng-if');
                 if (!showExpr){
-                    el.attr('ng-show', '$columns[$index].show(this)');
+                    el.attr('ng-if', '$columns[$index].show(this)');
                 }
             });
             return function (scope, element, attrs, controller) {

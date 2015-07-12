@@ -33,8 +33,8 @@
         <tr ng-repeat="user in $data">
             <!-- Note: we are not repeating over $columns therefore we need to render title and ng-show ourselves -->
             <!--<td ng-repeat="col in $columns">{{user[col.field]}}</td>-->
-            <td title="cols[0].title" ng-show="cols[0].show">{{user[cols[0].field]}}</td>
-            <td title="cols[1].title" ng-show="cols[1].show" class="text-danger">{{user[cols[1].field]}}</td>
+            <td title="cols[0].title" ng-if="cols[0].show">{{user[cols[0].field]}}</td>
+            <td title="cols[1].title" ng-if="cols[1].show" class="text-danger">{{user[cols[1].field]}}</td>
         </tr>
     </table>
 
