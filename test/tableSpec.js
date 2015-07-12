@@ -33,13 +33,16 @@ describe('ng-table', function() {
                     '<div>' +
                     '<table ng-table="tableParams" show-filter="true">' +
                     '<tr ng-repeat="user in $data">' +
-                    '<td data-header-title="\'Sort by Name\'" data-title="nameTitle()" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="getCustomClass($column)">' +
+                    '<td data-header-title="\'Sort by Name\'" data-title="nameTitle()" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="getCustomClass($column)"' +
+                        ' ng-if="showName">' +
                     '{{user.name}}' +
                     '</td>' +
-                    '<td x-data-header-title="\'Sort by Age\'" x-data-title="ageTitle()" sortable="\'age\'" x-data-header-class="getCustomClass($column)">' +
+                    '<td x-data-header-title="\'Sort by Age\'" x-data-title="ageTitle()" sortable="\'age\'" x-data-header-class="getCustomClass($column)"' +
+                        ' ng-if="showAge">' +
                     '{{user.age}}' +
                     '</td>' +
-                    '<td header-title="\'Sort by Money\'" title="moneyTitle()" filter="{ \'action\': \'select\' }" filter-data="money($column)" header-class="getCustomClass($column)">' +
+                    '<td header-title="\'Sort by Money\'" title="moneyTitle()" filter="{ \'action\': \'select\' }" filter-data="money($column)" header-class="getCustomClass($column)"' +
+                        ' ng-if="showMoney">' +
                     '{{user.money}}' +
                     '</td>' +
                     '</tr>' +
@@ -49,6 +52,17 @@ describe('ng-table', function() {
             scope.nameTitle = function(){
                 return 'Name of person';
             };
+            scope.ageTitle = function(){
+                return 'Age';
+            };
+            scope.moneyTitle = function(){
+                return 'Money';
+            };
+
+            scope.showName = true;
+            scope.showAge = true;
+            scope.showMoney = true;
+
             scope.ageTitle = function(){
                 return 'Age';
             };
@@ -193,6 +207,39 @@ describe('ng-table', function() {
             expect(angular.element(dataCells[0]).attr('data-title-text').trim()).toBe('Name of person');
             expect(angular.element(dataCells[1]).attr('data-title-text').trim()).toBe('Age');
             expect(angular.element(dataCells[2]).attr('data-title-text').trim()).toBe('Money');
+        }));
+
+
+        it('should show/hide columns', inject(function(NgTableParams) {
+            var tbody = elm.find('tbody');
+
+            scope.tableParams = new NgTableParams({
+                page: 1, // show first page
+                count: 10 // count per page
+            }, {
+                total: data.length,
+                data: data
+            });
+            scope.$digest();
+
+            var headerRow = angular.element(elm.find('thead').find('tr')[0]);
+            expect(headerRow.find('th').length).toBe(3);
+
+            var filterRow = angular.element(elm.find('thead').find('tr')[1]);
+            expect(filterRow.find('th').length).toBe(3);
+
+            var dataRow = angular.element(elm.find('tbody').find('tr')[0]);
+            expect(dataRow.find('td').length).toBe(3);
+
+            scope.showName = false;
+            scope.$digest();
+            expect(headerRow.find('th').length).toBe(2);
+            expect(filterRow.find('th').length).toBe(2);
+            expect(dataRow.find('td').length).toBe(2);
+            expect(angular.element(headerRow.find('th')[0]).text().trim()).toBe('Age');
+            expect(angular.element(headerRow.find('th')[1]).text().trim()).toBe('Money');
+            expect(angular.element(filterRow.find('th')[0]).find('input').length).toBe(0);
+            expect(angular.element(filterRow.find('th')[1]).find('select').length).toBe(1);
         }));
     });
 

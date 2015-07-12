@@ -165,6 +165,38 @@ describe('ng-table-dynamic', function() {
             expect(angular.element(dataCells[1]).attr('data-title-text').trim()).toBe('Age');
             expect(angular.element(dataCells[2]).attr('data-title-text').trim()).toBe('Money');
         }));
+
+        it('should show/hide columns', inject(function(NgTableParams) {
+            var tbody = elm.find('tbody');
+
+            scope.tableParams = new NgTableParams({
+                page: 1, // show first page
+                count: 10 // count per page
+            }, {
+                total: data.length,
+                data: data
+            });
+            scope.$digest();
+
+            var headerRow = angular.element(elm.find('thead').find('tr')[0]);
+            expect(headerRow.find('th').length).toBe(3);
+
+            var filterRow = angular.element(elm.find('thead').find('tr')[1]);
+            expect(filterRow.find('th').length).toBe(3);
+
+            var dataRow = angular.element(elm.find('tbody').find('tr')[0]);
+            expect(dataRow.find('td').length).toBe(3);
+
+            scope.cols[0].show = false;
+            scope.$digest();
+            expect(headerRow.find('th').length).toBe(2);
+            expect(filterRow.find('th').length).toBe(2);
+            expect(dataRow.find('td').length).toBe(2);
+            expect(angular.element(headerRow.find('th')[0]).text().trim()).toBe('Age');
+            expect(angular.element(headerRow.find('th')[1]).text().trim()).toBe('Money');
+            expect(angular.element(filterRow.find('th')[0]).find('input').length).toBe(0);
+            expect(angular.element(filterRow.find('th')[1]).find('select').length).toBe(1);
+        }));
     });
    describe('add column', function(){
         var elm;
