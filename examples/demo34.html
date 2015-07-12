@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="../bower_components/lodash/lodash.js"></script>
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-digest-hud/digest-hud.js"></script>
+    <script src="../dist/ng-table.js"></script>
+    <link rel="stylesheet" href="../dist/ng-table.css">
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+    </style>
+</head>
+<body ng-app="main">
+
+<h1 class="page-header"><code>ngTableDynamic</code> Performance playground</h1>
+
+<div ng-controller="DemoCtrl" class="container-fluid">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <ul class="list-inline">
+                <li><h2 class="h4">Table Columns</h2></li>
+                <li><button type="button" class="btn btn-primary" ng-click="selectAllCols()">Select all</button></li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <ul class="list-inline" ng-cloak>
+                <li ng-repeat="column in cols" style="min-width: 250px">
+                    <span class="glyphicon glyphicon-arrow-up" ng-click="move(column,$index,-1)"></span>
+                    <span class="glyphicon glyphicon-arrow-down" ng-click="move(column,$index, 1)"></span>
+
+                    <label>
+                        <input type="checkbox" ng-model="column.show" /> {{column.title}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h2 class="h4">Table control</h2></div>
+                <div class="panel-body">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label class="control-label" for="pageNumber">Page #:</label>
+                            <input id="pageNumber" class="form-control" type="number" ng-model="tableParams.page" ng-model-options="{getterSetter: true }"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="pageSize">Page Size:</label>
+                            <select id="pageSize" class="form-control" ng-model="tableParams.count" ng-model-options="{getterSetter: true }" ng-options="count for count in tableParams.settings().counts">
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-default" ng-click="tableParams.reload()">Reload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h2 class="h4">Table Edits</h2></div>
+                <div class="panel-body">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label class="control-label" for="rowIndex">Row:</label>
+                            <input id="rowIndex" class="form-control" type="number" ng-model="editIndex"/>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" ng-model="allData[editIndex].dataStoreClass" placeholder="dataStoreClass" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h2 class="h4">Angular</h2></div>
+                <div class="panel-body">
+                    <form class="form-inline">
+                        <button type="button" class="btn btn-default" ng-click="one = one+1">Run $digest</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2 class="h4">Table results</h2></div>
+        <table ng-cloak ng-table-dynamic="tableParams with cols" show-filter="true" class="table table-bordered table-striped">
+            <tr ng-repeat="row in $data">
+                <td ng-repeat="col in $columns">{{row[col.field]}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        var app = angular.module('main', ['ngTable', 'digestHud']);
+        app.config(function(digestHudProvider) {
+            digestHudProvider.enable();
+            // Optional configuration settings:
+            digestHudProvider.numTopWatches = 20;  // number of items to display in detailed table
+            digestHudProvider.numDigestStats = 3;  // number of most recent digests to use for min/med/max stats
+        });
+        app.controller('DemoCtrl', function demoController ($scope, $filter, $q, NgTableParams, demoDataGenerator) {
+            var data = demoDataGenerator.generateData(10000);
+            $scope.cols = demoDataGenerator.generateColumns(data[0]);
+            $scope.allData = data;
+
+            $scope.move = function(column, currentIdx, value){
+
+                var newPosition = currentIdx+value;
+
+                if (newPosition >= $scope.cols.length || newPosition < 0) {
+                    return;
+                }
+
+                $scope.cols[currentIdx] = $scope.cols[newPosition];
+                $scope.cols[newPosition] = column;
+            };
+
+            $scope.selectAllCols = function(){
+                $scope.cols.forEach(function(c){
+                    c.show = true;
+                });
+            };
+
+            $scope.tableParams = new NgTableParams({
+                page: 1,            // show first page
+                count: 100           // count per page
+            }, {
+                filterDelay: 0,
+                counts: [50, 100, 500],
+                total: data.length, // length of data
+                getData: function ($defer, params) {
+                    // use built-in angular filter
+                    var filteredData = !_.isEmpty(params.filter()) ?
+                            $filter('filter')(data, params.filter()) :
+                            data;
+                    var orderedData = _.isEmpty(params.sorting()) ?
+                            $filter('orderBy')(filteredData, params.orderBy()) :
+                            data;
+
+                    $scope.editIndex = (params.page() - 1) * params.count();
+                    params.total(orderedData.length);
+                    $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                }
+            });
+        });
+
+        app.service("demoDataGenerator", function demoDataGenerator(){
+
+            var template = {
+                "installationAt": "Philadelphia, PA",
+                "adminEmail": "ksm@pobox.com",
+                "poweredBy": "Cofax",
+                "poweredByIcon": "/images/cofax.gif",
+                "staticPath": "/content/static",
+                "templateProcessorClass": "org.cofax.WysiwygTemplate",
+                "templateLoaderClass": "org.cofax.FilesTemplateLoader",
+                "templatePath": "templates",
+                "templateOverridePath": "",
+                "defaultListTemplate": "listTemplate.htm",
+                "defaultFileTemplate": "articleTemplate.htm",
+                "useJSP": false,
+                "jspListTemplate": "listTemplate.jsp",
+                "jspFileTemplate": "articleTemplate.jsp",
+                "cachePackageTagsTrack": 200,
+                "cachePackageTagsStore": 200,
+                "cachePackageTagsRefresh": 60,
+                "cacheTemplatesTrack": 100,
+                "cacheTemplatesStore": 50,
+                "cacheTemplatesRefresh": 15,
+                "cachePagesTrack": 200,
+                "cachePagesStore": 100,
+                "cachePagesRefresh": 10,
+                "cachePagesDirtyRead": 10,
+                "searchEngineListTemplate": "forSearchEnginesList.htm",
+                "searchEngineFileTemplate": "forSearchEngines.htm",
+                "searchEngineRobotsDb": "WEB-INF/robots.db",
+                "useDataStore": true,
+                "dataStoreClass": "org.cofax.SqlDataStore",
+                "redirectionClass": "org.cofax.SqlRedirection",
+                "dataStoreName": "cofax",
+                "dataStoreDriver": "com.microsoft.jdbc.sqlserver.SQLServerDriver",
+                "dataStoreUrl": "jdbc:microsoft:sqlserver://LOCALHOST:1433;DatabaseName=goon",
+                "dataStoreUser": "sa",
+                "dataStorePassword": "dataStoreTestQuery",
+                "dataStoreTestQuery": "SET NOCOUNT ON;select test='test';",
+                "dataStoreLogFile": "/usr/local/tomcat/logs/datastore.log",
+                "dataStoreInitConns": 10,
+                "dataStoreMaxConns": 100,
+                "dataStoreConnUsageLimit": 100,
+                "dataStoreLogLevel": "debug",
+                "maxUrlLength": 500
+            };
+
+            this.generateData = generateData;
+            this.generateColumns = generateColumns;
+
+            function generateData(number){
+                return _.range(number).map(function(n){
+                    var clone = _.mapValues(template, function(val){
+                        return val + Number(_.uniqueId());
+                    });
+                    _.extend(clone, {id:n});
+                    return clone;
+                })
+            }
+
+            function generateColumns(sampleData){
+                var colNames = Object.getOwnPropertyNames(sampleData);
+                var cols = colNames.map(function (name, idx) {
+                    var filter = {};
+                    filter[name] = 'text';
+                    return {
+                        title: name,
+                        sortable: name,
+                        filter: filter,
+                        show: idx < 5 || name === 'id',
+                        field: name
+                    };
+                });
+                var idCol = _.findWhere(cols, { field: 'id'});
+                return [idCol].concat(_.without(cols, idCol));
+            }
+        });
+    </script>
+
+</div>
+
+
+</body>
+</html>
