@@ -1,3 +1,29 @@
+<a name="0.6.0"></a>
+# 0.6.0 (2015-07-12)
+
+
+## Breaking Changes
+
+- **header.html:** due to [6bb2aba8](https://github.com/esvit/ng-table/commit/6bb2aba8ce89a5afdf36f1fe42b7bd71efcf6b81),
+  anyone who relied on a specific 'position' field to order table columns will now
+need to change the order items's in the column array
+
+ Previously:
+ 
+````
+ cols[1].position = 2;
+ cols[2].position = 1;
+````
+
+ Now:
+ 
+````
+var swappedCol = cols[2];
+cols[2] = cols[1];
+cols[1] = swappedCol;
+````
+
+
 <a name="0.5.5"></a>
 # 0.5.5 (2015-07-09)
 
