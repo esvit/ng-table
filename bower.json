@@ -10,10 +10,10 @@
     "src"
   ],
   "dependencies": {
-    "angular": "~1"
+    "angular": "^1.2"
   },
   "devDependencies": {
-    "angular-mocks": "~1",
+    "angular-mocks": "^1.2",
     "angular-digest-hud": "~0.1.9",
     "lodash": "~3.10.0"
   }
