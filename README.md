@@ -49,7 +49,7 @@ Please be responsible, the open source community is not there to guess your prob
 Note that 80% of the open issues are actually not issues but "problem" due to developpers laziness or lack of investigation. These "issues" are a waste of time for us and especially if we have to setup a sample to reproduce the issue which those developpers could have done. Any open issue which does not fulfill this contract will be closed without investigation.
 
 
-## Examples (from simple to complex)
+## Examples
 
 * [Demo site](http://ng-table.com/)
 * [Codepen](http://codepen.io/christianacca/pen/jPxgzY?editors=101)
