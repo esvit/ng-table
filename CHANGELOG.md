@@ -1,3 +1,31 @@
+<a name="0.7.0"></a>
+# 0.7.0 (2015-07-13)
+
+
+## Breaking Changes
+
+- **ngTable+ngTableDynamic:** due to [b226dec9](https://github.com/esvit/ng-table/commit/b226dec9537769aaf355bf5a908f380622feba92),
+
+
+* showing/hiding columns now uses ng-if;  **ng-show is no longer supported**
+
+Previously:
+
+````html
+<tr>
+  <td ng-show="showColExpr">
+</tr>
+````
+
+Now:
+
+````html
+<tr>
+  <td ng-if="showColExpr">
+</tr>
+````
+
+
 <a name="0.6.0"></a>
 # 0.6.0 (2015-07-12)
 
