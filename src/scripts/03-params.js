@@ -428,7 +428,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
             paginationMinBlocks: 5,
             sortingIndicator: 'span',
             getGroups: this.getGroups,
-            getData: this.getData
+            getData: this.getData,
+            defaultSelectValue: '-'
         };
         angular.extend(settings, ngTableDefaults.settings);
 
