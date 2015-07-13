@@ -52,7 +52,7 @@ Note that 80% of the open issues are actually not issues but "problem" due to de
 ## Examples
 
 * [Demo site](http://ng-table.com/)
-* [Codepen](http://codepen.io/christianacca/pen/jPxgzY?editors=101)
+* [Codepen (ngTableDynamic)](http://codepen.io/christianacca/pen/jPxgzY?editors=101) (**Tip**: fork this to create your own example)
 
 ## Compatibility
 
