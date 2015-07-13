@@ -1,13 +1,13 @@
 RELEASING
 ============
 
-1. Minify source files: `grunt`
-
-2. Make the test pass: `karma start`
-
-3. Update [semver](http://semver.org/) version number in:
+1. Update [semver](http://semver.org/) version number in:
     - package.json
     - bower.json
+
+2. Minify source files: `grunt`
+
+3. Make the test pass: `karma start`
 
 4. Update CHANGELOG.md: 
     1. `node changelog.js n.n.n` where `n.n.n` is the version number used in step above
