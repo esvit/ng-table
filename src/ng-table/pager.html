@@ -1,6 +1,7 @@
 <div class="ng-cloak ng-table-pager" ng-if="params.data.length">
-    <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right">
+    <div ng-if="params.settings().counts.length && params.total() > params.settings().counts[0]" class="ng-table-counts btn-group pull-right">
         <button ng-repeat="count in params.settings().counts" type="button"
+                ng-if="($index == 0 && params.total() > count) || (params.total() > params.settings().counts[$index - 1])"
                 ng-class="{'active':params.count() == count}"
                 ng-click="params.count(count)" class="btn btn-default">
             <span ng-bind="count"></span>
