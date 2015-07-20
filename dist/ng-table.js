@@ -630,6 +630,18 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         })
     };
 
+    this.parseNgTableDynamicExpr = function (attr) {
+        if (!attr || attr.indexOf(" with ") > -1) {
+            var parts = attr.split(/\s+with\s+/);
+            return {
+                tableParams: parts[0],
+                columns: parts[1]
+            };
+        } else {
+            throw new Error('Parse error (expected example: ng-table-dynamic=\'tableParams with cols\')');
+        }
+    };
+
     this.setupBindingsToInternalScope = function(tableParamsExpr){
 
         // note: this we're setting up watches to simulate angular's isolated scope bindings
@@ -851,18 +863,6 @@ app.directive('ngTable', ['$q', '$parse',
  */
 app.directive('ngTableDynamic', ['$parse', function ($parse){
 
-    function parseDirectiveExpression(attr) {
-        if (!attr || attr.indexOf(" with ") > -1) {
-            var parts = attr.split(/\s+with\s+/);
-            return {
-                tableParams: parts[0],
-                columns: parts[1]
-            };
-        } else {
-            throw new Error('Parse error (expected example: ng-table-dynamic=\'tableParams with cols\')');
-        }
-    }
-
     return {
         restrict: 'A',
         priority: 1001,
@@ -899,7 +899,7 @@ app.directive('ngTableDynamic', ['$parse', function ($parse){
                 }
             });
             return function (scope, element, attrs, controller) {
-                var expr = parseDirectiveExpression(attrs.ngTableDynamic);
+                var expr = controller.parseNgTableDynamicExpr(attrs.ngTableDynamic);
 
                 controller.setupBindingsToInternalScope(expr.tableParams);
                 controller.compileDirectiveTemplates();

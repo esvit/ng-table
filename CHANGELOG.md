@@ -1,3 +1,13 @@
+<a name="0.7.1"></a>
+# 0.7.1 (2015-07-20)
+
+
+## Features
+
+- **ngTableController:** add function to parse the expression used to initialise ngTableDynamic
+  ([e9333f98](https://github.com/esvit/ng-table/commit/e9333f980764e48685477b93bb5031575b0963cf))
+
+
 <a name="0.7.0"></a>
 # 0.7.0 (2015-07-13)
 
