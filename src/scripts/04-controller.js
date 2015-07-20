@@ -130,6 +130,18 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         })
     };
 
+    this.parseNgTableDynamicExpr = function (attr) {
+        if (!attr || attr.indexOf(" with ") > -1) {
+            var parts = attr.split(/\s+with\s+/);
+            return {
+                tableParams: parts[0],
+                columns: parts[1]
+            };
+        } else {
+            throw new Error('Parse error (expected example: ng-table-dynamic=\'tableParams with cols\')');
+        }
+    };
+
     this.setupBindingsToInternalScope = function(tableParamsExpr){
 
         // note: this we're setting up watches to simulate angular's isolated scope bindings
