@@ -43,7 +43,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
     $scope.$watch('params.$params', function(newParams, oldParams) {
 
-        if (newParams === oldParams) {
+        if (!isFirstTimeLoad && newParams === oldParams) {
             return;
         }
 
