@@ -73,19 +73,24 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             };
             $element.addClass('ng-table');
             var headerTemplate = null;
+            var HidePage=$parse($attrs.ngTable)($scope).$params.footer;  // Elvin 增加显示 分页显示 true 
             if ($element.find('> thead').length === 0) {
                 headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
                 $element.prepend(headerTemplate);
             }
+            if (HidePage) {
             var paginationTemplate = angular.element(document.createElement('div')).attr({
                 'ng-table-pagination': 'params',
                 'template-url': 'templates.pagination'
             });
+            }
             $element.after(paginationTemplate);
             if (headerTemplate) {
                 $compile(headerTemplate)($scope);
             }
+            if (HidePage) {
             $compile(paginationTemplate)($scope);
+            }
         }
     };
 
