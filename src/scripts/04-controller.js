@@ -42,8 +42,24 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
     }
 
     $scope.$watch('params.$params', function(newParams, oldParams) {
-
-        if (newParams === oldParams) {
+        
+        // We don't want to watch for changes to $params whilst the NgTableParams.reload function is executing
+        // (ie $loading === true).
+        // This is important for cases where you have a want to *chain* a subsequent call to reload.
+        // Take the following code example:
+        //
+        // tableParams.reload().then(function(){
+        //   if (!tableParams.total() && _.size(tableParams.filter()) > 0) {
+        //     tableParams.filter({});
+        //     return tableParams.reload();
+        //   }
+        // });
+        //
+        // In the code above, you're checking whether to remove the table filter. When removing the filter
+        // you want the second reload to execute in the *same promise chain* initiated by the first call
+        // to reload; you do NOT want the second reload to trigger sometime later because of a $watch
+        // seeing the change to the filter.
+        if (newParams === oldParams || $scope.params.settings().$loading) {
             return;
         }
 
