@@ -17,6 +17,65 @@ app.value('ngTableDefaults', {
     settings: {}
 });
 
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .provider('ngTableFilterConfig', ngTableFilterConfigProvider);
+
+    ngTableFilterConfigProvider.$inject = [];
+
+    function ngTableFilterConfigProvider(){
+        var defaultConfig = {
+            defaultBaseUrl: 'ng-table/filters/',
+            defaultExt: '.html',
+            aliasUrls: {}
+        };
+        var config = defaultConfig;
+
+        this.$get = ngTableFilterConfig;
+        this.setConfig = setConfig;
+
+        /////////
+
+        function setConfig(customConfig){
+            config = angular.extend({}, defaultConfig, customConfig);
+            config.aliasUrls = angular.extend({}, defaultConfig.aliasUrls, config.aliasUrls);
+        }
+
+        /////////
+
+        ngTableFilterConfig.$inject = [];
+
+        function ngTableFilterConfig(){
+
+            var publicConfig = angular.copy(config);
+
+            var service = {
+                config: publicConfig,
+                getTemplateUrl: getTemplateUrl,
+                getUrlForAlias: getUrlForAlias
+            };
+            return service;
+
+            /////////
+
+            function getTemplateUrl(filterValue, filterKey){
+                if (filterValue.indexOf('/') !== -1){
+                    return filterValue;
+                }
+
+                return service.getUrlForAlias(filterValue, filterKey);
+            }
+
+            function getUrlForAlias(aliasName/*, filterKey*/){
+                return config.aliasUrls[aliasName] || config.defaultBaseUrl + aliasName + config.defaultExt;
+            }
+        }
+    }
+})();
+
+
 /**
  * @ngdoc service
  * @name NgTableParams

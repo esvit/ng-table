@@ -293,9 +293,10 @@ app.factory('ngTableColumn', [function () {
     angular.module('ngTable')
         .controller('ngTableFilterRowController', ngTableFilterRowController);
 
-    ngTableFilterRowController.$inject = [];
+    ngTableFilterRowController.$inject = ['$scope', 'ngTableFilterConfig'];
 
-    function ngTableFilterRowController(){
+    function ngTableFilterRowController($scope, ngTableFilterConfig){
 
+        $scope.config = ngTableFilterConfig;
     }
 })();
