@@ -42,7 +42,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
     }
 
     $scope.$watch('params.$params', function(newParams, oldParams) {
-        
+
         // We don't want to watch for changes to $params whilst the NgTableParams.reload function is executing
         // (ie $loading === true).
         // This is important for cases where you have a want to *chain* a subsequent call to reload.
@@ -185,21 +185,6 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             });
         }
     };
-
-    $scope.sortBy = function($column, event) {
-        var parsedSortable = $column.sortable && $column.sortable();
-        if (!parsedSortable) {
-            return;
-        }
-        var defaultSort = $scope.params.settings().defaultSort;
-        var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
-        var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
-        var sortingParams = (event.ctrlKey || event.metaKey) ? $scope.params.sorting() : {};
-        sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
-        $scope.params.parameters({
-            sorting: sortingParams
-        });
-    };
 }]);
 
 
@@ -270,3 +255,47 @@ app.factory('ngTableColumn', [function () {
         buildColumn: buildColumn
     };
 }]);
+
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .controller('ngTableSorterRowController', ngTableSorterRowController);
+
+    ngTableSorterRowController.$inject = ['$scope'];
+
+    function ngTableSorterRowController($scope){
+
+        $scope.sortBy = sortBy;
+
+        ///////////
+
+        function sortBy($column, event) {
+            var parsedSortable = $column.sortable && $column.sortable();
+            if (!parsedSortable) {
+                return;
+            }
+            var defaultSort = $scope.params.settings().defaultSort;
+            var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
+            var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
+            var sortingParams = (event.ctrlKey || event.metaKey) ? $scope.params.sorting() : {};
+            sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
+            $scope.params.parameters({
+                sorting: sortingParams
+            });
+        }
+    }
+})();
+
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .controller('ngTableFilterRowController', ngTableFilterRowController);
+
+    ngTableFilterRowController.$inject = [];
+
+    function ngTableFilterRowController(){
+
+    }
+})();

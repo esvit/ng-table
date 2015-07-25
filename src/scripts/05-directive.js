@@ -155,3 +155,43 @@ app.directive('ngTableDynamic', ['$parse', function ($parse){
         }
     };
 }]);
+
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .directive('ngTableFilterRow', ngTableFilterRow);
+
+    ngTableFilterRow.$inject = [];
+
+    function ngTableFilterRow(){
+        var directive = {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'ng-table/filterRow.html',
+            scope: true,
+            controller: 'ngTableFilterRowController'
+        };
+        return directive;
+    }
+})();
+
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .directive('ngTableSorterRow', ngTableSorterRow);
+
+    ngTableSorterRow.$inject = [];
+
+    function ngTableSorterRow(){
+        var directive = {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'ng-table/sorterRow.html',
+            scope: true,
+            controller: 'ngTableSorterRowController'
+        };
+        return directive;
+    }
+})();
