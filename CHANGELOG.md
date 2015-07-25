@@ -1,3 +1,56 @@
+<a name="0.8.0"></a>
+# 0.8.0 (2015-07-25)
+
+
+## Bug Fixes
+
+- **ngTableController:** don't trigger reload whilst a reload is already in-flight
+  ([97d09ca4](https://github.com/esvit/ng-table/commit/97d09ca43501ea97a30e1afcd04f6ed81df4f97d))
+
+
+## Features
+
+- **ngTableFilterConfig:** allow template urls for filters to be customized
+  ([032f6ff6](https://github.com/esvit/ng-table/commit/032f6ff6aec0fcad7c4d84976aee8dc317c67a6c))
+
+
+## Breaking Changes
+
+- **header.html:** due to [47460d67](https://github.com/esvit/ng-table/commit/47460d67acb518a402a42329e6108a4e86e436d6),
+
+
+The sortBy function previously declared by `ngTableController` has been moved to the new controller
+- `ngTableSorterRowController`.
+
+- **ngTableController:** due to [97d09ca4](https://github.com/esvit/ng-table/commit/97d09ca43501ea97a30e1afcd04f6ed81df4f97d),
+
+
+Calls to `NgTableParams.filter`, `NgTableParams.sorting` (etc) made in the `then` method of
+the promise returned by `NgTableParams.reload` will NOT trigger a subsequent call to `NgTableParams.reload`;
+the call to `NgTableParams.reload` must now be explicitly be made.
+
+Previously:
+
+```js
+tableParams.reload().then(function(){
+  if (!tableParams.total() && _.size(tableParams.filter()) > 0) {
+        tableParams.filter({});
+  }
+});
+```
+
+Now:
+
+```js
+tableParams.reload().then(function(){
+  if (!tableParams.total() && _.size(tableParams.filter()) > 0) {
+        tableParams.filter({});
+        return tableParams.reload();
+  }
+});
+```
+
+
 <a name="0.7.1"></a>
 # 0.7.1 (2015-07-20)
 
