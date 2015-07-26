@@ -8,6 +8,7 @@ describe('ngTableFilterConfig', function () {
         var fakeModule = angular.module('test.config', function () {});
         fakeModule.config( function (_ngTableFilterConfigProvider_) {
             ngTableFilterConfigProvider = _ngTableFilterConfigProvider_;
+            ngTableFilterConfigProvider.resetConfigs();
         });
         // Initialize test.app injector
         module('ngTable', 'test.config');
@@ -16,6 +17,36 @@ describe('ngTableFilterConfig', function () {
     beforeEach(inject(function (_ngTableFilterConfig_) {
         ngTableFilterConfig = _ngTableFilterConfig_;
     }));
+
+    describe('setConfig', function(){{
+
+        it('should set aliasUrls supplied', function(){
+            ngTableFilterConfigProvider.setConfig({
+                aliasUrls: {
+                    'text': 'custom/url/custom-text.html'
+                }
+            });
+
+            expect(ngTableFilterConfig.config.aliasUrls.text).toBe('custom/url/custom-text.html');
+        });
+
+        it('should merge aliasUrls with previous values', function(){
+            ngTableFilterConfigProvider.setConfig({
+                aliasUrls: {
+                    'text': 'custom/url/text.html'
+                }
+            });
+
+            ngTableFilterConfigProvider.setConfig({
+                aliasUrls: {
+                    'number': 'custom/url/custom-number.html'
+                }
+            });
+
+            expect(ngTableFilterConfig.config.aliasUrls.text).toBe('custom/url/text.html');
+            expect(ngTableFilterConfig.config.aliasUrls.number).toBe('custom/url/custom-number.html');
+        });
+    }});
 
     describe('getTemplateUrl', function(){
 

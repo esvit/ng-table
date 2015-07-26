@@ -26,21 +26,33 @@ app.value('ngTableDefaults', {
     ngTableFilterConfigProvider.$inject = [];
 
     function ngTableFilterConfigProvider(){
+        var config;
         var defaultConfig = {
             defaultBaseUrl: 'ng-table/filters/',
             defaultExt: '.html',
             aliasUrls: {}
         };
-        var config = defaultConfig;
 
         this.$get = ngTableFilterConfig;
+        this.resetConfigs = resetConfigs;
         this.setConfig = setConfig;
+
+        init();
 
         /////////
 
+        function init(){
+            resetConfigs();
+        }
+
+        function resetConfigs(){
+            config = defaultConfig;
+        }
+
         function setConfig(customConfig){
-            config = angular.extend({}, defaultConfig, customConfig);
-            config.aliasUrls = angular.extend({}, defaultConfig.aliasUrls, config.aliasUrls);
+            var mergeConfig = angular.extend({}, config, customConfig);
+            mergeConfig.aliasUrls = angular.extend({}, config.aliasUrls, customConfig.aliasUrls);
+            config = mergeConfig;
         }
 
         /////////
@@ -49,13 +61,20 @@ app.value('ngTableDefaults', {
 
         function ngTableFilterConfig(){
 
-            var publicConfig = angular.copy(config);
+            var publicConfig;
 
             var service = {
                 config: publicConfig,
                 getTemplateUrl: getTemplateUrl,
                 getUrlForAlias: getUrlForAlias
             };
+            Object.defineProperty(service, "config", {
+                get: function(){
+                    return publicConfig = publicConfig || angular.copy(config);
+                },
+                enumerable: true
+            });
+
             return service;
 
             /////////
