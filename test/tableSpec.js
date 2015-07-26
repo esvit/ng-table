@@ -309,6 +309,107 @@ describe('ng-table', function() {
 
             expect(columnDef).toBeDefined();
         }));
+
+        it('should apply initial sort', inject(function ($compile, NgTableParams) {
+            var elm = angular.element(
+                '<table ng-table="tableParams">' +
+                '<tr ng-repeat="user in $data"><td title="\'Age\'" sortable="\'age\'">{{user.age}}</td></tr>' +
+                '</table>');
+            $compile(elm)(scope);
+
+            var actualSort;
+            scope.tableParams = new NgTableParams({
+                sorting: { age: 'desc' }
+            }, {
+                getData: function($defer, params){
+                    actualSort = params.sorting();
+                    $defer.resolve([]);
+                }});
+            scope.$digest();
+
+            expect(actualSort.age).toBe('desc');
+        }));
+
+        it('when sorting changes should trigger reload of table', inject(function ($compile, NgTableParams) {
+            var elm = angular.element(
+                '<table ng-table="tableParams">' +
+                '<tr ng-repeat="user in $data"><td title="\'Age\'" sortable="\'age\'">{{user.age}}</td></tr>' +
+                '</table>');
+            $compile(elm)(scope);
+
+            scope.tableParams = new NgTableParams({ whatever: 'ignoreme'}, {
+                getData: function($defer, params){
+                    params.getDataCallCount++;
+                    $defer.resolve([]);
+                }});
+            scope.$digest();
+            scope.tableParams.getDataCallCount = 0; //reset
+
+            scope.tableParams.sorting()['age'] = 'desc';
+            scope.$digest();
+            expect(scope.tableParams.getDataCallCount).toBe(1);
+
+            scope.tableParams.sorting()['age'] = 'asc';
+            scope.$digest();
+            expect(scope.tableParams.getDataCallCount).toBe(2);
+
+            // setting the same sort order should not trigger reload
+            scope.tableParams.sorting({ age: 'asc'});
+            scope.$digest();
+            expect(scope.tableParams.getDataCallCount).toBe(2);
+        }));
+    });
+
+    describe('paging', function() {
+
+        var elm,
+            dataCallCount,
+            expectedPage,
+            ngTableSettings = { filterDelay: 0, getData: getData};
+
+        beforeEach(inject(function($compile) {
+            elm = angular.element(
+                '<table ng-table="tableParams">' +
+                '<tr ng-repeat="user in $data">' +
+                '<td title="\'Age\'">{{user.age}}</td>' +
+                '</tr>' +
+                '</table>');
+
+            dataCallCount = 0;
+            $compile(elm)(scope);
+            scope.$digest();
+        }));
+
+        function getData($defer, params) {
+            dataCallCount++;
+            expect(params.page()).toBe(expectedPage);
+            $defer.resolve([]);
+        }
+
+        it('should use initial NgTableParams constructor value', inject(function(NgTableParams){
+            scope.tableParams = new NgTableParams({ page: 2}, ngTableSettings);
+            expectedPage = 2;
+            scope.$digest();
+            expect(dataCallCount).toBe(1);
+        }));
+
+        it('should use initial NgTableParams constructor value combined with filter', inject(function(NgTableParams){
+            scope.tableParams = new NgTableParams({ page: 2, filter: { age: 5}}, ngTableSettings);
+            expectedPage = 2;
+            scope.$digest();
+            expect(dataCallCount).toBe(1);
+        }));
+
+        it('changing page # should trigger reload of data', inject(function(NgTableParams){
+            scope.tableParams = new NgTableParams({ page: 3 }, ngTableSettings);
+            expectedPage = 3;
+            scope.$digest();
+
+            expectedPage = 5;
+            scope.tableParams.page(5);
+            scope.$digest();
+            expect(dataCallCount).toBe(2);
+        }));
     });
 
     describe('filters', function(){
@@ -340,7 +441,14 @@ describe('ng-table', function() {
 
                 // 'text' is a shortcut alias for the template ng-table/filters/text
                 scope.usernameFilter = {username: 'text'};
-                scope.tableParams = new NgTableParams({}, {});
+                scope.tableParams = new NgTableParams({ whatever: 'ignoreme' }, {
+                    filterDelay: 10,
+                    getData: function($defer, params){
+                        params.getDataCallCount++;
+                        $defer.resolve([]);
+                    }
+                });
+                scope.tableParams.getDataCallCount = 0;
                 scope.$digest();
             }));
 
@@ -366,11 +474,33 @@ describe('ng-table', function() {
                 expect($capturedColumn.filter()['username']).toBe('text');
             });
 
+            it('when filter changes should trigger reload of table', inject(function ($timeout) {
+                var beforeCallCount = scope.tableParams.getDataCallCount;
+
+                scope.tableParams.filter()['username'] = 'new value';
+                scope.$digest();
+                $timeout.flush();  // trigger delayed filter
+                scope.tableParams.filter()['username'] = 'another value';
+                scope.$digest();
+                $timeout.flush();  // trigger delayed filter
+                expect(scope.tableParams.getDataCallCount).toBe(beforeCallCount + 2);
+
+                // same value - should not trigger reload
+                scope.tableParams.filter()['username'] = 'another value';
+                scope.$digest();
+                try{
+                    $timeout.flush();  // trigger delayed filter
+                } catch (ex) {
+
+                }
+                expect(scope.tableParams.getDataCallCount).toBe(beforeCallCount + 2);
+            }));
+
             it('when filter changes should reset page number to 1', inject(function ($timeout) {
                 // trigger initial load of data so that subsequent changes to filter will trigger reset of page #
                 scope.tableParams.filter()['username'] = 'initial value';
                 scope.$digest();
-                $timeout.flush(); // trigger delayed filter
+                $timeout.flush();  // trigger delayed filter
 
                 // set page to something other than 1
                 scope.tableParams.page(5);

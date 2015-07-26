@@ -63,20 +63,22 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             return;
         }
 
+        $scope.params['$$paramsFirstTimeLoad'] = !$scope.params.hasOwnProperty('$$paramsFirstTimeLoad');
         $scope.params.settings().$scope = $scope;
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
-            var maybeResetPage = isFirstTimeLoad ? angular.noop : resetPage;
-            delayFilter(function() {
+            var maybeResetPage = $scope.params['$$paramsFirstTimeLoad'] ? angular.noop : resetPage;
+            var applyFilter = function () {
                 maybeResetPage();
                 $scope.params.reload();
-            }, $scope.params.settings().filterDelay);
+            };
+            if ($scope.params.settings().filterDelay && !$scope.params['$$paramsFirstTimeLoad']){
+                delayFilter(applyFilter, $scope.params.settings().filterDelay);
+            } else {
+                applyFilter();
+            }
         } else {
             $scope.params.reload();
-        }
-
-        if (!$scope.params.isNullInstance) {
-            isFirstTimeLoad = false;
         }
 
     }, true);
