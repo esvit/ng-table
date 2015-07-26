@@ -379,6 +379,27 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
+         * @name NgTableParams#hasFilter
+         * @description Determines if NgTableParams#filter has significant filter value(s)
+         * (any value except null, undefined, or empty string)
+         * @returns {Boolean} true when NgTableParams#filter has at least one significant field value
+         */
+        this.hasFilter = function(){
+            var currentFilter = this.filter();
+            var keys = Object.keys(currentFilter);
+            var result = false;
+            for (var i=0; i < keys.length; i++){
+                var filterValue = currentFilter[keys[i]];
+                if (filterValue != null && filterValue !== '') {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        };
+
+        /**
+         * @ngdoc method
          * @name NgTableParams#url
          * @description Return groups for table grouping
          *

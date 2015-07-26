@@ -71,19 +71,6 @@ describe('NgTableParams', function () {
             page: 3
         });
         expect(params.page()).toBe(3);
-
-        var callCount = 0;
-        scope.tableParams = params;
-        scope.$watch('tableParams', function (innerParams) {
-            callCount++;
-            expect(innerParams.page()).toBe(4);
-        });
-        params.page(4);
-        scope.$apply();
-        expect(callCount).toBe(1);
-        // repeat call
-        scope.$apply();
-        expect(callCount).toBe(1);
     }));
 
     it('NgTableParams parse url parameters', inject(function (NgTableParams) {
@@ -293,4 +280,42 @@ describe('NgTableParams', function () {
         expect(settings.counts.length).toEqual(0);
         expect(settings.filterDelay).toEqual(750);
     }));
+
+    describe('hasFilter', function(){
+        var tableParams;
+
+        beforeEach(inject(function(NgTableParams){
+            tableParams = new NgTableParams({}, {});
+        }));
+
+        it('should return false for an empty filter object', function(){
+            tableParams.filter({});
+            expect(tableParams.hasFilter()).toBeFalsy();
+        });
+
+        it('should return true for when filter has a field with a significant value', function(){
+            tableParams.filter({ a: 'b' });
+            expect(tableParams.hasFilter()).toBeTruthy();
+
+            tableParams.filter({ a: 0 });
+            expect(tableParams.hasFilter()).toBeTruthy();
+        });
+
+        it('should return false when filter only has insignificant field values', function(){
+            tableParams.filter({ a: '' });
+            expect(tableParams.hasFilter()).toBeFalsy();
+
+            tableParams.filter({ a: null });
+            expect(tableParams.hasFilter()).toBeFalsy();
+
+            tableParams.filter({ a: undefined });
+            expect(tableParams.hasFilter()).toBeFalsy();
+
+            tableParams.filter({ a: undefined, b: '', c: undefined });
+            expect(tableParams.hasFilter()).toBeFalsy();
+
+            //tableParams.filter({ a: NaN });
+            //expect(tableParams.hasFilter()).toBeFalsy();
+        });
+    });
 });
