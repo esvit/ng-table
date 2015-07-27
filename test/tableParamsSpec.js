@@ -18,18 +18,21 @@ describe('NgTableParams', function () {
         {name: "Nephi", age: 29, role: 'User'},
         {name: "Enos", age: 34, role: 'User'}
     ];
+    var NgTableParams;
+
     beforeEach(module('ngTable'));
 
-    beforeEach(inject(function ($controller, $rootScope) {
+    beforeEach(inject(function ($controller, $rootScope, _NgTableParams_) {
         scope = $rootScope.$new();
+        NgTableParams = _NgTableParams_;
     }));
 
-    it('NgTableParams should be defined', inject(function (NgTableParams) {
+    it('NgTableParams should be defined', function () {
         var params = new NgTableParams();
         expect(NgTableParams).toBeDefined();
-    }));
+    });
 
-    it('NgTableParams test generatePagesArray', inject(function (NgTableParams) {
+    it('NgTableParams test generatePagesArray', function () {
         var params = new NgTableParams();
         expect(params.generatePagesArray(1, 30, 10)).toEqual([
             { type: 'prev', number: 1, active: false },
@@ -58,9 +61,9 @@ describe('NgTableParams', function () {
             { type: 'last', number: 10, active: true, current: false },
             { type: 'next', number: 3, active: true }
         ]);
-    }));
+    });
 
-    it('NgTableParams `page` parameter', inject(function (NgTableParams) {
+    it('NgTableParams `page` parameter', function () {
         var params = new NgTableParams();
 
         expect(params.page()).toBe(1);
@@ -71,9 +74,9 @@ describe('NgTableParams', function () {
             page: 3
         });
         expect(params.page()).toBe(3);
-    }));
+    });
 
-    it('NgTableParams parse url parameters', inject(function (NgTableParams) {
+    it('NgTableParams parse url parameters', function () {
         var params = new NgTableParams({
             'sorting[name]': 'asc',
             'sorting[age]': 'desc',
@@ -86,9 +89,9 @@ describe('NgTableParams', function () {
 
         expect(params.sorting()).toEqual({ 'age': 'desc' }); // sorting only by one column
         expect(params.sorting({})).toEqual(params);
-    }));
+    });
 
-    it('NgTableParams return url parameters', inject(function (NgTableParams) {
+    it('NgTableParams return url parameters', function () {
         var params = new NgTableParams({
             'sorting[name]': 'asc',
             'sorting[age]': 'desc',
@@ -109,9 +112,9 @@ describe('NgTableParams', function () {
             'filter[age]=20',
             'sorting[age]=desc'
         ]);
-    }));
+    });
 
-    it('NgTableParams test orderBy', inject(function (NgTableParams) {
+    it('NgTableParams test orderBy', function () {
         var params = new NgTableParams({
             'sorting[name]': 'asc'
         });
@@ -121,9 +124,9 @@ describe('NgTableParams', function () {
         params.sorting({ name: 'desc', age: 'asc' });
 
         expect(params.orderBy()).toEqual([ '-name', '+age' ]);
-    }));
+    });
 
-    it('NgTableParams test settings', inject(function (NgTableParams) {
+    it('NgTableParams test settings', function () {
         var params = new NgTableParams();
 
         expect(params.settings()).toEqual({
@@ -157,9 +160,9 @@ describe('NgTableParams', function () {
             getGroups: params.getGroups,
             filterDelay: 750
         });
-    }));
+    });
 
-    it('NgTableParams test getData', inject(function ($q, NgTableParams) {
+    it('NgTableParams test getData', inject(function ($q) {
         var params = new NgTableParams();
         $defer = $q.defer();
         $defer.promise.then(function(data) {
@@ -168,7 +171,7 @@ describe('NgTableParams', function () {
         params.getData($defer);
     }));
 
-    it('NgTableParams test grouping', inject(function ($q, NgTableParams) {
+    it('NgTableParams test grouping', inject(function ($q) {
         var params = new NgTableParams();
         params.getData = function ($defer) {
             $defer.resolve(data);
@@ -264,14 +267,14 @@ describe('NgTableParams', function () {
         params.getGroups($defer, 'age');
     }));
 
-    it('ngTableParams test defaults', inject(function ($q, ngTableParams, ngTableDefaults) {
+    it('ngTableParams test defaults', inject(function ($q, ngTableDefaults) {
         ngTableDefaults.params = {
             count: 2
         };
         ngTableDefaults.settings = {
             counts: []
         };
-        var params = new ngTableParams();
+        var params = new NgTableParams();
 
         expect(params.count()).toEqual(2);
         expect(params.page()).toEqual(1);
@@ -284,7 +287,7 @@ describe('NgTableParams', function () {
     describe('hasFilter', function(){
         var tableParams;
 
-        beforeEach(inject(function(NgTableParams){
+        beforeEach(inject(function(){
             tableParams = new NgTableParams({}, {});
         }));
 
