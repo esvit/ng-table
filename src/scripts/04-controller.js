@@ -41,7 +41,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         $scope.params.$params.page = 1;
     }
 
-    $scope.$watch('params.$params', function(newParams, oldParams) {
+    function onParamsChange (newParams, oldParams) {
 
         // We don't want to watch for changes to $params whilst the NgTableParams.reload function is executing
         // (ie $loading === true).
@@ -72,7 +72,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
                 maybeResetPage();
                 $scope.params.reload();
             };
-            if ($scope.params.settings().filterDelay && !$scope.params['$$paramsFirstTimeLoad']){
+            if ($scope.params.settings().filterDelay && !$scope.params['$$paramsFirstTimeLoad']) {
                 delayFilter(applyFilter, $scope.params.settings().filterDelay);
             } else {
                 applyFilter();
@@ -81,7 +81,12 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             $scope.params.reload();
         }
 
-    }, true);
+    }
+
+    // watch for changes to $params values (eg when a filter or page changes)
+    $scope.$watch('params.$params', onParamsChange, true);
+    // watch for changes to $params reference (eg when a new NgTableParams is bound to the scope)
+    $scope.$watch('params.$params', onParamsChange, false);
 
     this.compileDirectiveTemplates = function () {
         if (!$element.hasClass('ng-table')) {

@@ -654,4 +654,81 @@ describe('ng-table', function() {
             });
         });
     });
+
+    describe('internals', function(){
+
+        var elm,
+            NgTableParams;
+
+        beforeEach(inject(function($compile, _NgTableParams_) {
+            NgTableParams = _NgTableParams_;
+            elm = angular.element(
+                '<table ng-table="tableParams">' +
+                '<tr ng-repeat="user in $data">' +
+                '<td title="\'Age\'">{{user.age}}</td>' +
+                '</tr>' +
+                '</table>');
+
+            $compile(elm)(scope);
+            scope.$digest();
+        }));
+
+        function getData ($defer, params) {
+            if (!params.hasOwnProperty('getDataCallCount')){
+                params.getDataCallCount = 0;
+            }
+            params.getDataCallCount++;
+            $defer.resolve([]);
+        }
+
+        it('should reload when binding a new tableParams to scope', function(){
+            var tableParams = new NgTableParams({}, { getData: getData });
+            scope.tableParams = tableParams;
+            scope.$digest();
+
+            expect(tableParams.getDataCallCount).toBe(1);
+        });
+
+        it('should reload when binding a new tableParams to scope multiple times', function(){
+            var tableParams1 = new NgTableParams({}, { getData: getData });
+            scope.tableParams = tableParams1;
+            scope.$digest();
+
+            expect(tableParams1.getDataCallCount).toBe(1);
+
+            var tableParams2 = new NgTableParams({}, { getData: getData });
+            scope.tableParams = tableParams2;
+            scope.$digest();
+
+            expect(tableParams2.getDataCallCount).toBe(1);
+        });
+
+        it('should not reload when filter value is assigned the same value', function(){
+            // given
+            var tableParams = new NgTableParams({ filter: {age: 10} }, { filterDelay: 0, getData: getData });
+            scope.tableParams = tableParams;
+            scope.$digest();
+            tableParams.getDataCallCount = 0; //reset
+
+            // when
+            tableParams.filter({ age: 10});
+            scope.$digest();
+
+            expect(tableParams.getDataCallCount).toBe(0);
+        });
+
+        it('should reload when filter value changes', function(){
+            // given
+            var tableParams = new NgTableParams({ filter: {age: 10} }, { filterDelay: 0, getData: getData });
+            scope.tableParams = tableParams;
+            scope.$digest();
+            tableParams.getDataCallCount = 0; //reset
+
+            // when
+            tableParams.filter({ age: 12});
+            scope.$digest();
+
+            expect(tableParams.getDataCallCount).toBe(1);
+        });
+    });
 });
