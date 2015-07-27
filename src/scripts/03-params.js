@@ -481,6 +481,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                 // If getData resolved the $defer, and didn't promise us data,
                 //   create a promise from the $defer. We need to return a promise.
                 pData = $defer.promise;
+            } else {
+                pData = $q.when(pData);
             }
             return pData.then(function(data) {
                 settings.$loading = false;
