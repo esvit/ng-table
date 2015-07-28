@@ -136,6 +136,7 @@ describe('NgTableParams', function () {
             total: 0,
             defaultSort : 'desc',
             counts: [10, 25, 50, 100],
+            interceptors: [],
             paginationMaxBlocks: 11,
             paginationMinBlocks: 5,
             sortingIndicator : 'span',
@@ -144,7 +145,7 @@ describe('NgTableParams', function () {
             filterDelay: 750
         }));
 
-        params = new NgTableParams({}, { total: 100 });
+        params = new NgTableParams({}, { total: 100, counts: [1,2] });
 
         expect(params.settings()).toEqual(jasmine.objectContaining({
             $scope: null,
@@ -152,7 +153,8 @@ describe('NgTableParams', function () {
             data: null,
             total: 100,
             defaultSort : 'desc',
-            counts: [10, 25, 50, 100],
+            counts: [1,2],
+            interceptors: [],
             paginationMaxBlocks: 11,
             paginationMinBlocks: 5,
             sortingIndicator : 'span',
@@ -277,9 +279,14 @@ describe('NgTableParams', function () {
         expect(params.count()).toEqual(2);
         expect(params.page()).toEqual(1);
 
-        var settings = params.settings()
+        var settings = params.settings();
         expect(settings.counts.length).toEqual(0);
+        expect(settings.interceptors.length).toEqual(0);
         expect(settings.filterDelay).toEqual(750);
+
+        ngTableDefaults.settings.interceptors = [ { response: angular.identity }];
+        params = new NgTableParams();
+        expect(params.settings().interceptors.length).toEqual(1);
     }));
 
     describe('hasFilter', function(){
@@ -434,6 +441,194 @@ describe('NgTableParams', function () {
                 params.total(3);
                 return [1,2,3];
             }
+        });
+    });
+
+    describe('interceptors', function(){
+
+        var $scope;
+        beforeEach(inject(function($rootScope){
+            $scope = $rootScope.$new();
+        }));
+
+        function getData(/*$defer, params*/){
+            return [];
+        }
+
+        function createNgTable(settings){
+            settings = angular.extend({}, { $scope: $scope, getData: getData, filterDelay: 0 }, settings);
+            return new NgTableParams({}, settings);
+        }
+
+        it('can register interceptor', function(){
+            var interceptor = { response: angular.identity };
+            var tableParams = createNgTable({ interceptors: [interceptor]});
+            expect(tableParams.settings().interceptors).toEqual([interceptor]);
+        });
+
+        it('can register multiple interceptor', function(){
+            var interceptors = [{ response: angular.identity }, { response: angular.identity }];
+            var tableParams = createNgTable({ interceptors: interceptors});
+            expect(tableParams.settings().interceptors).toEqual(interceptors);
+        });
+
+        it('can register interceptors after NgTableParams created', function(){
+            var interceptor = { response: angular.identity };
+            var interceptor2 = { response: angular.identity };
+            var tableParams = createNgTable({ interceptors: [interceptor]});
+            var interceptors = tableParams.settings().interceptors.concat([interceptor2]);
+            tableParams.settings({ interceptors: interceptors});
+            expect(tableParams.settings().interceptors).toEqual(interceptors);
+        });
+
+        describe('one response interceptor', function(){
+
+            it('should receive response from call to getData', function(){
+                // given
+                var interceptor = {
+                    response: function(/*data, params*/){
+                        this.hasRun = true;
+                    }
+                };
+                var tableParams = createNgTable({ interceptors: [interceptor]});
+
+                // when
+                tableParams.reload();
+                $scope.$digest();
+
+                // then
+                expect(interceptor.hasRun).toBeTruthy();
+            });
+
+            it('should be able to modify data returned by getData', function(){
+                // given
+                var interceptor = {
+                    response: function(data/*, params*/){
+                        data.forEach(function(item){
+                            item.modified = true;
+                        });
+                        return data;
+                    }
+                };
+                var tableParams = createNgTable({ interceptors: [interceptor], getData: function(){
+                    return [{}, {}];
+                }});
+
+                // when
+                var actualData;
+                tableParams.reload().then(function(data){
+                    actualData = data;
+                });
+                $scope.$digest();
+
+                // then
+                expect(actualData).toEqual([{ modified: true }, { modified: true }]);
+            });
+
+            it('should be able to replace data returned by getData', function(){
+                // given
+                var interceptor = {
+                    response: function(data/*, params*/){
+                        return data.map(function(item){
+                            return item * 2;
+                        });
+                    }
+                };
+                var tableParams = createNgTable({ interceptors: [interceptor], getData: function(){
+                    return [2, 3];
+                }});
+
+                // when
+                var actualData;
+                tableParams.reload().then(function(data){
+                    actualData = data;
+                });
+                $scope.$digest();
+
+                // then
+                expect(actualData).toEqual([4, 6]);
+            });
+
+            it('should be able to access tableParams supplied to getData', function(){
+                // given
+                var interceptor = {
+                    response: function(data, params){
+                        params.total(data.total);
+                        return data.results;
+                    }
+                };
+                var tableParams = createNgTable({ interceptors: [interceptor], getData: function(){
+                    return { results: [1,2,3], total: 3};
+                }});
+
+                // when
+                var actualData;
+                tableParams.reload().then(function(data){
+                    actualData = data;
+                });
+                $scope.$digest();
+
+                // then
+                expect(actualData).toEqual([1,2,3]);
+                expect(tableParams.total()).toEqual(3);
+            });
+        });
+
+        describe('multiple response interceptors', function(){
+
+            it('should run interceptors in the order they were registered', function(){
+                // given
+                var callCount = 0;
+                var interceptor = {
+                    response: function(/*data, params*/){
+                        this.sequence = callCount;
+                        callCount++;
+                    }
+                };
+                var interceptors = [interceptor, angular.copy(interceptor)];
+                var tableParams = createNgTable({ interceptors: interceptors});
+
+                // when
+                tableParams.reload();
+                $scope.$digest();
+
+                // then
+                expect(interceptors[0].sequence).toBe(0);
+                expect(interceptors[1].sequence).toBe(1);
+            });
+
+            it('results of one interceptor should be piped to the next validator', function(){
+                // given
+                var callCount = 0;
+                var interceptor = {
+                    response: function(data/*, params*/){
+                        return data.map(function(item){
+                            return item * 2;
+                        });
+                    }
+                };
+                var interceptor2 = {
+                    response: function(data/*, params*/){
+                        return data.map(function(item){
+                            return item.toString() + '0';
+                        });
+                    }
+                };
+                var interceptors = [interceptor, interceptor2];
+                var tableParams = createNgTable({ interceptors: [interceptor, interceptor2], getData: function(){
+                    return [2, 3];
+                }});
+
+                // when
+                var actualData;
+                tableParams.reload().then(function(data){
+                    actualData = data;
+                });
+                $scope.$digest();
+
+                // then
+                expect(actualData).toEqual(['40', '60']);
+            });
         });
     });
 });

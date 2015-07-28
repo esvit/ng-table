@@ -480,6 +480,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
             } else {
                 pData = runGetData();
             }
+            pData = runInterceptorPipeline(pData);
 
             log('ngTable: reload data');
 
@@ -516,6 +517,15 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
             return $q.when(getGroupsFn.call(settings, settings.groupBy, self));
         }
 
+        function runInterceptorPipeline(dataFetched){
+            var interceptors = settings.interceptors || [];
+            return interceptors.reduce(function(result, interceptor){
+                return result.then(function(data){
+                    return $q.when(interceptor.response(data, self));
+                });
+            }, dataFetched);
+        }
+
         var params = this.$params = {
             page: 1,
             count: 1,
@@ -534,6 +544,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
             defaultSort: 'desc',
             filterDelay: 750,
             counts: [10, 25, 50, 100],
+            interceptors: [],
             paginationMaxBlocks: 11,
             paginationMinBlocks: 5,
             sortingIndicator: 'span',
