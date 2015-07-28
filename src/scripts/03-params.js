@@ -102,7 +102,7 @@ app.value('ngTableDefaults', {
  * @description Parameters manager for ngTable
  */
 
-app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log, ngTableDefaults) {
+app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBcShim', function($q, $log, ngTableDefaults, ngTableGetDataBcShim) {
     var isNumber = function(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
@@ -169,6 +169,17 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     //auto-set the total from passed in data
                     newSettings.total = newSettings.data.length;
                 }
+
+                // todo: remove the backwards compatibility shim and the following two if blocks
+                if (newSettings.getData && newSettings.getData.length > 1){
+                    // support the old getData($defer, params) api
+                    newSettings.getDataFnAdaptor = ngTableGetDataBcShim;
+                }
+                if (newSettings.getGroups && newSettings.getGroups.length > 2){
+                    // support the old getGroups($defer, grouping, params) api
+                    newSettings.getGroupsFnAdaptor = ngTableGetDataBcShim;
+                }
+
                 settings = angular.extend(settings, newSettings);
                 log('ngTable: set settings', settings);
                 return this;
@@ -290,16 +301,14 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
          * @name NgTableParams#getData
          * @description Called when updated some of parameters for get new data
          *
-         * @param {Object} $defer promise object
          * @param {Object} params New parameters
          */
-        this.getData = function($defer, params) {
+        this.getData = function(params) {
             if (angular.isArray(this.data) && angular.isObject(params)) {
-                $defer.resolve(this.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                return this.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
             } else {
-                $defer.resolve([]);
+                return [];
             }
-            return $defer.promise;
         };
 
         /**
@@ -307,10 +316,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
          * @name NgTableParams#getGroups
          * @description Return groups for table grouping
          */
-        this.getGroups = function($defer, column) {
-            var defer = $q.defer();
-
-            defer.promise.then(function(data) {
+        this.getGroups = function(column) {
+            return runGetData().then(function(data) {
                 var groups = {};
                 angular.forEach(data, function(item) {
                     var groupName = angular.isFunction(column) ? column(item) : item[column];
@@ -326,9 +333,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     result.push(groups[i]);
                 }
                 log('ngTable: refresh groups', result);
-                $defer.resolve(result);
+                return result;
             });
-            return this.getData(defer, self);
         };
 
         /**
@@ -461,8 +467,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
          * @description Reload table data
          */
         this.reload = function() {
-            var $defer = $q.defer(),
-                self = this,
+            var self = this,
                 pData = null;
 
             if (!settings.$scope) {
@@ -471,19 +476,13 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
             settings.$loading = true;
             if (settings.groupBy) {
-                pData = settings.getGroups($defer, settings.groupBy, this);
+                pData = runGetGroups();
             } else {
-                pData = settings.getData($defer, this);
+                pData = runGetData();
             }
+
             log('ngTable: reload data');
 
-            if (!pData) {
-                // If getData resolved the $defer, and didn't promise us data,
-                //   create a promise from the $defer. We need to return a promise.
-                pData = $defer.promise;
-            } else {
-                pData = $q.when(pData);
-            }
             return pData.then(function(data) {
                 settings.$loading = false;
                 log('ngTable: current scope', settings.$scope);
@@ -507,6 +506,16 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
             settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
         };
 
+        function runGetData(){
+            var getDataFn = settings.getDataFnAdaptor(settings.getData);
+            return $q.when(getDataFn.call(settings, self));
+        }
+
+        function runGetGroups(){
+            var getGroupsFn = settings.getGroupsFnAdaptor(settings.getGroups);
+            return $q.when(getGroupsFn.call(settings, settings.groupBy, self));
+        }
+
         var params = this.$params = {
             page: 1,
             count: 1,
@@ -528,11 +537,13 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
             paginationMaxBlocks: 11,
             paginationMinBlocks: 5,
             sortingIndicator: 'span',
+            getDataFnAdaptor: angular.identity,
+            getGroupsFnAdaptor: angular.identity,
             getGroups: this.getGroups,
             getData: this.getData
         };
-        angular.extend(settings, ngTableDefaults.settings);
 
+        this.settings(ngTableDefaults.settings);
         this.settings(baseSettings);
         this.parameters(baseParameters, true);
         return this;
@@ -548,3 +559,32 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 app.factory('ngTableParams', ['NgTableParams', function(NgTableParams) {
     return NgTableParams;
 }]);
+
+(function(){
+    'use strict';
+
+    // todo: remove shim after an acceptable depreciation period
+
+    angular.module('ngTable')
+        .factory('ngTableGetDataBcShim', ngTableGetDataBcShim);
+
+    ngTableGetDataBcShim.$inject = ['$q'];
+
+    function ngTableGetDataBcShim($q){
+
+        return createWrapper;
+
+        function createWrapper(getDataFn){
+            return function getDataShim(/*args*/){
+                var $defer = $q.defer();
+                var pData = getDataFn.apply(this, [$defer].concat(Array.prototype.slice.call(arguments)));
+                if (!pData) {
+                    // If getData resolved the $defer, and didn't promise us data,
+                    //   create a promise from the $defer. We need to return a promise.
+                    pData = $defer.promise;
+                }
+                return pData;
+            }
+        }
+    }
+})();
