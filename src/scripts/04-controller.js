@@ -89,7 +89,15 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             };
             $element.addClass('ng-table');
             var headerTemplate = null;
-            if ($element.find('> thead').length === 0) {
+
+            // $element.find('> thead').length === 0 doesn't work on jqlite
+            var theadFound = false;
+            angular.forEach($element.children, function(e) {
+                if (e.tagName === 'THEAD') {
+                    theadFound = true;
+                }
+            });
+            if (!theadFound) {
                 headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
                 $element.prepend(headerTemplate);
             }
