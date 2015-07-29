@@ -26,12 +26,12 @@
     <p><strong>Count per page:</strong> {{tableParams.count()}}
 
 
-        <table ng-table="tableParams" class="table ng-table-responsive">
+        <table ng-table="tableParams" class="table ng-table-responsive" show-filter="true">
             <tr ng-repeat="user in $data">
-                <td data-title="'Name'">
+                <td data-title="'Name'" filter="{ name: 'text'}">
                     {{user.name}}
                 </td>
-                <td data-title="'Age'">
+                <td data-title="'Age'" filter="{ age: 'text'}" sortable="'age'">
                     {{user.age}}
                 </td>
             </tr>
@@ -62,6 +62,7 @@
                 page: 1,            // show first page
                 count: 10           // count per page
             }, {
+                showFilter: true,
                 data: data
             });
         })
