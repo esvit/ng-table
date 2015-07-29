@@ -27,6 +27,20 @@ describe('NgTableParams', function () {
         NgTableParams = _NgTableParams_;
     }));
 
+    function createNgTable(settings) {
+        settings = angular.extend({}, {
+            $scope: scope,
+            filterDelay: 0,
+            getData: function (params) {
+                if (!params.hasOwnProperty('getDataCallCount')){
+                    params.getDataCallCount = 0;
+                }
+                params.getDataCallCount++;
+            }
+        }, settings);
+        return new NgTableParams({}, settings);
+    }
+
     it('NgTableParams should be defined', function () {
         var params = new NgTableParams();
         expect(NgTableParams).toBeDefined();
@@ -164,11 +178,47 @@ describe('NgTableParams', function () {
         }));
     });
 
-    it('NgTableParams test getData', inject(function ($q) {
-        var params = new NgTableParams();
-        var actualData = params.getData(params);
-        expect(actualData).toEqual([]);
-    }));
+    describe('reload', function(){
+
+        it('should call getData to retrieve data', function(){
+            var params = createNgTable();
+            params.reload();
+            expect(params.getDataCallCount).toBe(1);
+        });
+
+        it('should add the data returned by getData to the scope', function(){
+            var params = createNgTable({ getData: function(){
+                return [1,2,3];
+            }});
+            var scopeData = null;
+            params.reload().then(function(){
+                scopeData = scope.$data;
+            });
+            scope.$digest();
+            expect(scopeData).toEqual([1,2,3]);
+        });
+
+        it('should use ngTableDefaultGetData function when NgTableParams not supplied a getData function', function(){
+            // given
+            var settings = {
+                data: [{age: 1}, {age: 11}, {age: 110}, {age: 5}],
+                $scope: scope
+            };
+            var paramValues = {count: 2, filter: {age: 1}, sorting: { age: 'desc'}};
+            var params = new NgTableParams(paramValues, settings);
+
+            // when
+            var scopeData = null;
+            params.reload().then(function(){
+                scopeData = scope.$data;
+            });
+            scope.$digest();
+
+            // then
+            expect(scopeData).toEqual([{age: 110}, {age: 11}]);
+            expect(params.total()).toEqual(3);
+        });
+    });
 
     it('NgTableParams test grouping', inject(function ($rootScope) {
         var params = new NgTableParams({}, { getData: function (/*params*/) {
@@ -329,16 +379,6 @@ describe('NgTableParams', function () {
 
     describe('backwards compatibility shim', function(){
 
-        var $scope;
-        beforeEach(inject(function($rootScope){
-            $scope = $rootScope.$new();
-        }));
-
-        function createNgTable(settings){
-            settings = angular.extend({}, { $scope: $scope, filterDelay: 0 }, settings);
-            return new NgTableParams({}, settings);
-        }
-
         it('shim should supply getData original arguments', inject(function(ngTableGetDataBcShim){
             // given
             var callCount = 0;
@@ -376,7 +416,7 @@ describe('NgTableParams', function () {
             results.then(function(data){
                 expect(data.length).toBe(3);
             });
-            $scope.$digest();
+            scope.$digest();
 
             function originalGetDataFn($defer/*, params*/){
                 $defer.resolve([1,2,3]);
@@ -413,7 +453,7 @@ describe('NgTableParams', function () {
             dataFetched.then(function(data){
                 actualData = data;
             });
-            $scope.$digest();
+            scope.$digest();
             expect(actualData).toEqual([1,2,3]);
 
             function originalGetDataFn($defer, params){
@@ -434,7 +474,7 @@ describe('NgTableParams', function () {
             dataFetched.then(function(data){
                 actualData = data;
             });
-            $scope.$digest();
+            scope.$digest();
             expect(actualData).toEqual([1,2,3]);
 
             function newGetDataFn(params){
@@ -445,20 +485,6 @@ describe('NgTableParams', function () {
     });
 
     describe('interceptors', function(){
-
-        var $scope;
-        beforeEach(inject(function($rootScope){
-            $scope = $rootScope.$new();
-        }));
-
-        function getData(/*$defer, params*/){
-            return [];
-        }
-
-        function createNgTable(settings){
-            settings = angular.extend({}, { $scope: $scope, getData: getData, filterDelay: 0 }, settings);
-            return new NgTableParams({}, settings);
-        }
 
         it('can register interceptor', function(){
             var interceptor = { response: angular.identity };
@@ -494,7 +520,7 @@ describe('NgTableParams', function () {
 
                 // when
                 tableParams.reload();
-                $scope.$digest();
+                scope.$digest();
 
                 // then
                 expect(interceptor.hasRun).toBeTruthy();
@@ -519,7 +545,7 @@ describe('NgTableParams', function () {
                 tableParams.reload().then(function(data){
                     actualData = data;
                 });
-                $scope.$digest();
+                scope.$digest();
 
                 // then
                 expect(actualData).toEqual([{ modified: true }, { modified: true }]);
@@ -543,7 +569,7 @@ describe('NgTableParams', function () {
                 tableParams.reload().then(function(data){
                     actualData = data;
                 });
-                $scope.$digest();
+                scope.$digest();
 
                 // then
                 expect(actualData).toEqual([4, 6]);
@@ -566,7 +592,7 @@ describe('NgTableParams', function () {
                 tableParams.reload().then(function(data){
                     actualData = data;
                 });
-                $scope.$digest();
+                scope.$digest();
 
                 // then
                 expect(actualData).toEqual([1,2,3]);
@@ -590,7 +616,7 @@ describe('NgTableParams', function () {
 
                 // when
                 tableParams.reload();
-                $scope.$digest();
+                scope.$digest();
 
                 // then
                 expect(interceptors[0].sequence).toBe(0);
@@ -624,7 +650,7 @@ describe('NgTableParams', function () {
                 tableParams.reload().then(function(data){
                     actualData = data;
                 });
-                $scope.$digest();
+                scope.$digest();
 
                 // then
                 expect(actualData).toEqual(['40', '60']);
