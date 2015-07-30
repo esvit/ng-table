@@ -25,12 +25,12 @@
 
 		<h2>Dataset: <select ng-model="dataset" ng-options="ds for ds in datasets"></select></h2>
 
-        <table ng-table="tableParams" class="table">
+        <table ng-table="tableParams" class="table" show-filter="true">
             <tr ng-repeat="user in $data">
-                <td data-title="'Name'" sortable="'name'">
+                <td data-title="'Name'" sortable="'name'" filter="{name: 'text'}">
                     {{user.name}}
                 </td>
-                <td data-title="'Age'" sortable="'age'">
+                <td data-title="'Age'" sortable="'age'" filter="{age: 'text'}">
                     {{user.age}}
                 </td>
             </tr>
@@ -79,7 +79,7 @@
                         {name: "Enos", age: 34}];
 
 			$scope.$watch("dataset", function () {
-				$scope.tableParams.reload();
+				$scope.tableParams.settings({ data: self["data" + $scope.dataset]});
 			});
 
             $scope.tableParams = new NgTableParams({
@@ -89,18 +89,7 @@
                     name: 'asc'     // initial sorting
                 }
             }, {
-                total: 0, // we should calc it inside getData because data length is dynamic
-                getData: function($defer, params) {
-
-                    var data = self["data" + $scope.dataset];
-
-                    var filteredData = data;
-                    var orderedData = params.sorting() ?
-                                        $filter('orderBy')(filteredData, params.orderBy()) :
-                                        filteredData;
-                    params.total(self["data" + $scope.dataset].length);
-                    $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                }
+                data: self["data" + $scope.dataset]
             });
         })
         </script>

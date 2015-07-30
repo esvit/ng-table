@@ -658,10 +658,12 @@ describe('ng-table', function() {
     describe('internals', function(){
 
         var elm,
-            NgTableParams;
+            NgTableParams,
+            $timeout;
 
-        beforeEach(inject(function($compile, _NgTableParams_) {
+        beforeEach(inject(function($compile, _NgTableParams_, _$timeout_) {
             NgTableParams = _NgTableParams_;
+            $timeout = _$timeout_;
             elm = angular.element(
                 '<table ng-table="tableParams">' +
                 '<tr ng-repeat="user in $data">' +
@@ -673,16 +675,24 @@ describe('ng-table', function() {
             scope.$digest();
         }));
 
-        function getData ($defer, params) {
+        function getData (params) {
             if (!params.hasOwnProperty('getDataCallCount')){
                 params.getDataCallCount = 0;
             }
             params.getDataCallCount++;
-            $defer.resolve([]);
+            return [];
         }
 
         it('should reload when binding a new tableParams to scope', function(){
             var tableParams = new NgTableParams({}, { getData: getData });
+            scope.tableParams = tableParams;
+            scope.$digest();
+
+            expect(tableParams.getDataCallCount).toBe(1);
+        });
+
+        it('should reload once when binding a new tableParams that has an initial settings data field', function(){
+            var tableParams = new NgTableParams({}, { getData: getData, data: [1,2,3] });
             scope.tableParams = tableParams;
             scope.$digest();
 
@@ -701,6 +711,45 @@ describe('ng-table', function() {
             scope.$digest();
 
             expect(tableParams2.getDataCallCount).toBe(1);
+        });
+
+        it('should reload once when binding a new settings data value and changing the filter', function(){
+            var settings = {filterDelay: 100, getData: getData, data: [{age: 1}, {age: 2}]};
+            var tableParams = new NgTableParams({}, settings);
+            scope.tableParams = tableParams;
+            scope.$digest();
+            tableParams.getDataCallCount = 0; // reset
+
+            // when
+            tableParams.filter({ age: 1 });
+            tableParams.settings({ data: [{ age: 1 }, { age: 11 }, { age: 22 }]});
+            scope.$digest();
+            $timeout.flush(); // trigger the delayed reload
+
+            expect(tableParams.getDataCallCount).toBe(1);
+        });
+
+
+        it('should reload once with page reset to 1 when binding a new settings data value and changing the filter', function(){
+            var settings = {
+                counts: [1],
+                getData: getData,
+                data: [{age: 1}, {age: 2}]
+            };
+            var tableParams = new NgTableParams({ count: 1, page: 2 }, settings);
+            scope.tableParams = tableParams;
+            scope.$digest();
+            expect(tableParams.page()).toBe(2); // checking assumptions
+            tableParams.getDataCallCount = 0; // reset
+
+            // when
+            tableParams.filter({ age: 1 });
+            tableParams.settings({ data: [{ age: 1 }, { age: 11 }, { age: 22 }]});
+            scope.$digest();
+            $timeout.flush(); // trigger the delayed reload
+
+            expect(tableParams.getDataCallCount).toBe(1);
+            expect(tableParams.page()).toBe(1);
         });
 
         it('should not reload when filter value is assigned the same value', function(){
@@ -726,6 +775,24 @@ describe('ng-table', function() {
 
             // when
             tableParams.filter({ age: 12});
+            scope.$digest();
+
+            expect(tableParams.getDataCallCount).toBe(1);
+        });
+
+        it('should reload when new dataset supplied', function(){
+            // given
+            var initialDataset = [
+                {age: 1},
+                {age: 2}
+            ];
+            var tableParams = new NgTableParams(null, { getData: getData });
+            scope.tableParams = tableParams;
+            scope.$digest();
+            tableParams.getDataCallCount = 0; //reset
+
+            // when
+            tableParams.settings({ data: [{ age: 10}, { age: 11}, { age: 12}]});
             scope.$digest();
 
             expect(tableParams.getDataCallCount).toBe(1);
