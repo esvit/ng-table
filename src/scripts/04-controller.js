@@ -24,8 +24,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
     // the params field only consults the "own properties" of the $scope. This is to avoid seeing the params
     // field on a $scope higher up in the prototype chain
     if (!$scope.hasOwnProperty("params")) {
-        $scope.params = new NgTableParams();
-        $scope.params.isNullInstance = true;
+        $scope.params = new NgTableParams(true);
     }
     $scope.params.settings().$scope = $scope;
 

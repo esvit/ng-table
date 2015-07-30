@@ -102,11 +102,18 @@ app.value('ngTableDefaults', {
  * @description Parameters manager for ngTable
  */
 
-app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBcShim', 'ngTableDefaultGetData', function($q, $log, ngTableDefaults, ngTableGetDataBcShim, ngTableDefaultGetData) {
+app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBcShim', 'ngTableDefaultGetData', 'ngTableEventsChannel', function($q, $log, ngTableDefaults, ngTableGetDataBcShim, ngTableDefaultGetData, ngTableEventsChannel) {
     var isNumber = function(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
     var NgTableParams = function(baseParameters, baseSettings) {
+
+        // the ngTableController "needs" to create a dummy/null instance and it's important to know whether an instance
+        // is one of these
+        if (typeof baseParameters === "boolean"){
+            this.isNullInstance = true;
+        }
+
         var self = this,
             log = function() {
                 if (settings.debugMode && $log.debug) {
@@ -168,6 +175,10 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                 if (angular.isArray(newSettings.data)) {
                     //auto-set the total from passed in data
                     newSettings.total = newSettings.data.length;
+                }
+                // note: using non-strict equality as want null and undefined to be treated the same
+                if (newSettings.data && (newSettings.data != settings.data)) {
+                    ngTableEventsChannel.publishDatasetChanged(this, newSettings.data, settings.data);
                 }
 
                 // todo: remove the backwards compatibility shim and the following two if blocks
@@ -481,6 +492,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
 
             log('ngTable: reload data');
 
+            var oldDatapage = self.data;
             return pData.then(function(data) {
                 settings.$loading = false;
                 log('ngTable: current scope', settings.$scope);
@@ -491,8 +503,12 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                     self.data = data;
                     if (settings.$scope) settings.$scope.$data = data;
                 }
+                // note: I think it makes sense to publish this event even when data === oldDatapage
+                // subscribers can always set a filter to only receive the event when data !== oldDatapage
+                ngTableEventsChannel.publishAfterReloadData(self, data, oldDatapage);
+                self.reloadPages();
                 if (settings.$scope) {
-                    settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+                    // todo: remove after acceptable depreciation period
                     settings.$scope.$emit('ngTableAfterReloadData');
                 }
                 return data;
@@ -500,8 +516,14 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
         };
 
         this.reloadPages = function() {
-            var self = this;
-            settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+            var oldPages = settings.$scope.pages;
+            var newPages = this.generatePagesArray(this.page(), this.total(), this.count());
+            if (!angular.equals(oldPages, newPages)){
+                ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
+            }
+            if (settings.$scope){
+                settings.$scope.pages = newPages;
+            }
         };
 
         function runGetData(){
@@ -554,6 +576,9 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
         this.settings(ngTableDefaults.settings);
         this.settings(baseSettings);
         this.parameters(baseParameters, true);
+
+        ngTableEventsChannel.publishAfterCreated(this);
+
         return this;
     };
     return NgTableParams;
@@ -593,6 +618,97 @@ app.factory('ngTableParams', ['NgTableParams', function(NgTableParams) {
                 }
                 return pData;
             }
+        }
+    }
+})();
+
+
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .factory('ngTableEventsChannel', ngTableEventsChannel);
+
+    ngTableEventsChannel.$inject = ['$rootScope'];
+
+    /**
+     * @ngdoc service
+     * @name ngTableEventsChannel
+     * @description strongly typed pub/sub for `NgTableParams`
+     *
+     * Supported events:
+     *
+     * * afterCreated - raised when a new instance of `NgTableParams` has finished being constructed
+     * * afterReloadData - raised when the `reload` event has finished loading new data
+     * * datasetChanged - raised when `settings` receives a new data array
+     * * pagesChanged - raised when a new pages array has been generated
+     */
+    function ngTableEventsChannel($rootScope){
+
+        var events = {};
+        events = addChangeEvent('afterCreated', events);
+        events = addChangeEvent('afterReloadData', events);
+        events = addChangeEvent('datasetChanged', events);
+        events = addChangeEvent('pagesChanged', events);
+        return events;
+
+        //////////
+
+        function addChangeEvent(eventName, target){
+            var fnName = eventName.charAt(0).toUpperCase() + eventName.substring(1);
+            var event = {};
+            event['on' + fnName] = createEventSubscriptionFn(eventName);
+            event['publish' + fnName] = createPublishEventFn(eventName);
+            return angular.extend(target, event);
+        }
+
+        function createEventSubscriptionFn(eventName){
+
+            return function subscription(handler/*[, eventSelector or $scope][, eventSelector]*/){
+                var eventSelector = angular.identity;
+                var scope = $rootScope;
+
+                if (arguments.length === 2){
+                    if (angular.isFunction(arguments[1].$new)) {
+                        scope = arguments[1];
+                    } else {
+                        eventSelector = arguments[1]
+                    }
+                } else if (arguments.length > 2){
+                    scope = arguments[1];
+                    eventSelector = arguments[2];
+                }
+
+                // shorthand for subscriber to only receive events from a specific publisher instance
+                if (angular.isObject(eventSelector)) {
+                    var requiredPublisher = eventSelector;
+                    eventSelector = function(publisher){
+                        return publisher === requiredPublisher;
+                    }
+                }
+
+                return scope.$on('ngTable:' + eventName, function(event, params/*, ...args*/){
+                    // don't send events published by the internal NgTableParams created by ngTableController
+                    if (params.isNullInstance) return;
+
+                    var eventArgs = rest(arguments, 2);
+                    var fnArgs = [params].concat(eventArgs);
+                    if (eventSelector.apply(this, fnArgs)){
+                        handler.apply(this, fnArgs);
+                    }
+                });
+            }
+        }
+
+        function createPublishEventFn(eventName){
+            return function publish(/*args*/){
+                var fnArgs = ['ngTable:' + eventName].concat(Array.prototype.slice.call(arguments));
+                $rootScope.$broadcast.apply($rootScope, fnArgs);
+            }
+        }
+
+        function rest(array, n) {
+            return Array.prototype.slice.call(array, n == null ? 1 : n);
         }
     }
 })();

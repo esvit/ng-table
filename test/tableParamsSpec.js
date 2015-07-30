@@ -18,16 +18,24 @@ describe('NgTableParams', function () {
         {name: "Nephi", age: 29, role: 'User'},
         {name: "Enos", age: 34, role: 'User'}
     ];
-    var NgTableParams;
+    var NgTableParams,
+        $rootScope;
 
     beforeEach(module('ngTable'));
 
-    beforeEach(inject(function ($controller, $rootScope, _NgTableParams_) {
+    beforeEach(inject(function ($controller, _$rootScope_, _NgTableParams_) {
+        $rootScope = _$rootScope_;
         scope = $rootScope.$new();
         NgTableParams = _NgTableParams_;
     }));
 
     function createNgTable(settings) {
+        var initialParams;
+        if (arguments.length === 2){
+            initialParams = arguments[0];
+            settings = arguments[1];
+        }
+
         settings = angular.extend({}, {
             $scope: scope,
             filterDelay: 0,
@@ -38,7 +46,7 @@ describe('NgTableParams', function () {
                 params.getDataCallCount++;
             }
         }, settings);
-        return new NgTableParams({}, settings);
+        return new NgTableParams(initialParams, settings);
     }
 
     it('NgTableParams should be defined', function () {
@@ -657,4 +665,439 @@ describe('NgTableParams', function () {
             });
         });
     });
+
+    describe('events', function(){
+
+        var actualEventArgs,
+            actualPublisher,
+            fakeTableParams,
+            ngTableEventsChannel;
+
+        beforeEach(inject(function(_ngTableEventsChannel_){
+            ngTableEventsChannel = _ngTableEventsChannel_;
+            fakeTableParams = {};
+            actualPublisher = undefined;
+            actualEventArgs = undefined;
+        }));
+
+        function getSubscriberCount(){
+            var allEventNames = Object.keys($rootScope.$$listenerCount);
+            var ngTableEvents = allEventNames.filter(function(event){
+                return event.indexOf('ngTable:') === 0;
+            });
+            return ngTableEvents.reduce(function(result, event){
+                result += $rootScope.$$listenerCount[event];
+                return result;
+            }, 0);
+        }
+
+        describe('general pub/sub mechanics', function(){
+
+            var supportedEvents = ['DatasetChanged', 'AfterReloadData', 'PagesChanged', 'AfterCreated'];
+
+            it('should be safe to publish event when no subscribers', function () {
+
+                function test(event) {
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('publishing event should notify registered subscribers (one)', function(){
+
+                function test(event){
+                    // given
+                    var cbCount = 0;
+                    ngTableEventsChannel['on' + event](function(){
+                        cbCount++;
+                    });
+
+                    // when
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+
+                    // then
+                    expect(cbCount).toBe(1);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('publishing event should notify registered subscribers (multiple)', function(){
+
+                function test(event){
+                    // given
+                    var cb1Count = 0;
+                    ngTableEventsChannel['on' + event](function(){
+                        cb1Count++;
+                    });
+                    var cb2Count = 0;
+                    ngTableEventsChannel['on' + event](function(){
+                        cb2Count++;
+                    });
+
+                    // when
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+
+                    // then
+                    expect(cb1Count).toBe(1);
+                    expect(cb2Count).toBe(1);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('subscriber should be able to unregister their callback', function(){
+
+                function test(event){
+                    // given
+                    var cbCount = 0;
+                    var subscription = ngTableEventsChannel['on' + event](function(){
+                        cbCount++;
+                    });
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+                    expect(cbCount).toBe(1); // checking assumptions
+                    expect(getSubscriberCount()).toBe(1); // checking assumptions
+                    cbCount = 0; // reset
+
+                    // when
+                    subscription(); // unsubscribe
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+
+                    // then
+                    expect(cbCount).toBe(0);
+                    expect(getSubscriberCount()).toBe(0);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('subscriber should be able specify the scope to receive events', function(){
+
+                // this is useful as it allows all subscriptions to be removed by calling $destroy on that scope
+
+                function test(event){
+                    // given
+                    var childScope = $rootScope.$new();
+                    var cbCount = 0;
+                    ngTableEventsChannel['on' + event](function(){
+                        cbCount++;
+                    }, childScope);
+
+                    // when, then
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+                    expect(cbCount).toBe(1);
+
+                    cbCount = 0; // reset
+
+                    // when, then
+                    childScope.$destroy();
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+
+                    // then
+                    expect(cbCount).toBe(0);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('should not notify subscribers who have filter out the publisher', function(){
+
+                function test(event){
+                    // given
+                    var cbCount = 0;
+                    ngTableEventsChannel['on' + event](function(){
+                        cbCount++;
+                    }, function(publisher){
+                        return publisher === fakeTableParams;
+                    });
+
+                    // when
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+                    var anoParams = {};
+                    ngTableEventsChannel['publish' + event](anoParams);
+
+                    // then
+                    expect(cbCount).toBe(1);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('should not notify subscribers who have filter not to receive event based on arg values', function(){
+
+                function test(event){
+                    // given
+                    var cbCount = 0;
+                    ngTableEventsChannel['on' + event](function(){
+                        cbCount++;
+                    }, function(publisher, arg1){
+                        return arg1 === 1;
+                    });
+
+                    // when
+                    ngTableEventsChannel['publish' + event](fakeTableParams, 'cc');
+                    ngTableEventsChannel['publish' + event](fakeTableParams, 1);
+
+                    // then
+                    expect(cbCount).toBe(1);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('should support a shorthand for subscribers to receive events from specific NgTableParams instance', function () {
+
+                function test(event) {
+                    // given
+                    var cbCount = 0;
+                    ngTableEventsChannel['on' + event](function () {
+                        cbCount++;
+                    }, fakeTableParams);
+
+                    // when
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+                    var anoParams = {};
+                    ngTableEventsChannel['publish' + event](anoParams);
+
+                    // then
+                    expect(cbCount).toBe(1);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('publisher should be supplied to subscriber callback', function(){
+
+                function test(event){
+                    // given
+                    var cbCount = 0;
+                    ngTableEventsChannel['on' + event](function(params){
+                        actualPublisher = params;
+                    });
+
+                    // when
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+
+                    // then
+                    expect(actualPublisher).toBe(fakeTableParams);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('remaining event args should be supplied to subscriber callback', function(){
+
+                function test(event){
+                    // given
+                    ngTableEventsChannel['on' + event](function(params/*, ...args*/){
+                        actualPublisher = params;
+                        actualEventArgs = _.rest(arguments);
+                    });
+
+                    // when
+                    var arg1 = [1, 2];
+                    var arg2 = [1];
+                    ngTableEventsChannel['publish' + event](fakeTableParams, arg1, arg2);
+
+                    // then
+                    expect(actualEventArgs).toEqual([arg1, arg2]);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+            it('subscribers should never receive events from null instance of tableParams', function(){
+
+                function test(event){
+                    // given
+                    var cbCount = 0;
+                    ngTableEventsChannel['on' + event](function(params/*, ...args*/){
+                        cbCount++;
+                    });
+
+                    // when
+                    fakeTableParams.isNullInstance = true;
+                    ngTableEventsChannel['publish' + event](fakeTableParams);
+
+                    // then
+                    expect(cbCount).toEqual(0);
+                }
+
+                supportedEvents.forEach(test);
+            });
+
+        });
+
+        describe('afterCreated', function(){
+
+            it('should fire when a new NgTableParams has been constructed', function(){
+                // given
+                ngTableEventsChannel.onAfterCreated(function(params){
+                    actualPublisher = params;
+                });
+
+                // when
+                var params = createNgTable();
+
+                // then
+                expect(actualPublisher).toBe(params);
+            });
+        });
+
+        describe('afterReloadData', function(){
+
+            it('should fire when a reload completes', function(){
+                // given
+                ngTableEventsChannel.onAfterReloadData(function(params, newVal, oldVal){
+                    actualPublisher = params;
+                    actualEventArgs = [newVal, oldVal];
+                });
+                var newDatapage = [1, 5, 6];
+                var params = createNgTable({ getData: function(){
+                    return newDatapage;
+                }});
+
+                // when
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(actualPublisher).toBe(params);
+                expect(actualEventArgs).toEqual([newDatapage, []]);
+            });
+
+            it('should fire on reload even if datapage remains the same array', function(){
+                // given
+                var callCount = 0;
+                ngTableEventsChannel.onAfterReloadData(function(/*params, newVal, oldVal*/){
+                    callCount++;
+                });
+                var dataPage = [1,2,3];
+                var params = createNgTable({ getData: function(){
+                    return dataPage;
+                }});
+
+                // when
+                params.reload();
+                scope.$digest();
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(callCount).toBe(2);
+            });
+        });
+
+        describe('pagesChanged', function(){
+
+            it('should fire when a reload completes', function(){
+                // given
+                ngTableEventsChannel.onPagesChanged(function(params, newVal, oldVal){
+                    actualPublisher = params;
+                    actualEventArgs = [newVal, oldVal];
+                });
+                var params = createNgTable({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+
+                // when
+                params.reload();
+                scope.$digest();
+
+                // then
+                var expectedPages = params.generatePagesArray(params.page(), params.total(), params.count());
+                expect(expectedPages.length).toBeGreaterThan(0); // checking assumptions
+                expect(actualEventArgs).toEqual([expectedPages, undefined]);
+            });
+
+            it('should fire when a reload completes (multiple)', function(){
+                // given
+                var callCount = 0;
+                ngTableEventsChannel.onPagesChanged(function(/*params, newVal, oldVal*/){
+                    callCount++;
+                });
+                var params = createNgTable({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+
+                // when
+                params.reload();
+                scope.$digest();
+                params.page(2); // trigger a change to pages data structure
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(callCount).toBe(2);
+            });
+
+            it('should not fire on reload when pages remain the same', function(){
+                // given
+                var callCount = 0;
+                ngTableEventsChannel.onPagesChanged(function(/*params, newVal, oldVal*/){
+                    callCount++;
+                });
+                var params = createNgTable({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                params.reload();
+                scope.$digest();
+
+                // when
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(callCount).toBe(1);
+            });
+        });
+
+        describe('datasetChanged', function(){
+
+            it('should fire when a initial dataset is supplied as a settings value', function(){
+                // given
+                ngTableEventsChannel.onDatasetChanged(function(params, newVal, oldVal){
+                    actualPublisher = params;
+                    actualEventArgs = [newVal, oldVal];
+                });
+
+                // when
+                var initialDs = [5, 10];
+                var params = createNgTable({ data: initialDs});
+
+                // then
+                expect(actualPublisher).toBe(params);
+                expect(actualEventArgs).toEqual([initialDs, null]);
+            });
+
+            it('should fire when a new dataset is supplied as a settings value', function(){
+                // given
+                var initialDs = [1, 2];
+                ngTableEventsChannel.onDatasetChanged(function(params, newVal, oldVal){
+                    actualPublisher = params;
+                    actualEventArgs = [newVal, oldVal];
+                });
+                var params = createNgTable({ data: initialDs});
+
+                // when
+                var newDs = [5, 10];
+                params.settings({ data: newDs});
+
+                // then
+                expect(actualPublisher).toBe(params);
+                expect(actualEventArgs).toEqual([newDs, initialDs]);
+            });
+
+            it('should NOT fire when the same data array is supplied as a new settings value', function(){
+                // given
+                var callCount = 0;
+                var initialDs = [1, 2];
+                ngTableEventsChannel.onDatasetChanged(function(/*params, newVal, oldVal*/){
+                    callCount++;
+                });
+                var params = createNgTable({ data: initialDs});
+
+                // when
+                params.settings({ data: initialDs});
+
+                // then
+                expect(callCount).toBe(1);
+            });
+        });
+    })
 });
