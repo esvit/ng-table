@@ -29,7 +29,7 @@ describe('NgTableParams', function () {
         NgTableParams = _NgTableParams_;
     }));
 
-    function createNgTable(settings) {
+    function createNgTableParams(settings) {
         var initialParams;
         if (arguments.length === 2){
             initialParams = arguments[0];
@@ -189,13 +189,13 @@ describe('NgTableParams', function () {
     describe('reload', function(){
 
         it('should call getData to retrieve data', function(){
-            var params = createNgTable();
+            var params = createNgTableParams();
             params.reload();
             expect(params.getDataCallCount).toBe(1);
         });
 
         it('should add the data returned by getData to the scope', function(){
-            var params = createNgTable({ getData: function(){
+            var params = createNgTableParams({ getData: function(){
                 return [1,2,3];
             }});
             var scopeData = null;
@@ -451,7 +451,7 @@ describe('NgTableParams', function () {
 
         it('shim should be applied when getData function supplied has more than one parameter', function(){
             // given
-            var tableParams = createNgTable({ getData: originalGetDataFn});
+            var tableParams = createNgTableParams({ getData: originalGetDataFn});
 
             // when
             var dataFetched = tableParams.reload();
@@ -472,7 +472,7 @@ describe('NgTableParams', function () {
 
         it('shim should NOT be applied when getData has new signature', function(){
             // given
-            var tableParams = createNgTable({ getData: newGetDataFn});
+            var tableParams = createNgTableParams({ getData: newGetDataFn});
 
             // when
             var dataFetched = tableParams.reload();
@@ -496,20 +496,20 @@ describe('NgTableParams', function () {
 
         it('can register interceptor', function(){
             var interceptor = { response: angular.identity };
-            var tableParams = createNgTable({ interceptors: [interceptor]});
+            var tableParams = createNgTableParams({ interceptors: [interceptor]});
             expect(tableParams.settings().interceptors).toEqual([interceptor]);
         });
 
         it('can register multiple interceptor', function(){
             var interceptors = [{ response: angular.identity }, { response: angular.identity }];
-            var tableParams = createNgTable({ interceptors: interceptors});
+            var tableParams = createNgTableParams({ interceptors: interceptors});
             expect(tableParams.settings().interceptors).toEqual(interceptors);
         });
 
         it('can register interceptors after NgTableParams created', function(){
             var interceptor = { response: angular.identity };
             var interceptor2 = { response: angular.identity };
-            var tableParams = createNgTable({ interceptors: [interceptor]});
+            var tableParams = createNgTableParams({ interceptors: [interceptor]});
             var interceptors = tableParams.settings().interceptors.concat([interceptor2]);
             tableParams.settings({ interceptors: interceptors});
             expect(tableParams.settings().interceptors).toEqual(interceptors);
@@ -524,7 +524,7 @@ describe('NgTableParams', function () {
                         this.hasRun = true;
                     }
                 };
-                var tableParams = createNgTable({ interceptors: [interceptor]});
+                var tableParams = createNgTableParams({ interceptors: [interceptor]});
 
                 // when
                 tableParams.reload();
@@ -544,7 +544,7 @@ describe('NgTableParams', function () {
                         return data;
                     }
                 };
-                var tableParams = createNgTable({ interceptors: [interceptor], getData: function(){
+                var tableParams = createNgTableParams({ interceptors: [interceptor], getData: function(){
                     return [{}, {}];
                 }});
 
@@ -568,7 +568,7 @@ describe('NgTableParams', function () {
                         });
                     }
                 };
-                var tableParams = createNgTable({ interceptors: [interceptor], getData: function(){
+                var tableParams = createNgTableParams({ interceptors: [interceptor], getData: function(){
                     return [2, 3];
                 }});
 
@@ -591,7 +591,7 @@ describe('NgTableParams', function () {
                         return data.results;
                     }
                 };
-                var tableParams = createNgTable({ interceptors: [interceptor], getData: function(){
+                var tableParams = createNgTableParams({ interceptors: [interceptor], getData: function(){
                     return { results: [1,2,3], total: 3};
                 }});
 
@@ -620,7 +620,7 @@ describe('NgTableParams', function () {
                     }
                 };
                 var interceptors = [interceptor, angular.copy(interceptor)];
-                var tableParams = createNgTable({ interceptors: interceptors});
+                var tableParams = createNgTableParams({ interceptors: interceptors});
 
                 // when
                 tableParams.reload();
@@ -649,7 +649,7 @@ describe('NgTableParams', function () {
                     }
                 };
                 var interceptors = [interceptor, interceptor2];
-                var tableParams = createNgTable({ interceptors: [interceptor, interceptor2], getData: function(){
+                var tableParams = createNgTableParams({ interceptors: [interceptor, interceptor2], getData: function(){
                     return [2, 3];
                 }});
 
@@ -938,7 +938,7 @@ describe('NgTableParams', function () {
                 });
 
                 // when
-                var params = createNgTable();
+                var params = createNgTableParams();
 
                 // then
                 expect(actualPublisher).toBe(params);
@@ -954,7 +954,7 @@ describe('NgTableParams', function () {
                     actualEventArgs = [newVal, oldVal];
                 });
                 var newDatapage = [1, 5, 6];
-                var params = createNgTable({ getData: function(){
+                var params = createNgTableParams({ getData: function(){
                     return newDatapage;
                 }});
 
@@ -974,7 +974,7 @@ describe('NgTableParams', function () {
                     callCount++;
                 });
                 var dataPage = [1,2,3];
-                var params = createNgTable({ getData: function(){
+                var params = createNgTableParams({ getData: function(){
                     return dataPage;
                 }});
 
@@ -997,7 +997,7 @@ describe('NgTableParams', function () {
                     actualPublisher = params;
                     actualEventArgs = [newVal, oldVal];
                 });
-                var params = createNgTable({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
 
                 // when
                 params.reload();
@@ -1015,7 +1015,7 @@ describe('NgTableParams', function () {
                 ngTableEventsChannel.onPagesChanged(function(/*params, newVal, oldVal*/){
                     callCount++;
                 });
-                var params = createNgTable({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
 
                 // when
                 params.reload();
@@ -1034,7 +1034,7 @@ describe('NgTableParams', function () {
                 ngTableEventsChannel.onPagesChanged(function(/*params, newVal, oldVal*/){
                     callCount++;
                 });
-                var params = createNgTable({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
                 params.reload();
                 scope.$digest();
 
@@ -1058,7 +1058,7 @@ describe('NgTableParams', function () {
 
                 // when
                 var initialDs = [5, 10];
-                var params = createNgTable({ data: initialDs});
+                var params = createNgTableParams({ data: initialDs});
 
                 // then
                 expect(actualPublisher).toBe(params);
@@ -1072,7 +1072,7 @@ describe('NgTableParams', function () {
                     actualPublisher = params;
                     actualEventArgs = [newVal, oldVal];
                 });
-                var params = createNgTable({ data: initialDs});
+                var params = createNgTableParams({ data: initialDs});
 
                 // when
                 var newDs = [5, 10];
@@ -1090,7 +1090,7 @@ describe('NgTableParams', function () {
                 ngTableEventsChannel.onDatasetChanged(function(/*params, newVal, oldVal*/){
                     callCount++;
                 });
-                var params = createNgTable({ data: initialDs});
+                var params = createNgTableParams({ data: initialDs});
 
                 // when
                 params.settings({ data: initialDs});
