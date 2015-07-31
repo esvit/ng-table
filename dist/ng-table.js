@@ -624,6 +624,11 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
         $scope.params.settings().$scope = $scope;
 
+        // initialize $data with settings.data
+        if (!$scope.$data) {
+            $scope.$data = $scope.params.settings().data;
+        }
+
         if (!angular.equals(newParams.filter, oldParams.filter)) {
             var maybeResetPage = isFirstTimeLoad ? angular.noop : resetPage;
             delayFilter(function() {
@@ -648,7 +653,15 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             };
             $element.addClass('ng-table');
             var headerTemplate = null;
-            if ($element.find('> thead').length === 0) {
+
+            // $element.find('> thead').length === 0 doesn't work on jqlite
+            var theadFound = false;
+            angular.forEach($element.children, function(e) {
+                if (e.tagName === 'THEAD') {
+                    theadFound = true;
+                }
+            });
+            if (!theadFound) {
                 headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
                 $element.prepend(headerTemplate);
             }
