@@ -65,6 +65,11 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
         $scope.params.settings().$scope = $scope;
 
+        // initialize $data with settings.data
+        if (!$scope.$data) {
+            $scope.$data = $scope.params.settings().data;
+        }
+
         if (!angular.equals(newParams.filter, oldParams.filter)) {
             var maybeResetPage = isFirstTimeLoad ? angular.noop : resetPage;
             delayFilter(function() {
