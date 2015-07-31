@@ -115,7 +115,7 @@ describe('ng-table', function() {
             expect(angular.element(filters[2]).hasClass('filter')).toBeTruthy();
         });
 
-        it('should create table header classes', inject(function($compile, $rootScope) {
+        it('should create table header classes', function() {
 
             var thead = elm.find('thead');
             var rows = thead.find('tr');
@@ -132,7 +132,7 @@ describe('ng-table', function() {
             expect(angular.element(titles[0]).hasClass('customClass')).toBeTruthy();
             expect(angular.element(titles[1]).hasClass('customClass')).toBeTruthy();
             expect(angular.element(titles[2]).hasClass('moneyHeaderClass')).toBeTruthy();
-        }));
+        });
 
         it('should create table header titles', function() {
 

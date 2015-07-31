@@ -37,7 +37,6 @@ describe('NgTableParams', function () {
         }
 
         settings = angular.extend({}, {
-            $scope: scope,
             filterDelay: 0,
             getData: function (params) {
                 if (!params.hasOwnProperty('getDataCallCount')){
@@ -152,7 +151,6 @@ describe('NgTableParams', function () {
         var params = new NgTableParams();
 
         expect(params.settings()).toEqual(jasmine.objectContaining({
-            $scope: null,
             $loading: false,
             data: null,
             total: 0,
@@ -170,7 +168,6 @@ describe('NgTableParams', function () {
         params = new NgTableParams({}, { total: 100, counts: [1,2] });
 
         expect(params.settings()).toEqual(jasmine.objectContaining({
-            $scope: null,
             $loading: false,
             data: null,
             total: 100,
@@ -194,36 +191,29 @@ describe('NgTableParams', function () {
             expect(params.getDataCallCount).toBe(1);
         });
 
-        it('should add the data returned by getData to the scope', function(){
+        it('should add the results returned by getData to the data field', function(){
             var params = createNgTableParams({ getData: function(){
                 return [1,2,3];
             }});
-            var scopeData = null;
-            params.reload().then(function(){
-                scopeData = scope.$data;
-            });
+            params.reload();
             scope.$digest();
-            expect(scopeData).toEqual([1,2,3]);
+            expect(params.data).toEqual([1,2,3]);
         });
 
         it('should use ngTableDefaultGetData function when NgTableParams not supplied a getData function', function(){
             // given
             var settings = {
-                data: [{age: 1}, {age: 11}, {age: 110}, {age: 5}],
-                $scope: scope
+                data: [{age: 1}, {age: 11}, {age: 110}, {age: 5}]
             };
             var paramValues = {count: 2, filter: {age: 1}, sorting: { age: 'desc'}};
             var params = new NgTableParams(paramValues, settings);
 
             // when
-            var scopeData = null;
-            params.reload().then(function(){
-                scopeData = scope.$data;
-            });
+            params.reload();
             scope.$digest();
 
             // then
-            expect(scopeData).toEqual([{age: 110}, {age: 11}]);
+            expect(params.data).toEqual([{age: 110}, {age: 11}]);
             expect(params.total()).toEqual(3);
         });
     });

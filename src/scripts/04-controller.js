@@ -14,8 +14,8 @@
  * Each {@link ngTable ngTable} directive creates an instance of `ngTableController`
  */
 app.controller('ngTableController', ['$scope', 'NgTableParams', '$timeout', '$parse', '$compile', '$attrs', '$element',
-    'ngTableColumn',
-function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ngTableColumn) {
+    'ngTableColumn', 'ngTableEventsChannel',
+function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ngTableColumn, ngTableEventsChannel) {
     var isFirstTimeLoad = true;
     $scope.$filterRow = {};
     $scope.$loading = false;
@@ -226,6 +226,31 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             });
         }
     };
+
+
+
+    function commonInit(){
+        ngTableEventsChannel.onAfterReloadData(bindDataToScope, $scope, isMyPublisher);
+        ngTableEventsChannel.onPagesChanged(bindPagesToScope, $scope, isMyPublisher);
+
+        function bindDataToScope(params, newDatapage){
+            if (params.settings().groupBy) {
+                $scope.$groups = newDatapage;
+            } else {
+                $scope.$data = newDatapage;
+            }
+        }
+
+        function bindPagesToScope(params, newPages){
+            $scope.pages = newPages
+        }
+
+        function isMyPublisher(publisher){
+            return $scope.params === publisher;
+        }
+    }
+
+    commonInit();
 }]);
 
 

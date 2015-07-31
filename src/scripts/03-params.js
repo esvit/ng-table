@@ -478,10 +478,6 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
             var self = this,
                 pData = null;
 
-            if (!settings.$scope) {
-                return;
-            }
-
             settings.$loading = true;
             if (settings.groupBy) {
                 pData = runGetGroups();
@@ -492,39 +488,35 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
 
             log('ngTable: reload data');
 
-            var oldDatapage = self.data;
+            var oldData = self.data;
             return pData.then(function(data) {
                 settings.$loading = false;
-                log('ngTable: current scope', settings.$scope);
-                if (settings.groupBy) {
-                    self.data = data;
-                    if (settings.$scope) settings.$scope.$groups = data;
-                } else {
-                    self.data = data;
-                    if (settings.$scope) settings.$scope.$data = data;
-                }
-                // note: I think it makes sense to publish this event even when data === oldDatapage
-                // subscribers can always set a filter to only receive the event when data !== oldDatapage
-                ngTableEventsChannel.publishAfterReloadData(self, data, oldDatapage);
+                self.data = data;
+                // note: I think it makes sense to publish this event even when data === oldData
+                // subscribers can always set a filter to only receive the event when data !== oldData
+                ngTableEventsChannel.publishAfterReloadData(self, data, oldData);
                 self.reloadPages();
+
+                // todo: remove after acceptable depreciation period
                 if (settings.$scope) {
-                    // todo: remove after acceptable depreciation period
                     settings.$scope.$emit('ngTableAfterReloadData');
                 }
+
                 return data;
             });
         };
 
-        this.reloadPages = function() {
-            var oldPages = settings.$scope.pages;
-            var newPages = this.generatePagesArray(this.page(), this.total(), this.count());
-            if (!angular.equals(oldPages, newPages)){
-                ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
+        this.reloadPages = (function() {
+            var currentPages;
+            return function(){
+                var oldPages = currentPages;
+                var newPages = self.generatePagesArray(self.page(), self.total(), self.count());
+                if (!angular.equals(oldPages, newPages)){
+                    currentPages = newPages;
+                    ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
+                }
             }
-            if (settings.$scope){
-                settings.$scope.pages = newPages;
-            }
-        };
+        })();
 
         function runGetData(){
             var getDataFn = settings.getDataFnAdaptor(settings.getData);
@@ -556,6 +548,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
         angular.extend(params, ngTableDefaults.params);
 
         var settings = {
+            // todo: remove $scope after acceptable depreciation period as no longer required
             $scope: null, // set by ngTable controller
             $loading: false,
             data: null, //allows data to be set when table is initialized
