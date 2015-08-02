@@ -56,16 +56,103 @@ var app = angular.module('ngTable', []);
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .factory('ngTableEventsChannel', ngTableEventsChannel);
+
+    ngTableEventsChannel.$inject = ['$rootScope'];
+
+    /**
+     * @ngdoc service
+     * @name ngTableEventsChannel
+     * @description strongly typed pub/sub for `NgTableParams`
+     *
+     * Supported events:
+     *
+     * * afterCreated - raised when a new instance of `NgTableParams` has finished being constructed
+     * * afterReloadData - raised when the `reload` event has finished loading new data
+     * * datasetChanged - raised when `settings` receives a new data array
+     * * pagesChanged - raised when a new pages array has been generated
+     */
+    function ngTableEventsChannel($rootScope){
+
+        var events = {};
+        events = addChangeEvent('afterCreated', events);
+        events = addChangeEvent('afterReloadData', events);
+        events = addChangeEvent('datasetChanged', events);
+        events = addChangeEvent('pagesChanged', events);
+        return events;
+
+        //////////
+
+        function addChangeEvent(eventName, target){
+            var fnName = eventName.charAt(0).toUpperCase() + eventName.substring(1);
+            var event = {};
+            event['on' + fnName] = createEventSubscriptionFn(eventName);
+            event['publish' + fnName] = createPublishEventFn(eventName);
+            return angular.extend(target, event);
+        }
+
+        function createEventSubscriptionFn(eventName){
+
+            return function subscription(handler/*[, eventSelector or $scope][, eventSelector]*/){
+                var eventSelector = angular.identity;
+                var scope = $rootScope;
+
+                if (arguments.length === 2){
+                    if (angular.isFunction(arguments[1].$new)) {
+                        scope = arguments[1];
+                    } else {
+                        eventSelector = arguments[1]
+                    }
+                } else if (arguments.length > 2){
+                    scope = arguments[1];
+                    eventSelector = arguments[2];
+                }
+
+                // shorthand for subscriber to only receive events from a specific publisher instance
+                if (angular.isObject(eventSelector)) {
+                    var requiredPublisher = eventSelector;
+                    eventSelector = function(publisher){
+                        return publisher === requiredPublisher;
+                    }
+                }
+
+                return scope.$on('ngTable:' + eventName, function(event, params/*, ...args*/){
+                    // don't send events published by the internal NgTableParams created by ngTableController
+                    if (params.isNullInstance) return;
+
+                    var eventArgs = rest(arguments, 2);
+                    var fnArgs = [params].concat(eventArgs);
+                    if (eventSelector.apply(this, fnArgs)){
+                        handler.apply(this, fnArgs);
+                    }
+                });
+            }
+        }
+
+        function createPublishEventFn(eventName){
+            return function publish(/*args*/){
+                var fnArgs = ['ngTable:' + eventName].concat(Array.prototype.slice.call(arguments));
+                $rootScope.$broadcast.apply($rootScope, fnArgs);
+            }
+        }
+
+        function rest(array, n) {
+            return Array.prototype.slice.call(array, n == null ? 1 : n);
+        }
+    }
+})();
+
 /**
- * @ngdoc object
- * @name ngTableDefaultParams
- * @module ngTable
- * @description Default Parameters for ngTable
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-app.value('ngTableDefaults', {
-    params: {},
-    settings: {}
-});
 
 (function(){
     'use strict';
@@ -76,21 +163,33 @@ app.value('ngTableDefaults', {
     ngTableFilterConfigProvider.$inject = [];
 
     function ngTableFilterConfigProvider(){
+        var config;
         var defaultConfig = {
             defaultBaseUrl: 'ng-table/filters/',
             defaultExt: '.html',
             aliasUrls: {}
         };
-        var config = defaultConfig;
 
         this.$get = ngTableFilterConfig;
+        this.resetConfigs = resetConfigs;
         this.setConfig = setConfig;
+
+        init();
 
         /////////
 
+        function init(){
+            resetConfigs();
+        }
+
+        function resetConfigs(){
+            config = defaultConfig;
+        }
+
         function setConfig(customConfig){
-            config = angular.extend({}, defaultConfig, customConfig);
-            config.aliasUrls = angular.extend({}, defaultConfig.aliasUrls, config.aliasUrls);
+            var mergeConfig = angular.extend({}, config, customConfig);
+            mergeConfig.aliasUrls = angular.extend({}, config.aliasUrls, customConfig.aliasUrls);
+            config = mergeConfig;
         }
 
         /////////
@@ -99,13 +198,20 @@ app.value('ngTableDefaults', {
 
         function ngTableFilterConfig(){
 
-            var publicConfig = angular.copy(config);
+            var publicConfig;
 
             var service = {
                 config: publicConfig,
                 getTemplateUrl: getTemplateUrl,
                 getUrlForAlias: getUrlForAlias
             };
+            Object.defineProperty(service, "config", {
+                get: function(){
+                    return publicConfig = publicConfig || angular.copy(config);
+                },
+                enumerable: true
+            });
+
             return service;
 
             /////////
@@ -125,6 +231,132 @@ app.value('ngTableDefaults', {
     }
 })();
 
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+(function(){
+    'use strict';
+
+
+    angular.module('ngTable')
+        .provider('ngTableDefaultGetData', ngTableDefaultGetDataProvider);
+
+    ngTableDefaultGetDataProvider.$inject = [];
+
+    /**
+     * @ngdoc provider
+     * @name ngTableDefaultGetDataProvider
+     * @description Allows for the configuration of the {@link ngTable.ngTableDefaultGetData ngTableDefaultGetData}
+     * service.
+     *
+     * Set filterFilterName to the name of a angular filter that knows how to take `NgTableParams.filter()`
+     * to restrict an array of data.
+     *
+     * Set sortingFilterName to the name of a angular filter that knows how to take `NgTableParams.orderBy()`
+     * to sort an array of data.
+     *
+     * Out of the box the `ngTableDefaultGetData` service will be configured to use the angular `filter` and `orderBy`
+     * filters respectively
+     */
+    function ngTableDefaultGetDataProvider(){
+        var provider = this;
+        provider.$get = ngTableDefaultGetData;
+        provider.filterFilterName = 'filter';
+        provider.sortingFilterName = 'orderBy';
+
+        ///////////
+
+        ngTableDefaultGetData.$inject = ['$filter'];
+
+        /**
+         * @ngdoc service
+         * @name ngTableDefaultGetData
+         * @description A default implementation of the getData function that will apply the `filter`, `orderBy` and
+         * paging values from the `NgTableParams` instance supplied to the data array supplied.
+         *
+         * The outcome will be to return the resulting array and to assign the total item count after filtering
+         * to the `total` of the `NgTableParams` instance supplied
+         */
+        function ngTableDefaultGetData($filter) {
+
+            return getData;
+
+            function getData(data, params) {
+                if (data == null){
+                    return [];
+                }
+
+                var fData = params.hasFilter() ? $filter(provider.filterFilterName)(data, params.filter()) : data;
+                var orderBy = params.orderBy();
+                var orderedData = orderBy.length ? $filter(provider.sortingFilterName)(fData, orderBy) : fData;
+                var pagedData = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                params.total(orderedData.length); // set total for recalc pagination
+                return pagedData;
+            }
+        }
+    }
+})();
+
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+(function(){
+    'use strict';
+
+    // todo: remove shim after an acceptable depreciation period
+
+    angular.module('ngTable')
+        .factory('ngTableGetDataBcShim', ngTableGetDataBcShim);
+
+    ngTableGetDataBcShim.$inject = ['$q'];
+
+    function ngTableGetDataBcShim($q){
+
+        return createWrapper;
+
+        function createWrapper(getDataFn){
+            return function getDataShim(/*args*/){
+                var $defer = $q.defer();
+                var pData = getDataFn.apply(this, [$defer].concat(Array.prototype.slice.call(arguments)));
+                if (!pData) {
+                    // If getData resolved the $defer, and didn't promise us data,
+                    //   create a promise from the $defer. We need to return a promise.
+                    pData = $defer.promise;
+                }
+                return pData;
+            }
+        }
+    }
+})();
+
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+/**
+ * @ngdoc object
+ * @name ngTableDefaultParams
+ * @module ngTable
+ * @description Default Parameters for ngTable
+ */
+app.value('ngTableDefaults', {
+    params: {},
+    settings: {}
+});
 
 /**
  * @ngdoc service
@@ -133,12 +365,21 @@ app.value('ngTableDefaults', {
  * @description Parameters manager for ngTable
  */
 
-app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log, ngTableDefaults) {
+app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBcShim', 'ngTableDefaultGetData', 'ngTableEventsChannel', function($q, $log, ngTableDefaults, ngTableGetDataBcShim, ngTableDefaultGetData, ngTableEventsChannel) {
     var isNumber = function(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
     var NgTableParams = function(baseParameters, baseSettings) {
+
+        // the ngTableController "needs" to create a dummy/null instance and it's important to know whether an instance
+        // is one of these
+        if (typeof baseParameters === "boolean"){
+            this.isNullInstance = true;
+        }
+
         var self = this,
+            committedParams,
+            isCommittedDataset = false,
             log = function() {
                 if (settings.debugMode && $log.debug) {
                     $log.debug.apply(this, arguments);
@@ -200,6 +441,25 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     //auto-set the total from passed in data
                     newSettings.total = newSettings.data.length;
                 }
+                // note: using != as want null and undefined to be treated the same
+                if (newSettings.hasOwnProperty('data') && (newSettings.data != settings.data)) {
+                    if (isCommittedDataset){
+                        this.page(1); // reset page as a new dataset has been supplied
+                    }
+                    isCommittedDataset = false;
+                    ngTableEventsChannel.publishDatasetChanged(this, newSettings.data, settings.data);
+                }
+
+                // todo: remove the backwards compatibility shim and the following two if blocks
+                if (newSettings.getData && newSettings.getData.length > 1){
+                    // support the old getData($defer, params) api
+                    newSettings.getDataFnAdaptor = ngTableGetDataBcShim;
+                }
+                if (newSettings.getGroups && newSettings.getGroups.length > 2){
+                    // support the old getGroups($defer, grouping, params) api
+                    newSettings.getGroupsFnAdaptor = ngTableGetDataBcShim;
+                }
+
                 settings = angular.extend(settings, newSettings);
                 log('ngTable: set settings', settings);
                 return this;
@@ -321,16 +581,11 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
          * @name NgTableParams#getData
          * @description Called when updated some of parameters for get new data
          *
-         * @param {Object} $defer promise object
          * @param {Object} params New parameters
          */
-        this.getData = function($defer, params) {
-            if (angular.isArray(this.data) && angular.isObject(params)) {
-                $defer.resolve(this.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            } else {
-                $defer.resolve([]);
-            }
-            return $defer.promise;
+        this.getData = function(params) {
+            // note: this === settings
+            return ngTableDefaultGetData(this.data, params);
         };
 
         /**
@@ -338,10 +593,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
          * @name NgTableParams#getGroups
          * @description Return groups for table grouping
          */
-        this.getGroups = function($defer, column) {
-            var defer = $q.defer();
-
-            defer.promise.then(function(data) {
+        this.getGroups = function(column) {
+            return runGetData().then(function(data) {
                 var groups = {};
                 angular.forEach(data, function(item) {
                     var groupName = angular.isFunction(column) ? column(item) : item[column];
@@ -357,9 +610,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
                     result.push(groups[i]);
                 }
                 log('ngTable: refresh groups', result);
-                $defer.resolve(result);
+                return result;
             });
-            return this.getData(defer, self);
         };
 
         /**
@@ -429,6 +681,48 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
 
         /**
          * @ngdoc method
+         * @name NgTableParams#isDataReloadRequired
+         * @description Return true when a change to this `NgTableParams` instance should require the reload method
+         * to be run so as to ensure the data presented to the user reflects the `NgTableParams`
+         */
+        this.isDataReloadRequired = function(){
+            // note: using != as want to treat null and undefined the same
+            return !isCommittedDataset || !angular.equals(params, committedParams);
+        };
+
+        /**
+         * @ngdoc method
+         * @name NgTableParams#hasFilter
+         * @description Determines if NgTableParams#filter has significant filter value(s)
+         * (any value except null, undefined, or empty string)
+         * @returns {Boolean} true when NgTableParams#filter has at least one significant field value
+         */
+        this.hasFilter = function(){
+            var currentFilter = this.filter();
+            var keys = Object.keys(currentFilter);
+            var result = false;
+            for (var i=0; i < keys.length; i++){
+                var filterValue = currentFilter[keys[i]];
+                if (filterValue != null && filterValue !== '') {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        };
+
+        /**
+         * @ngdoc method
+         * @name NgTableParams#hasFilterChanges
+         * @description Return true when a change to `NgTableParams.filters`require the reload method
+         * to be run so as to ensure the data presented to the user reflects these filters
+         */
+        this.hasFilterChanges = function(){
+            return !angular.equals((params && params.filter), (committedParams && committedParams.filter));
+        };
+
+        /**
+         * @ngdoc method
          * @name NgTableParams#url
          * @description Return groups for table grouping
          *
@@ -471,51 +765,78 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
          * @description Reload table data
          */
         this.reload = function() {
-            var $defer = $q.defer(),
-                self = this,
+            var self = this,
                 pData = null;
 
-            if (!settings.$scope) {
-                return;
-            }
-
             settings.$loading = true;
+
+            committedParams = angular.copy(params);
+            isCommittedDataset = true;
+
             if (settings.groupBy) {
-                pData = settings.getGroups($defer, settings.groupBy, this);
+                pData = runGetGroups();
             } else {
-                pData = settings.getData($defer, this);
+                pData = runGetData();
             }
+            pData = runInterceptorPipeline(pData);
+
             log('ngTable: reload data');
 
-            if (!pData) {
-                // If getData resolved the $defer, and didn't promise us data,
-                //   create a promise from the $defer. We need to return a promise.
-                pData = $defer.promise;
-            }
+            var oldData = self.data;
             return pData.then(function(data) {
                 settings.$loading = false;
-                log('ngTable: current scope', settings.$scope);
-                if (settings.groupBy) {
-                    self.data = data;
-                    if (settings.$scope) settings.$scope.$groups = data;
-                } else {
-                    self.data = data;
-                    if (settings.$scope) settings.$scope.$data = data;
-                }
+                self.data = data;
+                // note: I think it makes sense to publish this event even when data === oldData
+                // subscribers can always set a filter to only receive the event when data !== oldData
+                ngTableEventsChannel.publishAfterReloadData(self, data, oldData);
+                self.reloadPages();
+
+                // todo: remove after acceptable depreciation period
                 if (settings.$scope) {
-                    settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
                     settings.$scope.$emit('ngTableAfterReloadData');
                 }
+
                 return data;
+            }).catch(function(reason){
+                committedParams = null;
+                isCommittedDataset = false;
+                // "rethrow"
+                return $q.reject(reason);
             });
         };
 
-        this.reloadPages = function() {
-            var self = this;
-            settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
-        };
+        this.reloadPages = (function() {
+            var currentPages;
+            return function(){
+                var oldPages = currentPages;
+                var newPages = self.generatePagesArray(self.page(), self.total(), self.count());
+                if (!angular.equals(oldPages, newPages)){
+                    currentPages = newPages;
+                    ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
+                }
+            }
+        })();
 
-        var params = this.$params = {
+        function runGetData(){
+            var getDataFn = settings.getDataFnAdaptor(settings.getData);
+            return $q.when(getDataFn.call(settings, self));
+        }
+
+        function runGetGroups(){
+            var getGroupsFn = settings.getGroupsFnAdaptor(settings.getGroups);
+            return $q.when(getGroupsFn.call(settings, settings.groupBy, self));
+        }
+
+        function runInterceptorPipeline(dataFetched){
+            var interceptors = settings.interceptors || [];
+            return interceptors.reduce(function(result, interceptor){
+                return result.then(function(data){
+                    return $q.when(interceptor.response(data, self));
+                });
+            }, dataFetched);
+        }
+
+        var params = {
             page: 1,
             count: 1,
             filter: {},
@@ -526,6 +847,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
         angular.extend(params, ngTableDefaults.params);
 
         var settings = {
+            // todo: remove $scope after acceptable depreciation period as no longer required
             $scope: null, // set by ngTable controller
             $loading: false,
             data: null, //allows data to be set when table is initialized
@@ -533,16 +855,22 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', function($q, $log
             defaultSort: 'desc',
             filterDelay: 750,
             counts: [10, 25, 50, 100],
+            interceptors: [],
             paginationMaxBlocks: 11,
             paginationMinBlocks: 5,
             sortingIndicator: 'span',
+            getDataFnAdaptor: angular.identity,
+            getGroupsFnAdaptor: angular.identity,
             getGroups: this.getGroups,
             getData: this.getData
         };
-        angular.extend(settings, ngTableDefaults.settings);
 
+        this.settings(ngTableDefaults.settings);
         this.settings(baseSettings);
         this.parameters(baseParameters, true);
+
+        ngTableEventsChannel.publishAfterCreated(this);
+
         return this;
     };
     return NgTableParams;
@@ -565,6 +893,67 @@ app.factory('ngTableParams', ['NgTableParams', function(NgTableParams) {
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .controller('ngTableFilterRowController', ngTableFilterRowController);
+
+    ngTableFilterRowController.$inject = ['$scope', 'ngTableFilterConfig'];
+
+    function ngTableFilterRowController($scope, ngTableFilterConfig){
+
+        $scope.config = ngTableFilterConfig;
+    }
+})();
+
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .controller('ngTableSorterRowController', ngTableSorterRowController);
+
+    ngTableSorterRowController.$inject = ['$scope'];
+
+    function ngTableSorterRowController($scope){
+
+        $scope.sortBy = sortBy;
+
+        ///////////
+
+        function sortBy($column, event) {
+            var parsedSortable = $column.sortable && $column.sortable();
+            if (!parsedSortable) {
+                return;
+            }
+            var defaultSort = $scope.params.settings().defaultSort;
+            var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
+            var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
+            var sortingParams = (event.ctrlKey || event.metaKey) ? $scope.params.sorting() : {};
+            sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
+            $scope.params.parameters({
+                sorting: sortingParams
+            });
+        }
+    }
+})();
+
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
 /**
  * @ngdoc object
  * @name ngTableController
@@ -573,8 +962,8 @@ app.factory('ngTableParams', ['NgTableParams', function(NgTableParams) {
  * Each {@link ngTable ngTable} directive creates an instance of `ngTableController`
  */
 app.controller('ngTableController', ['$scope', 'NgTableParams', '$timeout', '$parse', '$compile', '$attrs', '$element',
-    'ngTableColumn',
-function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ngTableColumn) {
+    'ngTableColumn', 'ngTableEventsChannel',
+function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ngTableColumn, ngTableEventsChannel) {
     var isFirstTimeLoad = true;
     $scope.$filterRow = {};
     $scope.$loading = false;
@@ -583,8 +972,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
     // the params field only consults the "own properties" of the $scope. This is to avoid seeing the params
     // field on a $scope higher up in the prototype chain
     if (!$scope.hasOwnProperty("params")) {
-        $scope.params = new NgTableParams();
-        $scope.params.isNullInstance = true;
+        $scope.params = new NgTableParams(true);
     }
     $scope.params.settings().$scope = $scope;
 
@@ -596,49 +984,43 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         };
     })();
 
-    function resetPage() {
-        $scope.params.$params.page = 1;
-    }
-
-    $scope.$watch('params.$params', function(newParams, oldParams) {
-
-        // We don't want to watch for changes to $params whilst the NgTableParams.reload function is executing
-        // (ie $loading === true).
-        // This is important for cases where you have a want to *chain* a subsequent call to reload.
-        // Take the following code example:
-        //
-        // tableParams.reload().then(function(){
-        //   if (!tableParams.total() && _.size(tableParams.filter()) > 0) {
-        //     tableParams.filter({});
-        //     return tableParams.reload();
-        //   }
-        // });
-        //
-        // In the code above, you're checking whether to remove the table filter. When removing the filter
-        // you want the second reload to execute in the *same promise chain* initiated by the first call
-        // to reload; you do NOT want the second reload to trigger sometime later because of a $watch
-        // seeing the change to the filter.
-        if (newParams === oldParams || $scope.params.settings().$loading) {
+    function onDataReloadStatusChange (newStatus/*, oldStatus*/) {
+        if (!newStatus) {
             return;
         }
 
         $scope.params.settings().$scope = $scope;
 
-        if (!angular.equals(newParams.filter, oldParams.filter)) {
-            var maybeResetPage = isFirstTimeLoad ? angular.noop : resetPage;
-            delayFilter(function() {
-                maybeResetPage();
-                $scope.params.reload();
-            }, $scope.params.settings().filterDelay);
+        var currentParams = $scope.params;
+
+        if (currentParams.hasFilterChanges()) {
+            var applyFilter = function () {
+                currentParams.page(1);
+                currentParams.reload();
+            };
+            if (currentParams.settings().filterDelay) {
+                delayFilter(applyFilter, currentParams.settings().filterDelay);
+            } else {
+                applyFilter();
+            }
         } else {
-            $scope.params.reload();
+            currentParams.reload();
+        }
+    }
+
+    // watch for when a new NgTableParams is bound to the scope
+    // CRITICAL: the watch must be for reference and NOT value equality; this is because NgTableParams maintains
+    // the current data page as a field. Checking this for value equality would be terrible for performance
+    // and potentially cause an error if the items in that array has circular references
+    $scope.$watch('params', function(newParams, oldParams){
+        if (newParams === oldParams || !newParams) {
+            return;
         }
 
-        if (!$scope.params.isNullInstance) {
-            isFirstTimeLoad = false;
-        }
+        newParams.reload();
+    }, false);
 
-    }, true);
+    $scope.$watch('params.isDataReloadRequired()', onDataReloadStatusChange);
 
     this.compileDirectiveTemplates = function () {
         if (!$element.hasClass('ng-table')) {
@@ -648,7 +1030,15 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             };
             $element.addClass('ng-table');
             var headerTemplate = null;
-            if ($element.find('> thead').length === 0) {
+
+            // $element.find('> thead').length === 0 doesn't work on jqlite
+            var theadFound = false;
+            angular.forEach($element.children, function(e) {
+                if (e.tagName === 'THEAD') {
+                    theadFound = true;
+                }
+            });
+            if (!theadFound) {
                 headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
                 $element.prepend(headerTemplate);
             }
@@ -744,6 +1134,31 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             });
         }
     };
+
+
+
+    function commonInit(){
+        ngTableEventsChannel.onAfterReloadData(bindDataToScope, $scope, isMyPublisher);
+        ngTableEventsChannel.onPagesChanged(bindPagesToScope, $scope, isMyPublisher);
+
+        function bindDataToScope(params, newDatapage){
+            if (params.settings().groupBy) {
+                $scope.$groups = newDatapage;
+            } else {
+                $scope.$data = newDatapage;
+            }
+        }
+
+        function bindPagesToScope(params, newPages){
+            $scope.pages = newPages
+        }
+
+        function isMyPublisher(publisher){
+            return $scope.params === publisher;
+        }
+    }
+
+    commonInit();
 }]);
 
 
@@ -814,51 +1229,6 @@ app.factory('ngTableColumn', [function () {
         buildColumn: buildColumn
     };
 }]);
-
-(function(){
-    'use strict';
-
-    angular.module('ngTable')
-        .controller('ngTableSorterRowController', ngTableSorterRowController);
-
-    ngTableSorterRowController.$inject = ['$scope'];
-
-    function ngTableSorterRowController($scope){
-
-        $scope.sortBy = sortBy;
-
-        ///////////
-
-        function sortBy($column, event) {
-            var parsedSortable = $column.sortable && $column.sortable();
-            if (!parsedSortable) {
-                return;
-            }
-            var defaultSort = $scope.params.settings().defaultSort;
-            var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
-            var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
-            var sortingParams = (event.ctrlKey || event.metaKey) ? $scope.params.sorting() : {};
-            sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
-            $scope.params.parameters({
-                sorting: sortingParams
-            });
-        }
-    }
-})();
-
-(function(){
-    'use strict';
-
-    angular.module('ngTable')
-        .controller('ngTableFilterRowController', ngTableFilterRowController);
-
-    ngTableFilterRowController.$inject = ['$scope', 'ngTableFilterConfig'];
-
-    function ngTableFilterRowController($scope, ngTableFilterConfig){
-
-        $scope.config = ngTableFilterConfig;
-    }
-})();
 
 /**
  * ngTable: Table + Angular JS

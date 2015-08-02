@@ -1,3 +1,41 @@
+<a name="0.8.1"></a>
+# 0.8.1 (2015-08-02)
+
+
+## Bug Fixes
+
+- **ngTableController:**
+  - table not reloaded when new NgTableParams bound to scope
+  ([d8cbd771](https://github.com/esvit/ng-table/commit/d8cbd771d11beb53cdb16e060c32cf633095d466))
+  - apply filter delay only when relevant
+  ([1ed42168](https://github.com/esvit/ng-table/commit/1ed42168d59933881f11ba36047459ddfe1af442))
+
+
+## Features
+
+- **NgTableController:** optimize calls to reload
+  ([e94ca5f7](https://github.com/esvit/ng-table/commit/e94ca5f7873673616e15a46ab8317595331ab6e1))
+- **NgTableParams:**
+  - allow getData to return an array of data
+  ([ab9ffdfa](https://github.com/esvit/ng-table/commit/ab9ffdfa09c64a10b4f955db21ed4de0a0bf7a9d))
+  - add hasFilter function
+  ([1163e22c](https://github.com/esvit/ng-table/commit/1163e22c9115515f3e9854769aa179895edfa550))
+  - add isDataReloadRequired and hasFilterChanges methods
+  ([95b0f2ba](https://github.com/esvit/ng-table/commit/95b0f2ba9e5073b5866c7c332c9556debe76495c))
+  - better default implementation of getData that filters and sorts
+  ([8d912609](https://github.com/esvit/ng-table/commit/8d912609f156d3722bba79ea53d5232576282ae8))
+  - extend getData with interceptor pipeline
+  ([f94c6357](https://github.com/esvit/ng-table/commit/f94c63572782b2e8a808beaf0c58a463e3fe50a4))
+- **ngTableController:** automatically reload table when settings data array changes
+  ([4817c203](https://github.com/esvit/ng-table/commit/4817c20359ee571c73e0edba89bf759a4f3b5aa2))
+- **ngTableDefaultGetData:** new service for applying NgTableParam filters (etc) to a data array
+  ([bdf5d9ee](https://github.com/esvit/ng-table/commit/bdf5d9ee3a71a441aba667d12bc5e48153fe32dc))
+- **ngTableEventsChannel:** publish strongly typed events using explicit service
+  ([1f3e7e4c](https://github.com/esvit/ng-table/commit/1f3e7e4cd797d6b96bb57473786eea64f805ce81))
+- **ngTableFilterConfig:** setConfig now merges with previous config values
+  ([155ef620](https://github.com/esvit/ng-table/commit/155ef6203baf228976d201e6757adf69a669d5c0))
+
+
 <a name="0.8.0"></a>
 # 0.8.0 (2015-07-25)
 
