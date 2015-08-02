@@ -773,7 +773,7 @@ describe('ng-table', function() {
             expect(tp.page()).toBe(1);
         });
 
-        xit('changing filter, orderBy, or page and then calling reload should not invoke getData twice', function(){
+        it('changing filter, orderBy, or page and then calling reload should not invoke getData twice', function(){
 
             // todo: refactor the watches in ngTableController to handle this case
 
@@ -811,7 +811,7 @@ describe('ng-table', function() {
             expect(tp.settings().getData.calls.count()).toBe(2);
         });
 
-        xit('changing filter, orderBy, or page then reload in a callback to reload should re-invoke getData 1 time only', function(){
+        it('changing filter, orderBy, or page then reload in a callback to reload should re-invoke getData 1 time only', function(){
 
             // todo: refactor the watches in ngTableController to handle this case
 

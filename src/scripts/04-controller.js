@@ -36,27 +36,8 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
         };
     })();
 
-    var pendingReload;
-
-    function onParamsChange (newParams, oldParams) {
-
-        // We don't want to watch for changes to $params whilst the NgTableParams.reload function is executing
-        // (ie $loading === true).
-        // This is important for cases where you have a want to *chain* a subsequent call to reload.
-        // Take the following code example:
-        //
-        // tableParams.reload().then(function(){
-        //   if (!tableParams.total() && _.size(tableParams.filter()) > 0) {
-        //     tableParams.filter({});
-        //     return tableParams.reload();
-        //   }
-        // });
-        //
-        // In the code above, you're checking whether to remove the table filter. When removing the filter
-        // you want the second reload to execute in the *same promise chain* initiated by the first call
-        // to reload; you do NOT want the second reload to trigger sometime later because of a $watch
-        // seeing the change to the filter.
-        if (newParams === oldParams || $scope.params.settings().$loading) {
+    function onDataReloadStatusChange (newStatus/*, oldStatus*/) {
+        if (!newStatus) {
             return;
         }
 
@@ -64,54 +45,34 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
         var currentParams = $scope.params;
 
-        var doReloadNow;
-        if (currentParams.$$paramsBootstrapping){
-            doReloadNow = function(){
-                currentParams.$$paramsBootstrapping = false;
-                currentParams.reload();
-            }
-        } else {
-            doReloadNow = currentParams.reload.bind(currentParams);
-        }
-
-        if (!angular.equals(newParams.filter, oldParams.filter)) {
-            var maybeResetPage;
-            if (currentParams.$$paramsBootstrapping) {
-                maybeResetPage = angular.noop;
-            } else {
-                var maybeResetPage = function resetPage() {
-                    currentParams.$params.page = 1;
-                };
-            }
+        if (currentParams.hasFilterChanges()) {
             var applyFilter = function () {
-                pendingReload = false;
-                maybeResetPage();
-                doReloadNow();
+                currentParams.page(1);
+                currentParams.reload();
             };
-            if (currentParams.settings().filterDelay && !currentParams.$$paramsBootstrapping) {
-                pendingReload = true;
+            if (currentParams.settings().filterDelay) {
                 delayFilter(applyFilter, currentParams.settings().filterDelay);
             } else {
                 applyFilter();
             }
         } else {
-            doReloadNow();
+            currentParams.reload();
         }
     }
 
-    // watch for changes to $params values (eg when a filter or page changes)
-    $scope.$watch('params.$params', onParamsChange, true);
-    // watch for changes to $params reference (eg when a new NgTableParams is bound to the scope)
-    $scope.$watch('params.$params', onParamsChange, false);
-
-    $scope.$watch('params.settings().data', function(newData, oldData){
-        if (newData === oldData || $scope.params.settings().$loading || pendingReload) {
+    // watch for when a new NgTableParams is bound to the scope
+    // CRITICAL: the watch must be for reference and NOT value equality; this is because NgTableParams maintains
+    // the current data page as a field. Checking this for value equality would be terrible for performance
+    // and potentially cause an error if the items in that array has circular references
+    $scope.$watch('params', function(newParams, oldParams){
+        if (newParams === oldParams || !newParams) {
             return;
         }
 
-        $scope.params.page(1);
-        $scope.params.reload();
-    });
+        newParams.reload();
+    }, false);
+
+    $scope.$watch('params.isDataReloadRequired()', onDataReloadStatusChange);
 
     this.compileDirectiveTemplates = function () {
         if (!$element.hasClass('ng-table')) {
@@ -212,7 +173,6 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
             }
             $scope.paramsModel = tableParamsGetter;
             $scope.params = params;
-            $scope.params.$$paramsBootstrapping = true;
         }), false);
 
         if ($attrs.showFilter) {

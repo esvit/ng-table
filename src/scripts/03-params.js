@@ -573,7 +573,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
             }, dataFetched);
         }
 
-        var params = this.$params = {
+        var params = {
             page: 1,
             count: 1,
             filter: {},
