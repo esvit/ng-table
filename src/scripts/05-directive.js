@@ -86,7 +86,12 @@ app.directive('ngTable', ['$q', '$parse',
                     scope.$columns = columns = controller.buildColumns(columns);
 
                     controller.setupBindingsToInternalScope(attrs.ngTable);
-                    controller.loadFilterData(columns);
+                    
+                    // this tiny wait gives the defaultSelectValue setting time to be updated
+                    window.setTimeout(function(){
+                        controller.loadFilterData(columns);
+                    }, 1);
+                    
                     controller.compileDirectiveTemplates();
                 };
             }

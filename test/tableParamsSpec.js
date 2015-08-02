@@ -151,7 +151,8 @@ describe('NgTableParams', function () {
             sortingIndicator : 'span',
             getData: params.getData,
             getGroups: params.getGroups,
-            filterDelay: 750
+            filterDelay: 750,
+            defaultSelectValue: '-'
         });
 
         params = new NgTableParams({}, { total: 100 });
@@ -168,7 +169,8 @@ describe('NgTableParams', function () {
             sortingIndicator : 'span',
             getData: params.getData,
             getGroups: params.getGroups,
-            filterDelay: 750
+            filterDelay: 750,
+            defaultSelectValue: '-'
         });
     }));
 
