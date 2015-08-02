@@ -115,6 +115,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
         }
 
         var self = this,
+            committedParams,
+            isCommittedDataset = false,
             log = function() {
                 if (settings.debugMode && $log.debug) {
                     $log.debug.apply(this, arguments);
@@ -176,8 +178,12 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                     //auto-set the total from passed in data
                     newSettings.total = newSettings.data.length;
                 }
-                // note: using non-strict equality as want null and undefined to be treated the same
-                if (newSettings.data && (newSettings.data != settings.data)) {
+                // note: using != as want null and undefined to be treated the same
+                if (newSettings.hasOwnProperty('data') && (newSettings.data != settings.data)) {
+                    if (isCommittedDataset){
+                        this.page(1); // reset page as a new dataset has been supplied
+                    }
+                    isCommittedDataset = false;
                     ngTableEventsChannel.publishDatasetChanged(this, newSettings.data, settings.data);
                 }
 
@@ -412,6 +418,17 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
 
         /**
          * @ngdoc method
+         * @name NgTableParams#isDataReloadRequired
+         * @description Return true when a change to this `NgTableParams` instance should require the reload method
+         * to be run so as to ensure the data presented to the user reflects the `NgTableParams`
+         */
+        this.isDataReloadRequired = function(){
+            // note: using != as want to treat null and undefined the same
+            return !isCommittedDataset || !angular.equals(params, committedParams);
+        };
+
+        /**
+         * @ngdoc method
          * @name NgTableParams#hasFilter
          * @description Determines if NgTableParams#filter has significant filter value(s)
          * (any value except null, undefined, or empty string)
@@ -429,6 +446,16 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                 }
             }
             return result;
+        };
+
+        /**
+         * @ngdoc method
+         * @name NgTableParams#hasFilterChanges
+         * @description Return true when a change to `NgTableParams.filters`require the reload method
+         * to be run so as to ensure the data presented to the user reflects these filters
+         */
+        this.hasFilterChanges = function(){
+            return !angular.equals((params && params.filter), (committedParams && committedParams.filter));
         };
 
         /**
@@ -479,6 +506,10 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                 pData = null;
 
             settings.$loading = true;
+
+            committedParams = angular.copy(params);
+            isCommittedDataset = true;
+
             if (settings.groupBy) {
                 pData = runGetGroups();
             } else {
@@ -503,6 +534,11 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                 }
 
                 return data;
+            }).catch(function(reason){
+                committedParams = null;
+                isCommittedDataset = false;
+                // "rethrow"
+                return $q.reject(reason);
             });
         };
 

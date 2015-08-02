@@ -37,19 +37,14 @@ describe('NgTableParams', function () {
         }
 
         settings = angular.extend({}, {
-            filterDelay: 0,
-            getData: function (params) {
-                if (!params.hasOwnProperty('getDataCallCount')){
-                    params.getDataCallCount = 0;
-                }
-                params.getDataCallCount++;
-            }
+            filterDelay: 0
         }, settings);
-        return new NgTableParams(initialParams, settings);
+        var tableParams = new NgTableParams(initialParams, settings);
+        spyOn(tableParams.settings(), 'getData').and.callThrough();
+        return tableParams;
     }
 
     it('NgTableParams should be defined', function () {
-        var params = new NgTableParams();
         expect(NgTableParams).toBeDefined();
     });
 
@@ -183,21 +178,35 @@ describe('NgTableParams', function () {
         }));
     });
 
+    it('changing settings().data should reset page to 1', function(){
+        // given
+        var tableParams = createNgTableParams({ count: 1, page: 2 }, { data: [1,2,3]});
+        tableParams.reload();
+        scope.$digest();
+        expect(tableParams.page()).toBe(2); // checking assumptions
+
+        // when
+        tableParams.settings({ data: [1,2,3, 4]});
+
+        // then
+        expect(tableParams.page()).toBe(1);
+    });
+
     describe('reload', function(){
 
         it('should call getData to retrieve data', function(){
-            var params = createNgTableParams();
-            params.reload();
-            expect(params.getDataCallCount).toBe(1);
+            var tp = createNgTableParams();
+            tp.reload();
+            expect(tp.settings().getData.calls.count()).toBe(1);
         });
 
         it('should add the results returned by getData to the data field', function(){
-            var params = createNgTableParams({ getData: function(){
+            var tp = createNgTableParams({ getData: function(){
                 return [1,2,3];
             }});
-            params.reload();
+            tp.reload();
             scope.$digest();
-            expect(params.data).toEqual([1,2,3]);
+            expect(tp.data).toEqual([1,2,3]);
         });
 
         it('should use ngTableDefaultGetData function when NgTableParams not supplied a getData function', function(){
@@ -205,26 +214,45 @@ describe('NgTableParams', function () {
             var settings = {
                 data: [{age: 1}, {age: 11}, {age: 110}, {age: 5}]
             };
-            var paramValues = {count: 2, filter: {age: 1}, sorting: { age: 'desc'}};
-            var params = new NgTableParams(paramValues, settings);
+            var initialValues = {count: 2, filter: {age: 1}, sorting: { age: 'desc'}};
+            var tp = createNgTableParams(initialValues, settings);
 
             // when
-            params.reload();
+            tp.reload();
             scope.$digest();
 
             // then
-            expect(params.data).toEqual([{age: 110}, {age: 11}]);
-            expect(params.total()).toEqual(3);
+            expect(tp.data).toEqual([{age: 110}, {age: 11}]);
+            expect(tp.total()).toEqual(3);
         });
+
+        it('should propagate rejection reason from getData', inject(function($q){
+            // given
+            var tp = createNgTableParams({ getData: function(){
+                return $q.reject('bad response')
+            }});
+
+            // when
+            var actualRejection;
+            tp.reload().catch(function(reason){
+                actualRejection = reason;
+            });
+            scope.$digest();
+
+            // then
+            expect(actualRejection).toBe('bad response');
+        }));
+
+
     });
 
     it('NgTableParams test grouping', inject(function ($rootScope) {
-        var params = new NgTableParams({}, { getData: function (/*params*/) {
+        var tp = createNgTableParams({ getData: function (/*params*/) {
             return data;
         }});
 
         var actualRoleGroups;
-        params.getGroups('role'/*, params*/).then(function(groups){
+        tp.getGroups('role'/*, params*/).then(function(groups){
             actualRoleGroups = groups;
         });
         $rootScope.$digest();
@@ -265,7 +293,7 @@ describe('NgTableParams', function () {
         ]);
 
         var actualAgeGroups;
-        params.getGroups('age'/*, params*/).then(function(groups){
+        tp.getGroups('age'/*, params*/).then(function(groups){
             actualAgeGroups = groups;
         });
         $rootScope.$digest();
@@ -322,57 +350,243 @@ describe('NgTableParams', function () {
         ngTableDefaults.settings = {
             counts: []
         };
-        var params = new NgTableParams();
+        var tp = new NgTableParams();
 
-        expect(params.count()).toEqual(2);
-        expect(params.page()).toEqual(1);
+        expect(tp.count()).toEqual(2);
+        expect(tp.page()).toEqual(1);
 
-        var settings = params.settings();
+        var settings = tp.settings();
         expect(settings.counts.length).toEqual(0);
         expect(settings.interceptors.length).toEqual(0);
         expect(settings.filterDelay).toEqual(750);
 
         ngTableDefaults.settings.interceptors = [ { response: angular.identity }];
-        params = new NgTableParams();
-        expect(params.settings().interceptors.length).toEqual(1);
+        tp = new NgTableParams();
+        expect(tp.settings().interceptors.length).toEqual(1);
     }));
 
     describe('hasFilter', function(){
-        var tableParams;
+        var tp;
 
         beforeEach(inject(function(){
-            tableParams = new NgTableParams({}, {});
+            tp = new NgTableParams({}, {});
         }));
 
         it('should return false for an empty filter object', function(){
-            tableParams.filter({});
-            expect(tableParams.hasFilter()).toBeFalsy();
+            tp.filter({});
+            expect(tp.hasFilter()).toBe(false);
         });
 
         it('should return true for when filter has a field with a significant value', function(){
-            tableParams.filter({ a: 'b' });
-            expect(tableParams.hasFilter()).toBeTruthy();
+            tp.filter({ a: 'b' });
+            expect(tp.hasFilter()).toBe(true);
 
-            tableParams.filter({ a: 0 });
-            expect(tableParams.hasFilter()).toBeTruthy();
+            tp.filter({ a: 0 });
+            expect(tp.hasFilter()).toBe(true);
         });
 
         it('should return false when filter only has insignificant field values', function(){
-            tableParams.filter({ a: '' });
-            expect(tableParams.hasFilter()).toBeFalsy();
+            tp.filter({ a: '' });
+            expect(tp.hasFilter()).toBe(false);
 
-            tableParams.filter({ a: null });
-            expect(tableParams.hasFilter()).toBeFalsy();
+            tp.filter({ a: null });
+            expect(tp.hasFilter()).toBe(false);
 
-            tableParams.filter({ a: undefined });
-            expect(tableParams.hasFilter()).toBeFalsy();
+            tp.filter({ a: undefined });
+            expect(tp.hasFilter()).toBe(false);
 
-            tableParams.filter({ a: undefined, b: '', c: undefined });
-            expect(tableParams.hasFilter()).toBeFalsy();
+            tp.filter({ a: undefined, b: '', c: undefined });
+            expect(tp.hasFilter()).toBe(false);
 
-            //tableParams.filter({ a: NaN });
-            //expect(tableParams.hasFilter()).toBeFalsy();
+            //tp.filter({ a: NaN });
+            //expect(tp.hasFilter()).toBe(false);
         });
+    });
+
+
+    describe('isDataReloadRequired', function(){
+        var tp;
+
+        beforeEach(inject(function(){
+            tp = createNgTableParams();
+        }));
+
+        it('should return true after construction', function(){
+            expect(tp.isDataReloadRequired()).toBe(true);
+        });
+
+        it('should return false once reload called after construction', function(){
+            tp.reload();
+            // note: we don't have to wait for the getData promise to be resolved before considering reload
+            // to be unnecessary - that's why we're not having to run a $digest
+            expect(tp.isDataReloadRequired()).toBe(false);
+        });
+
+        it('should return true when getData fails', inject(function($q){
+            tp.settings({ getData: function(){
+                return $q.reject('bad response');
+            }});
+            tp.reload();
+            scope.$digest();
+            expect(tp.isDataReloadRequired()).toBe(true);
+        }));
+
+        it('should detect direct changes to parameters', inject(function($q){
+            // given
+            tp.reload();
+            scope.$digest();
+            expect(tp.isDataReloadRequired()).toBe(false); // checking assumptions
+
+            // when
+            tp.filter().newField = 99;
+            expect(tp.isDataReloadRequired()).toBe(true);
+        }));
+
+        it('should return true until changed parameters have been reloaded', function(){
+            // given
+            tp.reload();
+            scope.$digest();
+
+            // when, then...
+            verifyIsDataReloadRequired(function(){
+                tp.filter({ age: 1});
+            });
+            verifyIsDataReloadRequired(function(){
+                tp.page(55);
+            });
+            verifyIsDataReloadRequired(function(){
+                tp.sorting({ age: 'desc'});
+            });
+            verifyIsDataReloadRequired(function(){
+                tp.count(100);
+            });
+        });
+
+        it('should return false when parameters "touched" but not modified', function(){
+            // given
+            tp.filter({ age: 1});
+            tp.reload();
+            scope.$digest();
+
+            // when, then...
+            tp.filter({ age: 1});
+            expect(tp.isDataReloadRequired()).toBe(false);
+        });
+
+        it('should return true when new settings data array supplied', function(){
+            // given
+            tp.reload();
+            scope.$digest();
+
+            verifyIsDataReloadRequired(function(){
+                tp.settings({ data: [11,22,33]});
+            });
+        });
+
+        it('should return true when existing settings data array is unset', function(){
+            // given
+            tp = createNgTableParams({ data: [1,2,3]});
+            tp.reload();
+            scope.$digest();
+
+            verifyIsDataReloadRequired(function(){
+                tp.settings({ data: null});
+            });
+        });
+
+        it('status should not change when settings called without a data array', function(){
+            // given
+            tp = createNgTableParams({ data: [1,2,3]});
+            tp.reload();
+            scope.$digest();
+
+            // when, then...
+            tp.settings({ total : 100 });
+            expect(tp.isDataReloadRequired()).toBe(false);
+        });
+
+
+        function verifyIsDataReloadRequired(modifer){
+            modifer();
+            expect(tp.isDataReloadRequired()).toBe(true);
+            tp.reload();
+            scope.$digest();
+            expect(tp.isDataReloadRequired()).toBe(false);
+        }
+    });
+
+    describe('hasFilterChanges', function(){
+        var tp;
+
+        beforeEach(inject(function(){
+            tp = createNgTableParams();
+        }));
+
+        it('should return true after construction', function(){
+            expect(tp.hasFilterChanges()).toBe(true);
+        });
+
+        it('should return false once reload called after construction', function(){
+            tp.reload();
+            // note: we don't have to wait for the getData promise to be resolved before considering reload
+            // to be unnecessary - that's why we're not having to run a $digest
+            expect(tp.hasFilterChanges()).toBe(false);
+        });
+
+        it('should return true when getData fails', inject(function($q){
+            tp.settings({ getData: function(){
+                return $q.reject('bad response');
+            }});
+            tp.reload();
+            scope.$digest();
+            expect(tp.hasFilterChanges()).toBe(true);
+        }));
+
+        it('should detect direct changes to filters', inject(function($q){
+            // given
+            tp.reload();
+            scope.$digest();
+            expect(tp.hasFilterChanges()).toBe(false); // checking assumptions
+
+            // when
+            tp.filter().newField = 99;
+            expect(tp.hasFilterChanges()).toBe(true);
+        }));
+
+        it('should return true until changed filters have been reloaded', function(){
+            // given
+            tp.reload();
+            scope.$digest();
+
+            // when, then...
+            tp.filter({ age: 1});
+            expect(tp.hasFilterChanges()).toBe(true);
+            tp.reload();
+            scope.$digest();
+            expect(tp.hasFilterChanges()).toBe(false);
+        });
+
+        it('should return false when filters "touched" but not modified', function(){
+            // given
+            tp.filter({ age: 1});
+            tp.reload();
+            scope.$digest();
+
+            // when, then...
+            tp.filter({ age: 1});
+            expect(tp.hasFilterChanges()).toBe(false);
+        });
+
+        it('status should not change just because new settings data array supplied', function(){
+            // given
+            tp.reload();
+            scope.$digest();
+
+            // when, then...
+            tp.settings({ data: [11,22,33]});
+            expect(tp.hasFilterChanges()).toBe(false);
+        });
+
     });
 
     describe('backwards compatibility shim', function(){
@@ -441,10 +655,10 @@ describe('NgTableParams', function () {
 
         it('shim should be applied when getData function supplied has more than one parameter', function(){
             // given
-            var tableParams = createNgTableParams({ getData: originalGetDataFn});
+            var tp = createNgTableParams({ getData: originalGetDataFn});
 
             // when
-            var dataFetched = tableParams.reload();
+            var dataFetched = tp.reload();
 
             // then
             var actualData;
@@ -462,10 +676,10 @@ describe('NgTableParams', function () {
 
         it('shim should NOT be applied when getData has new signature', function(){
             // given
-            var tableParams = createNgTableParams({ getData: newGetDataFn});
+            var tp = createNgTableParams({ getData: newGetDataFn});
 
             // when
-            var dataFetched = tableParams.reload();
+            var dataFetched = tp.reload();
 
             // then
             var actualData;
@@ -486,23 +700,23 @@ describe('NgTableParams', function () {
 
         it('can register interceptor', function(){
             var interceptor = { response: angular.identity };
-            var tableParams = createNgTableParams({ interceptors: [interceptor]});
-            expect(tableParams.settings().interceptors).toEqual([interceptor]);
+            var tp = createNgTableParams({ interceptors: [interceptor]});
+            expect(tp.settings().interceptors).toEqual([interceptor]);
         });
 
         it('can register multiple interceptor', function(){
             var interceptors = [{ response: angular.identity }, { response: angular.identity }];
-            var tableParams = createNgTableParams({ interceptors: interceptors});
-            expect(tableParams.settings().interceptors).toEqual(interceptors);
+            var tp = createNgTableParams({ interceptors: interceptors});
+            expect(tp.settings().interceptors).toEqual(interceptors);
         });
 
         it('can register interceptors after NgTableParams created', function(){
             var interceptor = { response: angular.identity };
             var interceptor2 = { response: angular.identity };
-            var tableParams = createNgTableParams({ interceptors: [interceptor]});
-            var interceptors = tableParams.settings().interceptors.concat([interceptor2]);
-            tableParams.settings({ interceptors: interceptors});
-            expect(tableParams.settings().interceptors).toEqual(interceptors);
+            var tp = createNgTableParams({ interceptors: [interceptor]});
+            var interceptors = tp.settings().interceptors.concat([interceptor2]);
+            tp.settings({ interceptors: interceptors});
+            expect(tp.settings().interceptors).toEqual(interceptors);
         });
 
         describe('one response interceptor', function(){
@@ -514,10 +728,10 @@ describe('NgTableParams', function () {
                         this.hasRun = true;
                     }
                 };
-                var tableParams = createNgTableParams({ interceptors: [interceptor]});
+                var tp = createNgTableParams({ interceptors: [interceptor]});
 
                 // when
-                tableParams.reload();
+                tp.reload();
                 scope.$digest();
 
                 // then
@@ -534,13 +748,13 @@ describe('NgTableParams', function () {
                         return data;
                     }
                 };
-                var tableParams = createNgTableParams({ interceptors: [interceptor], getData: function(){
+                var tp = createNgTableParams({ interceptors: [interceptor], getData: function(){
                     return [{}, {}];
                 }});
 
                 // when
                 var actualData;
-                tableParams.reload().then(function(data){
+                tp.reload().then(function(data){
                     actualData = data;
                 });
                 scope.$digest();
@@ -558,13 +772,13 @@ describe('NgTableParams', function () {
                         });
                     }
                 };
-                var tableParams = createNgTableParams({ interceptors: [interceptor], getData: function(){
+                var tp = createNgTableParams({ interceptors: [interceptor], getData: function(){
                     return [2, 3];
                 }});
 
                 // when
                 var actualData;
-                tableParams.reload().then(function(data){
+                tp.reload().then(function(data){
                     actualData = data;
                 });
                 scope.$digest();
@@ -581,20 +795,20 @@ describe('NgTableParams', function () {
                         return data.results;
                     }
                 };
-                var tableParams = createNgTableParams({ interceptors: [interceptor], getData: function(){
+                var tp = createNgTableParams({ interceptors: [interceptor], getData: function(){
                     return { results: [1,2,3], total: 3};
                 }});
 
                 // when
                 var actualData;
-                tableParams.reload().then(function(data){
+                tp.reload().then(function(data){
                     actualData = data;
                 });
                 scope.$digest();
 
                 // then
                 expect(actualData).toEqual([1,2,3]);
-                expect(tableParams.total()).toEqual(3);
+                expect(tp.total()).toEqual(3);
             });
         });
 
@@ -610,10 +824,10 @@ describe('NgTableParams', function () {
                     }
                 };
                 var interceptors = [interceptor, angular.copy(interceptor)];
-                var tableParams = createNgTableParams({ interceptors: interceptors});
+                var tp = createNgTableParams({ interceptors: interceptors});
 
                 // when
-                tableParams.reload();
+                tp.reload();
                 scope.$digest();
 
                 // then
@@ -639,13 +853,13 @@ describe('NgTableParams', function () {
                     }
                 };
                 var interceptors = [interceptor, interceptor2];
-                var tableParams = createNgTableParams({ interceptors: [interceptor, interceptor2], getData: function(){
+                var tp = createNgTableParams({ interceptors: [interceptor, interceptor2], getData: function(){
                     return [2, 3];
                 }});
 
                 // when
                 var actualData;
-                tableParams.reload().then(function(data){
+                tp.reload().then(function(data){
                     actualData = data;
                 });
                 scope.$digest();
