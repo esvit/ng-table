@@ -278,6 +278,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
          * @name NgTableParams#generatePagesArray
          * @description Generate array of pages
          *
+         * When no arguments supplied, the current parameter state of this `NgTableParams` instance will be used
+         *
          * @param {boolean} currentPage which page must be active
          * @param {boolean} totalItems  Total quantity of items
          * @param {boolean} pageSize    Quantity of items on page
@@ -285,6 +287,12 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
          * @returns {Array} Array of pages
          */
         this.generatePagesArray = function(currentPage, totalItems, pageSize, maxBlocks) {
+            if (!arguments.length){
+                currentPage = this.page();
+                totalItems = this.total();
+                pageSize = this.count();
+            }
+
             var maxPage, maxPivotPages, minPage, numPages, pages;
             maxBlocks = maxBlocks && maxBlocks < 6 ? 6 : maxBlocks;
 

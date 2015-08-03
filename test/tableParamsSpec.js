@@ -48,35 +48,50 @@ describe('NgTableParams', function () {
         expect(NgTableParams).toBeDefined();
     });
 
-    it('NgTableParams test generatePagesArray', function () {
-        var params = new NgTableParams();
-        expect(params.generatePagesArray(1, 30, 10)).toEqual([
-            { type: 'prev', number: 1, active: false },
-            { type: 'first', number: 1, active: false, current: true },
-            { type: 'page', number: 2, active: true, current: false },
-            { type: 'last', number: 3, active: true, current: false },
-            { type: 'next', number: 2, active: true }
-        ]);
-        expect(params.generatePagesArray(2, 30, 10)).toEqual([
-            { type: 'prev', number: 1, active: true },
-            { type: 'first', number: 1, active: true, current: false },
-            { type: 'page', number: 2, active: false, current: true },
-            { type: 'last', number: 3, active: true, current: false },
-            { type: 'next', number: 3, active: true }
-        ]);
-        expect(params.generatePagesArray(2, 100, 10)).toEqual([
-            { type: 'prev', number: 1, active: true },
-            { type: 'first', number: 1, active: true, current: false },
-            { type: 'page', number: 2, active: false, current: true },
-            { type: 'page', number: 3, active: true, current: false },
-            { type: 'page', number: 4, active: true, current: false },
-            { type: 'page', number: 5, active: true, current: false },
-            { type: 'page', number: 6, active: true, current: false },
-            { type: 'page', number: 7, active: true, current: false },
-            { type: 'more', active: false },
-            { type: 'last', number: 10, active: true, current: false },
-            { type: 'next', number: 3, active: true }
-        ]);
+    describe('generatePagesArray', function(){
+        it('should generate pages array using arguments supplied', function(){
+            var params = new NgTableParams();
+            expect(params.generatePagesArray(1, 30, 10)).toEqual([
+                { type: 'prev', number: 1, active: false },
+                { type: 'first', number: 1, active: false, current: true },
+                { type: 'page', number: 2, active: true, current: false },
+                { type: 'last', number: 3, active: true, current: false },
+                { type: 'next', number: 2, active: true }
+            ]);
+            expect(params.generatePagesArray(2, 30, 10)).toEqual([
+                { type: 'prev', number: 1, active: true },
+                { type: 'first', number: 1, active: true, current: false },
+                { type: 'page', number: 2, active: false, current: true },
+                { type: 'last', number: 3, active: true, current: false },
+                { type: 'next', number: 3, active: true }
+            ]);
+            expect(params.generatePagesArray(2, 100, 10)).toEqual([
+                { type: 'prev', number: 1, active: true },
+                { type: 'first', number: 1, active: true, current: false },
+                { type: 'page', number: 2, active: false, current: true },
+                { type: 'page', number: 3, active: true, current: false },
+                { type: 'page', number: 4, active: true, current: false },
+                { type: 'page', number: 5, active: true, current: false },
+                { type: 'page', number: 6, active: true, current: false },
+                { type: 'page', number: 7, active: true, current: false },
+                { type: 'more', active: false },
+                { type: 'last', number: 10, active: true, current: false },
+                { type: 'next', number: 3, active: true }
+            ]);
+        });
+
+        it('should use own parameter values to generate pages when no arguments supplied', function(){
+            var params = new NgTableParams({ page: 2, count: 10 }, { total: 30 });
+
+            expect(params.generatePagesArray()).toEqual([
+                { type: 'prev', number: 1, active: true },
+                { type: 'first', number: 1, active: true, current: false },
+                { type: 'page', number: 2, active: false, current: true },
+                { type: 'last', number: 3, active: true, current: false },
+                { type: 'next', number: 3, active: true }
+            ]);
+
+        });
     });
 
     it('NgTableParams `page` parameter', function () {
