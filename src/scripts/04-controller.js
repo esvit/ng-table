@@ -127,7 +127,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
                         data = [];
                     } else if (angular.isArray(data)) {
                         data.unshift({
-                            title: '-',
+                            title: '',
                             id: ''
                         });
                     }
