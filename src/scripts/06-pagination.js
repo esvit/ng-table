@@ -12,8 +12,8 @@
  * @module ngTable
  * @restrict A
  */
-app.directive('ngTablePagination', ['$compile',
-    function($compile) {
+app.directive('ngTablePagination', ['$compile', 'ngTableEventsChannel',
+    function($compile, ngTableEventsChannel) {
         'use strict';
 
         return {
@@ -23,22 +23,19 @@ app.directive('ngTablePagination', ['$compile',
                 'templateUrl': '='
             },
             replace: false,
-            link: function(scope, element, attrs) {
+            link: function(scope, element/*, attrs*/) {
 
-                var settings = scope.params.settings();
-                settings.$scope.$on('ngTableAfterReloadData', function() {
-                    var page = scope.params.page(),
-                        total = scope.params.total(),
-                        count = scope.params.count(),
-                        maxBlocks = settings.paginationMaxBlocks;
-                    scope.pages = scope.params.generatePagesArray(page, total, count, maxBlocks);
-                }, true);
+                ngTableEventsChannel.onAfterReloadData(function(pubParams) {
+                    scope.pages = pubParams.generatePagesArray();
+                }, scope, function(pubParams){
+                    return pubParams === scope.params;
+                });
 
                 scope.$watch('templateUrl', function(templateUrl) {
                     if (angular.isUndefined(templateUrl)) {
                         return;
                     }
-                    var template = angular.element(document.createElement('div'))
+                    var template = angular.element(document.createElement('div'));
                     template.attr({
                         'ng-include': 'templateUrl'
                     });
