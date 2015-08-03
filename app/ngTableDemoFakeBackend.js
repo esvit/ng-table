@@ -12,7 +12,27 @@
             "poweredByIcon": "/images/cofax.gif"
         };
 
+        this.generateColumns = generateColumns;
         this.generateData = generateData;
+
+        function generateColumns(sampleData) {
+            var colNames = Object.getOwnPropertyNames(sampleData);
+            var cols = colNames.map(function(name, idx) {
+                var filter = {};
+                filter[name] = 'text';
+                return {
+                    title: name,
+                    sortable: name,
+                    filter: filter,
+                    show: true,
+                    field: name
+                };
+            });
+            var idCol = _.findWhere(cols, {
+                field: 'id'
+            });
+            return [idCol].concat(_.without(cols, idCol));
+        }
 
         function generateData(number) {
             return _.range(number).map(function (n) {
