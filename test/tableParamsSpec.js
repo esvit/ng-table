@@ -1302,6 +1302,24 @@ describe('NgTableParams', function () {
                 expect(actualEventArgs).toEqual([newDs, initialDs]);
             });
 
+            it('should fire when a dataset is removed from settings value', function(){
+                // given
+                var initialDs = [1, 2];
+                ngTableEventsChannel.onDatasetChanged(function(params, newVal, oldVal){
+                    actualPublisher = params;
+                    actualEventArgs = [newVal, oldVal];
+                });
+                var params = createNgTableParams({ data: initialDs});
+
+                // when
+                var newDs = null;
+                params.settings({ data: newDs});
+
+                // then
+                expect(actualPublisher).toBe(params);
+                expect(actualEventArgs).toEqual([newDs, initialDs]);
+            });
+
             it('should NOT fire when the same data array is supplied as a new settings value', function(){
                 // given
                 var callCount = 0;
@@ -1316,6 +1334,16 @@ describe('NgTableParams', function () {
 
                 // then
                 expect(callCount).toBe(1);
+            });
+
+            it('settings().data on publisher should reference the new dataset', function(){
+                var initialDs = [1, 2];
+                var newDs = [1, 2, 3];
+                var params = createNgTableParams({ data: initialDs});
+                ngTableEventsChannel.onDatasetChanged(function(params, newVal/*, oldVal*/){
+                    expect(params.settings().data).toBe(newVal);
+                });
+                params.settings({ data: newDs});
             });
         });
     })

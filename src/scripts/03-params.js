@@ -100,14 +100,6 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                     //auto-set the total from passed in data
                     newSettings.total = newSettings.data.length;
                 }
-                // note: using != as want null and undefined to be treated the same
-                if (newSettings.hasOwnProperty('data') && (newSettings.data != settings.data)) {
-                    if (isCommittedDataset){
-                        this.page(1); // reset page as a new dataset has been supplied
-                    }
-                    isCommittedDataset = false;
-                    ngTableEventsChannel.publishDatasetChanged(this, newSettings.data, settings.data);
-                }
 
                 // todo: remove the backwards compatibility shim and the following two if blocks
                 if (newSettings.getData && newSettings.getData.length > 1){
@@ -119,7 +111,18 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                     newSettings.getGroupsFnAdaptor = ngTableGetDataBcShim;
                 }
 
+                var originalDataset = settings.data;
                 settings = angular.extend(settings, newSettings);
+
+                // note: using != as want null and undefined to be treated the same
+                var hasDatasetChanged = newSettings.hasOwnProperty('data') && (newSettings.data != originalDataset);
+                if (hasDatasetChanged) {
+                    if (isCommittedDataset){
+                        this.page(1); // reset page as a new dataset has been supplied
+                    }
+                    isCommittedDataset = false;
+                    ngTableEventsChannel.publishDatasetChanged(this, newSettings.data, originalDataset);
+                }
                 log('ngTable: set settings', settings);
                 return this;
             }
