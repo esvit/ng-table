@@ -85,7 +85,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
             // $element.find('> thead').length === 0 doesn't work on jqlite
             var theadFound = false;
-            angular.forEach($element.children, function(e) {
+            angular.forEach($element.children(), function(e) {
                 if (e.tagName === 'THEAD') {
                     theadFound = true;
                 }
