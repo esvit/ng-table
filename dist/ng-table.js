@@ -441,14 +441,6 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                     //auto-set the total from passed in data
                     newSettings.total = newSettings.data.length;
                 }
-                // note: using != as want null and undefined to be treated the same
-                if (newSettings.hasOwnProperty('data') && (newSettings.data != settings.data)) {
-                    if (isCommittedDataset){
-                        this.page(1); // reset page as a new dataset has been supplied
-                    }
-                    isCommittedDataset = false;
-                    ngTableEventsChannel.publishDatasetChanged(this, newSettings.data, settings.data);
-                }
 
                 // todo: remove the backwards compatibility shim and the following two if blocks
                 if (newSettings.getData && newSettings.getData.length > 1){
@@ -460,7 +452,18 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
                     newSettings.getGroupsFnAdaptor = ngTableGetDataBcShim;
                 }
 
+                var originalDataset = settings.data;
                 settings = angular.extend(settings, newSettings);
+
+                // note: using != as want null and undefined to be treated the same
+                var hasDatasetChanged = newSettings.hasOwnProperty('data') && (newSettings.data != originalDataset);
+                if (hasDatasetChanged) {
+                    if (isCommittedDataset){
+                        this.page(1); // reset page as a new dataset has been supplied
+                    }
+                    isCommittedDataset = false;
+                    ngTableEventsChannel.publishDatasetChanged(this, newSettings.data, originalDataset);
+                }
                 log('ngTable: set settings', settings);
                 return this;
             }
@@ -619,6 +622,8 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
          * @name NgTableParams#generatePagesArray
          * @description Generate array of pages
          *
+         * When no arguments supplied, the current parameter state of this `NgTableParams` instance will be used
+         *
          * @param {boolean} currentPage which page must be active
          * @param {boolean} totalItems  Total quantity of items
          * @param {boolean} pageSize    Quantity of items on page
@@ -626,6 +631,12 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
          * @returns {Array} Array of pages
          */
         this.generatePagesArray = function(currentPage, totalItems, pageSize, maxBlocks) {
+            if (!arguments.length){
+                currentPage = this.page();
+                totalItems = this.total();
+                pageSize = this.count();
+            }
+
             var maxPage, maxPivotPages, minPage, numPages, pages;
             maxBlocks = maxBlocks && maxBlocks < 6 ? 6 : maxBlocks;
 
@@ -1075,7 +1086,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
                         data = [];
                     } else if (angular.isArray(data)) {
                         data.unshift({
-                            title: '-',
+                            title: '',
                             id: ''
                         });
                     }
@@ -1442,8 +1453,8 @@ app.directive('ngTableDynamic', ['$parse', function ($parse){
  * @module ngTable
  * @restrict A
  */
-app.directive('ngTablePagination', ['$compile',
-    function($compile) {
+app.directive('ngTablePagination', ['$compile', 'ngTableEventsChannel',
+    function($compile, ngTableEventsChannel) {
         'use strict';
 
         return {
@@ -1453,22 +1464,19 @@ app.directive('ngTablePagination', ['$compile',
                 'templateUrl': '='
             },
             replace: false,
-            link: function(scope, element, attrs) {
+            link: function(scope, element/*, attrs*/) {
 
-                var settings = scope.params.settings();
-                settings.$scope.$on('ngTableAfterReloadData', function() {
-                    var page = scope.params.page(),
-                        total = scope.params.total(),
-                        count = scope.params.count(),
-                        maxBlocks = settings.paginationMaxBlocks;
-                    scope.pages = scope.params.generatePagesArray(page, total, count, maxBlocks);
-                }, true);
+                ngTableEventsChannel.onAfterReloadData(function(pubParams) {
+                    scope.pages = pubParams.generatePagesArray();
+                }, scope, function(pubParams){
+                    return pubParams === scope.params;
+                });
 
                 scope.$watch('templateUrl', function(templateUrl) {
                     if (angular.isUndefined(templateUrl)) {
                         return;
                     }
-                    var template = angular.element(document.createElement('div'))
+                    var template = angular.element(document.createElement('div'));
                     template.attr({
                         'ng-include': 'templateUrl'
                     });
@@ -1483,7 +1491,7 @@ app.directive('ngTablePagination', ['$compile',
 angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/filterRow.html', '<tr ng-show="show_filter" class="ng-table-filters"> <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter"> <div ng-repeat="(name, filter) in $column.filter(this)"> <div ng-include="config.getTemplateUrl(filter)"></div> </div> </th> </tr> ');
 	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" multiple ng-multiple="true" ng-model="params.filter()[name]" ng-if="filter==\'select-multiple\'" class="filter filter-select-multiple form-control" name="{{name}}"> </select> ');
-	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" ng-if="filter==\'select\'" class="filter filter-select form-control" name="{{name}}"> </select> ');
+	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" ng-if="filter==\'select\'" class="filter filter-select form-control" name="{{name}}"> <option style="display:none" value=""></option> </select> ');
 	$templateCache.put('ng-table/filters/text.html', '<input type="text" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" ng-if="filter==\'text\'" class="input-filter form-control"/>');
 	$templateCache.put('ng-table/header.html', '<ng-table-sorter-row></ng-table-sorter-row> <ng-table-filter-row></ng-table-filter-row> ');
 	$templateCache.put('ng-table/pager.html', '<div class="ng-cloak ng-table-pager" ng-if="params.data.length"> <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right"> <button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default"> <span ng-bind="count"></span> </button> </div> <ul class="pagination ng-table-pagination"> <li ng-class="{\'disabled\': !page.active && !page.current, \'active\': page.current}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="page" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="">&#8230;</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">&raquo;</a> </li> </ul> </div> ');

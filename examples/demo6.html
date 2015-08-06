@@ -73,7 +73,7 @@
             return !isNaN(parseFloat(n)) && isFinite(n);
         }
         var app = angular.module('main', ['ngTable', 'ngResource', 'ngMockE2E']).
-            run(function ($httpBackend, $filter, $log, NgTableParams) {
+            run(function ($httpBackend, $filter, $log, NgTableParams, ngTableDefaultGetData) {
                 // emulation of api server
                 $httpBackend.whenGET(/data.*/).respond(function (method, url, data, headers) {
                     var query = url.split('?')[1],
@@ -123,15 +123,11 @@
                         {name: "Enos", age: 76}];
 
                     var params = new NgTableParams(requestParams);
-                    data = params.filter() ? $filter('filter')(data, params.filter()) : data;
-                    data = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
-
-                    var total = data.length;
-                    data = data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                    var results = ngTableDefaultGetData(data, params);
 
                     return [200, {
-                        result: data,
-                        total: total
+                        results: results,
+                        inlineCount: params.total()
                     }];
                 });
                 $httpBackend.whenGET(/.*/).passThrough();
@@ -163,15 +159,11 @@
                     counts: [5, 10, 15],
                     paginationMaxBlocks: 9,
                     total: 0,           // length of data
-                    getData: function ($defer, params) {
+                    getData: function (params) {
                         // ajax request to api
-                        Api.get(params.url(), function (data) {
-                            $timeout(function () {
-                                // update table params
-                                params.total(data.total);
-                                // set new data
-                                $defer.resolve(data.result);
-                            }, 500);
+                        return Api.get(params.url()).$promise.then(function (data) {
+                            params.total(data.inlineCount);
+                            return data.results;
                         });
                     }
                 });

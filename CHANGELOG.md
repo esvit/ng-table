@@ -1,3 +1,21 @@
+<a name="0.8.2"></a>
+# 0.8.2 (2015-08-06)
+
+
+## Bug Fixes
+
+- **NgTableParams:** datasetChanged event fires too early
+  ([9706a60b](https://github.com/esvit/ng-table/commit/9706a60bc77f787afb04f01e9769c896fc63c063))
+- **select-filter:** select lists should not display an empty and '-' option
+  ([1ee441be](https://github.com/esvit/ng-table/commit/1ee441bebf3e1f8fac260a38b8b82122714191d2))
+
+
+## Features
+
+- **NgTableParams:** generatePagesArray can be called without arguments
+  ([25fc82bd](https://github.com/esvit/ng-table/commit/25fc82bd051b07ee9b49f105e453e7a64b462bfc))
+
+
 <a name="0.8.1"></a>
 # 0.8.1 (2015-08-02)
 
