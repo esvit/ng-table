@@ -176,16 +176,34 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
         /**
          * @ngdoc method
          * @name NgTableParams#filter
-         * @description If parameter page not set return current filter else set current filter
+         * @description If 'filter' parameter not set return current filter else set current filter
          *
-         * @param {string} filter New filter
+         * Note: when assigning a new filter, {@link NgTableParams#page page} will be set to 1
+         *
+         * @param {Object|Boolean} filter 'object': new filter to assign or
+         * 'true': to return the current filter minus any insignificant values (null,  undefined and empty string); or
+         * 'falsey': to return the current filter "as is"
          * @returns {Object} Current filter or `this`
          */
         this.filter = function(filter) {
-            return angular.isDefined(filter) ? this.parameters({
-                'filter': filter,
-                'page': 1
-            }) : params.filter;
+            if (angular.isDefined(filter) && angular.isObject(filter)) {
+                return this.parameters({
+                    'filter': filter,
+                    'page': 1
+                });
+            } else if (filter === true){
+                var keys = Object.keys(params.filter);
+                var significantFilter = {};
+                for (var i=0; i < keys.length; i++){
+                    var filterValue = params.filter[keys[i]];
+                    if (filterValue != null && filterValue !== '') {
+                        significantFilter[keys[i]] = filterValue;
+                    }
+                }
+                return significantFilter;
+            } else {
+                return params.filter;
+            }
         };
 
         /**
@@ -372,17 +390,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
          * @returns {Boolean} true when NgTableParams#filter has at least one significant field value
          */
         this.hasFilter = function(){
-            var currentFilter = this.filter();
-            var keys = Object.keys(currentFilter);
-            var result = false;
-            for (var i=0; i < keys.length; i++){
-                var filterValue = currentFilter[keys[i]];
-                if (filterValue != null && filterValue !== '') {
-                    result = true;
-                    break;
-                }
-            }
-            return result;
+            return Object.keys(this.filter(true)).length > 0;
         };
 
         /**
