@@ -216,11 +216,15 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
          * @description Checks sort field
          *
          * @param {string} field     Field name
-         * @param {string} direction Direction of sorting 'asc' or 'desc'
+         * @param {string} direction Optional direction of sorting ('asc' or 'desc')
          * @returns {Array} Return true if field sorted by direction
          */
         this.isSortBy = function(field, direction) {
-            return angular.isDefined(params.sorting[field]) && angular.equals(params.sorting[field], direction);
+            if(direction !== undefined) {
+                return angular.isDefined(params.sorting[field]) && params.sorting[field] == direction;
+            } else {
+                return angular.isDefined(params.sorting[field]);
+            }
         };
 
         /**
