@@ -513,6 +513,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
         var params = {
             page: 1,
             count: 1,
+            footer:true,
             filter: {},
             sorting: {},
             group: {},
