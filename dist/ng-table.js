@@ -291,7 +291,7 @@ var app = angular.module('ngTable', []);
                     return [];
                 }
 
-                var fData = params.hasFilter() ? $filter(provider.filterFilterName)(data, params.filter()) : data;
+                var fData = params.hasFilter() ? $filter(provider.filterFilterName)(data, params.filter(true)) : data;
                 var orderBy = params.orderBy();
                 var orderedData = orderBy.length ? $filter(provider.sortingFilterName)(fData, orderBy) : fData;
                 var pagedData = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
@@ -517,16 +517,34 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
         /**
          * @ngdoc method
          * @name NgTableParams#filter
-         * @description If parameter page not set return current filter else set current filter
+         * @description If 'filter' parameter not set return current filter else set current filter
          *
-         * @param {string} filter New filter
+         * Note: when assigning a new filter, {@link NgTableParams#page page} will be set to 1
+         *
+         * @param {Object|Boolean} filter 'object': new filter to assign or
+         * 'true': to return the current filter minus any insignificant values (null,  undefined and empty string); or
+         * 'falsey': to return the current filter "as is"
          * @returns {Object} Current filter or `this`
          */
         this.filter = function(filter) {
-            return angular.isDefined(filter) ? this.parameters({
-                'filter': filter,
-                'page': 1
-            }) : params.filter;
+            if (angular.isDefined(filter) && angular.isObject(filter)) {
+                return this.parameters({
+                    'filter': filter,
+                    'page': 1
+                });
+            } else if (filter === true){
+                var keys = Object.keys(params.filter);
+                var significantFilter = {};
+                for (var i=0; i < keys.length; i++){
+                    var filterValue = params.filter[keys[i]];
+                    if (filterValue != null && filterValue !== '') {
+                        significantFilter[keys[i]] = filterValue;
+                    }
+                }
+                return significantFilter;
+            } else {
+                return params.filter;
+            }
         };
 
         /**
@@ -557,11 +575,15 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
          * @description Checks sort field
          *
          * @param {string} field     Field name
-         * @param {string} direction Direction of sorting 'asc' or 'desc'
+         * @param {string} direction Optional direction of sorting ('asc' or 'desc')
          * @returns {Array} Return true if field sorted by direction
          */
         this.isSortBy = function(field, direction) {
-            return angular.isDefined(params.sorting[field]) && angular.equals(params.sorting[field], direction);
+            if(direction !== undefined) {
+                return angular.isDefined(params.sorting[field]) && params.sorting[field] == direction;
+            } else {
+                return angular.isDefined(params.sorting[field]);
+            }
         };
 
         /**
@@ -709,17 +731,7 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
          * @returns {Boolean} true when NgTableParams#filter has at least one significant field value
          */
         this.hasFilter = function(){
-            var currentFilter = this.filter();
-            var keys = Object.keys(currentFilter);
-            var result = false;
-            for (var i=0; i < keys.length; i++){
-                var filterValue = currentFilter[keys[i]];
-                if (filterValue != null && filterValue !== '') {
-                    result = true;
-                    break;
-                }
-            }
-            return result;
+            return Object.keys(this.filter(true)).length > 0;
         };
 
         /**
@@ -785,11 +797,10 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
             isCommittedDataset = true;
 
             if (settings.groupBy) {
-                pData = runGetGroups();
+                pData = runInterceptorPipeline(runGetGroups);
             } else {
-                pData = runGetData();
+                pData = runInterceptorPipeline(runGetData);
             }
-            pData = runInterceptorPipeline(pData);
 
             log('ngTable: reload data');
 
@@ -838,13 +849,18 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
             return $q.when(getGroupsFn.call(settings, settings.groupBy, self));
         }
 
-        function runInterceptorPipeline(dataFetched){
+        function runInterceptorPipeline(fetchFn){
             var interceptors = settings.interceptors || [];
+
             return interceptors.reduce(function(result, interceptor){
+                var thenFn = (interceptor.response && interceptor.response.bind(interceptor)) || $q.when;
+                var rejectFn = (interceptor.responseError && interceptor.responseError.bind(interceptor)) || $q.reject;
                 return result.then(function(data){
-                    return $q.when(interceptor.response(data, self));
+                    return thenFn(data, self);
+                }, function(reason){
+                    return rejectFn(reason, self);
                 });
-            }, dataFetched);
+            }, fetchFn());
         }
 
         var params = {
@@ -1044,7 +1060,7 @@ function($scope, NgTableParams, $timeout, $parse, $compile, $attrs, $element, ng
 
             // $element.find('> thead').length === 0 doesn't work on jqlite
             var theadFound = false;
-            angular.forEach($element.children, function(e) {
+            angular.forEach($element.children(), function(e) {
                 if (e.tagName === 'THEAD') {
                     theadFound = true;
                 }
@@ -1490,9 +1506,10 @@ app.directive('ngTablePagination', ['$compile', 'ngTableEventsChannel',
 
 angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/filterRow.html', '<tr ng-show="show_filter" class="ng-table-filters"> <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter"> <div ng-repeat="(name, filter) in $column.filter(this)"> <div ng-include="config.getTemplateUrl(filter)"></div> </div> </th> </tr> ');
-	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" multiple ng-multiple="true" ng-model="params.filter()[name]" ng-if="filter==\'select-multiple\'" class="filter filter-select-multiple form-control" name="{{name}}"> </select> ');
-	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" ng-if="filter==\'select\'" class="filter filter-select form-control" name="{{name}}"> <option style="display:none" value=""></option> </select> ');
-	$templateCache.put('ng-table/filters/text.html', '<input type="text" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" ng-if="filter==\'text\'" class="input-filter form-control"/>');
+	$templateCache.put('ng-table/filters/number.html', '<input type="number" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control"/> ');
+	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" multiple ng-multiple="true" ng-model="params.filter()[name]" class="filter filter-select-multiple form-control" name="{{name}}"> </select> ');
+	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="filter filter-select form-control" name="{{name}}"> <option style="display:none" value=""></option> </select> ');
+	$templateCache.put('ng-table/filters/text.html', '<input type="text" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control"/> ');
 	$templateCache.put('ng-table/header.html', '<ng-table-sorter-row></ng-table-sorter-row> <ng-table-filter-row></ng-table-filter-row> ');
 	$templateCache.put('ng-table/pager.html', '<div class="ng-cloak ng-table-pager" ng-if="params.data.length"> <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right"> <button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default"> <span ng-bind="count"></span> </button> </div> <ul class="pagination ng-table-pagination"> <li ng-class="{\'disabled\': !page.active && !page.current, \'active\': page.current}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="page" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="">&#8230;</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">&raquo;</a> </li> </ul> </div> ');
 	$templateCache.put('ng-table/sorterRow.html', '<tr> <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{ \'sortable\': $column.sortable(this), \'sort-asc\': params.sorting()[$column.sortable(this)]==\'asc\', \'sort-desc\': params.sorting()[$column.sortable(this)]==\'desc\' }" ng-click="sortBy($column, $event)" ng-if="$column.show(this)" ng-init="template=$column.headerTemplateURL(this)" class="header {{$column.class(this)}}"> <div ng-if="!template" class="ng-table-header" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'div\'}"> <span ng-bind="$column.title(this)" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'span\'}"></span> </div> <div ng-if="template" ng-include="template"></div> </th> </tr> ');

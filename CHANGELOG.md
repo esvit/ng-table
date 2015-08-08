@@ -1,3 +1,26 @@
+<a name="0.8.3"></a>
+# 0.8.3 (2015-08-09)
+
+
+## Bug Fixes
+
+- **ngTableDefaultGetData:** should ignore null and undefined filter values
+  ([64a33a85](https://github.com/esvit/ng-table/commit/64a33a8573e913ab38849534e7cbf85a286f245c))
+
+
+## Features
+
+- **NgTableParams:**
+  - filter function option to remove insignificant values
+  ([2f5f3016](https://github.com/esvit/ng-table/commit/2f5f30161a9cdd2628b3e713fae922faa85db911))
+  - isSortBy direction parameter now optional
+  ([b3e02b92](https://github.com/esvit/ng-table/commit/b3e02b922064a73e302ad08a2b6f90678dcc18dc))
+  - add response error interception
+  ([5613d1e0](https://github.com/esvit/ng-table/commit/5613d1e00cca6b8027686806a341a8b64e89a552))
+- **number.html:** new filter template for numbers
+  ([78b02bbf](https://github.com/esvit/ng-table/commit/78b02bbfe4e00c395df70d9bef64ac0b20d01e4d))
+
+
 <a name="0.8.2"></a>
 # 0.8.2 (2015-08-06)
 
