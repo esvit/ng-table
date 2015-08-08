@@ -21,7 +21,25 @@ describe('NgTableParams', function () {
     var NgTableParams,
         $rootScope;
 
-    beforeEach(module('ngTable'));
+
+    beforeEach(function () {
+        // Initialize the service provider
+        // by injecting it to a fake module's config block
+        var fakeModule = angular.module('test.config', function () {});
+        fakeModule.config( function ($provide) {
+            $provide.decorator('ngTableDefaultGetData', createSpy);
+
+
+            createSpy.$inject = ['$delegate'];
+            function createSpy(ngTableDefaultGetData){
+                return jasmine.createSpy('ngTableDefaultGetDataSpy',ngTableDefaultGetData).and.callThrough();
+            }
+        });
+        // Initialize test.app injector
+        module('ngTable', 'test.config');
+
+    });
+
 
     beforeEach(inject(function ($controller, _$rootScope_, _NgTableParams_) {
         $rootScope = _$rootScope_;
@@ -225,22 +243,17 @@ describe('NgTableParams', function () {
             expect(tp.data).toEqual([1,2,3]);
         });
 
-        it('should use ngTableDefaultGetData function when NgTableParams not supplied a getData function', function(){
+        it('should use ngTableDefaultGetData function when NgTableParams not supplied a getData function', inject(function(ngTableDefaultGetData){
             // given
-            var settings = {
-                data: [{age: 1}, {age: 11}, {age: 110}, {age: 5}]
-            };
-            var initialValues = {count: 2, filter: {age: 1}, sorting: { age: 'desc'}};
-            var tp = createNgTableParams(initialValues, settings);
+            var tp = createNgTableParams();
 
             // when
             tp.reload();
             scope.$digest();
 
             // then
-            expect(tp.data).toEqual([{age: 110}, {age: 11}]);
-            expect(tp.total()).toEqual(3);
-        });
+            expect(ngTableDefaultGetData).toHaveBeenCalled();
+        }));
 
         it('should propagate rejection reason from getData', inject(function($q){
             // given
@@ -258,8 +271,6 @@ describe('NgTableParams', function () {
             // then
             expect(actualRejection).toBe('bad response');
         }));
-
-
     });
 
     it('NgTableParams test grouping', inject(function ($rootScope) {
@@ -1422,6 +1433,22 @@ describe('NgTableParams', function () {
                 var expectedPages = params.generatePagesArray(params.page(), params.total(), params.count());
                 expect(expectedPages.length).toBeGreaterThan(0); // checking assumptions
                 expect(actualEventArgs).toEqual([expectedPages, undefined]);
+            });
+
+            it('should fire when a reload completes - no data', function(){
+                // given
+                ngTableEventsChannel.onPagesChanged(function(params, newVal, oldVal){
+                    actualPublisher = params;
+                    actualEventArgs = [newVal, oldVal];
+                });
+                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: []});
+
+                // when
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(actualEventArgs).toEqual([[], undefined]);
             });
 
             it('should fire when a reload completes (multiple)', function(){
