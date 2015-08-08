@@ -58,7 +58,7 @@
                     return [];
                 }
 
-                var fData = params.hasFilter() ? $filter(provider.filterFilterName)(data, params.filter()) : data;
+                var fData = params.hasFilter() ? $filter(provider.filterFilterName)(data, params.filter(true)) : data;
                 var orderBy = params.orderBy();
                 var orderedData = orderBy.length ? $filter(provider.sortingFilterName)(fData, orderBy) : fData;
                 var pagedData = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
