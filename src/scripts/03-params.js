@@ -444,11 +444,10 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
             isCommittedDataset = true;
 
             if (settings.groupBy) {
-                pData = runGetGroups();
+                pData = runInterceptorPipeline(runGetGroups);
             } else {
-                pData = runGetData();
+                pData = runInterceptorPipeline(runGetData);
             }
-            pData = runInterceptorPipeline(pData);
 
             log('ngTable: reload data');
 
@@ -497,13 +496,18 @@ app.factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBc
             return $q.when(getGroupsFn.call(settings, settings.groupBy, self));
         }
 
-        function runInterceptorPipeline(dataFetched){
+        function runInterceptorPipeline(fetchFn){
             var interceptors = settings.interceptors || [];
+
             return interceptors.reduce(function(result, interceptor){
+                var thenFn = (interceptor.response && interceptor.response.bind(interceptor)) || $q.when;
+                var rejectFn = (interceptor.responseError && interceptor.responseError.bind(interceptor)) || $q.reject;
                 return result.then(function(data){
-                    return $q.when(interceptor.response(data, self));
+                    return thenFn(data, self);
+                }, function(reason){
+                    return rejectFn(reason, self);
                 });
-            }, dataFetched);
+            }, fetchFn());
         }
 
         var params = {
