@@ -28,7 +28,6 @@
 
             var self = this,
                 committedParams,
-                getGroups,
                 isCommittedDataset = false,
                 log = function() {
                     if (settings.debugMode && $log.debug) {
@@ -98,7 +97,7 @@
                         newSettings.getDataFnAdaptor = ngTableGetDataBcShim;
                     }
                     if (newSettings.getGroups && newSettings.getGroups.length > 2){
-                        // support the old getGroups($defer, grouping, params) api
+                        // support the old getGroups($defer, params) api
                         newSettings.getGroupsFnAdaptor = ngTableGetDataBcShim;
                     }
 
@@ -249,38 +248,6 @@
                     sorting.push((params.sorting[column] === "asc" ? "+" : "-") + column);
                 }
                 return sorting;
-            };
-
-            /**
-             * @ngdoc method
-             * @name settings#getGroups
-             * @description Return groups of data to display in the table
-             *
-             * Called by NgTableParams whenever it considers new data is to be loaded
-             * and when the `settings` object has a `groupBy` value
-             *
-             * @param {Object} params the NgTableParams requesting data
-             */
-            getGroups = function(params) {
-                var column = params.settings().groupBy;
-                return runGetData().then(function(data) {
-                    var groups = {};
-                    angular.forEach(data, function(item) {
-                        var groupName = angular.isFunction(column) ? column(item) : item[column];
-
-                        groups[groupName] = groups[groupName] || {
-                                data: []
-                            };
-                        groups[groupName]['value'] = groupName;
-                        groups[groupName].data.push(item);
-                    });
-                    var result = [];
-                    for (var i in groups) {
-                        result.push(groups[i]);
-                    }
-                    log('ngTable: refresh groups', result);
-                    return result;
-                });
             };
 
             /**
@@ -507,6 +474,67 @@
                 }, fetchFn());
             }
 
+            function getDefaultSettingFns(){
+
+                return {
+                    getDataFnAdaptor: angular.identity,
+                    getGroupsFnAdaptor: angular.identity,
+                    getData: getData,
+                    getGroups: getGroups
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name settings#getData
+                 * @description Returns the data to display in the table
+                 *
+                 * Called by NgTableParams whenever it considers new data is to be loaded
+                 *
+                 * @param {Object} params the NgTableParams requesting data
+                 */
+                function getData(params) {
+                    return ngTableDefaultGetData(params.settings().data, params);
+                }
+
+                /**
+                 * @ngdoc method
+                 * @name settings#getGroups
+                 * @description Return groups of data to display in the table
+                 *
+                 * Called by NgTableParams whenever it considers new data is to be loaded
+                 * and when the `settings` object has a `groupBy` value
+                 *
+                 * @param {Object} params the NgTableParams requesting data
+                 */
+                function getGroups(params) {
+                    var settings = params.settings();
+                    var adaptedFn = settings.getDataFnAdaptor(settings.getData);
+                    var gotData = $q.when(adaptedFn.call(settings, params));
+                    return gotData.then(function(data) {
+                        var groups = {};
+                        angular.forEach(data, function(item) {
+                            var groupName;
+                            if (angular.isFunction(settings.groupBy)) {
+                                groupName = settings.groupBy(item);
+                            } else {
+                                groupName = item[settings.groupBy];
+                            }
+
+                            groups[groupName] = groups[groupName] || {
+                                    data: []
+                                };
+                            groups[groupName]['value'] = groupName;
+                            groups[groupName].data.push(item);
+                        });
+                        var result = [];
+                        for (var i in groups) {
+                            result.push(groups[i]);
+                        }
+                        return result;
+                    });
+                }
+            }
+
             var params = {
                 page: 1,
                 count: 1,
@@ -535,24 +563,10 @@
                 interceptors: [],
                 paginationMaxBlocks: 11,
                 paginationMinBlocks: 5,
-                sortingIndicator: 'span',
-                getDataFnAdaptor: angular.identity,
-                getGroupsFnAdaptor: angular.identity,
-                getGroups: getGroups,
-                /**
-                 * @ngdoc method
-                 * @name settings#getData
-                 * @description Returns the data to display in the table
-                 *
-                 * Called by NgTableParams whenever it considers new data is to be loaded
-                 *
-                 * @param {Object} params the NgTableParams requesting data
-                 */
-                getData: function(params) {
-                    return ngTableDefaultGetData(this.data, params);
-                }
+                sortingIndicator: 'span'
             };
 
+            this.settings(getDefaultSettingFns());
             this.settings(ngTableDefaults.settings);
             this.settings(baseSettings);
             this.parameters(baseParameters, true);

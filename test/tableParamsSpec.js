@@ -363,12 +363,8 @@ describe('NgTableParams', function () {
     }));
 
     it('ngTableParams test defaults', inject(function ($q, ngTableDefaults) {
-        ngTableDefaults.params = {
-            count: 2
-        };
-        ngTableDefaults.settings = {
-            counts: []
-        };
+        ngTableDefaults.params.count = 2;
+        ngTableDefaults.settings.counts = [];
         var tp = new NgTableParams();
 
         expect(tp.count()).toEqual(2);
