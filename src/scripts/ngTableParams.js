@@ -254,10 +254,15 @@
             /**
              * @ngdoc method
              * @name settings#getGroups
-             * @description Return groups for table grouping
+             * @description Return groups of data to display in the table
+             *
+             * Called by NgTableParams whenever it considers new data is to be loaded
+             * and when the `settings` object has a `groupBy` value
+             *
+             * @param {Object} params the NgTableParams requesting data
              */
-            getGroups = function(column) {
-                // this === settings
+            getGroups = function(params) {
+                var column = params.settings().groupBy;
                 return runGetData().then(function(data) {
                     var groups = {};
                     angular.forEach(data, function(item) {
@@ -485,7 +490,7 @@
 
             function runGetGroups(){
                 var getGroupsFn = settings.getGroupsFnAdaptor(settings.getGroups);
-                return $q.when(getGroupsFn.call(settings, settings.groupBy, self));
+                return $q.when(getGroupsFn.call(settings, self));
             }
 
             function runInterceptorPipeline(fetchFn){
@@ -537,7 +542,9 @@
                 /**
                  * @ngdoc method
                  * @name settings#getData
-                 * @description Called by NgTableParams whenever it considers new data is to be loaded
+                 * @description Returns the data to display in the table
+                 *
+                 * Called by NgTableParams whenever it considers new data is to be loaded
                  *
                  * @param {Object} params the NgTableParams requesting data
                  */
