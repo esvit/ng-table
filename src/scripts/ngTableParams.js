@@ -252,18 +252,6 @@
 
             /**
              * @ngdoc method
-             * @name NgTableParams#getData
-             * @description Called when updated some of parameters for get new data
-             *
-             * @param {Object} params New parameters
-             */
-            this.getData = function(params) {
-                // note: this === settings
-                return ngTableDefaultGetData(this.data, params);
-            };
-
-            /**
-             * @ngdoc method
              * @name NgTableParams#getGroups
              * @description Return groups for table grouping
              */
@@ -538,7 +526,16 @@
                 getDataFnAdaptor: angular.identity,
                 getGroupsFnAdaptor: angular.identity,
                 getGroups: this.getGroups,
-                getData: this.getData
+                /**
+                 * @ngdoc method
+                 * @name settings#getData
+                 * @description Called by NgTableParams whenever it considers new data is to be loaded
+                 *
+                 * @param {Object} params the NgTableParams requesting data
+                 */
+                getData: function(params) {
+                    return ngTableDefaultGetData(this.data, params);
+                }
             };
 
             this.settings(ngTableDefaults.settings);

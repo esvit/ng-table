@@ -178,37 +178,27 @@ describe('NgTableParams', function () {
     it('NgTableParams test settings', function () {
         var params = new NgTableParams();
 
-        expect(params.settings()).toEqual(jasmine.objectContaining({
+        var expectedSettings = {
             $loading: false,
             data: null,
             total: 0,
-            defaultSort : 'desc',
+            defaultSort: 'desc',
             counts: [10, 25, 50, 100],
             interceptors: [],
             paginationMaxBlocks: 11,
             paginationMinBlocks: 5,
-            sortingIndicator : 'span',
-            getData: params.getData,
-            getGroups: params.getGroups,
+            sortingIndicator: 'span',
             filterDelay: 750
-        }));
+        };
+        expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
+        expect(params.settings().getData).toEqual(jasmine.any(Function));
+        expect(params.settings().getGroups).toEqual(jasmine.any(Function));
 
         params = new NgTableParams({}, { total: 100, counts: [1,2] });
 
-        expect(params.settings()).toEqual(jasmine.objectContaining({
-            $loading: false,
-            data: null,
-            total: 100,
-            defaultSort : 'desc',
-            counts: [1,2],
-            interceptors: [],
-            paginationMaxBlocks: 11,
-            paginationMinBlocks: 5,
-            sortingIndicator : 'span',
-            getData: params.getData,
-            getGroups: params.getGroups,
-            filterDelay: 750
-        }));
+        expectedSettings.total = 100;
+        expectedSettings.counts = [1,2];
+        expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
     });
 
     it('changing settings().data should reset page to 1', function(){
