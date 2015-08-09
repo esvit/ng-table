@@ -18,8 +18,7 @@
     /**
      * @ngdoc provider
      * @name ngTableDefaultGetDataProvider
-     * @description Allows for the configuration of the {@link ngTable.ngTableDefaultGetData ngTableDefaultGetData}
-     * service.
+     * @description Allows for the configuration of the ngTableDefaultGetData service.
      *
      * Set filterFilterName to the name of a angular filter that knows how to take `NgTableParams.filter()`
      * to restrict an array of data.

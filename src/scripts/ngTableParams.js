@@ -488,9 +488,9 @@
                  * @name settings#getData
                  * @description Returns the data to display in the table
                  *
-                 * Called by NgTableParams whenever it considers new data is to be loaded
+                 * Called by `NgTableParams` whenever it considers new data is to be loaded
                  *
-                 * @param {Object} params the NgTableParams requesting data
+                 * @param {Object} params the `NgTableParams` requesting data
                  */
                 function getData(params) {
                     return ngTableDefaultGetData(params.settings().data, params);
@@ -501,10 +501,10 @@
                  * @name settings#getGroups
                  * @description Return groups of data to display in the table
                  *
-                 * Called by NgTableParams whenever it considers new data is to be loaded
+                 * Called by `NgTableParams` whenever it considers new data is to be loaded
                  * and when the `settings` object has a `groupBy` value
                  *
-                 * @param {Object} params the NgTableParams requesting data
+                 * @param {Object} params the `NgTableParams` requesting data
                  */
                 function getGroups(params) {
                     var settings = params.settings();
@@ -546,7 +546,7 @@
             angular.extend(params, ngTableDefaults.params);
 
             /**
-             * @ngdoc type
+             * @ngdoc object
              * @name settings
              * @module ngTable
              * @description configuration settings for `NgTableParams`
