@@ -60,7 +60,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="pageSize">Page Size:</label>
-                            <select id="pageSize" class="form-control" ng-model="tableParams.count" ng-model-options="{getterSetter: true }" ng-options="count for count in tableParams.settings().counts">
+                            <select id="pageSize" class="form-control" ng-model="tableParams.count" ng-model-options="{getterSetter: true }" ng-options="count for count in tableParams.settings().pager.counts">
                             </select>
                         </div>
                         <button type="button" class="btn btn-default" ng-click="tableParams.reload()">Reload</button>
@@ -141,7 +141,9 @@
                 count: 100           // count per page
             }, {
                 filterDelay: 0,
-                counts: [50, 100, 500],
+                pager: {
+                    counts: [50, 100, 500]
+                },
                 total: data.length, // length of data
                 getData: function ($defer, params) {
                     // use built-in angular filter

@@ -17,7 +17,7 @@ describe('ngTableDefaultGetData', function () {
 
     beforeEach(inject(function(_ngTableDefaultGetData_, NgTableParams){
         ngTableDefaultGetData = _ngTableDefaultGetData_;
-        tableParams = new NgTableParams({ count: 10}, { counts: [10]});
+        tableParams = new NgTableParams({ count: 10}, { pager: { counts: [10] }});
     }));
 
     it('should be configured to use built-in angular filters', function(){

@@ -58,7 +58,9 @@
                 total: 1,  // value less than count hide pagination
                 count: 5  // count per page
             }, {
-                counts: [], // hide page counts control
+                pager: {
+                    counts: [] // hide page counts control
+                },
                 getData: function($defer, params) {
                     $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                 }

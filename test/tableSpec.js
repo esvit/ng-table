@@ -753,7 +753,7 @@ describe('ng-table', function() {
 
         it('should reload 1 time with page reset to 1 when binding a new settings data value and changing the filter', function(){
             var settings = {
-                counts: [1],
+                pager: { counts: [1] },
                 data: [{age: 1}, {age: 2}],
                 filterDelay: 100
             };

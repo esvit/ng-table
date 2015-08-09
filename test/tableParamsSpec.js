@@ -183,9 +183,9 @@ describe('NgTableParams', function () {
             data: null,
             total: 0,
             defaultSort : 'desc',
-            counts: [10, 25, 50, 100],
             interceptors: [],
             pager: {
+                counts: [10, 25, 50, 100],
                 maxBlocks: 11,
                 minBlocks: 5
             },
@@ -195,18 +195,16 @@ describe('NgTableParams', function () {
             filterDelay: 750
         }));
 
-        params = new NgTableParams({}, { total: 100, counts: [1,2] });
+        params = new NgTableParams({}, { total: 100, pager: { counts: [1,2] }});
 
         expect(params.settings()).toEqual(jasmine.objectContaining({
             $loading: false,
             data: null,
             total: 100,
             defaultSort : 'desc',
-            counts: [1,2],
             interceptors: [],
             pager: {
-                maxBlocks: 11,
-                minBlocks: 5
+                counts: [1,2]
             },
             sortingIndicator : 'span',
             getData: params.getData,
@@ -379,7 +377,9 @@ describe('NgTableParams', function () {
             count: 2
         };
         ngTableDefaults.settings = {
-            counts: []
+            pager: {
+                counts: []
+            }
         };
         var tp = new NgTableParams();
 
@@ -387,7 +387,7 @@ describe('NgTableParams', function () {
         expect(tp.page()).toEqual(1);
 
         var settings = tp.settings();
-        expect(settings.counts.length).toEqual(0);
+        expect(settings.pager.counts.length).toEqual(0);
         expect(settings.interceptors.length).toEqual(0);
         expect(settings.filterDelay).toEqual(750);
 
@@ -1427,7 +1427,7 @@ describe('NgTableParams', function () {
                     actualPublisher = params;
                     actualEventArgs = [newVal, oldVal];
                 });
-                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                var params = createNgTableParams({ count: 5 }, { pager: { counts: [5,10] }, data: [1,2,3,4,5,6]});
 
                 // when
                 params.reload();
@@ -1445,7 +1445,7 @@ describe('NgTableParams', function () {
                     actualPublisher = params;
                     actualEventArgs = [newVal, oldVal];
                 });
-                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: []});
+                var params = createNgTableParams({ count: 5 }, { pager: { counts: [5,10] }, data: []});
 
                 // when
                 params.reload();
@@ -1461,7 +1461,7 @@ describe('NgTableParams', function () {
                 ngTableEventsChannel.onPagesChanged(function(/*params, newVal, oldVal*/){
                     callCount++;
                 });
-                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                var params = createNgTableParams({ count: 5 }, { pager: { counts: [5,10] }, data: [1,2,3,4,5,6]});
 
                 // when
                 params.reload();
@@ -1480,7 +1480,7 @@ describe('NgTableParams', function () {
                 ngTableEventsChannel.onPagesChanged(function(/*params, newVal, oldVal*/){
                     callCount++;
                 });
-                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                var params = createNgTableParams({ count: 5 }, { pager: { counts: [5,10] }, data: [1,2,3,4,5,6]});
                 params.reload();
                 scope.$digest();
 

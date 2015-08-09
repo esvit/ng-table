@@ -530,9 +530,9 @@
                 total: 0,
                 defaultSort: 'desc',
                 filterDelay: 750,
-                counts: [10, 25, 50, 100],
                 interceptors: [],
                 pager: {
+                    counts: [10, 25, 50, 100],
                     maxBlocks: 11,
                     minBlocks: 5
                 },
