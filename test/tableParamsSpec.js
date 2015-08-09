@@ -269,7 +269,7 @@ describe('NgTableParams', function () {
         }});
 
         var actualRoleGroups;
-        tp.getGroups('role'/*, params*/).then(function(groups){
+        tp.settings().getGroups('role'/*, params*/).then(function(groups){
             actualRoleGroups = groups;
         });
         $rootScope.$digest();
@@ -310,7 +310,7 @@ describe('NgTableParams', function () {
         ]);
 
         var actualAgeGroups;
-        tp.getGroups('age'/*, params*/).then(function(groups){
+        tp.settings().getGroups('age'/*, params*/).then(function(groups){
             actualAgeGroups = groups;
         });
         $rootScope.$digest();

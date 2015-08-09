@@ -28,6 +28,7 @@
 
             var self = this,
                 committedParams,
+                getGroups,
                 isCommittedDataset = false,
                 log = function() {
                     if (settings.debugMode && $log.debug) {
@@ -252,10 +253,11 @@
 
             /**
              * @ngdoc method
-             * @name NgTableParams#getGroups
+             * @name settings#getGroups
              * @description Return groups for table grouping
              */
-            this.getGroups = function(column) {
+            getGroups = function(column) {
+                // this === settings
                 return runGetData().then(function(data) {
                     var groups = {};
                     angular.forEach(data, function(item) {
@@ -510,6 +512,12 @@
             };
             angular.extend(params, ngTableDefaults.params);
 
+            /**
+             * @ngdoc type
+             * @name settings
+             * @module ngTable
+             * @description configuration settings for `NgTableParams`
+             */
             var settings = {
                 // todo: remove $scope after acceptable depreciation period as no longer required
                 $scope: null, // set by ngTable controller
@@ -525,7 +533,7 @@
                 sortingIndicator: 'span',
                 getDataFnAdaptor: angular.identity,
                 getGroupsFnAdaptor: angular.identity,
-                getGroups: this.getGroups,
+                getGroups: getGroups,
                 /**
                  * @ngdoc method
                  * @name settings#getData
