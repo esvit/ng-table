@@ -325,7 +325,7 @@
                         active: currentPage > 1,
                         current: currentPage === 1
                     });
-                    maxPivotPages = Math.round((settings.paginationMaxBlocks - settings.paginationMinBlocks) / 2);
+                    maxPivotPages = Math.round(((settings.pager.maxBlocks || 11) - (settings.pager.minBlocks || 5)) / 2);
                     minPage = Math.max(2, currentPage - maxPivotPages);
                     maxPage = Math.min(numPages - 1, currentPage + maxPivotPages * 2 - (currentPage - minPage));
                     minPage = Math.max(2, minPage - (maxPivotPages * 2 - (maxPage - minPage)));
@@ -532,8 +532,10 @@
                 filterDelay: 750,
                 counts: [10, 25, 50, 100],
                 interceptors: [],
-                paginationMaxBlocks: 11,
-                paginationMinBlocks: 5,
+                pager: {
+                    maxBlocks: 11,
+                    minBlocks: 5
+                },
                 sortingIndicator: 'span',
                 getDataFnAdaptor: angular.identity,
                 getGroupsFnAdaptor: angular.identity,

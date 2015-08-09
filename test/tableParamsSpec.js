@@ -185,8 +185,10 @@ describe('NgTableParams', function () {
             defaultSort : 'desc',
             counts: [10, 25, 50, 100],
             interceptors: [],
-            paginationMaxBlocks: 11,
-            paginationMinBlocks: 5,
+            pager: {
+                maxBlocks: 11,
+                minBlocks: 5
+            },
             sortingIndicator : 'span',
             getData: params.getData,
             getGroups: params.getGroups,
@@ -202,8 +204,10 @@ describe('NgTableParams', function () {
             defaultSort : 'desc',
             counts: [1,2],
             interceptors: [],
-            paginationMaxBlocks: 11,
-            paginationMinBlocks: 5,
+            pager: {
+                maxBlocks: 11,
+                minBlocks: 5
+            },
             sortingIndicator : 'span',
             getData: params.getData,
             getGroups: params.getGroups,

@@ -1,6 +1,9 @@
 <a name="0.8.3"></a>
 # 0.8.3 (2015-08-09)
+## Breaking Changes
 
+- **pagination:** converted paginationMaxBlocks/paginationMinBlocks to use pager settings  
+     pager.minBlocks, pager.maxBlocks for future enhancements
 
 ## Bug Fixes
 

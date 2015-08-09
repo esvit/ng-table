@@ -157,7 +157,10 @@
                     }
                 }, {
                     counts: [5, 10, 15],
-                    paginationMaxBlocks: 9,
+                    pager: {
+                        minBlocks: 4,
+                        maxBlocks: 9
+                    },
                     total: 0,           // length of data
                     getData: function (params) {
                         // ajax request to api
