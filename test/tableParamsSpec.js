@@ -604,6 +604,45 @@ describe('NgTableParams', function () {
 
     });
 
+    describe('hasErrorState', function(){
+        var tp;
+
+        it('should return false until reload fails', inject(function($q){
+            // given
+            tp = createNgTableParams({ getData: function(){
+                if (tp.settings().getData.calls.count() > 2){
+                    return $q.reject('bad response');
+                }
+                return [1,2];
+            }});
+
+            // when, then
+            tp.reload();
+            scope.$digest();
+            expect(tp.hasErrorState()).toBe(false);
+            tp.reload();
+            scope.$digest();
+            expect(tp.hasErrorState()).toBe(false);
+            tp.reload();
+            scope.$digest();
+            expect(tp.hasErrorState()).toBe(true);
+        }));
+
+        it('should return false once parameter values change', inject(function($q){
+            // given
+            tp = createNgTableParams({ getData: function(){
+                return $q.reject('bad response');
+            }});
+
+            // when, then
+            tp.reload();
+            scope.$digest();
+            expect(tp.hasErrorState()).toBe(true);
+            tp.filter({ age: 598});
+            expect(tp.hasErrorState()).toBe(false);
+        }));
+    });
+
     describe('backwards compatibility shim', function(){
 
         it('shim should supply getData original arguments', inject(function(ngTableGetDataBcShim){

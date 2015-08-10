@@ -28,6 +28,7 @@
 
             var self = this,
                 committedParams,
+                erroredParams,
                 isCommittedDataset = false,
                 log = function() {
                     if (settings.debugMode && $log.debug) {
@@ -418,6 +419,8 @@
                 var oldData = self.data;
                 return pData.then(function(data) {
                     settings.$loading = false;
+                    erroredParams = null;
+
                     self.data = data;
                     // note: I think it makes sense to publish this event even when data === oldData
                     // subscribers can always set a filter to only receive the event when data !== oldData
@@ -431,11 +434,25 @@
 
                     return data;
                 }).catch(function(reason){
+                    erroredParams = committedParams;
                     committedParams = null;
                     isCommittedDataset = false;
                     // "rethrow"
                     return $q.reject(reason);
                 });
+            };
+
+            /**
+             * @ngdoc method
+             * @name NgTableParams#hasErrorState
+             * @description Return true when an attempt to `reload` the current `parameter` values have resulted in
+             * a failure
+             *
+             * This method will continue to return true until the reload is successfully called or when the
+             * `parameter` values have changed
+             */
+            this.hasErrorState = function(){
+                return !!(erroredParams && angular.equals(erroredParams, params));
             };
 
             this.reloadPages = (function() {
