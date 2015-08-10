@@ -1,3 +1,19 @@
+<a name="1.0.0-alpha.1"></a>
+# 1.0.0-alpha.1 (2015-08-10)
+
+
+## Bug Fixes
+
+- **ngTableController:** should not call reload twice when initial load fails
+  ([a01da5bd](https://github.com/esvit/ng-table/commit/a01da5bdf9e88f27b6807458212f5c36d2390e85))
+
+
+## Features
+
+- **NgTableParams:** add hasErrorState method
+  ([093ba3d9](https://github.com/esvit/ng-table/commit/093ba3d96c591faaccff6a613223629a861a1c6a))
+
+
 <a name="1.0.0-alpha"></a>
 # 1.0.0-alpha (2015-08-10)
 
