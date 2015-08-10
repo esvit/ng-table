@@ -537,7 +537,7 @@
 
             var params = {
                 page: 1,
-                count: 1,
+                count: 10,
                 filter: {},
                 sorting: {},
                 group: {},

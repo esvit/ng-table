@@ -149,14 +149,14 @@ describe('NgTableParams', function () {
         });
         expect(params.url()).toEqual({
             'page': '1',
-            'count': '1',
+            'count': '10',
             'filter[name]': 'test',
             'filter[age]': 20,
             'sorting[age]': 'desc'
         });
         expect(params.url(true)).toEqual([
             'page=1',
-            'count=1',
+            'count=10',
             'filter[name]=test',
             'filter[age]=20',
             'sorting[age]=desc'
