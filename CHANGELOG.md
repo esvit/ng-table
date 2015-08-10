@@ -1,3 +1,67 @@
+<a name="1.0.0-alpha"></a>
+# 1.0.0-alpha (2015-08-10)
+
+
+## Bug Fixes
+
+- **NgTableParams:** default page size is unreasonably small
+  ([6aec41ca](https://github.com/esvit/ng-table/commit/6aec41cae47050861ade27cde71e4a6ca6252922))
+
+
+## Breaking Changes
+
+- **NgTableParams:**
+  - due to [6aec41ca](https://github.com/esvit/ng-table/commit/6aec41cae47050861ade27cde71e4a6ca6252922),
+
+
+Default page size has been increased from 1 to 10.
+
+To override this behaviour set the default page size in the a run block:
+
+```js
+angular.module("yourApp").run(setRunPhaseDefaults);
+
+setRunPhaseDefaults.$inject = ["ngTableDefaults"];
+
+function setRunPhaseDefaults(ngTableDefaults) {
+    ngTableDefaults.params.count = 1;
+}
+```
+
+  - due to [6b747850](https://github.com/esvit/ng-table/commit/6b747850fdc3ca9c22ee5f5e0d9cfc26d8e462f4),
+
+
+`NgTableParams` no longer exposes a `getGroups` method.
+
+`getGroups` is now a method on the settings object only.
+
+  - due to [1ed1a044](https://github.com/esvit/ng-table/commit/1ed1a044bf1eb411d6e051b3440d5e75007e06ee),
+
+
+`NgTableParams` no longer exposes a `getData` method
+
+- **settings:** due to [e29babf2](https://github.com/esvit/ng-table/commit/e29babf2958fb0f1ee39c48c8531cc70c110cdeb),
+
+
+The `column` parameter of the `getGroups` method has been removed.
+
+Instead the `groupBy` value on the `NgTableParams.settings()` object supplied as a parameter will
+be used to determine the grouping.
+
+Previously:
+
+```js
+var groupsFetched = tableParams.settings().getGroups('age');
+```
+
+Now:
+
+```js
+tableParams.settings({ groupBy: 'age'});
+var groupsFetched = tableParams.settings().getGroups(tableParams);
+```
+
+
 <a name="0.8.3"></a>
 # 0.8.3 (2015-08-09)
 
