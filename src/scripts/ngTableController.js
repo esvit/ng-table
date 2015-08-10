@@ -38,7 +38,7 @@
             })();
 
             function onDataReloadStatusChange (newStatus/*, oldStatus*/) {
-                if (!newStatus) {
+                if (!newStatus || $scope.params.hasErrorState()) {
                     return;
                 }
 

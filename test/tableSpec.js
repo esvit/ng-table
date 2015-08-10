@@ -751,6 +751,20 @@ describe('ng-table', function() {
             expect(tp.settings().getData.calls.count()).toBe(1);
         });
 
+        it('should reload 1 time when initial load fails', inject(function($q){
+            // given
+            var tp = createNgTableParams({filterDelay: 0, getData: function(){
+                return $q.reject('BANG!');
+            }});
+
+            // when
+            scope.tableParams = tp;
+            scope.$digest();
+
+            // then
+            expect(tp.settings().getData.calls.count()).toBe(1);
+        }));
+
         it('should reload 1 time with page reset to 1 when binding a new settings data value and changing the filter', function(){
             var settings = {
                 counts: [1],
@@ -774,9 +788,6 @@ describe('ng-table', function() {
         });
 
         it('changing filter, orderBy, or page and then calling reload should not invoke getData twice', function(){
-
-            // todo: refactor the watches in ngTableController to handle this case
-
             var tp = createNgTableParams();
             scope.tableParams = tp;
             scope.$digest();
@@ -790,6 +801,28 @@ describe('ng-table', function() {
             // then
             expect(tp.settings().getData.calls.count()).toBe(1);
         });
+
+        it('change to filter that fails to load should not cause infinite reload loop', inject(function($q){
+            var tp = createNgTableParams({ filterDelay: 0, getData: function(){
+                if (tp.settings().getData.calls.count() > 1){
+                    return $q.reject('BANG!');
+                }
+                return [1,2]
+            }});
+            scope.tableParams = tp;
+            scope.$digest();
+            expect(tp.settings().getData.calls.count()).toBe(1); // checking assumptions
+            expect(tp.isDataReloadRequired()).toBe(false); // checking assumptions
+
+            // when
+            tp.filter({ age: 5 });
+            expect(tp.isDataReloadRequired()).toBe(true); // checking assumptions
+            scope.$digest();
+
+            // then
+            expect(tp.isDataReloadRequired()).toBe(true);
+            expect(tp.settings().getData.calls.count()).toBe(2);
+        }));
 
         it('changing filter, orderBy, or page in a callback to reload should re-invoke getData 1 time only', function(){
             var tp = createNgTableParams();
