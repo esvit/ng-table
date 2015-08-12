@@ -25,6 +25,51 @@ describe('ngTableDefaultGetData', function () {
         expect(ngTableDefaultGetDataProvider.sortingFilterName).toBe('orderBy');
     });
 
+    describe('sorting', function(){
+        it('empty sorting', function(){
+            // given
+            tableParams.sorting({});
+            // when
+            var actualResults = ngTableDefaultGetData([{ age: 1 }, { age: 2}, { age: 3}], tableParams);
+            // then
+            expect(actualResults).toEqual([{ age: 1 }, { age: 2}, { age: 3}]);
+        });
+
+        it('single property sort ascending', function(){
+            // given
+            tableParams.sorting({ age: 'asc'});
+            // when
+            var actualResults = ngTableDefaultGetData([{ age: 1 }, { age: 3}, { age: 2}], tableParams);
+            // then
+            expect(actualResults).toEqual([{ age: 1 }, { age: 2}, { age: 3}]);
+        });
+
+        it('single property sort descending', function(){
+            // given
+            tableParams.sorting({ age: 'desc'});
+            // when
+            var actualResults = ngTableDefaultGetData([{ age: 1 }, { age: 3}, { age: 2}], tableParams);
+            // then
+            expect(actualResults).toEqual([{ age: 3 }, { age: 2}, { age: 1}]);
+        });
+
+        it('multiple property sort ascending', function(){
+            // given
+            tableParams.sorting({ age: 'asc', name: 'asc'});
+            // when
+            var data = [
+                {age: 1, name: 'b'}, {age: 3, name: 'a'}, {age: 2, name: 'a'}, {age: 1, name: 'a'}
+            ];
+            var actualResults = ngTableDefaultGetData(data, tableParams);
+            // then
+            var expectedData = [
+                {age: 1, name: 'a'}, {age: 1, name: 'b'}, {age: 2, name: 'a'}, {age: 3, name: 'a'}
+            ];
+            expect(actualResults).toEqual(expectedData);
+        });
+
+    });
+
     describe('filters', function(){
         it('empty filter', function(){
             // given
