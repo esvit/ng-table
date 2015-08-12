@@ -109,19 +109,21 @@
 
             this.loadFilterData = function ($columns) {
                 angular.forEach($columns, function ($column) {
-                    var def;
-                    def = $column.filterData($scope, {
+                    var result;
+                    result = $column.filterData($scope, {
                         $column: $column
                     });
-                    if (!def) {
+                    if (!result) {
                         delete $column.filterData;
                         return;
                     }
 
-                    // if we're working with a deferred object, let's wait for the promise
-                    if ((angular.isObject(def) && angular.isObject(def.promise))) {
+                    // if we're working with a deferred object or a promise, let's wait for the promise
+                    /* WARNING: support for returning a $defer is depreciated */
+                    if ((angular.isObject(result) && (angular.isObject(result.promise) || angular.isFunction(result.then)))) {
+                        var pData = angular.isFunction(result.then) ? result : result.promise;
                         delete $column.filterData;
-                        return def.promise.then(function(data) {
+                        return pData.then(function(data) {
                             // our deferred can eventually return arrays, functions and objects
                             if (!angular.isArray(data) && !angular.isFunction(data) && !angular.isObject(data)) {
                                 // if none of the above was found - we just want an empty array
@@ -137,7 +139,7 @@
                     }
                     // otherwise, we just return what the user gave us. It could be a function, array, object, whatever
                     else {
-                        return $column.data = def;
+                        return $column.data = result;
                     }
                 });
             };
