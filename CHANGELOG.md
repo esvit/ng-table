@@ -1,3 +1,19 @@
+<a name="1.0.0-alpha.2"></a>
+# 1.0.0-alpha.2 (2015-08-12)
+
+
+## Bug Fixes
+
+- **pager.html:** don't render empty pagination UL
+  ([ffbbca04](https://github.com/esvit/ng-table/commit/ffbbca0466b67e6a4b2b877282e7c7b45ad330af))
+
+
+## Features
+
+- **ngTableController:** allow $column.filterData to return a promise
+  ([f90cbcb8](https://github.com/esvit/ng-table/commit/f90cbcb87de4d072f33d5813fe69132e3e51b45f))
+
+
 <a name="1.0.0-alpha.1"></a>
 # 1.0.0-alpha.1 (2015-08-10)
 

@@ -1,6 +1,6 @@
 {
   "name": "ng-table",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "main": [
     "./dist/ng-table.min.js",
     "./dist/ng-table.min.css"
