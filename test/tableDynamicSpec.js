@@ -380,17 +380,20 @@ describe('ng-table-dynamic', function() {
 
         describe('select filter', function(){
 
-            beforeEach(inject(function($compile, $q, NgTableParams) {
+            beforeEach(inject(function ($compile, $q, NgTableParams) {
                 scope.cols = [{
-                        field: 'name',
-                        filter: {username: 'select'},
-                        filterData: getNamesAsDefer
-                    }, {
+                    field: 'name',
+                    filter: {username: 'select'},
+                    filterData: getNamesAsDefer
+                }, {
                     field: 'names2',
                     filter: {username2: 'select'},
                     filterData: getNamesAsPromise
-                }
-                ];
+                }, {
+                    field: 'names3',
+                    filter: {username3: 'select'},
+                    filterData: getNamesAsArray
+                }];
                 scope.tableParams = new NgTableParams({}, {});
                 $compile(elm)(scope);
                 scope.$digest();
@@ -406,6 +409,7 @@ describe('ng-table-dynamic', function() {
                     }]);
                     return def;
                 }
+
                 function getNamesAsPromise(/*$column*/) {
                     return $q.when([{
                         'id': 20,
@@ -416,15 +420,27 @@ describe('ng-table-dynamic', function() {
                     }]);
                 }
 
+                function getNamesAsArray(/*$column*/) {
+                    return [{
+                        'id': 20,
+                        'title': 'Christian'
+                    }, {
+                        'id': 21,
+                        'title': 'Simon'
+                    }];
+                }
+
             }));
 
             it('should render select lists', function() {
                 var inputs = elm.find('thead').find('tr').eq(1).find('th').find('select');
-                expect(inputs.length).toBe(2);
+                expect(inputs.length).toBe(3);
                 expect(inputs.eq(0).attr('ng-model')).not.toBeUndefined();
                 expect(inputs.eq(0).attr('name')).toBe('username');
                 expect(inputs.eq(1).attr('ng-model')).not.toBeUndefined();
                 expect(inputs.eq(1).attr('name')).toBe('username2');
+                expect(inputs.eq(2).attr('ng-model')).not.toBeUndefined();
+                expect(inputs.eq(2).attr('name')).toBe('username3');
             });
 
             it('should render list data return as a deferred', function() {
@@ -449,6 +465,24 @@ describe('ng-table-dynamic', function() {
 
             it('should render select list return as a promise', function() {
                 var inputs = elm.find('thead').find('tr').eq(1).find('th').eq(1).find('select');
+                expect(inputs[0].options.length).toBeGreaterThan(0);
+                var $column = inputs.eq(0).scope().$column;
+                var plucker = _.partialRight(_.pick, ['id', 'title']);
+                var actual = _.map($column.data, plucker);
+                expect(actual).toEqual([{
+                    'id': '',
+                    'title': ''
+                },{
+                    'id': 20,
+                    'title': 'Christian'
+                }, {
+                    'id': 21,
+                    'title': 'Simon'
+                }]);
+            });
+
+            it('should render select list return as an array', function() {
+                var inputs = elm.find('thead').find('tr').eq(1).find('th').eq(2).find('select');
                 expect(inputs[0].options.length).toBeGreaterThan(0);
                 var $column = inputs.eq(0).scope().$column;
                 var plucker = _.partialRight(_.pick, ['id', 'title']);
