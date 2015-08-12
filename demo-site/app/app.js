@@ -3,18 +3,24 @@
 
     angular.module('main', ['ngRoute', 'ngTable', 'ngSocial', 'embedCodepen'])
         .config(['$routeProvider',
-            function($routeProvider) {
+            function ($routeProvider) {
                 $routeProvider.
                     when('/', {
-                        templateUrl: 'views/intro.html',
+                        templateUrl: 'views/intro/overview.html',
                         controller: 'introController',
                         controllerAs: 'vm'
                     }).
-                    when('/demo/:id', {
-                        templateUrl: function($routeParams) {
-                            return 'views/demo' + $routeParams.id + '.html';
+                    when('/demo/todo', {
+                        templateUrl: 'views/todo.html',
+                        controller: function () {
+
+                        }
+                    }).
+                    when('/:section/:article', {
+                        templateUrl: function ($routeParams) {
+                            return 'views/' + $routeParams.section + '/' + $routeParams.article + '.html';
                         },
-                        controller: function() {
+                        controller: function () {
 
                         }
                     });
