@@ -1,7 +1,7 @@
 <tr ng-show="show_filter" class="ng-table-filters">
     <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter">
-        <div ng-repeat="(name, filter) in $column.filter(this)">
-            <div ng-include="config.getTemplateUrl(filter)"></div>
+        <div ng-repeat="(name, filter) in $column.filter(this)" ng-include="config.getTemplateUrl(filter)" class="filter-cell"
+             ng-class="[getFilterCellCss($column.filter(this)), $last ? 'last' : '']">
         </div>
     </th>
 </tr>
