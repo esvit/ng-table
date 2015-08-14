@@ -69,6 +69,9 @@
             /////////
 
             function getTemplateUrl(filterValue, filterKey){
+                if (angular.isObject(filterValue)){
+                    filterValue = filterValue.id;
+                }
                 if (filterValue.indexOf('/') !== -1){
                     return filterValue;
                 }

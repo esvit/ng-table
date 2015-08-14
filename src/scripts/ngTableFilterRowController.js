@@ -17,10 +17,19 @@
     function ngTableFilterRowController($scope, ngTableFilterConfig){
 
         $scope.config = ngTableFilterConfig;
+
         $scope.getFilterCellCss = function (filter){
             var size = Object.keys(filter).length;
             var width = parseInt(12 / size, 10);
             return 's' + width;
-        }
+        };
+
+        $scope.getFilterPlaceholderValue = function(filterValue/*, filterName*/){
+            if (angular.isObject(filterValue)) {
+                return filterValue.placeholder;
+            } else {
+                return '';
+            }
+        };
     }
 })();

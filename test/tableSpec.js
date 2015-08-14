@@ -660,6 +660,105 @@ describe('ng-table', function() {
                 expect(ageInput.attr('name')).toBe('age');
             });
         });
+
+        describe('filter with placeholder value and alias', function(){
+
+            var elm,
+                tp;
+            beforeEach(inject(function($compile) {
+                elm = angular.element(
+                    '<div>' +
+                    '<table ng-table="tableParams" show-filter="true">' +
+                    '<tr ng-repeat="user in $data">' +
+                    '<td header-class="captureColumn($column)" title="\'Name\'" '
+                    + 'filter="usernameFilter">{{user.name}}</td>' +
+                    '</tr>' +
+                    '</table>' +
+                    '</div>');
+
+                $compile(elm)(scope);
+                scope.$digest();
+
+                // 'text' is a shortcut alias for the template ng-table/filters/text
+                scope.usernameFilter = {
+                    username: { id: 'text', placeholder: 'User name'}
+                };
+                tp = scope.tableParams = createNgTableParams();
+                scope.$digest();
+            }));
+
+            it('should render named filter template with placeholder value', function() {
+                var inputs = elm.find('thead').find('tr').eq(1).find('th').find('input');
+                expect(inputs.length).toBe(1);
+                expect(inputs.eq(0).attr('type')).toBe('text');
+                expect(inputs.eq(0).attr('ng-model')).not.toBeUndefined();
+                expect(inputs.eq(0).attr('name')).toBe('username');
+                expect(inputs.eq(0).attr('placeholder')).toBe('User name');
+            });
+
+            it('should databind placeholder value to filter input', function () {
+                scope.usernameFilter.username.placeholder = 'Name of user';
+                scope.$digest();
+
+                var input = elm.find('thead').find('tr').eq(1).find('th').find('input');
+                expect(input.attr('placeholder')).toBe('Name of user');
+            });
+
+            it('should make filter def available on $column', function () {
+                expect($capturedColumn).toBeDefined();
+                expect($capturedColumn.filter).toBeDefined();
+                expect($capturedColumn.filter()).toBe(scope.usernameFilter);
+            });
+        });
+
+        describe('filter with placeholder value and url', function(){
+
+            var elm,
+                tp;
+            beforeEach(inject(function($compile) {
+                elm = angular.element(
+                    '<div>' +
+                    '<table ng-table="tableParams" show-filter="true">' +
+                    '<tr ng-repeat="user in $data">' +
+                    '<td header-class="captureColumn($column)" title="\'Age\'" '
+                    + 'filter="ageFilter">{{user.age}}</td>' +
+                    '</tr>' +
+                    '</table>' +
+                    '</div>');
+
+                $compile(elm)(scope);
+                scope.$digest();
+
+                scope.ageFilter = {
+                    age: { id: 'ng-table/filters/number.html', placeholder: 'User age'}
+                };
+                tp = scope.tableParams = createNgTableParams();
+                scope.$digest();
+            }));
+
+            it('should render named filter template with placeholder value', function() {
+                var inputs = elm.find('thead').find('tr').eq(1).find('th').find('input');
+                expect(inputs.length).toBe(1);
+                expect(inputs.eq(0).attr('type')).toBe('number');
+                expect(inputs.eq(0).attr('ng-model')).not.toBeUndefined();
+                expect(inputs.eq(0).attr('name')).toBe('age');
+                expect(inputs.eq(0).attr('placeholder')).toBe('User age');
+            });
+
+            it('should databind placeholder value to filter input', function () {
+                scope.ageFilter.age.placeholder = 'Age of user';
+                scope.$digest();
+
+                var input = elm.find('thead').find('tr').eq(1).find('th').find('input');
+                expect(input.attr('placeholder')).toBe('Age of user');
+            });
+
+            it('should make filter def available on $column', function () {
+                expect($capturedColumn).toBeDefined();
+                expect($capturedColumn.filter).toBeDefined();
+                expect($capturedColumn.filter()).toBe(scope.ageFilter);
+            });
+        });
     });
 
     describe('internals', function(){
