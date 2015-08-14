@@ -64,10 +64,11 @@
                 page: 1,            // show first page
                 count: 10,          // count per page
                 sorting: {
-                    name: 'asc'     // initial sorting
+                    name: 'asc'     // initial sorting,
                 }
             }, {
-                data: self["data" + $scope.dataset]
+                data: self["data" + $scope.dataset],
+                filterLayout: 'horizontal'
             });
         })
         </script>

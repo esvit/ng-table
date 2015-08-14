@@ -160,16 +160,19 @@
 }
 
 .filter > .filter-cell {
+    float: left;
+    box-sizing: border-box;
+}
+
+.filter-horizontal > .filter-cell {
     padding: 0 2px;
 }
 
-.filter > .filter-cell:first-child {
+.filter-horizontal > .filter-cell:first-child {
     padding-left: 0;
 }
 
-.filter > .filter-cell {
-    float: left;
-    box-sizing: border-box;
+.filter-horizontal > .filter-cell {
     &:last-child, &.last {
         padding-right: 0;
     }

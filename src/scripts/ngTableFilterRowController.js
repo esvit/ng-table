@@ -18,7 +18,11 @@
 
         $scope.config = ngTableFilterConfig;
 
-        $scope.getFilterCellCss = function (filter){
+        $scope.getFilterCellCss = function (filter, layout){
+            if (layout !== 'horizontal') {
+                return 's12';
+            }
+
             var size = Object.keys(filter).length;
             var width = parseInt(12 / size, 10);
             return 's' + width;

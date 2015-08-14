@@ -576,6 +576,7 @@
                 total: 0,
                 defaultSort: 'desc',
                 filterDelay: 750,
+                filterLayout: 'stack', // alternative: 'horizontal'
                 counts: [10, 25, 50, 100],
                 interceptors: [],
                 paginationMaxBlocks: 11,
