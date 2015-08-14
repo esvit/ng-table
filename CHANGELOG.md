@@ -1,3 +1,37 @@
+<a name="1.0.0-alpha.3"></a>
+# 1.0.0-alpha.3 (2015-08-14)
+
+
+## Bug Fixes
+
+- **ngTableController:** should be consistent about adding empty option item
+  ([d2080600](https://github.com/esvit/ng-table/commit/d2080600641206d84505c54f271c1eaebee391e8))
+
+
+## Features
+
+- **filters:**
+  - add filterLayout option to control position of multi-template filters
+  ([d1e02ccd](https://github.com/esvit/ng-table/commit/d1e02ccd7d0e9f3f9fb882a32113cc724bcfe5f4))
+  - support placeholder attribute for filter input
+  ([275f1c88](https://github.com/esvit/ng-table/commit/275f1c88f46515415a43e434a65fe54b4d813637))
+  - render a multi-template filter horizontally
+  ([c834cc09](https://github.com/esvit/ng-table/commit/c834cc098ee2fa6ffe986ec701ceb0f3360b5680))
+
+
+## Breaking Changes
+
+- **ngTableController:** due to [d2080600](https://github.com/esvit/ng-table/commit/d2080600641206d84505c54f271c1eaebee391e8),
+
+
+An empty item - `{ id: '', title: '' }` - is added to an array returned synchronously by `filterData`
+function.
+
+Implications:
+* make sure to *not* add an empty option yourself as this will be a duplicate
+* your array of items need to have an `id` and `title` field so as to match the empty option
+
+
 <a name="1.0.0-alpha.2"></a>
 # 1.0.0-alpha.2 (2015-08-12)
 
