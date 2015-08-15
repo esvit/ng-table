@@ -69,6 +69,7 @@ module.exports = function(grunt) {
                     'src/scripts/ngTableFilterRow.directive.js',
                     'src/scripts/ngTableSorterRowController.js',
                     'src/scripts/ngTableSorterRow.directive.js',
+                    'src/scripts/ngTableSelectFilterDs.directive.js',
                     './.temp/scripts/views.js',
                     'src/scripts/outro.js'
                 ],
