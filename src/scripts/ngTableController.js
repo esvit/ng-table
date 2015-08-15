@@ -128,28 +128,15 @@
                             if (!angular.isArray(data) && !angular.isFunction(data) && !angular.isObject(data)) {
                                 // if none of the above was found - we just want an empty array
                                 data = [];
-                            } else if (angular.isArray(data)) {
-                                ensureEmptyListOption(data);
                             }
                             $column.data = data;
                         });
                     }
                     // otherwise, we just return what the user gave us. It could be a function, array, object, whatever
                     else {
-                        ensureEmptyListOption(result);
                         return $column.data = result;
                     }
                 });
-
-                function ensureEmptyListOption(data){
-                    if (!angular.isArray(data)){
-                        return;
-                    }
-                    data.unshift({
-                        title: '',
-                        id: ''
-                    });
-                }
             };
 
             this.buildColumns = function (columns) {
