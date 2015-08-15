@@ -1161,28 +1161,15 @@
                             if (!angular.isArray(data) && !angular.isFunction(data) && !angular.isObject(data)) {
                                 // if none of the above was found - we just want an empty array
                                 data = [];
-                            } else if (angular.isArray(data)) {
-                                ensureEmptyListOption(data);
                             }
                             $column.data = data;
                         });
                     }
                     // otherwise, we just return what the user gave us. It could be a function, array, object, whatever
                     else {
-                        ensureEmptyListOption(result);
                         return $column.data = result;
                     }
                 });
-
-                function ensureEmptyListOption(data){
-                    if (!angular.isArray(data)){
-                        return;
-                    }
-                    data.unshift({
-                        title: '',
-                        id: ''
-                    });
-                }
             };
 
             this.buildColumns = function (columns) {
@@ -1616,11 +1603,87 @@
     }
 })();
 
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+(function(){
+    'use strict';
+
+    /**
+     * @ngdoc directive
+     * @name ngTableSelectFilterDs
+     * @module ngTable
+     * @restrict A
+     *
+     * @description
+     * Takes the array returned by $column.filterData and makes it available as `$selectData` on the `$scope`.
+     *
+     * The resulting `$selectData` array will contain an extra item that is suitable to represent the user
+     * "deselecting" an item from a `<select>` tag
+     *
+     * This directive is is focused on providing a datasource to an `ngOptions` directive
+     */
+    angular.module('ngTable')
+        .directive('ngTableSelectFilterDs', ngTableSelectFilterDs);
+
+    ngTableSelectFilterDs.$inject = [];
+
+    function ngTableSelectFilterDs(){
+        // note: not using isolated or child scope "by design"
+        // this is to allow this directive to be combined with other directives that do
+
+        var directive = {
+            restrict: 'A',
+            controller: ngTableSelectFilterDsController
+        };
+        return directive;
+    }
+
+    ngTableSelectFilterDsController.$inject = ['$scope', '$parse', '$attrs', '$q'];
+    function ngTableSelectFilterDsController($scope, $parse, $attrs, $q){
+
+        init();
+
+        function init(){
+            var $column = $parse($attrs.ngTableSelectFilterDs)($scope);
+            getSelectListData($column).then(function(data){
+                if (data && !hasEmptyOption(data)){
+                    data.unshift({ id: '', title: ''});
+                }
+                data = data || [];
+                $scope.$selectData = data;
+            });
+        }
+
+        function hasEmptyOption(data) {
+            var isMatch;
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+                if (item && item.id === '') {
+                    isMatch = true;
+                    break;
+                }
+            }
+            return isMatch;
+        }
+
+        function getSelectListData($column) {
+            var data = angular.isFunction($column.data) ? $column.data() : $column.data;
+            return $q.when(data);
+        }
+    }
+})();
+
 angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/filterRow.html', '<tr ng-show="show_filter" class="ng-table-filters"> <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter" ng-class="params.settings().filterLayout===\'horizontal\' ? \'filter-horizontal\' : \'\'"> <div ng-repeat="(name, filter) in $column.filter(this)" ng-include="config.getTemplateUrl(filter)" class="filter-cell" ng-class="[getFilterCellCss($column.filter(this), params.settings().filterLayout), $last ? \'last\' : \'\']"> </div> </th> </tr> ');
 	$templateCache.put('ng-table/filters/number.html', '<input type="number" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control" placeholder="{{getFilterPlaceholderValue(filter, name)}}"/> ');
 	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" multiple ng-multiple="true" ng-model="params.filter()[name]" class="filter filter-select-multiple form-control" name="{{name}}"> </select> ');
-	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="filter filter-select form-control" name="{{name}}"> <option style="display:none" value=""></option> </select> ');
+	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $selectData" ng-table-select-filter-ds="$column" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="filter filter-select form-control" name="{{name}}"> <option style="display:none" value=""></option> </select> ');
 	$templateCache.put('ng-table/filters/text.html', '<input type="text" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control" placeholder="{{getFilterPlaceholderValue(filter, name)}}"/> ');
 	$templateCache.put('ng-table/header.html', '<ng-table-sorter-row></ng-table-sorter-row> <ng-table-filter-row></ng-table-filter-row> ');
 	$templateCache.put('ng-table/pager.html', '<div class="ng-cloak ng-table-pager" ng-if="params.data.length"> <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right"> <button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default"> <span ng-bind="count"></span> </button> </div> <ul ng-if="pages.length" class="pagination ng-table-pagination"> <li ng-class="{\'disabled\': !page.active && !page.current, \'active\': page.current}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="page" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="">&#8230;</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">&raquo;</a> </li> </ul> </div> ');

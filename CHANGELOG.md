@@ -1,3 +1,27 @@
+<a name="1.0.0-alpha.4"></a>
+# 1.0.0-alpha.4 (2015-08-15)
+
+
+## Features
+
+- **filters:** add ngTableSelectFilterDs directive
+  ([c79fdd86](https://github.com/esvit/ng-table/commit/c79fdd86a718b61da0c7eab9eb2a82810881a941))
+
+
+## Breaking Changes
+
+- **filters:** due to [6e1bd3d9](https://github.com/esvit/ng-table/commit/6e1bd3d9b47ed1bf47c8daaf512ab2e9c3d9b4af),
+
+
+`ngTableController` no longer adds an empty item to the array returned by `$column.filterData`.
+
+This will only affect those apps that were using `$column.filterData` to supply data to a *custom*
+filter template.
+
+Those apps that are using the `select.html` will be unaffected as the `select.html` filter will add
+this empty item.
+
+
 <a name="1.0.0-alpha.3"></a>
 # 1.0.0-alpha.3 (2015-08-14)
 
