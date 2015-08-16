@@ -1,3 +1,18 @@
+<a name="1.0.0-alpha.5"></a>
+# 1.0.0-alpha.5 (2015-08-16)
+
+
+## Features
+
+- **NgTableParams:** set sensible defaults for filterComparator, filterFn and filterName
+  ([fc2fa182](https://github.com/esvit/ng-table/commit/fc2fa182c57bcb47ea036d78c891aedb1a64bd50))
+- **ngTableDefaultGetData:**
+  - support filterComparator,  filterFilterName override, and filterFn
+  ([a62754c9](https://github.com/esvit/ng-table/commit/a62754c9b61ee5543a52098d955a17d586f0620e))
+  - support nested property filters
+  ([58ee04a6](https://github.com/esvit/ng-table/commit/58ee04a6dc3da223616b85c8ad3b0c78ec4fd0d6))
+
+
 <a name="1.0.0-alpha.4"></a>
 # 1.0.0-alpha.4 (2015-08-15)
 

@@ -290,17 +290,56 @@
 
             return getData;
 
+            function getFilterFn(params) {
+                var settings = params.settings();
+                if (angular.isFunction(settings.filterFn)){
+                    return settings.filterFn;
+                } else {
+                    return $filter(settings.filterFilterName || provider.filterFilterName);
+                }
+            }
+
+            function applyFilter(data, params) {
+                var filter = params.filter(true);
+                var filterKeys = Object.keys(filter);
+                var parsedFilter = filterKeys.reduce(function(result, key){
+                    result = setPath(result, filter[key], key);
+                    return result;
+                }, {});
+                return getFilterFn(params)(data, parsedFilter, params.settings().filterComparator);
+            }
+
             function getData(data, params) {
                 if (data == null){
                     return [];
                 }
 
-                var fData = params.hasFilter() ? $filter(provider.filterFilterName)(data, params.filter(true)) : data;
+                var fData = params.hasFilter() ? applyFilter(data, params) : data;
                 var orderBy = params.orderBy();
                 var orderedData = orderBy.length ? $filter(provider.sortingFilterName)(fData, orderBy) : fData;
                 var pagedData = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
                 params.total(orderedData.length); // set total for recalc pagination
                 return pagedData;
+            }
+
+            // Sets the value at any depth in a nested object based on the path
+            // note: adapted from: underscore-contrib#setPath
+            function setPath(obj, value, path) {
+                var keys     = path.split('.');
+                var ret      = obj;
+                var lastKey  = keys[keys.length -1];
+                var target   = ret;
+
+                var parentPathKeys = keys.slice(0, keys.length -1);
+                parentPathKeys.forEach(function(key) {
+                    if (!target.hasOwnProperty(key)) {
+                        target[key] = {};
+                    }
+                    target = target[key];
+                });
+
+                target[lastKey] = value;
+                return ret;
             }
         }
     }
@@ -998,7 +1037,10 @@
                 data: null, //allows data to be set when table is initialized
                 total: 0,
                 defaultSort: 'desc',
+                filterComparator: undefined, // look for a substring match in case insensitive way
                 filterDelay: 750,
+                filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
+                filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
                 filterLayout: 'stack', // alternative: 'horizontal'
                 counts: [10, 25, 50, 100],
                 interceptors: [],
