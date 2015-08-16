@@ -248,11 +248,14 @@ describe('ngTableDefaultGetData', function () {
 
             myCustomFilter.$inject = [];
             function myCustomFilter() {
-                return function filter(people, criteriaObj/*, comparator*/) {
+
+                return jasmine.createSpy('myCustomFilterSpy',filter).and.callThrough();
+
+                function filter(people, criteriaObj/*, comparator*/) {
                     return people.filter(function (p) {
                         return criteriaObj.ages.indexOf(p.age) !== -1;
                     });
-                };
+                }
             }
         });
 
@@ -271,6 +274,16 @@ describe('ngTableDefaultGetData', function () {
             expect(actualResults).toEqual([{age: 1}, {age: 2}]);
         });
 
+        it('`this` context of custom filter should be set to the NgTableParams instance', inject(function (myCustomFilterFilter) {
+            // given
+            tableParams.settings({filterFilterName: 'myCustomFilter'});
+            tableParams.filter({ages: [1, 2]});
+            // when
+            ngTableDefaultGetData([{age: 1}, {age: 2}, {age: 3}], tableParams);
+            // then
+            expect(myCustomFilterFilter.calls.mostRecent().object).toBe(tableParams);
+        }));
+
         it('custom filter function', function () {
             // given
             tableParams.settings({filterFn: function(data, criteriaObj/*, comparator*/){
@@ -283,6 +296,17 @@ describe('ngTableDefaultGetData', function () {
             var actualResults = ngTableDefaultGetData([{age: 1}, {age: 2}, {age: 3}], tableParams);
             // then
             expect(actualResults).toEqual([{age: 1}, {age: 2}]);
+        });
+
+        it('`this` context of custom filter function should be set to the NgTableParams instance', function () {
+            // given
+            var filterFnSpy = jasmine.createSpy('filterFn', angular.identity).and.callThrough();
+            tableParams.settings({ filterFn: filterFnSpy});
+            tableParams.filter({age: 1});
+            // when
+            var actualResults = ngTableDefaultGetData([{age: 1}], tableParams);
+            // then
+            expect(filterFnSpy.calls.mostRecent().object).toBe(tableParams);
         });
     });
 });

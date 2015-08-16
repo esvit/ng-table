@@ -68,7 +68,8 @@
                     result = setPath(result, filter[key], key);
                     return result;
                 }, {});
-                return getFilterFn(params)(data, parsedFilter, params.settings().filterComparator);
+                var filterFn = getFilterFn(params);
+                return filterFn.call(params, data, parsedFilter, params.settings().filterComparator);
             }
 
             function getData(data, params) {
