@@ -2,16 +2,12 @@ describe('ngTableFilterConfig', function () {
     var ngTableFilterConfig,
         ngTableFilterConfigProvider;
 
-    beforeEach(function () {
-        // Initialize the service provider
-        // by injecting it to a fake module's config block
-        var fakeModule = angular.module('test.config', function () {});
-        fakeModule.config( function (_ngTableFilterConfigProvider_) {
+    beforeEach(module("ngTable"));
+    beforeEach(function(){
+        module(function(_ngTableFilterConfigProvider_){
             ngTableFilterConfigProvider = _ngTableFilterConfigProvider_;
             ngTableFilterConfigProvider.resetConfigs();
         });
-        // Initialize test.app injector
-        module('ngTable', 'test.config');
     });
 
     beforeEach(inject(function (_ngTableFilterConfig_) {

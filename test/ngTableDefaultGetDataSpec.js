@@ -3,18 +3,13 @@ describe('ngTableDefaultGetData', function () {
     describe('provider', function () {
         var ngTableDefaultGetDataProvider;
 
-        beforeEach(function () {
-            // grab a reference to the service provider
-            // by injecting it to a fake module's config block
-            var fakeModule = angular.module('test.config', function () {});
-            fakeModule.config(function (_ngTableDefaultGetDataProvider_) {
-                ngTableDefaultGetDataProvider = _ngTableDefaultGetDataProvider_;
+        beforeEach(module("ngTable"));
+        beforeEach(function(){
+            module(function(_ngTableDefaultGetDataProvider_){
+                ngTableDefaultGetDataProvider=_ngTableDefaultGetDataProvider_;
             });
-            // Initialize test.app injector
-            module('ngTable', 'test.config');
-            // ensure the config block runs
-            inject(function(_ngTableDefaultGetData_){ });
         });
+        beforeEach(inject());
 
         it('should be configured to use built-in angular filters', function () {
             expect(ngTableDefaultGetDataProvider.filterFilterName).toBe('filter');
@@ -246,13 +241,10 @@ describe('ngTableDefaultGetData', function () {
         var ngTableDefaultGetData, tableParams;
 
         beforeEach(function () {
-            // grab a reference to the service provider
-            // by injecting it to a fake module's config block
-            var fakeModule = angular.module('custom.filters', function () {
+            // add a custom filter available to our tests
+            module('ngTable', function($provide){
+                $provide.factory('myCustomFilterFilter', myCustomFilter)
             });
-            fakeModule.filter('myCustomFilter', myCustomFilter);
-            // Initialize test.app injector
-            module('ngTable', 'custom.filters');
 
             myCustomFilter.$inject = [];
             function myCustomFilter() {

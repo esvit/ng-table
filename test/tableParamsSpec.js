@@ -21,12 +21,9 @@ describe('NgTableParams', function () {
     var NgTableParams,
         $rootScope;
 
-
-    beforeEach(function () {
-        // Initialize the service provider
-        // by injecting it to a fake module's config block
-        var fakeModule = angular.module('test.config', function () {});
-        fakeModule.config( function ($provide) {
+    beforeEach(module("ngTable"));
+    beforeEach(function(){
+        module(function($provide){
             $provide.decorator('ngTableDefaultGetData', createSpy);
 
 
@@ -35,11 +32,7 @@ describe('NgTableParams', function () {
                 return jasmine.createSpy('ngTableDefaultGetDataSpy',ngTableDefaultGetData).and.callThrough();
             }
         });
-        // Initialize test.app injector
-        module('ngTable', 'test.config');
-
     });
-
 
     beforeEach(inject(function ($controller, _$rootScope_, _NgTableParams_) {
         $rootScope = _$rootScope_;
