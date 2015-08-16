@@ -332,7 +332,7 @@
              */
             this.isDataReloadRequired = function(){
                 // note: using != as want to treat null and undefined the same
-                return !isCommittedDataset || !angular.equals(params, committedParams);
+                return !isCommittedDataset || !angular.equals(params, committedParams) || hasGlobalSearchFieldChanges();
             };
 
             /**
@@ -353,8 +353,15 @@
              * to be run so as to ensure the data presented to the user reflects these filters
              */
             this.hasFilterChanges = function(){
-                return !angular.equals((params && params.filter), (committedParams && committedParams.filter));
+                return !angular.equals((params && params.filter), (committedParams && committedParams.filter)) ||
+                    hasGlobalSearchFieldChanges();
             };
+
+            function hasGlobalSearchFieldChanges(){
+                var currentVal = (params && params.filter && params.filter.$);
+                var previousVal = (committedParams && committedParams.filter && committedParams.filter.$);
+                return !angular.equals(currentVal, previousVal);
+            }
 
             /**
              * @ngdoc method

@@ -473,6 +473,17 @@ describe('NgTableParams', function () {
             });
         });
 
+        it('should return true when `$` field on `filter` changes', function(){
+            // given
+            tp.reload();
+            scope.$digest();
+            expect(tp.isDataReloadRequired()).toBe(false); // checking assumptions
+
+            // when
+            tp.filter().$ = 'cc';
+            expect(tp.isDataReloadRequired()).toBe(true);
+        });
+
         it('should return false when parameters "touched" but not modified', function(){
             // given
             tp.filter({ age: 1});
@@ -563,6 +574,17 @@ describe('NgTableParams', function () {
             tp.filter().newField = 99;
             expect(tp.hasFilterChanges()).toBe(true);
         }));
+
+        it('should return true when `$` field on `filter` changes', function(){
+            // given
+            tp.reload();
+            scope.$digest();
+            expect(tp.hasFilterChanges()).toBe(false); // checking assumptions
+
+            // when
+            tp.filter().$ = 'cc';
+            expect(tp.hasFilterChanges()).toBe(true);
+        });
 
         it('should return true until changed filters have been reloaded', function(){
             // given
