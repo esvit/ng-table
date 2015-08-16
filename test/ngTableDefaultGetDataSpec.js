@@ -127,5 +127,64 @@ describe('ngTableDefaultGetData', function () {
             // then
             expect(actualResults).toEqual([{age: 2, name: 'B'}]);
         });
+
+        it('single nested property, one level deep', function(){
+            // given
+            tableParams.filter({ 'details.age': 1});
+            // when
+            var data = [{
+                details: {age: 1}
+            }, {
+                details: {age: 2}
+            }, {
+                details: {age: 3}
+            }, {
+                age: 1
+            }];
+            var actualResults = ngTableDefaultGetData(data, tableParams);
+            // then
+            expect(actualResults).toEqual([{ details: {age: 1}}]);
+        });
+
+        it('single nested property, two levels deep', function(){
+            // given
+            tableParams.filter({ 'details.personal.age': 1});
+            // when
+            var data = [{
+                details: { personal: {age: 1}}
+            }, {
+                details: { personal: {age: 2}}
+            }, {
+                details: { personal: {age: 3}}
+            }, {
+                age: 1
+            }];
+            var actualResults = ngTableDefaultGetData(data, tableParams);
+            // then
+            expect(actualResults).toEqual([{ details: { personal: {age: 1}}}]);
+        });
+
+        it('multiple nested property, two levels deep', function(){
+            // given
+            tableParams.filter({ 'details.personal.age': 1, 'job.money': 100 });
+            // when
+            var data = [{
+                details: { personal: {age: 1}},
+                job: {money: 200}
+            }, {
+                details: { personal: {age: 1}},
+                job: {money: 100}
+            }, {
+                details: { personal: {age: 3}},
+                job: {money: 100}
+            }];
+            var actualResults = ngTableDefaultGetData(data, tableParams);
+            // then
+            var expected = [{
+                details: {personal: {age: 1}},
+                job: {money: 100}
+            }];
+            expect(actualResults).toEqual(expected);
+        });
     });
 });

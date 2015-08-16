@@ -52,17 +52,47 @@
 
             return getData;
 
+            function applyFilter(data, params) {
+                var filter = params.filter(true);
+                var filterKeys = Object.keys(filter);
+                var parsedFilter = filterKeys.reduce(function(result, key){
+                    result = setPath(result, filter[key], key);
+                    return result;
+                }, {});
+                return $filter(provider.filterFilterName)(data, parsedFilter);
+            }
+
             function getData(data, params) {
                 if (data == null){
                     return [];
                 }
 
-                var fData = params.hasFilter() ? $filter(provider.filterFilterName)(data, params.filter(true)) : data;
+                var fData = params.hasFilter() ? applyFilter(data, params) : data;
                 var orderBy = params.orderBy();
                 var orderedData = orderBy.length ? $filter(provider.sortingFilterName)(fData, orderBy) : fData;
                 var pagedData = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
                 params.total(orderedData.length); // set total for recalc pagination
                 return pagedData;
+            }
+
+            // Sets the value at any depth in a nested object based on the path
+            // note: adapted from: underscore-contrib#setPath
+            function setPath(obj, value, path) {
+                var keys     = path.split('.');
+                var ret      = obj;
+                var lastKey  = keys[keys.length -1];
+                var target   = ret;
+
+                var parentPathKeys = keys.slice(0, keys.length -1);
+                parentPathKeys.forEach(function(key) {
+                    if (!target.hasOwnProperty(key)) {
+                        target[key] = {};
+                    }
+                    target = target[key];
+                });
+
+                target[lastKey] = value;
+                return ret;
             }
         }
     }
