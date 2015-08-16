@@ -52,6 +52,15 @@
 
             return getData;
 
+            function getFilterFn(params) {
+                var settings = params.settings();
+                if (angular.isFunction(settings.filterFn)){
+                    return settings.filterFn;
+                } else {
+                    return $filter(settings.filterFilterName || provider.filterFilterName);
+                }
+            }
+
             function applyFilter(data, params) {
                 var filter = params.filter(true);
                 var filterKeys = Object.keys(filter);
@@ -59,7 +68,7 @@
                     result = setPath(result, filter[key], key);
                     return result;
                 }, {});
-                return $filter(provider.filterFilterName)(data, parsedFilter);
+                return getFilterFn(params)(data, parsedFilter, params.settings().filterComparator);
             }
 
             function getData(data, params) {
