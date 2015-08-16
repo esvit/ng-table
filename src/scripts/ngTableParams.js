@@ -575,7 +575,10 @@
                 data: null, //allows data to be set when table is initialized
                 total: 0,
                 defaultSort: 'desc',
+                filterComparator: undefined, // look for a substring match in case insensitive way
                 filterDelay: 750,
+                filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
+                filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
                 filterLayout: 'stack', // alternative: 'horizontal'
                 counts: [10, 25, 50, 100],
                 interceptors: [],

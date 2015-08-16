@@ -188,7 +188,10 @@ describe('NgTableParams', function () {
             paginationMaxBlocks: 11,
             paginationMinBlocks: 5,
             sortingIndicator: 'span',
-            filterDelay: 750
+            filterComparator: undefined,
+            filterDelay: 750,
+            filterFilterName: undefined,
+            filterFn: undefined
         };
         expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
         expect(params.settings().getData).toEqual(jasmine.any(Function));
