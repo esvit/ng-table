@@ -1,3 +1,19 @@
+<a name="1.0.0-alpha.6"></a>
+# 1.0.0-alpha.6 (2015-08-17)
+
+
+## Bug Fixes
+
+- **NgTableParams:** table not reloaded when special `$` filter field changes
+  ([8c287e91](https://github.com/esvit/ng-table/commit/8c287e9179aeaa1b646d0c6d7db5b8b1363f8963))
+
+
+## Features
+
+- **ngTableDefaultGetData:** set the `this` context of the filter function to the current NgTableParams
+  ([e23ce330](https://github.com/esvit/ng-table/commit/e23ce330d385ae09d1b3840e52b6369a37948696))
+
+
 <a name="1.0.0-alpha.5"></a>
 # 1.0.0-alpha.5 (2015-08-16)
 
