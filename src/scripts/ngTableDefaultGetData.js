@@ -50,6 +50,8 @@
          */
         function ngTableDefaultGetData($filter) {
 
+            var defaultDataOptions = {applyFilter: true, applySort: true, applyPaging: true};
+
             return getData;
 
             function getFilterFn(params) {
@@ -61,7 +63,15 @@
                 }
             }
 
+            function getOrderByFn (/*params*/){
+                return $filter(provider.sortingFilterName);
+            }
+
             function applyFilter(data, params) {
+                if (!params.hasFilter()) {
+                    return data;
+                }
+
                 var filter = params.filter(true);
                 var filterKeys = Object.keys(filter);
                 var parsedFilter = filterKeys.reduce(function(result, key){
@@ -72,17 +82,28 @@
                 return filterFn.call(params, data, parsedFilter, params.settings().filterComparator);
             }
 
+            function applyPaging(data, params) {
+                var pagedData = data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                params.total(data.length); // set total for recalc pagination
+                return pagedData;
+            }
+
+            function applySort(data, params) {
+                var orderBy = params.orderBy();
+                var orderByFn = getOrderByFn(params);
+                return orderBy.length ? orderByFn(data, orderBy) : data;
+            }
+
             function getData(data, params) {
                 if (data == null){
                     return [];
                 }
 
-                var fData = params.hasFilter() ? applyFilter(data, params) : data;
-                var orderBy = params.orderBy();
-                var orderedData = orderBy.length ? $filter(provider.sortingFilterName)(fData, orderBy) : fData;
-                var pagedData = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                params.total(orderedData.length); // set total for recalc pagination
-                return pagedData;
+                var options = angular.extend({}, defaultDataOptions, params.settings().dataOptions);
+
+                var fData = options.applyFilter ? applyFilter(data, params) : data;
+                var orderedData = options.applySort ? applySort(fData, params) : fData;
+                return options.applyPaging ? applyPaging(orderedData, params) : orderedData;
             }
 
             // Sets the value at any depth in a nested object based on the path
