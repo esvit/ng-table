@@ -123,14 +123,11 @@ describe('NgTableParams', function () {
             'sorting[name]': 'asc',
             'sorting[age]': 'desc',
             'filter[name]': 'test',
-            'filter[age]': 20
+            'filter[age]': '20'
         });
 
         expect(params.filter()).toEqual({ 'name': 'test', 'age': 20 });
-        expect(params.filter({})).toEqual(params);
-
         expect(params.sorting()).toEqual({ 'age': 'desc' }); // sorting only by one column
-        expect(params.sorting({})).toEqual(params);
     });
 
     it('NgTableParams return url parameters', function () {
@@ -138,13 +135,13 @@ describe('NgTableParams', function () {
             'sorting[name]': 'asc',
             'sorting[age]': 'desc',
             'filter[name]': 'test',
-            'filter[age]': 20
+            'filter[age]': '20'
         });
         expect(params.url()).toEqual({
             'page': '1',
             'count': '10',
             'filter[name]': 'test',
-            'filter[age]': 20,
+            'filter[age]': '20',
             'sorting[age]': 'desc'
         });
         expect(params.url(true)).toEqual([

@@ -380,25 +380,29 @@
                             name = encodeURIComponent(key);
                         if (typeof item === "object") {
                             for (var subkey in item) {
-                                if (!angular.isUndefined(item[subkey]) && item[subkey] !== "") {
+                                if (isSignificantValue(item[subkey])) {
                                     var pname = name + "[" + encodeURIComponent(subkey) + "]";
-                                    if (asString) {
-                                        pairs.push(pname + "=" + item[subkey]);
-                                    } else {
-                                        pairs[pname] = item[subkey];
-                                    }
+                                    collectValue(item[subkey], pname);
                                 }
                             }
-                        } else if (!angular.isFunction(item) && !angular.isUndefined(item) && item !== "") {
-                            if (asString) {
-                                pairs.push(name + "=" + encodeURIComponent(item));
-                            } else {
-                                pairs[name] = encodeURIComponent(item);
-                            }
+                        } else if (!angular.isFunction(item) && isSignificantValue(item)) {
+                            collectValue(item, name);
                         }
                     }
                 }
                 return pairs;
+
+                function collectValue(value, key){
+                    if (asString) {
+                        pairs.push(key + "=" + encodeURIComponent(value));
+                    } else {
+                        pairs[key] = encodeURIComponent(value);
+                    }
+                }
+
+                function isSignificantValue(value){
+                    return angular.isDefined(value) && value !== ""
+                }
             };
 
             /**
