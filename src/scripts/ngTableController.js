@@ -192,7 +192,7 @@
                 ngTableEventsChannel.onPagesChanged(bindPagesToScope, $scope, isMyPublisher);
 
                 function bindDataToScope(params, newDatapage){
-                    if (params.settings().groupBy) {
+                    if (params.hasGroup()) {
                         $scope.$groups = newDatapage;
                     } else {
                         $scope.$data = newDatapage;

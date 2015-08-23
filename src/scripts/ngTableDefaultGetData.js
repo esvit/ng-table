@@ -52,6 +52,10 @@
 
             var defaultDataOptions = {applyFilter: true, applySort: true, applyPaging: true};
 
+            getData.applyPaging = applyPaging;
+            getData.getFilterFn = getFilterFn;
+            getData.getOrderByFn = getOrderByFn;
+
             return getData;
 
             function getFilterFn(params) {

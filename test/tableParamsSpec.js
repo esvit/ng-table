@@ -1,24 +1,6 @@
 describe('NgTableParams', function () {
-    var scope, ctrl, data = [
-        {name: "Moroni", age: 50, role: 'Administrator'},
-        {name: "Tiancum", age: 43, role: 'Administrator'},
-        {name: "Jacob", age: 27, role: 'Administrator'},
-        {name: "Nephi", age: 29, role: 'Moderator'},
-        {name: "Enos", age: 34, role: 'User'},
-        {name: "Tiancum", age: 43, role: 'User'},
-        {name: "Jacob", age: 27, role: 'User'},
-        {name: "Nephi", age: 29, role: 'Moderator'},
-        {name: "Enos", age: 34, role: 'User'},
-        {name: "Tiancum", age: 43, role: 'Moderator'},
-        {name: "Jacob", age: 27, role: 'User'},
-        {name: "Nephi", age: 29, role: 'User'},
-        {name: "Enos", age: 34, role: 'Moderator'},
-        {name: "Tiancum", age: 43, role: 'User'},
-        {name: "Jacob", age: 27, role: 'User'},
-        {name: "Nephi", age: 29, role: 'User'},
-        {name: "Enos", age: 34, role: 'User'}
-    ];
-    var NgTableParams,
+    var scope,
+        NgTableParams,
         $rootScope;
 
     beforeEach(module("ngTable"));
@@ -123,11 +105,15 @@ describe('NgTableParams', function () {
             'sorting[name]': 'asc',
             'sorting[age]': 'desc',
             'filter[name]': 'test',
-            'filter[age]': '20'
+            'filter[age]': '20',
+            'group[name]' : 'asc',
+            'group[age]' : 'desc',
+            'group[surname]' : undefined
         });
 
         expect(params.filter()).toEqual({ 'name': 'test', 'age': 20 });
-        expect(params.sorting()).toEqual({ 'age': 'desc' }); // sorting only by one column
+        expect(params.sorting()).toEqual({ 'age': 'desc' }); // sorting only by one column - todo: remove restriction
+        expect(params.group()).toEqual({ 'name' : 'asc', 'age': 'desc', 'surname': undefined });
     });
 
     it('NgTableParams return url parameters', function () {
@@ -135,25 +121,34 @@ describe('NgTableParams', function () {
             'sorting[name]': 'asc',
             'sorting[age]': 'desc',
             'filter[name]': 'test',
-            'filter[age]': '20'
+            'filter[age]': '20',
+            'group[name]' : 'asc',
+            'group[age]' : 'desc',
+            'group[surname]' : ''
         });
         expect(params.url()).toEqual({
             'page': '1',
             'count': '10',
             'filter[name]': 'test',
             'filter[age]': '20',
-            'sorting[age]': 'desc'
+            'sorting[age]': 'desc',  // sorting only by one column - todo: remove restriction
+            'group[name]' : 'asc',
+            'group[age]' : 'desc',
+            'group[surname]' : ''
         });
         expect(params.url(true)).toEqual([
             'page=1',
             'count=10',
             'filter[name]=test',
             'filter[age]=20',
-            'sorting[age]=desc'
+            'sorting[age]=desc',  // sorting only by one column - todo: remove restriction
+            'group[name]=asc',
+            'group[age]=desc',
+            'group[surname]='
         ]);
     });
 
-    it('NgTableParams test orderBy', function () {
+    it('orderBy', function () {
         var params = new NgTableParams({
             'sorting[name]': 'asc'
         });
@@ -165,7 +160,94 @@ describe('NgTableParams', function () {
         expect(params.orderBy()).toEqual([ '-name', '+age' ]);
     });
 
-    it('NgTableParams test settings', function () {
+    describe('group', function(){
+        it('one group', function () {
+            var params = new NgTableParams({
+                group: 'role'
+            }, {
+                groupOptions: { defaultSort: 'desc' }
+            });
+
+            expect(params.hasGroup()).toBe(true);
+            expect(params.group()).toEqual({ role: 'desc' });
+
+            params.group('age');
+            expect(params.group()).toEqual({ age: 'desc' });
+
+            params.group('age', 'asc');
+            expect(params.group()).toEqual({ age: 'asc' });
+
+            params.group(angular.identity);
+            expect(params.group()).toEqual(angular.identity);
+            expect(params.hasGroup()).toBe(true);
+        });
+
+        it('one group function', function () {
+            var params = new NgTableParams({
+                group: angular.identity
+            });
+
+            expect(params.hasGroup()).toBe(true);
+            expect(params.group()).toEqual(angular.identity);
+        });
+
+        it('can clear group', function () {
+            var params = new NgTableParams({
+                group: 'role'
+            });
+
+            expect(params.hasGroup()).toBe(true); // checking assumptions
+
+            params.group({});
+            expect(params.hasGroup()).toBe(false);
+            expect(params.group()).toEqual({});
+        });
+
+        it('multiple groups', function () {
+            var params = new NgTableParams({
+                group: 'role'
+            }, {
+                groupOptions: { defaultSort: 'desc' }
+            });
+
+            var newGroups = _.extend({}, params.group(), { age: 'desc'});
+            params.group(newGroups);
+            expect(params.group()).toEqual({ role: 'desc', age: 'desc' });
+
+            params.group({ role: 'asc', age: 'asc'});
+            expect(params.group()).toEqual({ role: 'asc', age: 'asc' });
+        });
+
+        it('should apply current defaultSort from groupOptions', function(){
+            var params = new NgTableParams({
+                group: 'role'
+            }, {
+                groupOptions: { defaultSort: 'desc' }
+            });
+
+            params.settings({ groupOptions: { defaultSort: 'asc' }});
+
+            params.group('age');
+            expect(params.group()).toEqual({ age: 'asc' });
+        });
+
+        it('should not apply defaultSort from groupOptions when explicitly set to undefined/null', function(){
+            var params = new NgTableParams({
+                group: 'role'
+            }, {
+                groupOptions: { defaultSort: 'desc' }
+            });
+            expect(params.group()).toEqual({ role: 'desc' }); // checking assumptions
+
+            params.group({ role: undefined});
+            expect(params.group()).toEqual({ role: undefined });
+
+            params.group({ age: null});
+            expect(params.group()).toEqual({ age: null });
+        });
+    });
+
+    it('settings', function () {
         var params = new NgTableParams();
 
         var expectedSettings = {
@@ -181,16 +263,21 @@ describe('NgTableParams', function () {
             filterComparator: undefined,
             filterDelay: 750,
             filterFilterName: undefined,
-            filterFn: undefined
+            filterFn: undefined,
+            groupOptions: { defaultSort: 'asc', isExpanded: true }
         };
         expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
         expect(params.settings().getData).toEqual(jasmine.any(Function));
         expect(params.settings().getGroups).toEqual(jasmine.any(Function));
 
-        params = new NgTableParams({}, { total: 100, counts: [1,2] });
+        params = new NgTableParams({}, {
+            total: 100,
+            counts: [1,2],
+            groupOptions: { isExpanded: false } });
 
         expectedSettings.total = 100;
         expectedSettings.counts = [1,2];
+        expectedSettings.groupOptions = { defaultSort: 'asc', isExpanded: false };
         expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
     });
 
@@ -256,104 +343,258 @@ describe('NgTableParams', function () {
         }));
     });
 
-    it('NgTableParams test grouping', inject(function ($rootScope) {
-        var tp = createNgTableParams({ getData: function (/*params*/) {
-            return data;
-        }});
+    describe('getGroups', function(){
 
-        var actualRoleGroups;
-        tp.settings({ groupBy: 'role'});
-        tp.reload().then(function(groups){
-            actualRoleGroups = groups;
+        var data;
+        beforeEach(function(){
+            data = [
+                { 'name': 'Hanson', 'role': 'Accounting' },
+                { 'name': 'Eaton', 'role': 'Customer Service' },
+                { 'name': 'Perry', 'role': 'Customer Service' },
+                { 'name': 'George', 'role': 'Accounting' },
+                { 'name': 'Jennings', 'role': 'Asset Management' },
+                { 'name': 'Whitney', 'role': 'Accounting' },
+                { 'name': 'Weaver', 'role': 'Payroll' },
+                { 'name': 'Gibson', 'role': 'Payroll' },
+                { 'name': 'Wells', 'role': 'Media Relations' },
+                { 'name': 'Willis', 'role': 'Finances' },
+                { 'name': 'Donovan', 'role': 'Customer Relations' },
+                { 'name': 'Mcdonald', 'role': 'Finances' },
+                { 'name': 'Young', 'role': 'Asset Management' }
+            ];
         });
-        $rootScope.$digest();
 
-        expect(actualRoleGroups).toEqual([
-            {
-                value: 'Administrator',
-                data: [
-                    {name: "Moroni", age: 50, role: 'Administrator'},
-                    {name: "Tiancum", age: 43, role: 'Administrator'},
-                    {name: "Jacob", age: 27, role: 'Administrator'}
-                ]
-            },
-            {
-                value: 'Moderator',
-                data: [
-                    {name: "Nephi", age: 29, role: 'Moderator'},
-                    {name: "Nephi", age: 29, role: 'Moderator'},
-                    {name: "Tiancum", age: 43, role: 'Moderator'},
-                    {name: "Enos", age: 34, role: 'Moderator'}
-                ]
-            },
-            {
-                value: 'User',
-                data: [
-                    {name: "Enos", age: 34, role: 'User'},
-                    {name: "Tiancum", age: 43, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Enos", age: 34, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Nephi", age: 29, role: 'User'},
-                    {name: "Tiancum", age: 43, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Nephi", age: 29, role: 'User'},
-                    {name: "Enos", age: 34, role: 'User'}
-                ]
-            }
-        ]);
 
-        var actualAgeGroups;
-        tp.settings({ groupBy: 'age'});
-        tp.reload().then(function(groups){
-            actualAgeGroups = groups;
+        it('should group data then apply paging to groups', function () {
+            var tp = createNgTableParams({ count: 2, group: { role: '' } }, { data: data });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Accounting',
+                    data: [
+                        { "name": 'Hanson', "role": 'Accounting' },
+                        { "name": 'George', "role": 'Accounting' },
+                        { "name": 'Whitney', "role": 'Accounting' }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Customer Service',
+                    data: [
+                        { "name": 'Eaton', "role": 'Customer Service' },
+                        { "name": 'Perry', "role": 'Customer Service' }
+                    ]
+                }
+            ]);
         });
-        $rootScope.$digest();
 
-        expect(actualAgeGroups).toEqual([
-            {
-                value: 27,
-                data: [
-                    {name: "Jacob", age: 27, role: 'Administrator'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'},
-                    {name: "Jacob", age: 27, role: 'User'}
-                ]
-            },
-            {
-                value: 29,
-                data: [
-                    {name: "Nephi", age: 29, role: 'Moderator'},
-                    {name: "Nephi", age: 29, role: 'Moderator'},
-                    {name: "Nephi", age: 29, role: 'User'},
-                    {name: "Nephi", age: 29, role: 'User'}
-                ]
-            },
-            {
-                value: 34,
-                data: [
-                    {name: "Enos", age: 34, role: 'User'},
-                    {name: "Enos", age: 34, role: 'User'},
-                    {name: "Enos", age: 34, role: 'Moderator'},
-                    {name: "Enos", age: 34, role: 'User'}
-                ]
-            },
-            {
-                value: 43,
-                data: [
-                    {name: "Tiancum", age: 43, role: 'Administrator'},
-                    {name: "Tiancum", age: 43, role: 'User'},
-                    {name: "Tiancum", age: 43, role: 'Moderator'},
-                    {name: "Tiancum", age: 43, role: 'User'}
-                ]
-            },{
-                value: 50,
-                data: [
-                    {name: "Moroni", age: 50, role: 'Administrator'}
-                ]
-            }
-        ]);
-    }));
+        it('should sort data, then group, then page groups', function () {
+            var tp = createNgTableParams({
+                count: 2,
+                sorting: { name: 'desc'},
+                group: { role: '' }
+            }, { data: data });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Asset Management',
+                    data: [
+                        { "name": 'Young', "role": 'Asset Management' },
+                        { "name": 'Jennings', "role": 'Asset Management' }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Finances',
+                    data: [
+                        { "name": 'Willis', "role": 'Finances' },
+                        { "name": 'Mcdonald', "role": 'Finances' }
+                    ]
+                }
+            ]);
+        });
+
+        it('should use group function to group data', function () {
+            var tp = createNgTableParams({
+                count: 2,
+                sorting: {name: 'desc'},
+                group: function (item) {
+                    return item.name[0];
+                }
+            }, {data: data});
+
+            var actualRoleGroups;
+            tp.reload().then(function (groups) {
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Y',
+                    data: [
+                        { "name": "Young", "role": "Asset Management" }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'W',
+                    data: [
+                        { "name": "Willis", "role": "Finances" },
+                        { "name": "Whitney", "role": "Accounting" },
+                        { "name": "Wells", "role": "Media Relations" },
+                        { "name": "Weaver", "role": "Payroll" }
+                    ]
+                }
+            ]);
+        });
+
+        it('should filter and sort data, then group, then page groups', function () {
+            var tp = createNgTableParams({
+                count: 2,
+                sorting: { name: 'desc' },
+                filter: { name: 'e' },
+                group: { role: '' }
+            }, {
+                data: data
+            });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Accounting',
+                    data: [
+                        { 'name': 'Whitney', 'role': 'Accounting' },
+                        { 'name': 'George', 'role': 'Accounting' }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Media Relations',
+                    data: [
+                        { 'name': 'Wells', 'role': 'Media Relations' }
+                    ]
+                }
+            ]);
+        });
+
+        it('should filter and sort data, then group, then apply group sortDirection, and finally page groups', function () {
+            var tp = createNgTableParams({
+                count: 3,
+                sorting: { name: 'desc' },
+                filter: { name: 'e' },
+                group: { role: 'desc' }
+            }, {
+                data: data,
+                groupOptions: {
+                    // this value will be overridden by group: { role: 'desc' }
+                    defaultSort: undefined
+                }
+            });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Payroll',
+                    data: [
+                        { 'name': 'Weaver', 'role': 'Payroll' }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Media Relations',
+                    data: [
+                        { 'name': 'Wells', 'role': 'Media Relations' }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Customer Service',
+                    data: [
+                        { 'name': 'Perry', 'role': 'Customer Service' },
+                        { 'name': 'Eaton', 'role': 'Customer Service' }
+                    ]
+                }
+            ]);
+        });
+
+        it('should use sortDirection defined on group function to sort groups', function () {
+            var groupFn = function(item){
+                return item.role;
+            };
+            groupFn.sortDirection = 'desc';
+            var tp = createNgTableParams({
+                count: 3,
+                sorting: { name: 'desc' },
+                filter: { name: 'e' },
+                group: groupFn
+            }, {
+                data: data,
+                groupOptions: {
+                    // this value will be overridden by groupFn.sortDirection
+                    defaultSort: undefined
+                }
+            });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Payroll',
+                    data: [
+                        { 'name': 'Weaver', 'role': 'Payroll' }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Media Relations',
+                    data: [
+                        { 'name': 'Wells', 'role': 'Media Relations' }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Customer Service',
+                    data: [
+                        { 'name': 'Perry', 'role': 'Customer Service' },
+                        { 'name': 'Eaton', 'role': 'Customer Service' }
+                    ]
+                }
+            ]);
+        });
+    });
 
     it('ngTableParams test defaults', inject(function ($q, ngTableDefaults) {
         ngTableDefaults.params.count = 2;

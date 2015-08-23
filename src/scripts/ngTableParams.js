@@ -14,7 +14,7 @@
      * @description Parameters manager for ngTable
      */
 
-    angular.module('ngTable').factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBcShim', 'ngTableDefaultGetData', 'ngTableEventsChannel', function($q, $log, ngTableDefaults, ngTableGetDataBcShim, ngTableDefaultGetData, ngTableEventsChannel) {
+    angular.module('ngTable').factory('NgTableParams', ['$q', '$log', '$filter', 'ngTableDefaults', 'ngTableGetDataBcShim', 'ngTableDefaultGetData', 'ngTableEventsChannel', function($q, $log, $filter, ngTableDefaults, ngTableGetDataBcShim, ngTableDefaultGetData, ngTableEventsChannel) {
         var isNumber = function(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
         };
@@ -34,6 +34,10 @@
                     if (settings.debugMode && $log.debug) {
                         $log.debug.apply(this, arguments);
                     }
+                },
+                defaultGroupOptions = {
+                    defaultSort: 'asc', // set to 'asc' or 'desc' to apply sorting to groups
+                    isExpanded: true
                 };
 
             this.data = [];
@@ -68,7 +72,11 @@
                             }
                             params[lastKey] = angular.extend(params[lastKey] || {}, value[lastKey]);
                         } else {
-                            params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
+                            if (key === 'group'){
+                                params[key] = parseGroup(newParameters[key]);
+                            } else {
+                                params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
+                            }
                         }
                     }
                     log('ngTable: set parameters', params);
@@ -76,6 +84,18 @@
                 }
                 return params;
             };
+
+            function parseGroup(group){
+                if (angular.isFunction(group)) {
+                    return group;
+                } else if (angular.isString(group)) {
+                    var grp = {};
+                    grp[group] = settings.groupOptions && settings.groupOptions.defaultSort;
+                    return grp;
+                } else {
+                    return group;
+                }
+            }
 
             /**
              * @ngdoc method
@@ -87,6 +107,14 @@
              */
             this.settings = function(newSettings) {
                 if (angular.isDefined(newSettings)) {
+
+                    // todo: don't modify newSettings object: this introduces unexpected side effects;
+                    // instead take a copy of newSettings
+
+                    if (newSettings.groupOptions){
+                        newSettings.groupOptions = angular.extend({}, settings.groupOptions, newSettings.groupOptions);
+                    }
+
                     if (angular.isArray(newSettings.data)) {
                         //auto-set the total from passed in data
                         newSettings.total = newSettings.data.length;
@@ -199,6 +227,32 @@
 
             /**
              * @ngdoc method
+             * @name NgTableParams#group
+             * @description If 'group' parameter is not set, return current grouping. Otherwise set current group.
+             *
+             * @param {string|Function|Object} group New group field
+             * @param {string} sortDirection Optional direction that the list of groups should be sorted
+             * @returns {Object} Current grouping or `this`
+             */
+            this.group = function(group, sortDirection) {
+                if (!angular.isDefined(group)){
+                    return params.group;
+                } else if (angular.isDefined(group) && angular.isDefined(sortDirection)) {
+                    var groupArray = {};
+                    groupArray[group] = sortDirection;
+                    this.parameters({
+                        'group': groupArray
+                    });
+                    return this;
+                } else {
+                    this.parameters({
+                        'group': group
+                    });
+                }
+            };
+
+            /**
+             * @ngdoc method
              * @name NgTableParams#sorting
              * @description If 'sorting' parameter is not set, return current sorting. Otherwise set current sorting.
              *
@@ -244,12 +298,16 @@
              * @returns {Array} Array like: [ '-name', '+age' ]
              */
             this.orderBy = function() {
-                var sorting = [];
-                for (var column in params.sorting) {
-                    sorting.push((params.sorting[column] === "asc" ? "+" : "-") + column);
-                }
-                return sorting;
+                return convertSortToOrderBy(params.sorting);
             };
+
+            function convertSortToOrderBy(sorting){
+                var result = [];
+                for (var column in sorting) {
+                    result.push((sorting[column] === "asc" ? "+" : "-") + column);
+                }
+                return result;
+            }
 
             /**
              * @ngdoc method
@@ -348,6 +406,16 @@
 
             /**
              * @ngdoc method
+             * @name NgTableParams#hasGroup
+             * @description Determines if at least one group has been set
+             * @returns {Boolean}
+             */
+            this.hasGroup = function(){
+                return angular.isFunction(params.group) || Object.keys(params.group).length > 0
+            };
+
+            /**
+             * @ngdoc method
              * @name NgTableParams#hasFilterChanges
              * @description Return true when a change to `NgTableParams.filters`require the reload method
              * to be run so as to ensure the data presented to the user reflects these filters
@@ -380,12 +448,12 @@
                             name = encodeURIComponent(key);
                         if (typeof item === "object") {
                             for (var subkey in item) {
-                                if (isSignificantValue(item[subkey])) {
+                                if (isSignificantValue(item[subkey], key)) {
                                     var pname = name + "[" + encodeURIComponent(subkey) + "]";
                                     collectValue(item[subkey], pname);
                                 }
                             }
-                        } else if (!angular.isFunction(item) && isSignificantValue(item)) {
+                        } else if (!angular.isFunction(item) && isSignificantValue(item, key)) {
                             collectValue(item, name);
                         }
                     }
@@ -400,8 +468,8 @@
                     }
                 }
 
-                function isSignificantValue(value){
-                    return angular.isDefined(value) && value !== ""
+                function isSignificantValue(value, key){
+                    return key === "group" ? true : angular.isDefined(value) && value !== "";
                 }
             };
 
@@ -419,7 +487,7 @@
                 committedParams = angular.copy(params);
                 isCommittedDataset = true;
 
-                if (settings.groupBy) {
+                if (self.hasGroup()) {
                     pData = runInterceptorPipeline(runGetGroups);
                 } else {
                     pData = runInterceptorPipeline(runGetData);
@@ -530,35 +598,60 @@
                  * @description Return groups of data to display in the table
                  *
                  * Called by `NgTableParams` whenever it considers new data is to be loaded
-                 * and when the `settings` object has a `groupBy` value
+                 * and when a `group` value has been assigned
                  *
                  * @param {Object} params the `NgTableParams` requesting data
                  */
                 function getGroups(params) {
+
+                    var group = params.group();
+                    var groupFn;
+                    var sortDirection = undefined;
+                    if (angular.isFunction(group)) {
+                        groupFn = group;
+                        sortDirection = group.sortDirection;
+                    } else {
+                        // currently support for only one group implemented
+                        var groupField = Object.keys(group)[0];
+                        sortDirection = group[groupField];
+                        groupFn = function(item){
+                            return item[groupField];
+                        };
+                    }
+
                     var settings = params.settings();
+                    var originalDataOptions = settings.dataOptions;
+                    settings.dataOptions = { applyPaging: false };
                     var adaptedFn = settings.getDataFnAdaptor(settings.getData);
                     var gotData = $q.when(adaptedFn.call(settings, params));
                     return gotData.then(function(data) {
                         var groups = {};
+                        var groupOptions = settings.groupOptions || defaultGroupOptions;
                         angular.forEach(data, function(item) {
-                            var groupName;
-                            if (angular.isFunction(settings.groupBy)) {
-                                groupName = settings.groupBy(item);
-                            } else {
-                                groupName = item[settings.groupBy];
-                            }
-
+                            var groupName = groupFn(item);
                             groups[groupName] = groups[groupName] || {
-                                    data: []
+                                    data: [],
+                                    $hideRows: !groupOptions.isExpanded,
+                                    value: groupName
                                 };
-                            groups[groupName]['value'] = groupName;
                             groups[groupName].data.push(item);
                         });
                         var result = [];
                         for (var i in groups) {
                             result.push(groups[i]);
                         }
-                        return result;
+                        if (sortDirection) {
+                            var orderByFn = ngTableDefaultGetData.getOrderByFn();
+                            var orderBy = convertSortToOrderBy({
+                                value: sortDirection
+                            });
+                            result = orderByFn(result, orderBy);
+                        }
+
+                        return ngTableDefaultGetData.applyPaging(result, params);
+                    }).finally(function(){
+                        // restore the real options
+                        settings.dataOptions = originalDataOptions;
                     });
                 }
             }
@@ -568,8 +661,7 @@
                 count: 10,
                 filter: {},
                 sorting: {},
-                group: {},
-                groupBy: null
+                group: {}
             };
             angular.extend(params, ngTableDefaults.params);
 
@@ -591,6 +683,7 @@
                 filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
                 filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
                 filterLayout: 'stack', // alternative: 'horizontal'
+                groupOptions: angular.copy(defaultGroupOptions),
                 counts: [10, 25, 50, 100],
                 interceptors: [],
                 paginationMaxBlocks: 11,
