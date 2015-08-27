@@ -23,6 +23,7 @@
             headerTemplateURL: function(){ return false; },
             headerTitle: function(){ return ''; },
             sortable: function(){ return false; },
+            summary: function() { return false; },
             show: function(){ return true; },
             title: function(){ return ''; },
             titleAlt: function(){ return ''; }
