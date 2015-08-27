@@ -28,19 +28,24 @@
                 compile: function(element) {
                     var columns = [],
                         i = 0,
-                        row = null;
+                        dataRow,
+                        groupRow,
+                        rows = [];
 
-                    // IE 8 fix :not(.ng-table-group) selector
                     angular.forEach(angular.element(element.find('tr')), function(tr) {
-                        tr = angular.element(tr);
-                        if (!tr.hasClass('ng-table-group') && !row) {
-                            row = tr;
-                        }
+                        rows.push(angular.element(tr))
                     });
-                    if (!row) {
+                    dataRow = rows.filter(function(tr){
+                        return !tr.hasClass('ng-table-group');
+                    })[0];
+                    groupRow = rows.filter(function(tr){
+                        return tr.hasClass('ng-table-group');
+                    })[0];
+
+                    if (!dataRow) {
                         return;
                     }
-                    angular.forEach(row.find('td'), function(item) {
+                    angular.forEach(dataRow.find('td'), function(item) {
                         var el = angular.element(item);
                         if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
                             return;
@@ -49,19 +54,43 @@
                         var getAttrValue = function(attr){
                             return el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr);
                         };
+                        var setAttrValue = function(attr, value){
+                            if (el.attr('x-data-' + attr)){
+                                el.attr('x-data-' + attr, value)
+                            } else if (el.attr('data' + attr)){
+                                el.attr('data' + attr, value)
+                            } else {
+                                el.attr(attr, value)
+                            }
+                        };
 
                         var parsedAttribute = function(attr) {
                             var expr = getAttrValue(attr);
                             if (!expr){
                                 return undefined;
                             }
-                            return function(scope, locals) {
+
+                            var localValue;
+                            var getter = function (scope, locals) {
+                                if (localValue !== undefined){
+                                    return localValue;
+                                }
                                 return $parse(expr)(scope, angular.extend(locals || {}, {
                                     $columns: columns
                                 }));
                             };
+                            getter.assign = function($scope, value){
+                                var parsedExpr = $parse(expr);
+                                if (parsedExpr.assign) {
+                                    // we should be writing back to the parent scope as this is where the expression
+                                    // came from
+                                    parsedExpr.assign($scope.$parent, value);
+                                } else {
+                                    localValue = value;
+                                }
+                            };
+                            return getter;
                         };
-
                         var titleExpr = getAttrValue('title-alt') || getAttrValue('title');
                         if (titleExpr){
                             el.attr('data-title-text', '{{' + titleExpr + '}}'); // this used in responsive table
@@ -76,12 +105,19 @@
                             sortable: parsedAttribute('sortable'),
                             'class': parsedAttribute('header-class'),
                             filter: parsedAttribute('filter'),
+                            groupable: parsedAttribute('groupable'),
                             headerTemplateURL: parsedAttribute('header'),
                             filterData: parsedAttribute('filter-data'),
-                            show: (el.attr("ng-if") ? function (scope) {
-                                return $parse(el.attr("ng-if"))(scope);
-                            } : undefined)
+                            show: el.attr("ng-if") ? parsedAttribute('ng-if') : undefined
                         });
+
+                        if (groupRow){
+                            // change ng-if to bind to our column definition which we know will be writable
+                            // because this will potentially increase the $watch count, only do so when we definitely
+                            // need to change visibility of the columns.
+                            // currently only ngTableGroupRow directive needs this
+                            setAttrValue('ng-if', '$columns[' + (columns.length - 1) + '].show(this)');
+                        }
                     });
                     return function(scope, element, attrs, controller) {
                         scope.$columns = columns = controller.buildColumns(columns);

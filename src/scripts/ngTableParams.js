@@ -27,8 +27,8 @@
             }
 
             var self = this,
-                committedParams,
-                erroredParams,
+                prevParamsMemento,
+                errParamsMemento,
                 isCommittedDataset = false,
                 log = function() {
                     if (settings.debugMode && $log.debug) {
@@ -237,18 +237,23 @@
             this.group = function(group, sortDirection) {
                 if (!angular.isDefined(group)){
                     return params.group;
+                }
+
+                var newParameters = {
+                    page: 1
+                };
+                if (angular.isFunction(group) && angular.isDefined(sortDirection)){
+                    group.sortDirection = sortDirection;
+                    newParameters.group = group;
                 } else if (angular.isDefined(group) && angular.isDefined(sortDirection)) {
                     var groupArray = {};
                     groupArray[group] = sortDirection;
-                    this.parameters({
-                        'group': groupArray
-                    });
-                    return this;
+                    newParameters.group = groupArray;
                 } else {
-                    this.parameters({
-                        'group': group
-                    });
+                    newParameters.group = group;
                 }
+                this.parameters(newParameters);
+                return this;
             };
 
             /**
@@ -390,9 +395,17 @@
              */
             this.isDataReloadRequired = function(){
                 // note: using != as want to treat null and undefined the same
-                return !isCommittedDataset || !angular.equals(params, committedParams) || hasGlobalSearchFieldChanges();
+                return !isCommittedDataset || !angular.equals(createComparableParams(), prevParamsMemento)
+                    || hasGlobalSearchFieldChanges();
             };
 
+            function createComparableParams(){
+                var result = {params: params};
+                if (angular.isFunction(params.group)){
+                    result.groupSortDirection = params.group.sortDirection;
+                }
+                return result
+            }
             /**
              * @ngdoc method
              * @name NgTableParams#hasFilter
@@ -410,8 +423,24 @@
              * @description Determines if at least one group has been set
              * @returns {Boolean}
              */
-            this.hasGroup = function(){
-                return angular.isFunction(params.group) || Object.keys(params.group).length > 0
+            this.hasGroup = function(group, sortDirection){
+                if (group == null) {
+                    return angular.isFunction(params.group) || Object.keys(params.group).length > 0
+                }
+
+                if (angular.isFunction(group)) {
+                    if (sortDirection == null) {
+                        return params.group === group;
+                    } else {
+                        return params.group === group && group.sortDirection === sortDirection;
+                    }
+                } else {
+                    if (sortDirection == null) {
+                        return Object.keys(params.group).indexOf(group) !== -1;
+                    } else {
+                        return params.group[group] === sortDirection;
+                    }
+                }
             };
 
             /**
@@ -421,13 +450,14 @@
              * to be run so as to ensure the data presented to the user reflects these filters
              */
             this.hasFilterChanges = function(){
-                return !angular.equals((params && params.filter), (committedParams && committedParams.filter)) ||
-                    hasGlobalSearchFieldChanges();
+                var previousFilter = (prevParamsMemento && prevParamsMemento.params.filter);
+                return !angular.equals((params.filter), previousFilter) || hasGlobalSearchFieldChanges();
             };
 
             function hasGlobalSearchFieldChanges(){
-                var currentVal = (params && params.filter && params.filter.$);
-                var previousVal = (committedParams && committedParams.filter && committedParams.filter.$);
+                var currentVal = (params.filter && params.filter.$);
+                var previousVal =
+                    (prevParamsMemento && prevParamsMemento.params.filter && prevParamsMemento.params.filter.$);
                 return !angular.equals(currentVal, previousVal);
             }
 
@@ -484,7 +514,7 @@
 
                 settings.$loading = true;
 
-                committedParams = angular.copy(params);
+                prevParamsMemento = angular.copy(createComparableParams());
                 isCommittedDataset = true;
 
                 if (self.hasGroup()) {
@@ -498,7 +528,7 @@
                 var oldData = self.data;
                 return pData.then(function(data) {
                     settings.$loading = false;
-                    erroredParams = null;
+                    errParamsMemento = null;
 
                     self.data = data;
                     // note: I think it makes sense to publish this event even when data === oldData
@@ -513,8 +543,8 @@
 
                     return data;
                 }).catch(function(reason){
-                    erroredParams = committedParams;
-                    committedParams = null;
+                    errParamsMemento = prevParamsMemento;
+                    prevParamsMemento = null;
                     isCommittedDataset = false;
                     // "rethrow"
                     return $q.reject(reason);
@@ -531,7 +561,7 @@
              * `parameter` values have changed
              */
             this.hasErrorState = function(){
-                return !!(erroredParams && angular.equals(erroredParams, params));
+                return !!(errParamsMemento && angular.equals(errParamsMemento, createComparableParams()));
             };
 
             this.reloadPages = (function() {

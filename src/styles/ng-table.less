@@ -89,6 +89,17 @@
         }
     }
 
+    .ng-table-group-header {
+        th {
+            text-align: left;
+        }
+    }
+    .ng-table-group-selector {
+        display: block;
+        > button {
+            float: right;
+        }
+    }
     & + .pagination {
         margin-top: 0;
     }
@@ -150,11 +161,14 @@
     .ng-table-counts {}
 }
 
+.ng-table-group-selector:before,
+.ng-table-group-selector:after,
 .filter:before,
 .filter:after {
     display: table;
     content: " ";
 }
+.ng-table-group-selector:after,
 .filter:after {
     clear: both;
 }

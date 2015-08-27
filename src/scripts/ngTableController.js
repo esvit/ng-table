@@ -178,6 +178,24 @@
                         $scope.show_filter = value;
                     });
                 }
+
+                $scope.$groupRow = {};
+                if ($attrs.showGroup) {
+                    var showGroupGetter = $parse($attrs.showGroup);
+                    $scope.$parent.$watch(showGroupGetter, function(value) {
+                        $scope.$groupRow.show = value;
+                    });
+                    if (showGroupGetter.assign){
+                        $scope.$watch('$groupRow.show', function(value) {
+                            showGroupGetter.assign($scope.$parent, value);
+                        });
+                    }
+                } else{
+                    $scope.$watch('params.hasGroup()', function(newValue) {
+                        $scope.$groupRow.show = newValue;
+                    });
+                }
+
                 if ($attrs.disableFilter) {
                     $scope.$parent.$watch($attrs.disableFilter, function(value) {
                         $scope.$filterRow.disabled = value;

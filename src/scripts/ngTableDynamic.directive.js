@@ -18,7 +18,7 @@
      * A dynamic version of the {@link ngTable ngTable} directive that accepts a dynamic list of columns
      * definitions to render
      */
-    angular.module('ngTable').directive('ngTableDynamic', ['$parse', function ($parse){
+    angular.module('ngTable').directive('ngTableDynamic', [function (){
 
         return {
             restrict: 'A',

@@ -169,17 +169,17 @@ describe('NgTableParams', function () {
             });
 
             expect(params.hasGroup()).toBe(true);
+            expect(params.hasGroup('role')).toBe(true);
+            expect(params.hasGroup('role', 'desc')).toBe(true);
             expect(params.group()).toEqual({ role: 'desc' });
 
             params.group('age');
+            expect(params.hasGroup('age', 'desc')).toBe(true);
             expect(params.group()).toEqual({ age: 'desc' });
 
             params.group('age', 'asc');
+            expect(params.hasGroup('age', 'asc')).toBe(true);
             expect(params.group()).toEqual({ age: 'asc' });
-
-            params.group(angular.identity);
-            expect(params.group()).toEqual(angular.identity);
-            expect(params.hasGroup()).toBe(true);
         });
 
         it('one group function', function () {
@@ -188,7 +188,16 @@ describe('NgTableParams', function () {
             });
 
             expect(params.hasGroup()).toBe(true);
+            expect(params.hasGroup(angular.identity)).toBe(true);
             expect(params.group()).toEqual(angular.identity);
+
+
+            var fn = function(){ };
+            fn.sortDirection = 'desc';
+            params.group(fn);
+            expect(params.hasGroup(fn)).toBe(true);
+            expect(params.hasGroup(fn, 'desc')).toBe(true);
+            expect(params.group()).toEqual(fn);
         });
 
         it('can clear group', function () {
@@ -212,9 +221,16 @@ describe('NgTableParams', function () {
 
             var newGroups = _.extend({}, params.group(), { age: 'desc'});
             params.group(newGroups);
+            expect(params.hasGroup()).toBe(true);
+            expect(params.hasGroup('role')).toBe(true);
+            expect(params.hasGroup('role', 'desc')).toBe(true);
+            expect(params.hasGroup('age')).toBe(true);
+            expect(params.hasGroup('age', 'desc')).toBe(true);
             expect(params.group()).toEqual({ role: 'desc', age: 'desc' });
 
             params.group({ role: 'asc', age: 'asc'});
+            expect(params.hasGroup('age', 'desc')).toBe(false);
+            expect(params.hasGroup('age', 'asc')).toBe(true);
             expect(params.group()).toEqual({ role: 'asc', age: 'asc' });
         });
 
@@ -719,6 +735,26 @@ describe('NgTableParams', function () {
 
             // when
             tp.filter().$ = 'cc';
+            expect(tp.isDataReloadRequired()).toBe(true);
+        });
+
+        it('should return true when group function sort direction changes', function(){
+            // given
+            tp.reload();
+            scope.$digest();
+            expect(tp.isDataReloadRequired()).toBe(false); // checking assumptions
+
+            // when, then...
+
+            var grouper = function(){ };
+            tp.group(grouper);
+            expect(tp.isDataReloadRequired()).toBe(true);
+
+            tp.reload();
+            scope.$digest();
+            expect(tp.isDataReloadRequired()).toBe(false);
+
+            grouper.sortDirection = 'desc';
             expect(tp.isDataReloadRequired()).toBe(true);
         });
 
