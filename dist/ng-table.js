@@ -288,6 +288,12 @@
          */
         function ngTableDefaultGetData($filter) {
 
+            var defaultDataOptions = {applyFilter: true, applySort: true, applyPaging: true};
+
+            getData.applyPaging = applyPaging;
+            getData.getFilterFn = getFilterFn;
+            getData.getOrderByFn = getOrderByFn;
+
             return getData;
 
             function getFilterFn(params) {
@@ -299,7 +305,15 @@
                 }
             }
 
+            function getOrderByFn (/*params*/){
+                return $filter(provider.sortingFilterName);
+            }
+
             function applyFilter(data, params) {
+                if (!params.hasFilter()) {
+                    return data;
+                }
+
                 var filter = params.filter(true);
                 var filterKeys = Object.keys(filter);
                 var parsedFilter = filterKeys.reduce(function(result, key){
@@ -310,17 +324,28 @@
                 return filterFn.call(params, data, parsedFilter, params.settings().filterComparator);
             }
 
+            function applyPaging(data, params) {
+                var pagedData = data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                params.total(data.length); // set total for recalc pagination
+                return pagedData;
+            }
+
+            function applySort(data, params) {
+                var orderBy = params.orderBy();
+                var orderByFn = getOrderByFn(params);
+                return orderBy.length ? orderByFn(data, orderBy) : data;
+            }
+
             function getData(data, params) {
                 if (data == null){
                     return [];
                 }
 
-                var fData = params.hasFilter() ? applyFilter(data, params) : data;
-                var orderBy = params.orderBy();
-                var orderedData = orderBy.length ? $filter(provider.sortingFilterName)(fData, orderBy) : fData;
-                var pagedData = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                params.total(orderedData.length); // set total for recalc pagination
-                return pagedData;
+                var options = angular.extend({}, defaultDataOptions, params.settings().dataOptions);
+
+                var fData = options.applyFilter ? applyFilter(data, params) : data;
+                var orderedData = options.applySort ? applySort(fData, params) : fData;
+                return options.applyPaging ? applyPaging(orderedData, params) : orderedData;
             }
 
             // Sets the value at any depth in a nested object based on the path
@@ -401,17 +426,31 @@
      */
     angular.module('ngTable').factory('ngTableColumn', [function () {
 
-        var defaults = {
-            'class': function(){ return ''; },
-            filter: function(){ return false; },
-            filterData: angular.noop,
-            headerTemplateURL: function(){ return false; },
-            headerTitle: function(){ return ''; },
-            sortable: function(){ return false; },
-            show: function(){ return true; },
-            title: function(){ return ''; },
-            titleAlt: function(){ return ''; }
-        };
+        function createDefaults(){
+            return {
+                'class': createGetterSetter(''),
+                filter: createGetterSetter(false),
+                groupable: createGetterSetter(false),
+                filterData: angular.noop,
+                headerTemplateURL: createGetterSetter(false),
+                headerTitle: createGetterSetter(''),
+                sortable: createGetterSetter(false),
+                show: createGetterSetter(true),
+                title: createGetterSetter(''),
+                titleAlt: createGetterSetter('')
+            };
+        }
+
+        function createGetterSetter(initialValue){
+            var value = initialValue;
+            var getter = function (/*$scope, locals*/){
+                return value;
+            };
+            getter.assign = function($scope, newValue){
+                value = newValue;
+            };
+            return getter;
+        }
 
         /**
          * @ngdoc method
@@ -425,6 +464,7 @@
         function buildColumn(column, defaultScope){
             // note: we're not modifying the original column object. This helps to avoid unintended side affects
             var extendedCol = Object.create(column);
+            var defaults = createDefaults();
             for (var prop in defaults) {
                 if (extendedCol[prop] === undefined) {
                     extendedCol[prop] = defaults[prop];
@@ -435,21 +475,28 @@
                     // - note that the original column object is being "proxied"; this is important
                     //   as it ensure that any changes to the original object will be returned by the "getter"
                     (function(prop1){
-                        extendedCol[prop1] = function(){
+                        var getterFn = function () {
                             return column[prop1];
                         };
+                        getterFn.assign = function($scope, value){
+                            column[prop1] = value;
+                        };
+                        extendedCol[prop1] = getterFn;
                     })(prop);
                 }
                 (function(prop1){
                     // satisfy the arguments expected by the function returned by parsedAttribute in the ngTable directive
                     var getterFn = extendedCol[prop1];
-                    extendedCol[prop1] = function(){
-                        if (arguments.length === 0){
+                    extendedCol[prop1] = function () {
+                        if (arguments.length === 0) {
                             return getterFn.call(column, defaultScope);
                         } else {
                             return getterFn.apply(column, arguments);
                         }
                     };
+                    if (getterFn.assign){
+                        extendedCol[prop1].assign = getterFn.assign;
+                    }
                 })(prop);
             }
             return extendedCol;
@@ -477,7 +524,7 @@
      * @description Parameters manager for ngTable
      */
 
-    angular.module('ngTable').factory('NgTableParams', ['$q', '$log', 'ngTableDefaults', 'ngTableGetDataBcShim', 'ngTableDefaultGetData', 'ngTableEventsChannel', function($q, $log, ngTableDefaults, ngTableGetDataBcShim, ngTableDefaultGetData, ngTableEventsChannel) {
+    angular.module('ngTable').factory('NgTableParams', ['$q', '$log', '$filter', 'ngTableDefaults', 'ngTableGetDataBcShim', 'ngTableDefaultGetData', 'ngTableEventsChannel', function($q, $log, $filter, ngTableDefaults, ngTableGetDataBcShim, ngTableDefaultGetData, ngTableEventsChannel) {
         var isNumber = function(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
         };
@@ -490,13 +537,17 @@
             }
 
             var self = this,
-                committedParams,
-                erroredParams,
+                prevParamsMemento,
+                errParamsMemento,
                 isCommittedDataset = false,
                 log = function() {
                     if (settings.debugMode && $log.debug) {
                         $log.debug.apply(this, arguments);
                     }
+                },
+                defaultGroupOptions = {
+                    defaultSort: 'asc', // set to 'asc' or 'desc' to apply sorting to groups
+                    isExpanded: true
                 };
 
             this.data = [];
@@ -531,7 +582,11 @@
                             }
                             params[lastKey] = angular.extend(params[lastKey] || {}, value[lastKey]);
                         } else {
-                            params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
+                            if (key === 'group'){
+                                params[key] = parseGroup(newParameters[key]);
+                            } else {
+                                params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
+                            }
                         }
                     }
                     log('ngTable: set parameters', params);
@@ -539,6 +594,18 @@
                 }
                 return params;
             };
+
+            function parseGroup(group){
+                if (angular.isFunction(group)) {
+                    return group;
+                } else if (angular.isString(group)) {
+                    var grp = {};
+                    grp[group] = settings.groupOptions && settings.groupOptions.defaultSort;
+                    return grp;
+                } else {
+                    return group;
+                }
+            }
 
             /**
              * @ngdoc method
@@ -550,6 +617,14 @@
              */
             this.settings = function(newSettings) {
                 if (angular.isDefined(newSettings)) {
+
+                    // todo: don't modify newSettings object: this introduces unexpected side effects;
+                    // instead take a copy of newSettings
+
+                    if (newSettings.groupOptions){
+                        newSettings.groupOptions = angular.extend({}, settings.groupOptions, newSettings.groupOptions);
+                    }
+
                     if (angular.isArray(newSettings.data)) {
                         //auto-set the total from passed in data
                         newSettings.total = newSettings.data.length;
@@ -662,6 +737,37 @@
 
             /**
              * @ngdoc method
+             * @name NgTableParams#group
+             * @description If 'group' parameter is not set, return current grouping. Otherwise set current group.
+             *
+             * @param {string|Function|Object} group New group field
+             * @param {string} sortDirection Optional direction that the list of groups should be sorted
+             * @returns {Object} Current grouping or `this`
+             */
+            this.group = function(group, sortDirection) {
+                if (!angular.isDefined(group)){
+                    return params.group;
+                }
+
+                var newParameters = {
+                    page: 1
+                };
+                if (angular.isFunction(group) && angular.isDefined(sortDirection)){
+                    group.sortDirection = sortDirection;
+                    newParameters.group = group;
+                } else if (angular.isDefined(group) && angular.isDefined(sortDirection)) {
+                    var groupArray = {};
+                    groupArray[group] = sortDirection;
+                    newParameters.group = groupArray;
+                } else {
+                    newParameters.group = group;
+                }
+                this.parameters(newParameters);
+                return this;
+            };
+
+            /**
+             * @ngdoc method
              * @name NgTableParams#sorting
              * @description If 'sorting' parameter is not set, return current sorting. Otherwise set current sorting.
              *
@@ -707,12 +813,16 @@
              * @returns {Array} Array like: [ '-name', '+age' ]
              */
             this.orderBy = function() {
-                var sorting = [];
-                for (var column in params.sorting) {
-                    sorting.push((params.sorting[column] === "asc" ? "+" : "-") + column);
-                }
-                return sorting;
+                return convertSortToOrderBy(params.sorting);
             };
+
+            function convertSortToOrderBy(sorting){
+                var result = [];
+                for (var column in sorting) {
+                    result.push((sorting[column] === "asc" ? "+" : "-") + column);
+                }
+                return result;
+            }
 
             /**
              * @ngdoc method
@@ -795,9 +905,17 @@
              */
             this.isDataReloadRequired = function(){
                 // note: using != as want to treat null and undefined the same
-                return !isCommittedDataset || !angular.equals(params, committedParams) || hasGlobalSearchFieldChanges();
+                return !isCommittedDataset || !angular.equals(createComparableParams(), prevParamsMemento)
+                    || hasGlobalSearchFieldChanges();
             };
 
+            function createComparableParams(){
+                var result = {params: params};
+                if (angular.isFunction(params.group)){
+                    result.groupSortDirection = params.group.sortDirection;
+                }
+                return result
+            }
             /**
              * @ngdoc method
              * @name NgTableParams#hasFilter
@@ -811,18 +929,45 @@
 
             /**
              * @ngdoc method
+             * @name NgTableParams#hasGroup
+             * @description Determines if at least one group has been set
+             * @returns {Boolean}
+             */
+            this.hasGroup = function(group, sortDirection){
+                if (group == null) {
+                    return angular.isFunction(params.group) || Object.keys(params.group).length > 0
+                }
+
+                if (angular.isFunction(group)) {
+                    if (sortDirection == null) {
+                        return params.group === group;
+                    } else {
+                        return params.group === group && group.sortDirection === sortDirection;
+                    }
+                } else {
+                    if (sortDirection == null) {
+                        return Object.keys(params.group).indexOf(group) !== -1;
+                    } else {
+                        return params.group[group] === sortDirection;
+                    }
+                }
+            };
+
+            /**
+             * @ngdoc method
              * @name NgTableParams#hasFilterChanges
              * @description Return true when a change to `NgTableParams.filters`require the reload method
              * to be run so as to ensure the data presented to the user reflects these filters
              */
             this.hasFilterChanges = function(){
-                return !angular.equals((params && params.filter), (committedParams && committedParams.filter)) ||
-                    hasGlobalSearchFieldChanges();
+                var previousFilter = (prevParamsMemento && prevParamsMemento.params.filter);
+                return !angular.equals((params.filter), previousFilter) || hasGlobalSearchFieldChanges();
             };
 
             function hasGlobalSearchFieldChanges(){
-                var currentVal = (params && params.filter && params.filter.$);
-                var previousVal = (committedParams && committedParams.filter && committedParams.filter.$);
+                var currentVal = (params.filter && params.filter.$);
+                var previousVal =
+                    (prevParamsMemento && prevParamsMemento.params.filter && prevParamsMemento.params.filter.$);
                 return !angular.equals(currentVal, previousVal);
             }
 
@@ -843,25 +988,29 @@
                             name = encodeURIComponent(key);
                         if (typeof item === "object") {
                             for (var subkey in item) {
-                                if (!angular.isUndefined(item[subkey]) && item[subkey] !== "") {
+                                if (isSignificantValue(item[subkey], key)) {
                                     var pname = name + "[" + encodeURIComponent(subkey) + "]";
-                                    if (asString) {
-                                        pairs.push(pname + "=" + item[subkey]);
-                                    } else {
-                                        pairs[pname] = item[subkey];
-                                    }
+                                    collectValue(item[subkey], pname);
                                 }
                             }
-                        } else if (!angular.isFunction(item) && !angular.isUndefined(item) && item !== "") {
-                            if (asString) {
-                                pairs.push(name + "=" + encodeURIComponent(item));
-                            } else {
-                                pairs[name] = encodeURIComponent(item);
-                            }
+                        } else if (!angular.isFunction(item) && isSignificantValue(item, key)) {
+                            collectValue(item, name);
                         }
                     }
                 }
                 return pairs;
+
+                function collectValue(value, key){
+                    if (asString) {
+                        pairs.push(key + "=" + encodeURIComponent(value));
+                    } else {
+                        pairs[key] = encodeURIComponent(value);
+                    }
+                }
+
+                function isSignificantValue(value, key){
+                    return key === "group" ? true : angular.isDefined(value) && value !== "";
+                }
             };
 
             /**
@@ -875,10 +1024,10 @@
 
                 settings.$loading = true;
 
-                committedParams = angular.copy(params);
+                prevParamsMemento = angular.copy(createComparableParams());
                 isCommittedDataset = true;
 
-                if (settings.groupBy) {
+                if (self.hasGroup()) {
                     pData = runInterceptorPipeline(runGetGroups);
                 } else {
                     pData = runInterceptorPipeline(runGetData);
@@ -889,7 +1038,7 @@
                 var oldData = self.data;
                 return pData.then(function(data) {
                     settings.$loading = false;
-                    erroredParams = null;
+                    errParamsMemento = null;
 
                     self.data = data;
                     // note: I think it makes sense to publish this event even when data === oldData
@@ -904,8 +1053,8 @@
 
                     return data;
                 }).catch(function(reason){
-                    erroredParams = committedParams;
-                    committedParams = null;
+                    errParamsMemento = prevParamsMemento;
+                    prevParamsMemento = null;
                     isCommittedDataset = false;
                     // "rethrow"
                     return $q.reject(reason);
@@ -922,7 +1071,7 @@
              * `parameter` values have changed
              */
             this.hasErrorState = function(){
-                return !!(erroredParams && angular.equals(erroredParams, params));
+                return !!(errParamsMemento && angular.equals(errParamsMemento, createComparableParams()));
             };
 
             this.reloadPages = (function() {
@@ -989,35 +1138,60 @@
                  * @description Return groups of data to display in the table
                  *
                  * Called by `NgTableParams` whenever it considers new data is to be loaded
-                 * and when the `settings` object has a `groupBy` value
+                 * and when a `group` value has been assigned
                  *
                  * @param {Object} params the `NgTableParams` requesting data
                  */
                 function getGroups(params) {
+
+                    var group = params.group();
+                    var groupFn;
+                    var sortDirection = undefined;
+                    if (angular.isFunction(group)) {
+                        groupFn = group;
+                        sortDirection = group.sortDirection;
+                    } else {
+                        // currently support for only one group implemented
+                        var groupField = Object.keys(group)[0];
+                        sortDirection = group[groupField];
+                        groupFn = function(item){
+                            return item[groupField];
+                        };
+                    }
+
                     var settings = params.settings();
+                    var originalDataOptions = settings.dataOptions;
+                    settings.dataOptions = { applyPaging: false };
                     var adaptedFn = settings.getDataFnAdaptor(settings.getData);
                     var gotData = $q.when(adaptedFn.call(settings, params));
                     return gotData.then(function(data) {
                         var groups = {};
+                        var groupOptions = settings.groupOptions || defaultGroupOptions;
                         angular.forEach(data, function(item) {
-                            var groupName;
-                            if (angular.isFunction(settings.groupBy)) {
-                                groupName = settings.groupBy(item);
-                            } else {
-                                groupName = item[settings.groupBy];
-                            }
-
+                            var groupName = groupFn(item);
                             groups[groupName] = groups[groupName] || {
-                                    data: []
+                                    data: [],
+                                    $hideRows: !groupOptions.isExpanded,
+                                    value: groupName
                                 };
-                            groups[groupName]['value'] = groupName;
                             groups[groupName].data.push(item);
                         });
                         var result = [];
                         for (var i in groups) {
                             result.push(groups[i]);
                         }
-                        return result;
+                        if (sortDirection) {
+                            var orderByFn = ngTableDefaultGetData.getOrderByFn();
+                            var orderBy = convertSortToOrderBy({
+                                value: sortDirection
+                            });
+                            result = orderByFn(result, orderBy);
+                        }
+
+                        return ngTableDefaultGetData.applyPaging(result, params);
+                    }).finally(function(){
+                        // restore the real options
+                        settings.dataOptions = originalDataOptions;
                     });
                 }
             }
@@ -1027,8 +1201,7 @@
                 count: 10,
                 filter: {},
                 sorting: {},
-                group: {},
-                groupBy: null
+                group: {}
             };
             angular.extend(params, ngTableDefaults.params);
 
@@ -1050,6 +1223,7 @@
                 filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
                 filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
                 filterLayout: 'stack', // alternative: 'horizontal'
+                groupOptions: angular.copy(defaultGroupOptions),
                 counts: [10, 25, 50, 100],
                 interceptors: [],
                 paginationMaxBlocks: 11,
@@ -1261,6 +1435,24 @@
                         $scope.show_filter = value;
                     });
                 }
+
+                $scope.$groupRow = {};
+                if ($attrs.showGroup) {
+                    var showGroupGetter = $parse($attrs.showGroup);
+                    $scope.$parent.$watch(showGroupGetter, function(value) {
+                        $scope.$groupRow.show = value;
+                    });
+                    if (showGroupGetter.assign){
+                        $scope.$watch('$groupRow.show', function(value) {
+                            showGroupGetter.assign($scope.$parent, value);
+                        });
+                    }
+                } else{
+                    $scope.$watch('params.hasGroup()', function(newValue) {
+                        $scope.$groupRow.show = newValue;
+                    });
+                }
+
                 if ($attrs.disableFilter) {
                     $scope.$parent.$watch($attrs.disableFilter, function(value) {
                         $scope.$filterRow.disabled = value;
@@ -1275,7 +1467,7 @@
                 ngTableEventsChannel.onPagesChanged(bindPagesToScope, $scope, isMyPublisher);
 
                 function bindDataToScope(params, newDatapage){
-                    if (params.settings().groupBy) {
+                    if (params.hasGroup()) {
                         $scope.$groups = newDatapage;
                     } else {
                         $scope.$data = newDatapage;
@@ -1325,19 +1517,24 @@
                 compile: function(element) {
                     var columns = [],
                         i = 0,
-                        row = null;
+                        dataRow,
+                        groupRow,
+                        rows = [];
 
-                    // IE 8 fix :not(.ng-table-group) selector
                     angular.forEach(angular.element(element.find('tr')), function(tr) {
-                        tr = angular.element(tr);
-                        if (!tr.hasClass('ng-table-group') && !row) {
-                            row = tr;
-                        }
+                        rows.push(angular.element(tr))
                     });
-                    if (!row) {
+                    dataRow = rows.filter(function(tr){
+                        return !tr.hasClass('ng-table-group');
+                    })[0];
+                    groupRow = rows.filter(function(tr){
+                        return tr.hasClass('ng-table-group');
+                    })[0];
+
+                    if (!dataRow) {
                         return;
                     }
-                    angular.forEach(row.find('td'), function(item) {
+                    angular.forEach(dataRow.find('td'), function(item) {
                         var el = angular.element(item);
                         if (el.attr('ignore-cell') && 'true' === el.attr('ignore-cell')) {
                             return;
@@ -1346,19 +1543,43 @@
                         var getAttrValue = function(attr){
                             return el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr);
                         };
+                        var setAttrValue = function(attr, value){
+                            if (el.attr('x-data-' + attr)){
+                                el.attr('x-data-' + attr, value)
+                            } else if (el.attr('data' + attr)){
+                                el.attr('data' + attr, value)
+                            } else {
+                                el.attr(attr, value)
+                            }
+                        };
 
                         var parsedAttribute = function(attr) {
                             var expr = getAttrValue(attr);
                             if (!expr){
                                 return undefined;
                             }
-                            return function(scope, locals) {
+
+                            var localValue;
+                            var getter = function (scope, locals) {
+                                if (localValue !== undefined){
+                                    return localValue;
+                                }
                                 return $parse(expr)(scope, angular.extend(locals || {}, {
                                     $columns: columns
                                 }));
                             };
+                            getter.assign = function($scope, value){
+                                var parsedExpr = $parse(expr);
+                                if (parsedExpr.assign) {
+                                    // we should be writing back to the parent scope as this is where the expression
+                                    // came from
+                                    parsedExpr.assign($scope.$parent, value);
+                                } else {
+                                    localValue = value;
+                                }
+                            };
+                            return getter;
                         };
-
                         var titleExpr = getAttrValue('title-alt') || getAttrValue('title');
                         if (titleExpr){
                             el.attr('data-title-text', '{{' + titleExpr + '}}'); // this used in responsive table
@@ -1373,12 +1594,19 @@
                             sortable: parsedAttribute('sortable'),
                             'class': parsedAttribute('header-class'),
                             filter: parsedAttribute('filter'),
+                            groupable: parsedAttribute('groupable'),
                             headerTemplateURL: parsedAttribute('header'),
                             filterData: parsedAttribute('filter-data'),
-                            show: (el.attr("ng-if") ? function (scope) {
-                                return $parse(el.attr("ng-if"))(scope);
-                            } : undefined)
+                            show: el.attr("ng-if") ? parsedAttribute('ng-if') : undefined
                         });
+
+                        if (groupRow){
+                            // change ng-if to bind to our column definition which we know will be writable
+                            // because this will potentially increase the $watch count, only do so when we definitely
+                            // need to change visibility of the columns.
+                            // currently only ngTableGroupRow directive needs this
+                            setAttrValue('ng-if', '$columns[' + (columns.length - 1) + '].show(this)');
+                        }
                     });
                     return function(scope, element, attrs, controller) {
                         scope.$columns = columns = controller.buildColumns(columns);
@@ -1413,7 +1641,7 @@
      * A dynamic version of the {@link ngTable ngTable} directive that accepts a dynamic list of columns
      * definitions to render
      */
-    angular.module('ngTable').directive('ngTableDynamic', ['$parse', function ($parse){
+    angular.module('ngTable').directive('ngTableDynamic', [function (){
 
         return {
             restrict: 'A',
@@ -1598,6 +1826,149 @@
     'use strict';
 
     angular.module('ngTable')
+        .controller('ngTableGroupRowController', ngTableGroupRowController);
+
+    ngTableGroupRowController.$inject = ['$scope'];
+
+    function ngTableGroupRowController($scope){
+
+        var groupFns = [];
+
+        init();
+
+        function init(){
+            $scope.getGroupables = getGroupables;
+            $scope.getGroupTitle = getGroupTitle;
+            $scope.getVisibleColumns = getVisibleColumns;
+            $scope.groupBy = groupBy;
+            $scope.isSelectedGroup = isSelectedGroup;
+
+            $scope.$watch('params.group()', setGroup, true);
+        }
+
+        function changeSortDirection(){
+            var newDirection;
+            if ($scope.params.hasGroup($scope.$selGroup, 'asc')) {
+                newDirection = 'desc';
+            } else if ($scope.params.hasGroup($scope.$selGroup, 'desc')){
+                newDirection = '';
+            } else {
+                newDirection = 'asc';
+            }
+            $scope.params.group($scope.$selGroup, newDirection);
+        }
+
+        function findGroupColumn(groupKey) {
+            return $scope.$columns.filter(function ($column) {
+                return $column.groupable($scope) === groupKey;
+            })[0];
+        }
+
+        function getGroupTitle(group){
+            return angular.isFunction(group) ? group.title : group.title($scope);
+        }
+
+        function getGroupables(){
+            var groupableCols = $scope.$columns.filter(function ($column) {
+                return $column.groupable($scope);
+            });
+            return groupFns.concat(groupableCols);
+        }
+
+        function getVisibleColumns(){
+            return $scope.$columns.filter(function($column){
+                return $column.show($scope);
+            })
+        }
+
+        function groupBy(group){
+            if (group.groupable){
+                if (group.groupable($scope) === $scope.$selGroup){
+                    changeSortDirection();
+                } else {
+                    var existingGroupCol = findGroupColumn($scope.$selGroup);
+                    if (existingGroupCol && existingGroupCol.show.assign && group.show.assign){
+                        existingGroupCol.show.assign($scope, true);
+                        group.show.assign($scope, false);
+                    }
+                    $scope.params.group(group.groupable($scope));
+                }
+            } else{
+                if (group === $scope.$selGroup){
+                    changeSortDirection();
+                } else {
+                    $scope.params.group(group);
+                }
+            }
+        }
+
+        function isSelectedGroup(group){
+            if (group.groupable){
+                return group.groupable($scope) === $scope.$selGroup;
+            } else {
+                return group === $scope.$selGroup;
+            }
+        }
+
+        function setGroup(group){
+            if (angular.isFunction(group)) {
+                groupFns = [group];
+                $scope.$selGroup = group;
+                $scope.$selGroupTitle = group.title;
+            } else {
+                // note: currently only one group is implemented
+                var groupKey = Object.keys(group || {})[0];
+                var groupedColumn = findGroupColumn(groupKey);
+                if (groupedColumn) {
+                    $scope.$selGroupTitle = groupedColumn.title($scope);
+                    $scope.$selGroup = groupKey;
+                }
+            }
+        }
+    }
+})();
+
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .directive('ngTableGroupRow', ngTableGroupRow);
+
+    ngTableGroupRow.$inject = [];
+
+    function ngTableGroupRow(){
+        var directive = {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'ng-table/groupRow.html',
+            scope: true,
+            controller: 'ngTableGroupRowController',
+            controllerAs: 'dctrl'
+        };
+        return directive;
+    }
+})();
+
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Vitalii Savchuk <esvit666@gmail.com>
+ * @url https://github.com/esvit/ng-table/
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
         .controller('ngTableSorterRowController', ngTableSorterRowController);
 
     ngTableSorterRowController.$inject = ['$scope'];
@@ -1735,9 +2106,10 @@ angular.module('ngTable').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" multiple ng-multiple="true" ng-model="params.filter()[name]" class="filter filter-select-multiple form-control" name="{{name}}"> </select> ');
 	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $selectData" ng-table-select-filter-ds="$column" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="filter filter-select form-control" name="{{name}}"> <option style="display:none" value=""></option> </select> ');
 	$templateCache.put('ng-table/filters/text.html', '<input type="text" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control" placeholder="{{getFilterPlaceholderValue(filter, name)}}"/> ');
-	$templateCache.put('ng-table/header.html', '<ng-table-sorter-row></ng-table-sorter-row> <ng-table-filter-row></ng-table-filter-row> ');
+	$templateCache.put('ng-table/groupRow.html', '<tr ng-if="params.hasGroup()" ng-show="$groupRow.show" class="ng-table-group-header"> <th colspan="{{getVisibleColumns().length}}" class="sortable" ng-class="{ \'sort-asc\': params.hasGroup($selGroup, \'asc\'), \'sort-desc\':params.hasGroup($selGroup, \'desc\') }"> <a href="" ng-click="isSelectorOpen=!isSelectorOpen" class="ng-table-group-selector"> <strong class="sort-indicator">{{$selGroupTitle}}</strong> <button class="btn btn-default btn-xs" ng-click="$groupRow.show=false" ng-disabled="isSelectorOpen"><span class="glyphicon glyphicon-resize-small"></span> </button> </a> <div class="list-group" ng-if="isSelectorOpen"> <a href="" class="list-group-item" ng-repeat="group in getGroupables()" ng-click="groupBy(group)"> <strong>{{ getGroupTitle(group)}}</strong> <strong ng-class="isSelectedGroup(group) && \'sort-indicator\'"></strong> </a> </div> </th> </tr> ');
+	$templateCache.put('ng-table/header.html', '<ng-table-group-row></ng-table-group-row> <ng-table-sorter-row></ng-table-sorter-row> <ng-table-filter-row></ng-table-filter-row> ');
 	$templateCache.put('ng-table/pager.html', '<div class="ng-cloak ng-table-pager" ng-if="params.data.length"> <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right"> <button ng-repeat="count in params.settings().counts" type="button" ng-class="{\'active\':params.count()==count}" ng-click="params.count(count)" class="btn btn-default"> <span ng-bind="count"></span> </button> </div> <ul ng-if="pages.length" class="pagination ng-table-pagination"> <li ng-class="{\'disabled\': !page.active && !page.current, \'active\': page.current}" ng-repeat="page in pages" ng-switch="page.type"> <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo;</a> <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="page" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="more" ng-click="params.page(page.number)" href="">&#8230;</a> <a ng-switch-when="last" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a> <a ng-switch-when="next" ng-click="params.page(page.number)" href="">&raquo;</a> </li> </ul> </div> ');
-	$templateCache.put('ng-table/sorterRow.html', '<tr> <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{ \'sortable\': $column.sortable(this), \'sort-asc\': params.sorting()[$column.sortable(this)]==\'asc\', \'sort-desc\': params.sorting()[$column.sortable(this)]==\'desc\' }" ng-click="sortBy($column, $event)" ng-if="$column.show(this)" ng-init="template=$column.headerTemplateURL(this)" class="header {{$column.class(this)}}"> <div ng-if="!template" class="ng-table-header" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'div\'}"> <span ng-bind="$column.title(this)" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'span\'}"></span> </div> <div ng-if="template" ng-include="template"></div> </th> </tr> ');
+	$templateCache.put('ng-table/sorterRow.html', '<tr class="ng-table-sort-header"> <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{ \'sortable\': $column.sortable(this), \'sort-asc\': params.sorting()[$column.sortable(this)]==\'asc\', \'sort-desc\': params.sorting()[$column.sortable(this)]==\'desc\' }" ng-click="sortBy($column, $event)" ng-if="$column.show(this)" ng-init="template=$column.headerTemplateURL(this)" class="header {{$column.class(this)}}"> <div ng-if="!template" class="ng-table-header" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'div\'}"> <span ng-bind="$column.title(this)" ng-class="{\'sort-indicator\': params.settings().sortingIndicator==\'span\'}"></span> </div> <div ng-if="template" ng-include="template"></div> </th> </tr> ');
 }]);
     return angular.module('ngTable');
 }));

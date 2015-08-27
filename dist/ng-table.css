@@ -83,6 +83,15 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.ng-table .ng-table-group-header th {
+  text-align: left;
+}
+.ng-table .ng-table-group-selector {
+  display: block;
+}
+.ng-table .ng-table-group-selector > button {
+  float: right;
+}
 .ng-table + .pagination {
   margin-top: 0;
 }
@@ -134,11 +143,14 @@
     display: block;
   }
 }
+.ng-table-group-selector:before,
+.ng-table-group-selector:after,
 .filter:before,
 .filter:after {
   display: table;
   content: " ";
 }
+.ng-table-group-selector:after,
 .filter:after {
   clear: both;
 }

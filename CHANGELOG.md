@@ -1,3 +1,60 @@
+<a name="1.0.0-alpha.7"></a>
+# 1.0.0-alpha.7 (2015-08-27)
+
+
+## Bug Fixes
+
+- **NgTableParams:** the url method does not URI encoded all parameter values
+  ([6e7bf3a7](https://github.com/esvit/ng-table/commit/6e7bf3a733f15987b5b3aefeb738f3d5c03aaa8e))
+
+
+## Features
+
+- **NgTableParams:** improved support for grouping data
+  ([1cd90cde](https://github.com/esvit/ng-table/commit/1cd90cdeb1b3720945c246e875d602ea8d30c873))
+- **groupRow:** extend header with a data group picker
+  ([ffa617cb](https://github.com/esvit/ng-table/commit/ffa617cb53fd02d38d02b86d4b37e52813dcec1e))
+- **ngTableDefaultGetData:** allow NgTableParams to determine if sorting, filtering, and paging apply
+  ([6536d734](https://github.com/esvit/ng-table/commit/6536d734f865a101021639db311648e334b649a7))
+
+
+## Breaking Changes
+
+- **NgTableParams:**
+  - due to [1cd90cde](https://github.com/esvit/ng-table/commit/1cd90cdeb1b3720945c246e875d602ea8d30c873),
+
+
+* `settings().groupBy` renamed and moved to `parameters().group`
+
+Previously:
+
+```js
+var params = new NgTableParams({...}, { groupBy: 'role'});
+// changing value:
+params.settings({ groupBy: 'age'});
+
+```
+
+Now:
+
+```js
+var params = new NgTableParams({group: 'role'}, {...});
+// changing value:
+params.group('age');
+// OR
+params.parameters({ group: { age: undefined }});
+```
+
+* paging is applied after grouping
+
+This means that groups will no longer be duplicated and split across pages.
+
+  - due to [6e7bf3a7](https://github.com/esvit/ng-table/commit/6e7bf3a733f15987b5b3aefeb738f3d5c03aaa8e),
+
+
+All parameter values are now URI encoded, thus a numerical filter value will now be returned as a quoted string
+
+
 <a name="1.0.0-alpha.6"></a>
 # 1.0.0-alpha.6 (2015-08-17)
 
