@@ -150,6 +150,20 @@
 
             /**
              * @ngdoc method
+             * @name NgTableParams#summaryVaules
+             * @description If parameter summaryVaules not set return current summary else set current summaryVaules
+             *
+             * @param {string} summaryVaules
+             * @returns {Object|Number} Current summaryVaules or `this`
+             */
+            this.summaryValues = function(summaryValues) {
+               return angular.isDefined(summaryValues) ? this.settings({
+                  'summaryValues': summaryValues
+               }) : settings.summaryValues;
+            }
+
+            /**
+             * @ngdoc method
              * @name NgTableParams#count
              * @description If parameter count not set return current count per page else set count per page
              *
@@ -615,5 +629,3 @@
         return NgTableParams;
     }]);
 })();
-
-
