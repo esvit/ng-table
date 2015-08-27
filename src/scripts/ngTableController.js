@@ -79,6 +79,7 @@
                 if (!$element.hasClass('ng-table')) {
                     $scope.templates = {
                         header: ($attrs.templateHeader ? $attrs.templateHeader : 'ng-table/header.html'),
+                        footer: ($attrs.templateFooter ? $attrs.templateFooter : 'ng-table/footer.html'),
                         pagination: ($attrs.templatePagination ? $attrs.templatePagination : 'ng-table/pager.html')
                     };
                     $element.addClass('ng-table');
@@ -95,6 +96,17 @@
                         headerTemplate = angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
                         $element.prepend(headerTemplate);
                     }
+                    var footerTemplate = null;
+                    var tfootFound = false;
+                    angular.forEach($element.children(), function(e){
+                       if (e.tagName === 'TFOOT') {
+                          theadFound = true;
+                       }
+                    });
+                    if (!tfootFound) {
+                       footerTemplate = angular.element(document.createElement('tfoot')).attr('ng-include', 'templates.footer');
+                       $element.append(footerTemplate);
+                    }
                     var paginationTemplate = angular.element(document.createElement('div')).attr({
                         'ng-table-pagination': 'params',
                         'template-url': 'templates.pagination'
@@ -102,6 +114,9 @@
                     $element.after(paginationTemplate);
                     if (headerTemplate) {
                         $compile(headerTemplate)($scope);
+                    }
+                    if (footerTemplate) {
+                       $compile(footerTemplate)($scope);
                     }
                     $compile(paginationTemplate)($scope);
                 }
@@ -184,8 +199,6 @@
                     });
                 }
             };
-
-
 
             function commonInit(){
                 ngTableEventsChannel.onAfterReloadData(bindDataToScope, $scope, isMyPublisher);

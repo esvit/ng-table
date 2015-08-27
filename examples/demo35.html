@@ -69,22 +69,6 @@
 
                params.total(collection.length);
 
-/*
-               var summaryFuncs = params.settings().summaries;
-               var summaryValues = {};
-               angular.forEach(summaryFuncs, function(summaryFunc) {
-                   var column = summaryFunc();
-                   if (column) {
-                       summaryValues[column] = 0;
-                       angular.forEach(collection, function(row){
-                           summaryValues[column] += row[column];
-                       });
-                   }
-               });
-
-               params.summaryValues(summaryValues);
-*/
-
                $defer.resolve(
                    collection.slice((params.page() - 1) * params.count(),
                    params.page() * params.count()));
