@@ -56,8 +56,6 @@
                         {name: "Enos", age: 34}];
 
             function filterSortAndSlice(collection, $defer, params) {
-                debugger;
-
                collection =
                     params.filter() ?
                     $filter('filter')(collection, params.filter()) :
@@ -68,6 +66,21 @@
                        collection;
 
                params.total(collection.length);
+
+               var summaryValues = {};
+               var summaryFuncs = params.settings().summaries;
+               angular.forEach(summaryFuncs, function(summaryFunc) {
+                   summaryIndex = summaryFunc();
+
+                   if (summaryIndex) {
+                       summaryValues[summaryIndex] = 0;
+                       debugger;
+                       angular.forEach(collection, function(row){
+                           summaryValues[summaryIndex] += row[summaryIndex];
+                       });
+                   }
+               });
+               params.summaryValues(summaryValues);
 
                $defer.resolve(
                    collection.slice((params.page() - 1) * params.count(),
