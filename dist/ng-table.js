@@ -1669,6 +1669,57 @@
 /**
  * ngTable: Table + Angular JS
  *
+ * @author Szymon Drosdzol <szymon.drosdzol@gmail.com>
+ * @url https://github.com/sprzedamsanki/ng-table
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+ (function(){
+     'use strict';
+
+     angular.module('ngTable')
+         .directive('ngTableSummaryRow', ngTableSummaryRow);
+
+     ngTableSummaryRow.$inject = [];
+
+     function ngTableSummaryRow(){
+         var directive = {
+             restrict: 'E',
+             replace: true,
+             templateUrl: 'ng-table/summaryRow.html',
+             scope: true,
+             controller: 'ngTableSummaryRowController'
+         };
+         return directive;
+     }
+ })();
+
+/**
+ * ngTable: Table + Angular JS
+ *
+ * @author Szymon Drosdzol <szymon.drosdzol@gmail.com>
+ * @url https://github.com/sprzedamsanki/ng-table
+ * @license New BSD License <http://creativecommons.org/licenses/BSD/>
+ */
+
+(function(){
+    'use strict';
+
+    angular.module('ngTable')
+        .controller('ngTableSummaryRowController', ngTableSummaryRowController);
+
+    ngTableSummaryRowController.$inject = ['$scope'];
+
+    function ngTableSummaryRowController($scope){
+        $scope.params.settings().summaries = $scope.$columns.map(function($column){
+            return $column.summary;
+        });
+    }
+})();
+
+/**
+ * ngTable: Table + Angular JS
+ *
  * @author Vitalii Savchuk <esvit666@gmail.com>
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
