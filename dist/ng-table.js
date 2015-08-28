@@ -596,12 +596,23 @@
             };
 
             function parseGroup(group){
+                var defaultSort = settings.groupOptions && settings.groupOptions.defaultSort;
                 if (angular.isFunction(group)) {
+                    if (group.sortDirection == null){
+                        group.sortDirection = defaultSort;
+                    }
                     return group;
                 } else if (angular.isString(group)) {
                     var grp = {};
-                    grp[group] = settings.groupOptions && settings.groupOptions.defaultSort;
+                    grp[group] = defaultSort;
                     return grp;
+                } else if (angular.isObject(group)) {
+                    for (var key in group) {
+                        if (group[key] == null){
+                            group[key] = defaultSort;
+                        }
+                    }
+                    return group;
                 } else {
                     return group;
                 }
@@ -1460,7 +1471,11 @@
                 }
             };
 
-
+            function getVisibleColumns(){
+                return ($scope.$columns || []).filter(function(c){
+                    return c.show($scope);
+                });
+            }
 
             function commonInit(){
                 ngTableEventsChannel.onAfterReloadData(bindDataToScope, $scope, isMyPublisher);
@@ -1468,7 +1483,8 @@
 
                 function bindDataToScope(params, newDatapage){
                     if (params.hasGroup()) {
-                        $scope.$groups = newDatapage;
+                        $scope.$groups = newDatapage || [];
+                        $scope.$groups.visibleColumnCount = getVisibleColumns().length;
                     } else {
                         $scope.$data = newDatapage;
                     }
@@ -1521,7 +1537,7 @@
                         groupRow,
                         rows = [];
 
-                    angular.forEach(angular.element(element.find('tr')), function(tr) {
+                    angular.forEach(element.find('tr'), function(tr) {
                         rows.push(angular.element(tr))
                     });
                     dataRow = rows.filter(function(tr){
@@ -1652,7 +1668,7 @@
                 var row;
 
                 // IE 8 fix :not(.ng-table-group) selector
-                angular.forEach(angular.element(tElement.find('tr')), function(tr) {
+                angular.forEach(tElement.find('tr'), function(tr) {
                     tr = angular.element(tr);
                     if (!tr.hasClass('ng-table-group') && !row) {
                         row = tr;
@@ -1882,21 +1898,19 @@
         }
 
         function groupBy(group){
-            if (group.groupable){
-                if (group.groupable($scope) === $scope.$selGroup){
-                    changeSortDirection();
-                } else {
-                    var existingGroupCol = findGroupColumn($scope.$selGroup);
-                    if (existingGroupCol && existingGroupCol.show.assign && group.show.assign){
-                        existingGroupCol.show.assign($scope, true);
+            if (isSelectedGroup(group)){
+                changeSortDirection();
+            } else {
+                var existingGroupCol = findGroupColumn($scope.$selGroup);
+                if (existingGroupCol && existingGroupCol.show.assign){
+                    existingGroupCol.show.assign($scope, true);
+                }
+                if (group.groupable){
+                    if (group.show.assign){
                         group.show.assign($scope, false);
                     }
                     $scope.params.group(group.groupable($scope));
-                }
-            } else{
-                if (group === $scope.$selGroup){
-                    changeSortDirection();
-                } else {
+                } else{
                     $scope.params.group(group);
                 }
             }

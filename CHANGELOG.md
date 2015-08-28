@@ -1,3 +1,21 @@
+<a name="1.0.0-alpha.8"></a>
+# 1.0.0-alpha.8 (2015-08-28)
+
+
+## Bug Fixes
+
+- **NgTableParams:** incorrect default sort direction applied to grouping function
+  ([7b30995e](https://github.com/esvit/ng-table/commit/7b30995e2922d7367e9336d987d9e739f7f29cd3))
+- **groupRow:** table columns are lost when switching between groups
+  ([6d2c7358](https://github.com/esvit/ng-table/commit/6d2c735847918bd3c717f58a2f10be0fd3a01a8b))
+
+
+## Features
+
+- **ngTableController:** add visibleColumnCount to $groups data
+  ([53ed583c](https://github.com/esvit/ng-table/commit/53ed583c5fd1b1dd4f147aee9ab852a90e6f17c4))
+
+
 <a name="1.0.0-alpha.7"></a>
 # 1.0.0-alpha.7 (2015-08-27)
 
