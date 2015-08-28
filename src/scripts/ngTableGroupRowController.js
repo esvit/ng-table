@@ -66,21 +66,19 @@
         }
 
         function groupBy(group){
-            if (group.groupable){
-                if (group.groupable($scope) === $scope.$selGroup){
-                    changeSortDirection();
-                } else {
-                    var existingGroupCol = findGroupColumn($scope.$selGroup);
-                    if (existingGroupCol && existingGroupCol.show.assign && group.show.assign){
-                        existingGroupCol.show.assign($scope, true);
+            if (isSelectedGroup(group)){
+                changeSortDirection();
+            } else {
+                var existingGroupCol = findGroupColumn($scope.$selGroup);
+                if (existingGroupCol && existingGroupCol.show.assign){
+                    existingGroupCol.show.assign($scope, true);
+                }
+                if (group.groupable){
+                    if (group.show.assign){
                         group.show.assign($scope, false);
                     }
                     $scope.params.group(group.groupable($scope));
-                }
-            } else{
-                if (group === $scope.$selGroup){
-                    changeSortDirection();
-                } else {
+                } else{
                     $scope.params.group(group);
                 }
             }
