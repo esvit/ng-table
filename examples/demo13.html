@@ -28,7 +28,7 @@
                 <col width="50%"/>
             </colgroup>
             <tr class="ng-table-group" ng-repeat-start="group in $groups">
-                <td colspan="2">
+                <td colspan="{{$groups.visibleColumnCount}}">
                     <a href="" ng-click="group.$hideRows = !group.$hideRows">
                         <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
                         <strong>{{ group.value }}</strong>

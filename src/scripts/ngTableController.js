@@ -203,7 +203,11 @@
                 }
             };
 
-
+            function getVisibleColumns(){
+                return ($scope.$columns || []).filter(function(c){
+                    return c.show($scope);
+                });
+            }
 
             function commonInit(){
                 ngTableEventsChannel.onAfterReloadData(bindDataToScope, $scope, isMyPublisher);
@@ -211,7 +215,8 @@
 
                 function bindDataToScope(params, newDatapage){
                     if (params.hasGroup()) {
-                        $scope.$groups = newDatapage;
+                        $scope.$groups = newDatapage || [];
+                        $scope.$groups.visibleColumnCount = getVisibleColumns().length;
                     } else {
                         $scope.$data = newDatapage;
                     }
