@@ -32,7 +32,7 @@
                         groupRow,
                         rows = [];
 
-                    angular.forEach(angular.element(element.find('tr')), function(tr) {
+                    angular.forEach(element.find('tr'), function(tr) {
                         rows.push(angular.element(tr))
                     });
                     dataRow = rows.filter(function(tr){

@@ -29,7 +29,7 @@
                 var row;
 
                 // IE 8 fix :not(.ng-table-group) selector
-                angular.forEach(angular.element(tElement.find('tr')), function(tr) {
+                angular.forEach(tElement.find('tr'), function(tr) {
                     tr = angular.element(tr);
                     if (!tr.hasClass('ng-table-group') && !row) {
                         row = tr;
