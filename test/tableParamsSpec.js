@@ -189,6 +189,7 @@ describe('NgTableParams', function () {
 
             expect(params.hasGroup()).toBe(true);
             expect(params.hasGroup(angular.identity)).toBe(true);
+            expect(params.hasGroup(angular.identity, params.settings().groupOptions.defaultSort)).toBe(true);
             expect(params.group()).toEqual(angular.identity);
 
 
@@ -247,7 +248,7 @@ describe('NgTableParams', function () {
             expect(params.group()).toEqual({ age: 'asc' });
         });
 
-        it('should not apply defaultSort from groupOptions when explicitly set to undefined/null', function(){
+        it('should not apply defaultSort from groupOptions when explicitly set to empty string', function(){
             var params = new NgTableParams({
                 group: 'role'
             }, {
@@ -255,11 +256,14 @@ describe('NgTableParams', function () {
             });
             expect(params.group()).toEqual({ role: 'desc' }); // checking assumptions
 
-            params.group({ role: undefined});
-            expect(params.group()).toEqual({ role: undefined });
+            params.group({ role: ''});
+            expect(params.group()).toEqual({ role: '' });
 
-            params.group({ age: null});
-            expect(params.group()).toEqual({ age: null });
+            params.group({ age: undefined});
+            expect(params.group()).toEqual({ age: 'desc' });
+
+            params.group({ role: null});
+            expect(params.group()).toEqual({ role: 'desc' });
         });
     });
 
@@ -445,12 +449,14 @@ describe('NgTableParams', function () {
         });
 
         it('should use group function to group data', function () {
+            var grouper = function (item) {
+                return item.name[0];
+            };
+            grouper.sortDirection = '';
             var tp = createNgTableParams({
                 count: 2,
                 sorting: {name: 'desc'},
-                group: function (item) {
-                    return item.name[0];
-                }
+                group: grouper
             }, {data: data});
 
             var actualRoleGroups;

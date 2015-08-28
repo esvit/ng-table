@@ -86,12 +86,23 @@
             };
 
             function parseGroup(group){
+                var defaultSort = settings.groupOptions && settings.groupOptions.defaultSort;
                 if (angular.isFunction(group)) {
+                    if (group.sortDirection == null){
+                        group.sortDirection = defaultSort;
+                    }
                     return group;
                 } else if (angular.isString(group)) {
                     var grp = {};
-                    grp[group] = settings.groupOptions && settings.groupOptions.defaultSort;
+                    grp[group] = defaultSort;
                     return grp;
+                } else if (angular.isObject(group)) {
+                    for (var key in group) {
+                        if (group[key] == null){
+                            group[key] = defaultSort;
+                        }
+                    }
+                    return group;
                 } else {
                     return group;
                 }
