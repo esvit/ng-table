@@ -59,11 +59,11 @@
             return getData;
 
             function getFilterFn(params) {
-                var settings = params.settings();
-                if (angular.isFunction(settings.filterFn)){
-                    return settings.filterFn;
+                var filterOptions = params.settings().filterOptions;
+                if (angular.isFunction(filterOptions.filterFn)){
+                    return filterOptions.filterFn;
                 } else {
-                    return $filter(settings.filterFilterName || provider.filterFilterName);
+                    return $filter(filterOptions.filterFilterName || provider.filterFilterName);
                 }
             }
 
@@ -83,7 +83,7 @@
                     return result;
                 }, {});
                 var filterFn = getFilterFn(params);
-                return filterFn.call(params, data, parsedFilter, params.settings().filterComparator);
+                return filterFn.call(params, data, parsedFilter, params.settings().filterOptions.filterComparator);
             }
 
             function applyPaging(data, params) {

@@ -194,9 +194,10 @@ describe('ngTableDefaultGetData', function () {
 
                 it('function', function () {
                     // given
-                    tableParams.settings({filterComparator: function(actual, expected){
+                    var comparer = function (actual, expected) {
                         return angular.equals(actual, expected);
-                    }});
+                    };
+                    tableParams.settings({ filterOptions: { filterComparator: comparer }});
                     tableParams.filter({age: 1});
                     // when
                     var actualResults = ngTableDefaultGetData([{age: 10}, {age: 1}, {age: 101}, {age: 2}], tableParams);
@@ -206,7 +207,7 @@ describe('ngTableDefaultGetData', function () {
 
                 it('"true"', function () {
                     // given
-                    tableParams.settings({filterComparator: true});
+                    tableParams.settings({ filterOptions: { filterComparator: true }});
                     tableParams.filter({age: 1});
                     // when
                     var actualResults = ngTableDefaultGetData([{age: 10}, {age: 1}, {age: 101}, {age: 2}], tableParams);
@@ -216,7 +217,7 @@ describe('ngTableDefaultGetData', function () {
 
                 it('"false"', function () {
                     // given
-                    tableParams.settings({filterComparator: false});
+                    tableParams.settings({ filterOptions: { filterComparator: false }});
                     tableParams.filter({age: 1});
                     // when
                     var actualResults = ngTableDefaultGetData([{age: 10}, {age: 1}, {age: 101}, {age: 2}], tableParams);
@@ -226,7 +227,7 @@ describe('ngTableDefaultGetData', function () {
 
                 it('"undefined" (the default)', function () {
                     // given
-                    tableParams.settings({filterComparator: undefined});
+                    tableParams.settings({ filterOptions: { filterComparator: undefined }});
                     tableParams.filter({age: 1});
                     // when
                     var actualResults = ngTableDefaultGetData([{age: 10}, {age: 1}, {age: 101}, {age: 2}], tableParams);
@@ -266,7 +267,7 @@ describe('ngTableDefaultGetData', function () {
 
         it('filterFilterName override', function () {
             // given
-            tableParams.settings({filterFilterName: 'myCustomFilter'});
+            tableParams.settings({ filterOptions: {filterFilterName: 'myCustomFilter'}});
             tableParams.filter({ages: [1, 2]});
             // when
             var actualResults = ngTableDefaultGetData([{age: 1}, {age: 2}, {age: 3}], tableParams);
@@ -276,7 +277,7 @@ describe('ngTableDefaultGetData', function () {
 
         it('`this` context of custom filter should be set to the NgTableParams instance', inject(function (myCustomFilterFilter) {
             // given
-            tableParams.settings({filterFilterName: 'myCustomFilter'});
+            tableParams.settings({ filterOptions: {filterFilterName: 'myCustomFilter'}});
             tableParams.filter({ages: [1, 2]});
             // when
             ngTableDefaultGetData([{age: 1}, {age: 2}, {age: 3}], tableParams);
@@ -286,11 +287,12 @@ describe('ngTableDefaultGetData', function () {
 
         it('custom filter function', function () {
             // given
-            tableParams.settings({filterFn: function(data, criteriaObj/*, comparator*/){
+            var filterFn = function (data, criteriaObj/*, comparator*/) {
                 return data.filter(function (p) {
                     return criteriaObj.ages.indexOf(p.age) !== -1;
                 });
-            }});
+            };
+            tableParams.settings({ filterOptions: { filterFn: filterFn }});
             tableParams.filter({ages: [1, 2]});
             // when
             var actualResults = ngTableDefaultGetData([{age: 1}, {age: 2}, {age: 3}], tableParams);
@@ -301,7 +303,7 @@ describe('ngTableDefaultGetData', function () {
         it('`this` context of custom filter function should be set to the NgTableParams instance', function () {
             // given
             var filterFnSpy = jasmine.createSpy('filterFn', angular.identity).and.callThrough();
-            tableParams.settings({ filterFn: filterFnSpy});
+            tableParams.settings({ filterOptions: { filterFn: filterFnSpy }});
             tableParams.filter({age: 1});
             // when
             var actualResults = ngTableDefaultGetData([{age: 1}], tableParams);

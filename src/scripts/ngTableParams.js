@@ -35,6 +35,13 @@
                         $log.debug.apply(this, arguments);
                     }
                 },
+                defaultFilterOptions = {
+                    filterComparator: undefined, // look for a substring match in case insensitive way
+                    filterDelay: 750,
+                    filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
+                    filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
+                    filterLayout: 'stack' // alternative: 'horizontal'
+                },
                 defaultGroupOptions = {
                     defaultSort: 'asc', // set to 'asc' or 'desc' to apply sorting to groups
                     isExpanded: true
@@ -122,6 +129,9 @@
                     // todo: don't modify newSettings object: this introduces unexpected side effects;
                     // instead take a copy of newSettings
 
+                    if (newSettings.filterOptions){
+                        newSettings.filterOptions = angular.extend({}, settings.filterOptions, newSettings.filterOptions);
+                    }
                     if (newSettings.groupOptions){
                         newSettings.groupOptions = angular.extend({}, settings.groupOptions, newSettings.groupOptions);
                     }
@@ -667,12 +677,11 @@
                     var gotData = $q.when(adaptedFn.call(settings, params));
                     return gotData.then(function(data) {
                         var groups = {};
-                        var groupOptions = settings.groupOptions || defaultGroupOptions;
                         angular.forEach(data, function(item) {
                             var groupName = groupFn(item);
                             groups[groupName] = groups[groupName] || {
                                     data: [],
-                                    $hideRows: !groupOptions.isExpanded,
+                                    $hideRows: !settings.groupOptions.isExpanded,
                                     value: groupName
                                 };
                             groups[groupName].data.push(item);
@@ -719,11 +728,7 @@
                 data: null, //allows data to be set when table is initialized
                 total: 0,
                 defaultSort: 'desc',
-                filterComparator: undefined, // look for a substring match in case insensitive way
-                filterDelay: 750,
-                filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
-                filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
-                filterLayout: 'stack', // alternative: 'horizontal'
+                filterOptions: angular.copy(defaultFilterOptions),
                 groupOptions: angular.copy(defaultGroupOptions),
                 counts: [10, 25, 50, 100],
                 interceptors: [],

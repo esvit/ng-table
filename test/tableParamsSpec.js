@@ -29,9 +29,10 @@ describe('NgTableParams', function () {
             settings = arguments[1];
         }
 
-        settings = angular.extend({}, {
+        settings = angular.extend({}, settings);
+        settings.filterOptions = angular.extend({}, {
             filterDelay: 0
-        }, settings);
+        }, settings.filterOptions);
         var tableParams = new NgTableParams(initialParams, settings);
         spyOn(tableParams.settings(), 'getData').and.callThrough();
         return tableParams;
@@ -280,10 +281,13 @@ describe('NgTableParams', function () {
             paginationMaxBlocks: 11,
             paginationMinBlocks: 5,
             sortingIndicator: 'span',
-            filterComparator: undefined,
-            filterDelay: 750,
-            filterFilterName: undefined,
-            filterFn: undefined,
+            filterOptions: {
+                filterComparator: undefined,
+                filterDelay: 750,
+                filterFilterName: undefined,
+                filterFn: undefined,
+                filterLayout: 'stack'
+            },
             groupOptions: { defaultSort: 'asc', isExpanded: true }
         };
         expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
@@ -629,7 +633,7 @@ describe('NgTableParams', function () {
         var settings = tp.settings();
         expect(settings.counts.length).toEqual(0);
         expect(settings.interceptors.length).toEqual(0);
-        expect(settings.filterDelay).toEqual(750);
+        expect(settings.filterOptions.filterDelay).toEqual(750);
 
         ngTableDefaults.settings.interceptors = [ { response: angular.identity }];
         tp = new NgTableParams();

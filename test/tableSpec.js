@@ -35,9 +35,10 @@ describe('ng-table', function() {
             settings = arguments[1];
         }
 
-        settings = angular.extend({}, {
+        settings = angular.extend({}, settings);
+        settings.filterOptions = angular.extend({}, {
             filterDelay: 0
-        }, settings);
+        }, settings.filterOptions);
         var tableParams = new NgTableParams(initialParams, settings);
         spyOn(tableParams.settings(), 'getData').and.callThrough();
         return tableParams;
@@ -455,7 +456,7 @@ describe('ng-table', function() {
 
                 // 'text' is a shortcut alias for the template ng-table/filters/text
                 scope.usernameFilter = {username: 'text'};
-                tp = scope.tableParams = createNgTableParams({ filterDelay: 10 });
+                tp = scope.tableParams = createNgTableParams({ filterOptions: { filterDelay: 10 } });
                 scope.$digest();
             }));
 
@@ -979,7 +980,7 @@ describe('ng-table', function() {
 
         it('should reload 1 time when binding a new settings data value and changing the filter', function(){
             // given
-            var tp = createNgTableParams({filterDelay: 100, data: [{age: 1}, {age: 2}]});
+            var tp = createNgTableParams({filterOptions: { filterDelay: 100 }, data: [{age: 1}, {age: 2}]});
             scope.tableParams = tp;
             scope.$digest();
             tp.settings().getData.calls.reset();
@@ -995,7 +996,7 @@ describe('ng-table', function() {
 
         it('should reload 1 time when multiple filter changes are debounced', function(){
             // given
-            var tp = createNgTableParams({filterDelay: 100, data: [{age: 1}, {age: 2}]});
+            var tp = createNgTableParams({filterOptions: { filterDelay: 100 }, data: [{age: 1}, {age: 2}]});
             scope.tableParams = tp;
             scope.$digest();
             tp.settings().getData.calls.reset();
@@ -1012,7 +1013,7 @@ describe('ng-table', function() {
 
         it('should reload 1 time when initial load fails', inject(function($q){
             // given
-            var tp = createNgTableParams({filterDelay: 0, getData: function(){
+            var tp = createNgTableParams({ getData: function(){
                 return $q.reject('BANG!');
             }});
 
@@ -1028,7 +1029,7 @@ describe('ng-table', function() {
             var settings = {
                 counts: [1],
                 data: [{age: 1}, {age: 2}],
-                filterDelay: 100
+                filterOptions: { filterDelay: 100 }
             };
             var tp = createNgTableParams({ count: 1, page: 2 }, settings);
             scope.tableParams = tp;
@@ -1062,7 +1063,7 @@ describe('ng-table', function() {
         });
 
         it('change to filter that fails to load should not cause infinite reload loop', inject(function($q){
-            var tp = createNgTableParams({ filterDelay: 0, getData: function(){
+            var tp = createNgTableParams({ getData: function(){
                 if (tp.settings().getData.calls.count() > 1){
                     return $q.reject('BANG!');
                 }
@@ -1127,7 +1128,7 @@ describe('ng-table', function() {
 
         it('should not reload when filter value is assigned the same value', function(){
             // given
-            var tp = createNgTableParams({ filter: {age: 10} }, { filterDelay: 0 });
+            var tp = createNgTableParams({ filter: {age: 10} }, { });
             scope.tableParams = tp;
             scope.$digest();
             tp.settings().getData.calls.reset();
@@ -1141,7 +1142,7 @@ describe('ng-table', function() {
 
         it('should reload when filter value changes', function(){
             // given
-            var tp = createNgTableParams({ filter: {age: 10} }, { filterDelay: 0 });
+            var tp = createNgTableParams({ filter: {age: 10} }, {});
             scope.tableParams = tp;
             scope.$digest();
             tp.settings().getData.calls.reset();

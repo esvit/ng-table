@@ -45,14 +45,15 @@
                 $scope.params.settings().$scope = $scope;
 
                 var currentParams = $scope.params;
+                var filterOptions = currentParams.settings().filterOptions;
 
                 if (currentParams.hasFilterChanges()) {
                     var applyFilter = function () {
                         currentParams.page(1);
                         currentParams.reload();
                     };
-                    if (currentParams.settings().filterDelay) {
-                        delayFilter(applyFilter, currentParams.settings().filterDelay);
+                    if (filterOptions.filterDelay) {
+                        delayFilter(applyFilter, filterOptions.filterDelay);
                     } else {
                         applyFilter();
                     }
