@@ -297,11 +297,11 @@
             return getData;
 
             function getFilterFn(params) {
-                var settings = params.settings();
-                if (angular.isFunction(settings.filterFn)){
-                    return settings.filterFn;
+                var filterOptions = params.settings().filterOptions;
+                if (angular.isFunction(filterOptions.filterFn)){
+                    return filterOptions.filterFn;
                 } else {
-                    return $filter(settings.filterFilterName || provider.filterFilterName);
+                    return $filter(filterOptions.filterFilterName || provider.filterFilterName);
                 }
             }
 
@@ -321,7 +321,7 @@
                     return result;
                 }, {});
                 var filterFn = getFilterFn(params);
-                return filterFn.call(params, data, parsedFilter, params.settings().filterComparator);
+                return filterFn.call(params, data, parsedFilter, params.settings().filterOptions.filterComparator);
             }
 
             function applyPaging(data, params) {
@@ -545,10 +545,19 @@
                         $log.debug.apply(this, arguments);
                     }
                 },
+                defaultFilterOptions = {
+                    filterComparator: undefined, // look for a substring match in case insensitive way
+                    filterDelay: 500,
+                    filterDelayThreshold: 10000, // size of data array that will trigger the filterDelay being applied
+                    filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
+                    filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
+                    filterLayout: 'stack' // alternative: 'horizontal'
+                },
                 defaultGroupOptions = {
                     defaultSort: 'asc', // set to 'asc' or 'desc' to apply sorting to groups
                     isExpanded: true
-                };
+                },
+                defaultFettingsFns = getDefaultSettingFns();
 
             this.data = [];
 
@@ -632,6 +641,9 @@
                     // todo: don't modify newSettings object: this introduces unexpected side effects;
                     // instead take a copy of newSettings
 
+                    if (newSettings.filterOptions){
+                        newSettings.filterOptions = angular.extend({}, settings.filterOptions, newSettings.filterOptions);
+                    }
                     if (newSettings.groupOptions){
                         newSettings.groupOptions = angular.extend({}, settings.groupOptions, newSettings.groupOptions);
                     }
@@ -653,6 +665,10 @@
 
                     var originalDataset = settings.data;
                     settings = angular.extend(settings, newSettings);
+
+                    if (angular.isArray(newSettings.data)) {
+                        optimizeFilterDelay();
+                    }
 
                     // note: using != as want null and undefined to be treated the same
                     var hasDatasetChanged = newSettings.hasOwnProperty('data') && (newSettings.data != originalDataset);
@@ -1085,6 +1101,15 @@
                 return !!(errParamsMemento && angular.equals(errParamsMemento, createComparableParams()));
             };
 
+            function optimizeFilterDelay(){
+                // don't debounce by default filter input when working with small synchronous datasets
+                if (settings.filterOptions.filterDelay === defaultFilterOptions.filterDelay &&
+                    settings.total <= settings.filterOptions.filterDelayThreshold &&
+                    settings.getData === defaultFettingsFns.getData){
+                    settings.filterOptions.filterDelay = 0;
+                }
+            }
+
             this.reloadPages = (function() {
                 var currentPages;
                 return function(){
@@ -1177,12 +1202,11 @@
                     var gotData = $q.when(adaptedFn.call(settings, params));
                     return gotData.then(function(data) {
                         var groups = {};
-                        var groupOptions = settings.groupOptions || defaultGroupOptions;
                         angular.forEach(data, function(item) {
                             var groupName = groupFn(item);
                             groups[groupName] = groups[groupName] || {
                                     data: [],
-                                    $hideRows: !groupOptions.isExpanded,
+                                    $hideRows: !settings.groupOptions.isExpanded,
                                     value: groupName
                                 };
                             groups[groupName].data.push(item);
@@ -1229,11 +1253,7 @@
                 data: null, //allows data to be set when table is initialized
                 total: 0,
                 defaultSort: 'desc',
-                filterComparator: undefined, // look for a substring match in case insensitive way
-                filterDelay: 750,
-                filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
-                filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
-                filterLayout: 'stack', // alternative: 'horizontal'
+                filterOptions: angular.copy(defaultFilterOptions),
                 groupOptions: angular.copy(defaultGroupOptions),
                 counts: [10, 25, 50, 100],
                 interceptors: [],
@@ -1242,7 +1262,7 @@
                 sortingIndicator: 'span'
             };
 
-            this.settings(getDefaultSettingFns());
+            this.settings(defaultFettingsFns);
             this.settings(ngTableDefaults.settings);
             this.settings(baseSettings);
             this.parameters(baseParameters, true);
@@ -1313,14 +1333,15 @@
                 $scope.params.settings().$scope = $scope;
 
                 var currentParams = $scope.params;
+                var filterOptions = currentParams.settings().filterOptions;
 
                 if (currentParams.hasFilterChanges()) {
                     var applyFilter = function () {
                         currentParams.page(1);
                         currentParams.reload();
                     };
-                    if (currentParams.settings().filterDelay) {
-                        delayFilter(applyFilter, currentParams.settings().filterDelay);
+                    if (filterOptions.filterDelay) {
+                        delayFilter(applyFilter, filterOptions.filterDelay);
                     } else {
                         applyFilter();
                     }
@@ -2115,7 +2136,7 @@
 })();
 
 angular.module('ngTable').run(['$templateCache', function ($templateCache) {
-	$templateCache.put('ng-table/filterRow.html', '<tr ng-show="show_filter" class="ng-table-filters"> <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter" ng-class="params.settings().filterLayout===\'horizontal\' ? \'filter-horizontal\' : \'\'"> <div ng-repeat="(name, filter) in $column.filter(this)" ng-include="config.getTemplateUrl(filter)" class="filter-cell" ng-class="[getFilterCellCss($column.filter(this), params.settings().filterLayout), $last ? \'last\' : \'\']"> </div> </th> </tr> ');
+	$templateCache.put('ng-table/filterRow.html', '<tr ng-show="show_filter" class="ng-table-filters"> <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter" ng-class="params.settings().filterOptions.filterLayout===\'horizontal\' ? \'filter-horizontal\' : \'\'"> <div ng-repeat="(name, filter) in $column.filter(this)" ng-include="config.getTemplateUrl(filter)" class="filter-cell" ng-class="[getFilterCellCss($column.filter(this), params.settings().filterOptions.filterLayout), $last ? \'last\' : \'\']"> </div> </th> </tr> ');
 	$templateCache.put('ng-table/filters/number.html', '<input type="number" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control" placeholder="{{getFilterPlaceholderValue(filter, name)}}"/> ');
 	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" multiple ng-multiple="true" ng-model="params.filter()[name]" class="filter filter-select-multiple form-control" name="{{name}}"> </select> ');
 	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $selectData" ng-table-select-filter-ds="$column" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="filter filter-select form-control" name="{{name}}"> <option style="display:none" value=""></option> </select> ');

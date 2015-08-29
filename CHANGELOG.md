@@ -1,3 +1,27 @@
+<a name="1.0.0-beta.1"></a>
+# 1.0.0-beta.1 (2015-08-29)
+
+
+## Bug Fixes
+
+- **NgTableParams:** filterDelay too high
+  ([6a3692dc](https://github.com/esvit/ng-table/commit/6a3692dc4fc102b41d4ac80f7c90a5c327a96a31))
+
+
+## Features
+
+- **NgTableParams:** optimize filter debounce for in-memory data arrays
+  ([8010e07f](https://github.com/esvit/ng-table/commit/8010e07f18faf8fde5e30e0d7233a79221317651))
+
+
+## Breaking Changes
+
+- **NgTableParams:** due to [449ab623](https://github.com/esvit/ng-table/commit/449ab6230c4b6ce39111851f3e605da3d8281786),
+
+
+Move `settings().filterDelay` to `settings().filterOptions.filterDelay`
+
+
 <a name="1.0.0-alpha.8"></a>
 # 1.0.0-alpha.8 (2015-08-28)
 
