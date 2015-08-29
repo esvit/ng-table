@@ -285,7 +285,7 @@ describe('NgTableParams', function () {
                 sortingIndicator: 'span',
                 filterOptions: {
                     filterComparator: undefined,
-                    filterDelay: 750,
+                    filterDelay: 500,
                     filterDelayThreshold: 10000,
                     filterFilterName: undefined,
                     filterFn: undefined,
@@ -339,13 +339,13 @@ describe('NgTableParams', function () {
             var tableParams = new NgTableParams({}, { data: [1,2], getData: function(){
                 // am I sync or async?
             }});
-            expect(tableParams.settings().filterOptions.filterDelay).toBe(750);
+            expect(tableParams.settings().filterOptions.filterDelay).toBe(500);
         });
 
         it('should set filterDelay when data exceeds filterDelayThreshold', function(){
             // given
             var tableParams = new NgTableParams({}, { filterOptions: { filterDelayThreshold: 5 }, data: [,2,3,4,5,6] });
-            expect(tableParams.settings().filterOptions.filterDelay).toBe(750);
+            expect(tableParams.settings().filterOptions.filterDelay).toBe(500);
         });
 
         it('should allow filterDelay to be set explicitly', function(){
@@ -669,7 +669,7 @@ describe('NgTableParams', function () {
         var settings = tp.settings();
         expect(settings.counts.length).toEqual(0);
         expect(settings.interceptors.length).toEqual(0);
-        expect(settings.filterOptions.filterDelay).toEqual(750);
+        expect(settings.filterOptions.filterDelay).toEqual(500);
 
         ngTableDefaults.settings.interceptors = [ { response: angular.identity }];
         tp = new NgTableParams();
