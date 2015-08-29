@@ -268,55 +268,91 @@ describe('NgTableParams', function () {
         });
     });
 
-    it('settings', function () {
-        var params = new NgTableParams();
+    describe('settings', function(){
 
-        var expectedSettings = {
-            $loading: false,
-            data: null,
-            total: 0,
-            defaultSort: 'desc',
-            counts: [10, 25, 50, 100],
-            interceptors: [],
-            paginationMaxBlocks: 11,
-            paginationMinBlocks: 5,
-            sortingIndicator: 'span',
-            filterOptions: {
-                filterComparator: undefined,
-                filterDelay: 750,
-                filterFilterName: undefined,
-                filterFn: undefined,
-                filterLayout: 'stack'
-            },
-            groupOptions: { defaultSort: 'asc', isExpanded: true }
-        };
-        expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
-        expect(params.settings().getData).toEqual(jasmine.any(Function));
-        expect(params.settings().getGroups).toEqual(jasmine.any(Function));
+        it('defaults', function () {
+            var params = new NgTableParams();
 
-        params = new NgTableParams({}, {
-            total: 100,
-            counts: [1,2],
-            groupOptions: { isExpanded: false } });
+            var expectedSettings = {
+                $loading: false,
+                data: null,
+                total: 0,
+                defaultSort: 'desc',
+                counts: [10, 25, 50, 100],
+                interceptors: [],
+                paginationMaxBlocks: 11,
+                paginationMinBlocks: 5,
+                sortingIndicator: 'span',
+                filterOptions: {
+                    filterComparator: undefined,
+                    filterDelay: 750,
+                    filterDelayThreshold: 10000,
+                    filterFilterName: undefined,
+                    filterFn: undefined,
+                    filterLayout: 'stack'
+                },
+                groupOptions: { defaultSort: 'asc', isExpanded: true }
+            };
+            expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
+            expect(params.settings().getData).toEqual(jasmine.any(Function));
+            expect(params.settings().getGroups).toEqual(jasmine.any(Function));
 
-        expectedSettings.total = 100;
-        expectedSettings.counts = [1,2];
-        expectedSettings.groupOptions = { defaultSort: 'asc', isExpanded: false };
-        expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
-    });
+            params = new NgTableParams({}, {
+                total: 100,
+                counts: [1,2],
+                groupOptions: { isExpanded: false } });
 
-    it('changing settings().data should reset page to 1', function(){
-        // given
-        var tableParams = createNgTableParams({ count: 1, page: 2 }, { data: [1,2,3]});
-        tableParams.reload();
-        scope.$digest();
-        expect(tableParams.page()).toBe(2); // checking assumptions
+            expectedSettings.total = 100;
+            expectedSettings.counts = [1,2];
+            expectedSettings.groupOptions = { defaultSort: 'asc', isExpanded: false };
+            expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
+        });
 
-        // when
-        tableParams.settings({ data: [1,2,3, 4]});
+        it('changing settings().data should reset page to 1', function(){
+            // given
+            var tableParams = createNgTableParams({ count: 1, page: 2 }, { data: [1,2,3]});
+            tableParams.reload();
+            scope.$digest();
+            expect(tableParams.page()).toBe(2); // checking assumptions
 
-        // then
-        expect(tableParams.page()).toBe(1);
+            // when
+            tableParams.settings({ data: [1,2,3, 4]});
+
+            // then
+            expect(tableParams.page()).toBe(1);
+        });
+
+        it('should not set filterDelay when working with synchronous data', function(){
+            // given
+            var tableParams = new NgTableParams({}, { data: [1,2,3]});
+            expect(tableParams.settings().filterOptions.filterDelay).toBe(0);
+        });
+
+        it('should not set filterDelay when working with synchronous data (empty dataset)', function(){
+            // given
+            var tableParams = new NgTableParams({}, { data: []});
+            expect(tableParams.settings().filterOptions.filterDelay).toBe(0);
+        });
+
+        it('should set filterDelay when not certain working with synchronous data', function(){
+            // given
+            var tableParams = new NgTableParams({}, { data: [1,2], getData: function(){
+                // am I sync or async?
+            }});
+            expect(tableParams.settings().filterOptions.filterDelay).toBe(750);
+        });
+
+        it('should set filterDelay when data exceeds filterDelayThreshold', function(){
+            // given
+            var tableParams = new NgTableParams({}, { filterOptions: { filterDelayThreshold: 5 }, data: [,2,3,4,5,6] });
+            expect(tableParams.settings().filterOptions.filterDelay).toBe(750);
+        });
+
+        it('should allow filterDelay to be set explicitly', function(){
+            // given
+            var tableParams = new NgTableParams({}, { filterOptions: { filterDelay: 100}, data: [1,2] });
+            expect(tableParams.settings().filterOptions.filterDelay).toBe(100);
+        });
     });
 
     describe('reload', function(){

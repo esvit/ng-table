@@ -38,6 +38,7 @@
                 defaultFilterOptions = {
                     filterComparator: undefined, // look for a substring match in case insensitive way
                     filterDelay: 750,
+                    filterDelayThreshold: 10000, // size of data array that will trigger the filterDelay being applied
                     filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
                     filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
                     filterLayout: 'stack' // alternative: 'horizontal'
@@ -45,7 +46,8 @@
                 defaultGroupOptions = {
                     defaultSort: 'asc', // set to 'asc' or 'desc' to apply sorting to groups
                     isExpanded: true
-                };
+                },
+                defaultFettingsFns = getDefaultSettingFns();
 
             this.data = [];
 
@@ -153,6 +155,10 @@
 
                     var originalDataset = settings.data;
                     settings = angular.extend(settings, newSettings);
+
+                    if (angular.isArray(newSettings.data)) {
+                        optimizeFilterDelay();
+                    }
 
                     // note: using != as want null and undefined to be treated the same
                     var hasDatasetChanged = newSettings.hasOwnProperty('data') && (newSettings.data != originalDataset);
@@ -585,6 +591,15 @@
                 return !!(errParamsMemento && angular.equals(errParamsMemento, createComparableParams()));
             };
 
+            function optimizeFilterDelay(){
+                // don't debounce by default filter input when working with small synchronous datasets
+                if (settings.filterOptions.filterDelay === defaultFilterOptions.filterDelay &&
+                    settings.total <= settings.filterOptions.filterDelayThreshold &&
+                    settings.getData === defaultFettingsFns.getData){
+                    settings.filterOptions.filterDelay = 0;
+                }
+            }
+
             this.reloadPages = (function() {
                 var currentPages;
                 return function(){
@@ -737,7 +752,7 @@
                 sortingIndicator: 'span'
             };
 
-            this.settings(getDefaultSettingFns());
+            this.settings(defaultFettingsFns);
             this.settings(ngTableDefaults.settings);
             this.settings(baseSettings);
             this.parameters(baseParameters, true);
