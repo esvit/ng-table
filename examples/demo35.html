@@ -28,7 +28,7 @@
                     {{user.name}}
                 </td>
                 <td data-title="'Age'" filter="{ 'age': 'number' }"
-                    summary="'age'" summary-class="'test-class'">
+                    summary="'age'" summary-class="'test-class'" summary-filter="'currency'">
                     {{user.age}}
                 </td>
             </tr>
@@ -69,7 +69,9 @@
 
                var summaryValues = {};
                var summaryFuncs = params.settings().summaries;
-               angular.forEach(summaryFuncs, function(summaryFunc) {
+               var summaryFilterFuncs = params.settings().summaryFilters;
+
+               angular.forEach(summaryFuncs, function(summaryFunc, key) {
                    summaryIndex = summaryFunc();
 
                    if (summaryIndex) {
@@ -77,9 +79,17 @@
                        angular.forEach(collection, function(row){
                            summaryValues[summaryIndex] += row[summaryIndex];
                        });
+
+                       var summaryFilter = summaryFilterFuncs[key]();
+                       if (summaryFilter) {
+                           var actualFilter = $filter(summaryFilter);
+                           summaryValues[summaryIndex] =
+                                actualFilter(summaryValues[summaryIndex]);
+                       }
                    }
                });
-               params.summaryValues(summaryValues);
+
+                params.summaryValues(summaryValues);
 
                $defer.resolve(
                    collection.slice((params.page() - 1) * params.count(),

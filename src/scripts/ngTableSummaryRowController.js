@@ -18,5 +18,9 @@
         $scope.params.settings().summaries = $scope.$columns.map(function($column){
             return $column.summary;
         });
+
+        $scope.params.settings().summaryFilters = $scope.$columns.map(function($column){
+            return $column.summaryFilter;
+        });
     }
 })();

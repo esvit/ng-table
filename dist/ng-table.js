@@ -410,6 +410,7 @@
             sortable: function(){ return false; },
             summary: function() { return false; },
             summaryClass: function(){ return ''; },
+            summaryFilter: function(){ return false; },
             show: function(){ return true; },
             title: function(){ return ''; },
             titleAlt: function(){ return ''; }
@@ -1402,6 +1403,7 @@
                             filter: parsedAttribute('filter'),
                             summary: parsedAttribute('summary'),
                             summaryClass: parsedAttribute('summary-class'),
+                            summaryFilter: parsedAttribute('summary-filter'),
                             headerTemplateURL: parsedAttribute('header'),
                             filterData: parsedAttribute('filter-data'),
                             show: (el.attr("ng-if") ? function (scope) {
@@ -1729,6 +1731,10 @@
     function ngTableSummaryRowController($scope){
         $scope.params.settings().summaries = $scope.$columns.map(function($column){
             return $column.summary;
+        });
+
+        $scope.params.settings().summaryFilters = $scope.$columns.map(function($column){
+            return $column.summaryFilter;
         });
     }
 })();
