@@ -28,7 +28,7 @@
                     {{user.name}}
                 </td>
                 <td data-title="'Age'" filter="{ 'age': 'number' }"
-                    summary="'age'">
+                    summary="'age'" summary-class="'test-class'">
                     {{user.age}}
                 </td>
             </tr>
@@ -74,7 +74,6 @@
 
                    if (summaryIndex) {
                        summaryValues[summaryIndex] = 0;
-                       debugger;
                        angular.forEach(collection, function(row){
                            summaryValues[summaryIndex] += row[summaryIndex];
                        });

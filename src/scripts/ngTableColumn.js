@@ -24,6 +24,7 @@
             headerTitle: function(){ return ''; },
             sortable: function(){ return false; },
             summary: function() { return false; },
+            summaryClass: function(){ return ''; },
             show: function(){ return true; },
             title: function(){ return ''; },
             titleAlt: function(){ return ''; }

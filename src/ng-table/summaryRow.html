@@ -1,7 +1,8 @@
 <tr>
    <td
       ng-repeat="$column in $columns"
-      ng-if="$column.show(this)">
+      ng-if="$column.show(this)"
+      ng-class="$column.summaryClass()">
          {{params.summaryValues()[$column.summary(this)]}}
    </td>
 </tr>
