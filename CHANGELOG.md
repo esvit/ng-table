@@ -1,3 +1,13 @@
+<a name="1.0.0-beta.2"></a>
+# 1.0.0-beta.2 (2015-09-02)
+
+
+## Bug Fixes
+
+- **ngTableSelectFilterDs:** not binding to scope an array returned asynchronously
+  ([4c063685](https://github.com/esvit/ng-table/commit/4c0636857c804f5d050dbf83698f0615ee1216f9))
+
+
 <a name="1.0.0-beta.1"></a>
 # 1.0.0-beta.1 (2015-08-29)
 

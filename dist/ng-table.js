@@ -2103,10 +2103,17 @@
     ngTableSelectFilterDsController.$inject = ['$scope', '$parse', '$attrs', '$q'];
     function ngTableSelectFilterDsController($scope, $parse, $attrs, $q){
 
+        var $column = {};
         init();
 
         function init(){
-            var $column = $parse($attrs.ngTableSelectFilterDs)($scope);
+            $column = $parse($attrs.ngTableSelectFilterDs)($scope);
+            $scope.$watch(function(){
+                return $column.data;
+            }, bindDataSource);
+        }
+
+        function bindDataSource(){
             getSelectListData($column).then(function(data){
                 if (data && !hasEmptyOption(data)){
                     data.unshift({ id: '', title: ''});
