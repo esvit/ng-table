@@ -38,6 +38,23 @@ describe('ngTableSelectFilterDs directive', function(){
             expect($scope.$selectData).toEqual([]);
         });
 
+        it('should keep the array on scope in sync with data array on $column', function(){
+            // given
+            $scope.$column = {
+                data: null
+            };
+            $compile(elem)($scope);
+            $scope.$digest();
+
+            // when
+            var newArray = [{id: 1, title: 'A'}];
+            $scope.$column.data = newArray;
+            $scope.$digest();
+
+            // then
+            expect($scope.$selectData).toBe(newArray);
+        });
+
         it('should add empty option to array', function(){
             // note: modifying the array supplied is not great as this can cause unexpected side effects
             // however, it does mean that a consumer can update the array and have this reflected in the select list
@@ -84,6 +101,23 @@ describe('ngTableSelectFilterDs directive', function(){
             // then
             expect(data).toEqual([{id: '', title: ''}, {id: 1, title: 'A'}]);
         });
+
+        it('should add empty option to a new arriving array', function(){
+            // given
+            $scope.$column = {
+                data: [{id: 1, title: 'A'}]
+            };
+            $compile(elem)($scope);
+            $scope.$digest();
+
+            // when
+            $scope.$column.data = [{id: 1, title: 'B'}];
+            $scope.$digest();
+
+            // then
+            expect($scope.$selectData).toEqual([{ id: '', title: ''}, {id: 1, title: 'B'}]);
+        });
+
     });
 
     describe('function datasource', function(){
@@ -117,6 +151,24 @@ describe('ngTableSelectFilterDs directive', function(){
             expect($scope.$selectData).toEqual([]);
         });
 
+        it('should keep the array on scope in sync with data array on $column', function(){
+            // given
+            data = [{id: 1, title: 'A'}];
+            $compile(elem)($scope);
+            $scope.$digest();
+
+            // when
+            var newArray = [{id: 1, title: 'A'}];
+            $scope.$column.data = function(){
+                return newArray;
+            };
+            $scope.$digest();
+
+            // then
+            expect($scope.$selectData).toBe(newArray);
+        });
+
+
         it('should add empty option to array', function(){
             // given
             data = [{id: 1, title: 'A'}];
@@ -149,14 +201,34 @@ describe('ngTableSelectFilterDs directive', function(){
             // then
             expect(data).toEqual([{id: '', title: ''}, {id: 1, title: 'A'}]);
         });
+
+        it('should add empty option to a new arriving array', function(){
+            // given
+            data = [{id: 1, title: 'A'}];
+            $compile(elem)($scope);
+            $scope.$digest();
+
+            // when
+            $scope.$column.data = function(){
+                return [{id: 1, title: 'B'}];
+            };
+            $scope.$digest();
+
+            // then
+            expect($scope.$selectData).toEqual([{ id: '', title: ''}, {id: 1, title: 'B'}]);
+        });
     });
 
     describe('asyn function datasource', function(){
         var data;
-        beforeEach(inject(function($q){
+        var $timeout;
+        beforeEach(inject(function(_$timeout_){
+            $timeout = _$timeout_;
             $scope.$column = {
                 data: function(){
-                    return $q.when(data);
+                    return $timeout(function(){
+                        return data;
+                    }, 10);
                 }
             };
         }));
@@ -167,6 +239,7 @@ describe('ngTableSelectFilterDs directive', function(){
             // when
             $compile(elem)($scope);
             $scope.$digest();
+            $timeout.flush();
             // then
             expect($scope.$selectData).toBe(data);
         });
@@ -177,9 +250,32 @@ describe('ngTableSelectFilterDs directive', function(){
             // when
             $compile(elem)($scope);
             $scope.$digest();
+            $timeout.flush();
             // then
             expect($scope.$selectData).toEqual([]);
         });
+
+        it('should keep the array on scope in sync with data array on $column', function(){
+            // given
+            data = [{id: 1, title: 'A'}];
+            $compile(elem)($scope);
+            $scope.$digest();
+            $timeout.flush();
+
+            // when
+            var newArray = [{id: 1, title: 'A'}];
+            $scope.$column.data = function(){
+                return $timeout(function(){
+                    return newArray;
+                }, 10);
+            };
+            $scope.$digest();
+            $timeout.flush();
+
+            // then
+            expect($scope.$selectData).toBe(newArray);
+        });
+
 
         it('should add empty option to array', function(){
             // given
@@ -187,6 +283,7 @@ describe('ngTableSelectFilterDs directive', function(){
             // when
             $compile(elem)($scope);
             $scope.$digest();
+            $timeout.flush();
             // then
             expect(data).toEqual([{ id: '', title: ''}, {id: 1, title: 'A'}]);
         });
@@ -200,6 +297,7 @@ describe('ngTableSelectFilterDs directive', function(){
             // when
             $compile(elem)($scope);
             $scope.$digest();
+            $timeout.flush();
             // then
             expect(data).toEqual([{ id: '', title: ''}]);
         });
@@ -210,8 +308,30 @@ describe('ngTableSelectFilterDs directive', function(){
             // when
             $compile(elem)($scope);
             $scope.$digest();
+            $timeout.flush();
             // then
             expect(data).toEqual([{id: '', title: ''}, {id: 1, title: 'A'}]);
         });
+
+        it('should add empty option to a new arriving array', function(){
+            // given
+            data = [{id: 1, title: 'A'}];
+            $compile(elem)($scope);
+            $scope.$digest();
+            $timeout.flush();
+
+            // when
+            $scope.$column.data = function(){
+                return $timeout(function(){
+                    return [{id: 1, title: 'B'}];
+                }, 10);
+            };
+            $scope.$digest();
+            $timeout.flush();
+
+            // then
+            expect($scope.$selectData).toEqual([{ id: '', title: ''}, {id: 1, title: 'B'}]);
+        });
+
     });
 });
