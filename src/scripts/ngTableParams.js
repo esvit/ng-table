@@ -32,7 +32,7 @@
                 isCommittedDataset = false,
                 log = function() {
                     if (settings.debugMode && $log.debug) {
-                        $log.debug.apply(this, arguments);
+                        $log.debug.apply($log, arguments);
                     }
                 },
                 defaultFilterOptions = {
