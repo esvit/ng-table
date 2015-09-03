@@ -26,6 +26,7 @@
             $scope.getVisibleColumns = getVisibleColumns;
             $scope.groupBy = groupBy;
             $scope.isSelectedGroup = isSelectedGroup;
+            $scope.toggleDetail = toggleDetail;
 
             $scope.$watch('params.group()', setGroup, true);
         }
@@ -106,6 +107,11 @@
                     $scope.$selGroup = groupKey;
                 }
             }
+        }
+
+        function toggleDetail(){
+            $scope.params.settings().groupOptions.isExpanded = !$scope.params.settings().groupOptions.isExpanded;
+            return $scope.params.reload();
         }
     }
 })();
