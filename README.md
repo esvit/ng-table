@@ -65,6 +65,23 @@ The `$defer` paramater supplied to your `getData` method has been removed. Inste
     }
 ```
 
+### 4. `ngTableParams` renamed to `NgTableParams`
+
+**To migrate**
+
+*Previously:*
+
+```js
+    var tp = new ngTableParams();
+```
+
+*Now:*
+
+```js
+    var tp = new NgTableParams();
+```
+
+
 ## Installing via Bower
 ```
 bower install ng-table
