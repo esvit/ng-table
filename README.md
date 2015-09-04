@@ -9,7 +9,9 @@ Header row with titles and filters automatic generated on compilation step.
 
 ## Depreciation notice
 
-The following behaviours will be depreciated:
+The following behaviours are depreciated and will be removed before the 1.0.0 release.
+
+The 1.0.0 release is expected to land in 2-3 weeks.
 
 ### 1. `ngTableAfterReloadData` event will be removed
 
