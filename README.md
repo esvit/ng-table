@@ -7,6 +7,62 @@ Code licensed under New BSD License.
 This directive allow to liven your tables. It support sorting, filtering and pagination.
 Header row with titles and filters automatic generated on compilation step.
 
+## Depreciation notice
+
+The following behaviours will be depreciated:
+
+### 1. `ngTableAfterReloadData` event will be removed
+
+Eventing no longer uses *direct* calls $scope.$emit. Instead a strongly typed pub/sub service (`ngTableEventsChannel`) is used.
+
+**To migrate**
+
+*Previously:*
+
+```js
+    $scope.$on('ngTableAfterReloadData', yourHandler)
+```
+
+*Now:*
+
+```js
+    ngTableEventsChannel.onAfterReloadData(yourHandler, $scope)
+```
+
+### 2. `$scope` removed from `NgTableParams`
+
+Because of 1. above, `NgTableParams` no longer requires a reference to `$scope`. 
+
+A reference to `$scope` was largely an internal requirement so there should be no code change required on your part.
+
+### 3. `getData` signature change
+
+The `$defer` paramater supplied to your `getData` method has been removed. Instead your `getData` method should return an array or a promise that resolves to an array.
+
+**To migrate**
+
+*Previously:*
+
+```js
+    var tp = new NgTableParams({}, { getData: getData });
+    
+    function getData($defer, params){
+        // snip
+        $defer.resolve(yourDataArray);
+    }
+```
+
+*Now:*
+
+```js
+    var tp = new NgTableParams({}, { getData: getData });
+    
+    function getData(params){
+        // snip
+        return yourDataArrayOrPromise;
+    }
+```
+
 ## Installing via Bower
 ```
 bower install ng-table
