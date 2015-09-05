@@ -70,14 +70,7 @@
             if (isSelectedGroup(group)){
                 changeSortDirection();
             } else {
-                var existingGroupCol = findGroupColumn($scope.$selGroup);
-                if (existingGroupCol && existingGroupCol.show.assign){
-                    existingGroupCol.show.assign($scope, true);
-                }
                 if (group.groupable){
-                    if (group.show.assign){
-                        group.show.assign($scope, false);
-                    }
                     $scope.params.group(group.groupable($scope));
                 } else{
                     $scope.params.group(group);
@@ -94,6 +87,10 @@
         }
 
         function setGroup(group){
+            var existingGroupCol = findGroupColumn($scope.$selGroup);
+            if (existingGroupCol && existingGroupCol.show.assign){
+                existingGroupCol.show.assign($scope, true);
+            }
             if (angular.isFunction(group)) {
                 groupFns = [group];
                 $scope.$selGroup = group;
@@ -105,6 +102,9 @@
                 if (groupedColumn) {
                     $scope.$selGroupTitle = groupedColumn.title($scope);
                     $scope.$selGroup = groupKey;
+                    if (groupedColumn.show.assign) {
+                        groupedColumn.show.assign($scope, false);
+                    }
                 }
             }
         }
