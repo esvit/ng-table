@@ -64,6 +64,7 @@ module.exports = function(grunt) {
                     'src/scripts/ngTableController.js',
                     'src/scripts/ngTable.directive.js',
                     'src/scripts/ngTableDynamic.directive.js',
+                    'src/scripts/ngTableColumnsBinding.directive.js',
                     'src/scripts/ngTablePagination.directive.js',
                     'src/scripts/ngTableFilterRowController.js',
                     'src/scripts/ngTableFilterRow.directive.js',
