@@ -1,3 +1,23 @@
+<a name="1.0.0-beta.3"></a>
+# 1.0.0-beta.3 (2015-09-06)
+
+
+## Bug Fixes
+
+- **NgTableParams:** thisArg for apply on $log functions should be $log
+  ([f8e0a9de](https://github.com/esvit/ng-table/commit/f8e0a9dea32ef0f73b8cf19e9928656a230d9935))
+- **groupRow:** should update as group changes externally
+  ([7d2965c5](https://github.com/esvit/ng-table/commit/7d2965c5bc220ec4483059cf87c6256d98132d77))
+
+
+## Features
+
+- **groupRow:** add expand/collapse toggle for group rows
+  ([32f208b2](https://github.com/esvit/ng-table/commit/32f208b2bd137d57a9e91bc4c5a7e5bd2ef5c862))
+- **ngTableColumnsBinding:** new directive that provide access to the $columns array
+  ([e290293c](https://github.com/esvit/ng-table/commit/e290293c7cb649591ebb78d92199d164bb3f8490))
+
+
 <a name="1.0.0-beta.2"></a>
 # 1.0.0-beta.2 (2015-09-02)
 

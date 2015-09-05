@@ -89,8 +89,12 @@
 .ng-table .ng-table-group-selector {
   display: block;
 }
-.ng-table .ng-table-group-selector > button {
+.ng-table .ng-table-group-close,
+.ng-table .ng-table-group-toggle {
   float: right;
+}
+.ng-table .ng-table-group-toggle {
+  margin-right: 5px;
 }
 .ng-table + .pagination {
   margin-top: 0;
