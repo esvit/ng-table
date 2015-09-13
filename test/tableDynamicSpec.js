@@ -1,5 +1,5 @@
 describe('ng-table-dynamic', function() {
-    var data = [
+    var dataset = [
         { id: 1, name: "Moroni", age: 50, money: -10 },
         { id: 2, name: "Tiancum", age: 43, money: 120 },
         { id: 3, name: "Jacob", age: 27, money: 5.5 },
@@ -148,8 +148,7 @@ describe('ng-table-dynamic', function() {
                 page: 1, // show first page
                 count: 10 // count per page
             }, {
-                total: data.length,
-                data: data
+                dataset: dataset
             });
             scope.$digest();
 
@@ -173,8 +172,7 @@ describe('ng-table-dynamic', function() {
                 page: 1, // show first page
                 count: 10 // count per page
             }, {
-                total: data.length,
-                data: data
+                dataset: dataset
             });
             scope.$digest();
 
@@ -306,8 +304,7 @@ describe('ng-table-dynamic', function() {
                 page: 1, // show first page
                 count: 10 // count per page
             }, {
-                total: data.length,
-                data: data
+                dataset: dataset
             });
 
             $compile(elm)(scope);

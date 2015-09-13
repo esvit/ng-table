@@ -275,7 +275,7 @@ describe('NgTableParams', function () {
 
             var expectedSettings = {
                 $loading: false,
-                data: null,
+                dataset: null,
                 total: 0,
                 defaultSort: 'desc',
                 counts: [10, 25, 50, 100],
@@ -308,49 +308,49 @@ describe('NgTableParams', function () {
             expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
         });
 
-        it('changing settings().data should reset page to 1', function(){
+        it('changing settings().dataset should reset page to 1', function(){
             // given
-            var tableParams = createNgTableParams({ count: 1, page: 2 }, { data: [1,2,3]});
+            var tableParams = createNgTableParams({ count: 1, page: 2 }, { dataset: [1,2,3]});
             tableParams.reload();
             scope.$digest();
             expect(tableParams.page()).toBe(2); // checking assumptions
 
             // when
-            tableParams.settings({ data: [1,2,3, 4]});
+            tableParams.settings({ dataset: [1,2,3, 4]});
 
             // then
             expect(tableParams.page()).toBe(1);
         });
 
-        it('should not set filterDelay when working with synchronous data', function(){
+        it('should not set filterDelay when working with synchronous dataset', function(){
             // given
-            var tableParams = new NgTableParams({}, { data: [1,2,3]});
+            var tableParams = new NgTableParams({}, { dataset: [1,2,3]});
             expect(tableParams.settings().filterOptions.filterDelay).toBe(0);
         });
 
-        it('should not set filterDelay when working with synchronous data (empty dataset)', function(){
+        it('should not set filterDelay when working with synchronous dataset (empty dataset)', function(){
             // given
-            var tableParams = new NgTableParams({}, { data: []});
+            var tableParams = new NgTableParams({}, { dataset: []});
             expect(tableParams.settings().filterOptions.filterDelay).toBe(0);
         });
 
-        it('should set filterDelay when not certain working with synchronous data', function(){
+        it('should set filterDelay when not certain working with synchronous dataset', function(){
             // given
-            var tableParams = new NgTableParams({}, { data: [1,2], getData: function(){
+            var tableParams = new NgTableParams({}, { dataset: [1,2], getData: function(){
                 // am I sync or async?
             }});
             expect(tableParams.settings().filterOptions.filterDelay).toBe(500);
         });
 
-        it('should set filterDelay when data exceeds filterDelayThreshold', function(){
+        it('should set filterDelay when dataset exceeds filterDelayThreshold', function(){
             // given
-            var tableParams = new NgTableParams({}, { filterOptions: { filterDelayThreshold: 5 }, data: [,2,3,4,5,6] });
+            var tableParams = new NgTableParams({}, { filterOptions: { filterDelayThreshold: 5 }, dataset: [,2,3,4,5,6] });
             expect(tableParams.settings().filterOptions.filterDelay).toBe(500);
         });
 
         it('should allow filterDelay to be set explicitly', function(){
             // given
-            var tableParams = new NgTableParams({}, { filterOptions: { filterDelay: 100}, data: [1,2] });
+            var tableParams = new NgTableParams({}, { filterOptions: { filterDelay: 100}, dataset: [1,2] });
             expect(tableParams.settings().filterOptions.filterDelay).toBe(100);
         });
     });
@@ -405,9 +405,9 @@ describe('NgTableParams', function () {
 
     describe('getGroups', function(){
 
-        var data;
+        var dataset;
         beforeEach(function(){
-            data = [
+            dataset = [
                 { 'name': 'Hanson', 'role': 'Accounting' },
                 { 'name': 'Eaton', 'role': 'Customer Service' },
                 { 'name': 'Perry', 'role': 'Customer Service' },
@@ -426,7 +426,7 @@ describe('NgTableParams', function () {
 
 
         it('should group data then apply paging to groups', function () {
-            var tp = createNgTableParams({ count: 2, group: { role: '' } }, { data: data });
+            var tp = createNgTableParams({ count: 2, group: { role: '' } }, { dataset: dataset });
 
             var actualRoleGroups;
             tp.reload().then(function(groups){
@@ -460,7 +460,7 @@ describe('NgTableParams', function () {
                 count: 2,
                 sorting: { name: 'desc'},
                 group: { role: '' }
-            }, { data: data });
+            }, { dataset: dataset });
 
             var actualRoleGroups;
             tp.reload().then(function(groups){
@@ -497,7 +497,7 @@ describe('NgTableParams', function () {
                 count: 2,
                 sorting: {name: 'desc'},
                 group: grouper
-            }, {data: data});
+            }, {dataset: dataset});
 
             var actualRoleGroups;
             tp.reload().then(function (groups) {
@@ -533,7 +533,7 @@ describe('NgTableParams', function () {
                 filter: { name: 'e' },
                 group: { role: '' }
             }, {
-                data: data
+                dataset: dataset
             });
 
             var actualRoleGroups;
@@ -568,7 +568,7 @@ describe('NgTableParams', function () {
                 filter: { name: 'e' },
                 group: { role: 'desc' }
             }, {
-                data: data,
+                dataset: dataset,
                 groupOptions: {
                     // this value will be overridden by group: { role: 'desc' }
                     defaultSort: undefined
@@ -618,7 +618,7 @@ describe('NgTableParams', function () {
                 filter: { name: 'e' },
                 group: groupFn
             }, {
-                data: data,
+                dataset: dataset,
                 groupOptions: {
                     // this value will be overridden by groupFn.sortDirection
                     defaultSort: undefined
@@ -815,30 +815,30 @@ describe('NgTableParams', function () {
             expect(tp.isDataReloadRequired()).toBe(false);
         });
 
-        it('should return true when new settings data array supplied', function(){
+        it('should return true when new settings dataset array supplied', function(){
             // given
             tp.reload();
             scope.$digest();
 
             verifyIsDataReloadRequired(function(){
-                tp.settings({ data: [11,22,33]});
+                tp.settings({ dataset: [11,22,33]});
             });
         });
 
-        it('should return true when existing settings data array is unset', function(){
+        it('should return true when existing settings dataset array is unset', function(){
             // given
-            tp = createNgTableParams({ data: [1,2,3]});
+            tp = createNgTableParams({ dataset: [1,2,3]});
             tp.reload();
             scope.$digest();
 
             verifyIsDataReloadRequired(function(){
-                tp.settings({ data: null});
+                tp.settings({ dataset: null});
             });
         });
 
-        it('status should not change when settings called without a data array', function(){
+        it('status should not change when settings called without a dataset array', function(){
             // given
-            tp = createNgTableParams({ data: [1,2,3]});
+            tp = createNgTableParams({ dataset: [1,2,3]});
             tp.reload();
             scope.$digest();
 
@@ -930,13 +930,13 @@ describe('NgTableParams', function () {
             expect(tp.hasFilterChanges()).toBe(false);
         });
 
-        it('status should not change just because new settings data array supplied', function(){
+        it('status should not change just because new settings dataset array supplied', function(){
             // given
             tp.reload();
             scope.$digest();
 
             // when, then...
-            tp.settings({ data: [11,22,33]});
+            tp.settings({ dataset: [11,22,33]});
             expect(tp.hasFilterChanges()).toBe(false);
         });
 
@@ -1788,7 +1788,7 @@ describe('NgTableParams', function () {
                     actualPublisher = params;
                     actualEventArgs = [newVal, oldVal];
                 });
-                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                var params = createNgTableParams({ count: 5 }, { counts: [5,10], dataset: [1,2,3,4,5,6]});
 
                 // when
                 params.reload();
@@ -1806,7 +1806,7 @@ describe('NgTableParams', function () {
                     actualPublisher = params;
                     actualEventArgs = [newVal, oldVal];
                 });
-                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: []});
+                var params = createNgTableParams({ count: 5 }, { counts: [5,10], dataset: []});
 
                 // when
                 params.reload();
@@ -1822,7 +1822,7 @@ describe('NgTableParams', function () {
                 ngTableEventsChannel.onPagesChanged(function(/*params, newVal, oldVal*/){
                     callCount++;
                 });
-                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                var params = createNgTableParams({ count: 5 }, { counts: [5,10], dataset: [1,2,3,4,5,6]});
 
                 // when
                 params.reload();
@@ -1841,7 +1841,7 @@ describe('NgTableParams', function () {
                 ngTableEventsChannel.onPagesChanged(function(/*params, newVal, oldVal*/){
                     callCount++;
                 });
-                var params = createNgTableParams({ count: 5 }, { counts: [5,10], data: [1,2,3,4,5,6]});
+                var params = createNgTableParams({ count: 5 }, { counts: [5,10], dataset: [1,2,3,4,5,6]});
                 params.reload();
                 scope.$digest();
 
@@ -1865,7 +1865,7 @@ describe('NgTableParams', function () {
 
                 // when
                 var initialDs = [5, 10];
-                var params = createNgTableParams({ data: initialDs});
+                var params = createNgTableParams({ dataset: initialDs});
 
                 // then
                 expect(actualPublisher).toBe(params);
@@ -1879,11 +1879,11 @@ describe('NgTableParams', function () {
                     actualPublisher = params;
                     actualEventArgs = [newVal, oldVal];
                 });
-                var params = createNgTableParams({ data: initialDs});
+                var params = createNgTableParams({ dataset: initialDs});
 
                 // when
                 var newDs = [5, 10];
-                params.settings({ data: newDs});
+                params.settings({ dataset: newDs});
 
                 // then
                 expect(actualPublisher).toBe(params);
@@ -1897,41 +1897,41 @@ describe('NgTableParams', function () {
                     actualPublisher = params;
                     actualEventArgs = [newVal, oldVal];
                 });
-                var params = createNgTableParams({ data: initialDs});
+                var params = createNgTableParams({ dataset: initialDs});
 
                 // when
                 var newDs = null;
-                params.settings({ data: newDs});
+                params.settings({ dataset: newDs});
 
                 // then
                 expect(actualPublisher).toBe(params);
                 expect(actualEventArgs).toEqual([newDs, initialDs]);
             });
 
-            it('should NOT fire when the same data array is supplied as a new settings value', function(){
+            it('should NOT fire when the same dataset array is supplied as a new settings value', function(){
                 // given
                 var callCount = 0;
                 var initialDs = [1, 2];
                 ngTableEventsChannel.onDatasetChanged(function(/*params, newVal, oldVal*/){
                     callCount++;
                 });
-                var params = createNgTableParams({ data: initialDs});
+                var params = createNgTableParams({ dataset: initialDs});
 
                 // when
-                params.settings({ data: initialDs});
+                params.settings({ dataset: initialDs});
 
                 // then
                 expect(callCount).toBe(1);
             });
 
-            it('settings().data on publisher should reference the new dataset', function(){
+            it('settings().dataset on publisher should reference the new dataset', function(){
                 var initialDs = [1, 2];
                 var newDs = [1, 2, 3];
-                var params = createNgTableParams({ data: initialDs});
+                var params = createNgTableParams({ dataset: initialDs});
                 ngTableEventsChannel.onDatasetChanged(function(params, newVal/*, oldVal*/){
-                    expect(params.settings().data).toBe(newVal);
+                    expect(params.settings().dataset).toBe(newVal);
                 });
-                params.settings({ data: newDs});
+                params.settings({ dataset: newDs});
             });
         });
     })

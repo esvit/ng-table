@@ -1,5 +1,5 @@
 describe('ng-table', function() {
-    var data = [
+    var dataset = [
         { id: 1, name: "Moroni", age: 50, money: -10 },
         { id: 2, name: "Tiancum", age: 43, money: 120 },
         { id: 3, name: "Jacob", age: 27, money: 5.5 },
@@ -175,9 +175,9 @@ describe('ng-table', function() {
                 page: 1, // show first page
                 count: 10 // count per page
             }, {
-                total: data.length, // length of data
+                total: dataset.length, // length of data
                 getData: function($defer, params) {
-                    $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                    $defer.resolve(dataset.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                 }
             });
 
@@ -207,9 +207,9 @@ describe('ng-table', function() {
                 page: 1, // show first page
                 count: 10 // count per page
             }, {
-                total: data.length, // length of data
+                total: dataset.length, // length of data
                 getData: function($defer, params) {
-                    $defer.resolve(data);
+                    $defer.resolve(dataset);
                 }
             });
             scope.tableParams = params;
@@ -236,8 +236,8 @@ describe('ng-table', function() {
                 page: 1, // show first page
                 count: 10 // count per page
             }, {
-                total: data.length,
-                data: data
+                total: dataset.length,
+                dataset: dataset
             });
             scope.$digest();
 
@@ -282,9 +282,9 @@ describe('ng-table', function() {
                 page: 1, // show first page
                 count: 10 // count per page
             }, {
-                total: data.length, // length of data
+                total: dataset.length, // length of data
                 getData: function($defer, params) {
-                    $defer.resolve(data);
+                    $defer.resolve(dataset);
                 }
             });
             scope.tableParams = params;
@@ -948,16 +948,16 @@ describe('ng-table', function() {
             expect(tp.settings().getData.calls.count()).toBe(1);
         });
 
-        it('should reload 1 time when binding a new tableParams that has an initial settings data field', function(){
-            var tp = createNgTableParams({ data: [1,2,3] });
+        it('should reload 1 time when binding a new tableParams that has an initial settings dataset field', function(){
+            var tp = createNgTableParams({ dataset: [1,2,3] });
             scope.tableParams = tp;
             scope.$digest();
 
             expect(tp.settings().getData.calls.count()).toBe(1);
         });
 
-        it('should reload 1 time when binding a new tableParams with initial filter that has an initial settings data field', function(){
-            var tp = createNgTableParams({filter: {age: 1}}, { data: [1,2,3] });
+        it('should reload 1 time when binding a new tableParams with initial filter that has an initial settings dataset field', function(){
+            var tp = createNgTableParams({filter: {age: 1}}, { dataset: [1,2,3] });
             scope.tableParams = tp;
             scope.$digest();
 
@@ -978,16 +978,16 @@ describe('ng-table', function() {
             expect(tp2.settings().getData.calls.count()).toBe(1);
         });
 
-        it('should reload 1 time when binding a new settings data value and changing the filter', function(){
+        it('should reload 1 time when binding a new settings dataset value and changing the filter', function(){
             // given
-            var tp = createNgTableParams({filterOptions: { filterDelay: 100 }, data: [{age: 1}, {age: 2}]});
+            var tp = createNgTableParams({filterOptions: { filterDelay: 100 }, dataset: [{age: 1}, {age: 2}]});
             scope.tableParams = tp;
             scope.$digest();
             tp.settings().getData.calls.reset();
 
             // when
             tp.filter({ age: 1 });
-            tp.settings({ data: [{ age: 1 }, { age: 11 }, { age: 22 }]});
+            tp.settings({ dataset: [{ age: 1 }, { age: 11 }, { age: 22 }]});
             scope.$digest();
             $timeout.flush(); // trigger the delayed reload
 
@@ -996,7 +996,7 @@ describe('ng-table', function() {
 
         it('should reload 1 time when multiple filter changes are debounced', function(){
             // given
-            var tp = createNgTableParams({filterOptions: { filterDelay: 100 }, data: [{age: 1}, {age: 2}]});
+            var tp = createNgTableParams({filterOptions: { filterDelay: 100 }, dataset: [{age: 1}, {age: 2}]});
             scope.tableParams = tp;
             scope.$digest();
             tp.settings().getData.calls.reset();
@@ -1025,10 +1025,10 @@ describe('ng-table', function() {
             expect(tp.settings().getData.calls.count()).toBe(1);
         }));
 
-        it('should reload 1 time with page reset to 1 when binding a new settings data value and changing the filter', function(){
+        it('should reload 1 time with page reset to 1 when binding a new settings dataset value and changing the filter', function(){
             var settings = {
                 counts: [1],
-                data: [{age: 1}, {age: 2}],
+                dataset: [{age: 1}, {age: 2}],
                 filterOptions: { filterDelay: 100 }
             };
             var tp = createNgTableParams({ count: 1, page: 2 }, settings);
@@ -1039,7 +1039,7 @@ describe('ng-table', function() {
 
             // when
             tp.filter({ age: 1 });
-            tp.settings({ data: [{ age: 1 }, { age: 11 }, { age: 22 }]});
+            tp.settings({ dataset: [{ age: 1 }, { age: 11 }, { age: 22 }]});
             scope.$digest();
             $timeout.flush(); // trigger the delayed reload
 
@@ -1166,7 +1166,7 @@ describe('ng-table', function() {
             tp.settings().getData.calls.reset();
 
             // when
-            tp.settings({ data: [{ age: 10}, { age: 11}, { age: 12}]});
+            tp.settings({ dataset: [{ age: 10}, { age: 11}, { age: 12}]});
             scope.$digest();
 
             expect(tp.settings().getData.calls.count()).toBe(1);
