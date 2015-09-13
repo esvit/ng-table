@@ -1,3 +1,27 @@
+<a name="1.0.0-beta.4"></a>
+# 1.0.0-beta.4 (2015-09-13)
+
+
+## Breaking Changes
+
+- **NgTableParams:** due to [380ba21f](https://github.com/esvit/ng-table/commit/380ba21fdf5f4cd69322599a53d86e456851dcea),
+
+
+* `NgTableParams.settings().data` renamed to `NgTableParams.settings().dataset`
+
+Previously:
+
+```js
+var tp = new NgTableParams({}, {data: yourArray });
+```
+
+Now:
+
+```js
+var tp = new NgTableParams({}, {dataset: yourArray });
+```
+
+
 <a name="1.0.0-beta.3"></a>
 # 1.0.0-beta.3 (2015-09-06)
 
