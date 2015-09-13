@@ -5,113 +5,59 @@
     <title>ngTable Examples</title>
     <link rel="stylesheet" href="css/docs.css">
     <link rel="stylesheet" href="css/social.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css">
 
     <!--[if lt IE 9]>
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <![endif]-->
-    <script src="js/angular.min.js"></script>
-    <script src="js/angular-resource.min.js"></script>
-    <script src="js/angular-route.min.js"></script>
-    <script src="dist/ng-table.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-sanitize.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-resource.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-route.js"></script>
+    <script src="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.js"></script>
+    <script src="js/embed-codepen.min.js"></script>
 
     <script src="js/angular-social.js"></script>
-    <script src="js/ng-table-export.src.js"></script>
-
-    <link rel="stylesheet" href="dist/ng-table.min.css">
 
     <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/github.min.css">
     <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
 </head>
-<body ng-app="main">
+<body ng-app="main" class="container-fluid">
 <a target="_blank" href="https://github.com/esvit/ng-table"><img style="position: absolute; z-index: 100; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
 
 <div class="row">
     <div class="col-md-9">
 
-        <div class="pull-right padded">
-            <div class="btn-group">
-                <button type="button" ng-class="{'active': tabState == 'example'}" ng-click="tabState = 'example'" class="btn btn-default">Example</button>
-                <button type="button" ng-class="{'active': tabState == 'code'}" ng-click="tabState = 'code'" class="btn btn-default">Code</button>
-            </div>
-        </div>
-        <div class="padded">
-            <div ng-show="tabState == 'code'">
-                <pre data-prettycode="exampleCode"></pre>
-            </div>
-            <div ng-show="tabState == 'example'" ng-view></div>
-        </div>
+        <div ng-view></div>
 
     </div>
     <div class="col-md-3">
 
         <div class="bs-docs-sidebar hidden-print" role="complementary">
 
-            <ul class="nav bs-docs-sidenav">
+            <ul class="nav bs-docs-sidenav" ng-controller="menuController as menu">
                 <li>
-                    <h1>ngTable v0.5.5</h1>
+                    <h1><a href="#/">ngTable</a></h1>
                 </li>
-                <li class="active">
-                    <a href="#/">0. Intro</a>
+                <li class="active" ng-repeat="section in menu.sections">
+                    <a ng-href="{{ section.url }}" ng-click="section.hasMore && (section.isOpen = !section.isOpen)"
+                       ng-style="!section.hasMore && !section.url && { 'cursor': 'text'}">
+                        {{ $index + '. ' + section.title }}
+                        <span ng-if="section.isOpen && section.hasMore" class="glyphicon glyphicon-chevron-up"></span>
+                    </a>
                     <ul class="nav">
-                        <li><a href="#/demo/0-1">HTML Markup</a></li>
-                        <li><a href="#/demo/0-2">ngTableParams (javascript part)</a></li>
-                        <li><a href="#/demo/0-3">Full-feature demo</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#dropdowns">1. Pagination</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/1-1">Simple example</a></li>
-                        <li><a href="#/demo/1-2">Custom template</a></li>
-                        <li><a href="#/demo/1-3">External pagination element</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#dropdowns">2. Sorting</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/2-1">Simple example</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#btn-groups">3. Filtering</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/3-1">Simple example</a></li>
-                        <li><a href="#/demo/3-2">Custom filters</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#btn-dropdowns">4. Grouping</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/4-1">Simple example</a></li>
-                        <li><a href="#/demo/4-2">Grouping with callback</a></li>
-                        <li><a href="#/demo/4-3">Dynamic grouping</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#glyphicons">5. Customize table</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/5-1">Saving params in url</a></li>
-                        <li><a href="#/demo/5-2">AJAX Data Loading</a></li>
-                        <li><a href="#/demo/5-3">Hidden pagination</a></li>
-                        <li><a href="#/demo/5-4">Cell template</a></li>
-                        <li><a href="#/demo/5-5">Row template</a></li>
-                        <li><a href="#/demo/5-6">Editable demo</a></li>
-                        <li><a href="#/demo/5-7">Table with checkboxes</a></li>
-                        <li><a href="#/demo/5-8">Custom header</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="">6. Summary row</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/6-1">Basic example</a></li>
-                        <li><a href="#/demo/6-2">Example with grouping</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="">7. Plugins</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/7-1">Export to CSV</a></li>
+                        <li>
+                            <a href="{{section.items[0].url}}" ng-bind-html="section.items[0].title"></a>
+                        </li>
+                        <li ng-if="!section.isOpen && section.hasMore">
+                            <a href="" style="display: block" ng-click="section.isOpen = true">
+                                more <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </li>
+                        <li ng-show="!section.hasMore || section.isOpen" ng-repeat="item in section.items|limitTo:section.items.length:1">
+                            <a href="{{item.url}}" ng-bind-html="item.title"></a>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -135,81 +81,7 @@
     </ul>
 </footer>
 
-<script>
-    var app = angular.module('main', ['ngRoute', 'ngResource', 'ngSocial', 'ngTable', 'ngTableExport'])
-            .config(['$routeProvider',
-                function($routeProvider) {
-                    var getTemplatePath = function($routeParams) {
-                        return 'views/demo' + $routeParams.id + '.html';
-                    }
-                    $routeProvider.
-                            when('/', {
-                                templateUrl: 'views/intro.html',
-                                controller: function($rootScope, $routeParams, $http) {
-                                    $rootScope.tabState = 'example';
-
-                                    var url = 'views/intro.html';
-                                    $http.get(url).success(function(res) {
-                                        $rootScope.exampleCode = res;
-                                    });
-                                }
-                            }).
-                            when('/demo/:id', {
-                                templateUrl: function($routeParams) {
-                                    return getTemplatePath($routeParams);
-                                },
-                                controller: function($rootScope, $routeParams, $http) {
-                                    $rootScope.tabState = 'example';
-
-                                    var url = getTemplatePath($routeParams);
-                                    $http.get(url).success(function(res) {
-                                        $rootScope.exampleCode = res;
-                                    });
-                                }
-                            });
-                }])
-            .factory('IssueService', ['$resource', function($resource) {
-                return $resource('https://api.github.com/repos/:username/:repo/issues', {
-                    state: 'open'
-                }, {
-                    query: {
-                        method: 'GET',
-                        isArray: true
-                    }
-                });
-            }])
-            .run(['$rootScope', function($rootScope) {
-                $rootScope.tabState = 'example';
-            }])
-            .directive('runScript', function(){
-                return {
-                    restrict: 'A',
-                    link: function(scope, element, attrs){
-                        with(window) {
-                            eval(element.html()); // just for demo, don't use in real projects
-                        }
-                    }
-                }
-            })
-            .directive('prettycode', function() {
-                return {
-                    restrict: 'A',
-                    scope: {
-                        'code': '=prettycode',
-                        'prettyLang': '@prettyLang'
-                    },
-                    link: function postLink(scope, element, attrs) {
-                        scope.$watch('code', function(code) {
-                            if (angular.isUndefined(code)) {
-                                return;
-                            }
-                            element.html(hljs.highlight(scope.prettyLang || 'html', code).value);
-                        })
-                        element.html(hljs.highlight(scope.prettyLang || 'html', element.text()).value);
-                    }
-                };
-            });
-</script>
+<script src="app/app.js"></script>
 
 </body>
 </html>
