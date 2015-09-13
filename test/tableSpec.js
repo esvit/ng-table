@@ -172,13 +172,9 @@ describe('ng-table', function() {
             expect(rows.length).toBe(0);
 
             var params = new NgTableParams({
-                page: 1, // show first page
                 count: 10 // count per page
             }, {
-                total: dataset.length, // length of data
-                getData: function($defer, params) {
-                    $defer.resolve(dataset.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                }
+                dataset: dataset
             });
 
             scope.tableParams = params;
@@ -203,14 +199,8 @@ describe('ng-table', function() {
         it('should show data-title-text', function() {
             var tbody = elm.find('tbody');
 
-            var params = new NgTableParams({
-                page: 1, // show first page
-                count: 10 // count per page
-            }, {
-                total: dataset.length, // length of data
-                getData: function($defer, params) {
-                    $defer.resolve(dataset);
-                }
+            var params = new NgTableParams({}, {
+                dataset: dataset
             });
             scope.tableParams = params;
             scope.$digest();
@@ -232,11 +222,7 @@ describe('ng-table', function() {
         it('should show/hide columns', function() {
             var tbody = elm.find('tbody');
 
-            scope.tableParams = new NgTableParams({
-                page: 1, // show first page
-                count: 10 // count per page
-            }, {
-                total: dataset.length,
+            scope.tableParams = new NgTableParams({}, {
                 dataset: dataset
             });
             scope.$digest();
@@ -278,14 +264,8 @@ describe('ng-table', function() {
             $compile(elm)(scope);
             scope.$digest();
 
-            var params = new NgTableParams({
-                page: 1, // show first page
-                count: 10 // count per page
-            }, {
-                total: dataset.length, // length of data
-                getData: function($defer, params) {
-                    $defer.resolve(dataset);
-                }
+            var params = new NgTableParams({}, {
+                dataset: dataset
             });
             scope.tableParams = params;
             scope.$digest();
