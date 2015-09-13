@@ -35,7 +35,7 @@
                 {name: "Tiancum", age: 43},
                 {name: "Jacob", age: 27}
             ];
-            self.tableParams = new NgTableParams({ count: 5}, { counts: [5, 10, 25], data: data, filterDelay: 0});
+            self.tableParams = new NgTableParams({ count: 5}, { counts: [5, 10, 25], dataset: data});
         })
         .directive('prettycode', function() {
             return {
