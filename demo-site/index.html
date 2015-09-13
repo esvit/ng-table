@@ -12,6 +12,7 @@
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <![endif]-->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-sanitize.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-resource.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-route.js"></script>
     <script src="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.js"></script>
@@ -22,130 +23,41 @@
     <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/github.min.css">
     <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
 </head>
-<body ng-app="main">
+<body ng-app="main" class="container-fluid">
 <a target="_blank" href="https://github.com/esvit/ng-table"><img style="position: absolute; z-index: 100; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
 
 <div class="row">
     <div class="col-md-9">
 
-        <div class="padded">
-            <div ng-view></div>
-        </div>
+        <div ng-view></div>
 
     </div>
     <div class="col-md-3">
 
         <div class="bs-docs-sidebar hidden-print" role="complementary">
 
-            <ul class="nav bs-docs-sidenav">
+            <ul class="nav bs-docs-sidenav" ng-controller="menuController as menu">
                 <li>
-                    <h1>ngTable</h1>
+                    <h1><a href="#/">ngTable</a></h1>
                 </li>
-                <li class="active">
-                    <a href="#/">0. Intro</a>
+                <li class="active" ng-repeat="section in menu.sections">
+                    <a ng-href="{{ section.url }}" ng-click="section.hasMore && (section.isOpen = !section.isOpen)"
+                       ng-style="!section.hasMore && !section.url && { 'cursor': 'text'}">
+                        {{ $index + '. ' + section.title }}
+                        <span ng-if="section.isOpen && section.hasMore" class="glyphicon glyphicon-chevron-up"></span>
+                    </a>
                     <ul class="nav">
-                        <li><a href="#/intro/demo-real-world">Real world example</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#dropdowns">x. Loading data</a>
-                    <ul class="nav">
-                        <li><a href="#/loading/overview">Overview</a></li>
-                        <li><a href="#/loading/demo-managed-array">Managed array</a></li>
-                        <li><a href="#/loading/demo-lazy-loaded">Lazy loading managed array</a></li>
-                        <li><a href="#/loading/demo-external-array">External array (eg server-side)</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#dropdowns">x. Pagination</a>
-                    <ul class="nav">
-                        <li><a href="#/pagination/demo-pager-basic">Basic example</a></li>
-                        <li><a href="#/pagination/demo-api">Change page / page controls programmatically</a></li>
-                        <li><a href="#/demo/todo">Custom template</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#dropdowns">x. Sorting</a>
-                    <ul class="nav">
-                        <li><a href="#/sorting/demo-sorting-basic">Basic example</a></li>
-                        <li><a href="#/sorting/demo-api">Change sort order programmatically</a></li>
-                        <li><a href="#/sorting/demo-enabling">Enable sorting programmatically</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#btn-groups">x. Filtering</a>
-                    <ul class="nav">
-                        <li><a href="#/filtering/demo-filtering-basic">Basic example</a></li>
-                        <li><a href="#/filtering/demo-nested-property">Nested property filters</a></li>
-                        <li><a href="#/filtering/demo-select">Select filters</a></li>
-                        <li><a href="#/filtering/demo-custom-template">Custom filter template</a></li>
-                        <li><a href="#/filtering/demo-multi-template">Multiple template filters</a></li>
-                        <li><a href="#/filtering/demo-api">Change filter values programmatically</a></li>
-                        <li><a href="#/filtering/demo-enabling">Enable filters programmatically</a></li>
-                        <li><a href="#/filtering/demo-customize-algorithm">Customize filter algorithm</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#btn-dropdowns">x. Grouping</a>
-                    <ul class="nav">
-                        <li><a href="#/grouping/demo-grouping-basic">Basic example</a></li>
-                        <li><a href="#/grouping/demo-grouping-fn">Custom grouping function</a></li>
-                        <li><a href="#/grouping/demo-summary">Summary row</a></li>
-                        <li><a href="#/grouping/demo-api">Change grouping programmatically</a></li>
-                        <li><a href="#/grouping/demo-enabling">Enable grouping programmatically</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#/">x. Formatting table</a>
-                    <ul class="nav">
-                        <li><a href="#/formatting/demo-cell-values"><em>ngTable</em>: Data cell template</a></li>
-                        <li><a href="#/formatting/demo-dynamic-js-values"><em>ngTableDynamic</em>: Data cell template (via JS)</a></li>
-                        <li><a href="#/formatting/demo-dynamic-html-values"><em>ngTableDynamic</em>: Data cell template (via HTML)</a></li>
-                        <li><a href="#/formatting/demo-row">Data row template</a></li>
-                        <li><a href="#/formatting/demo-header-cell-basic">Header cell template - basic</a></li>
-                        <li><a href="#/formatting/demo-header-cell-full">Header cell template - full</a></li>
-                        <li><a href="#/formatting/demo-custom-header">Custom header</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#/">x. Working with columns</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/todo">Show/hide columns</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#/">x. Editing data</a>
-                    <ul class="nav">
-                        <li><a href="#/editing/demo-inline">Inline row edit</a></li>
-                        <li><a href="#/editing/demo-batch">Batch table edit</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#/">x. Events</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/todo">Overview</a></li>
-                        <li><a href="#/demo/todo">Example</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#/">x. Global customizations</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/todo">Response interceptors</a></li>
-                        <li><a href="#/demo/todo">Change default parameters and settings</a></li>
-                        <li><a href="#/demo/todo">Replace default filter/sorting algorithm</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#glyphicons">x. Miscellaneous</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/5-1">Saving params in url</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="">x. Plugins</a>
-                    <ul class="nav">
-                        <li><a href="#/demo/todo">Resize columns</a></li>
-                        <li><a href="#/demo/todo">Export to CSV</a></li>
+                        <li>
+                            <a href="{{section.items[0].url}}" ng-bind-html="section.items[0].title"></a>
+                        </li>
+                        <li ng-if="!section.isOpen && section.hasMore">
+                            <a href="" style="display: block" ng-click="section.isOpen = true">
+                                more <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </li>
+                        <li ng-show="!section.hasMore || section.isOpen" ng-repeat="item in section.items|limitTo:section.items.length:1">
+                            <a href="{{item.url}}" ng-bind-html="item.title"></a>
+                        </li>
                     </ul>
                 </li>
             </ul>

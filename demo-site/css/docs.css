@@ -2,8 +2,8 @@ body > .row {
     width: 100%;
 }
 
-.padded {
-    padding: 20px;
+[ng-view] {
+    padding: 20px 0;
 }
 
 .row .page-header {
@@ -34,7 +34,10 @@ body > .row {
     margin: 0;
     padding: 10px 18px;
     font-size: 24px;
+}
+.bs-docs-sidenav h1 a {
     color: #b94a48;
+    text-decoration: none;
 }
 
 /* All levels of nav */

@@ -1,15 +1,14 @@
-<div class="page-header">
-    <h1>Loading data - overview</h1>
-</div>
-
 <div class="row">
 
-    <p>There are broadly two options for getting data loaded into a table. These are discussed below</p>
+    <div class="col-xs-12">
+        <div class="page-header">
+            <h1>Loading data - overview</h1>
+        </div>
 
-    <div class="bs-callout bs-callout-info">
-        <h4>Options</h4>
+        <p>There are broadly two options for getting data loaded into a table. These are discussed below</p>
+
         <dl>
-            <dt>Managed array</dt>
+            <dt>1. Managed array</dt>
             <dd>
                 Hand <code>NgTableParams</code> an in-memory array and let it do the filtering, sorting and paging
                 on that array. Eg:<br/>
@@ -18,7 +17,7 @@ var data = [{ name: 'christian', age: 21 }, { name: 'anthony', age: 88 }];
 var tp = new NgTableParams({}, { data: data });
 </pre>
             </dd>
-            <dt>External array</dt>
+            <dt>2. External array</dt>
             <dd>
                 Hand <code>NgTableParams</code> a custom <code>getData</code> function that it will call to load
                 data. Eg:<br/>
