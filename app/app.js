@@ -1,65 +1,241 @@
-define([
-    'angular',
-    'ngTable'
-], function (angular) {
+(function(){
     'use strict';
 
-    var app = angular.module('main', ['ngTable']).
-    controller('DemoCtrl', function($scope, $filter, $q, ngTableParams) {
-        var data = [{name: "Moroni", age: 50, money: -10},
-                    {name: "Tiancum", age: 43,money: 120},
-                    {name: "Jacob", age: 27, money: 5.5},
-                    {name: "Nephi", age: 29,money: -54},
-                    {name: "Enos", age: 34,money: 110},
-                    {name: "Tiancum", age: 43, money: 1000},
-                    {name: "Jacob", age: 27,money: -201},
-                    {name: "Nephi", age: 29, money: 100},
-                    {name: "Enos", age: 34, money: -52.5},
-                    {name: "Tiancum", age: 43, money: 52.1},
-                    {name: "Jacob", age: 27, money: 110},
-                    {name: "Nephi", age: 29, money: -55},
-                    {name: "Enos", age: 34, money: 551},
-                    {name: "Tiancum", age: 43, money: -1410},
-                    {name: "Jacob", age: 27, money: 410},
-                    {name: "Nephi", age: 29, money: 100},
-                    {name: "Enos", age: 34, money: -100}];
+    angular.module('main', ['ngRoute', 'ngTable', 'ngSocial', 'embedCodepen', 'ngSanitize'])
+        .config(['$routeProvider',
+            function ($routeProvider) {
+                $routeProvider.
+                    when('/', {
+                        templateUrl: 'views/intro/overview.html',
+                        controller: 'introController',
+                        controllerAs: 'vm'
+                    }).
+                    when('/demo/todo', {
+                        templateUrl: 'views/todo.html',
+                        controller: function () {
 
-        $scope.tableParams = new ngTableParams({
-            $liveFiltering: true,
-            page: 1,            // show first page
-            total: data.length, // length of data
-            count: 10           // count per page
-        });
+                        }
+                    }).
+                    when('/:section/:article', {
+                        templateUrl: function ($routeParams) {
+                            return 'views/' + $routeParams.section + '/' + $routeParams.article + '.html';
+                        },
+                        controller: function () {
 
-        $scope.names = function(column) {
-            var def = $q.defer(),
-                arr = [],
-                names = [];
-            angular.forEach(data, function(item){
-                if ($.inArray(item.name, arr) === -1) {
-                    arr.push(item.name);
-                    names.push({
-                        'id': item.name,
-                        'title': item.name
+                        }
                     });
+            }])
+        .controller('introController', function(NgTableParams){
+            var self = this;
+            var data = [{name: "Moroni", age: 50},
+                {name: "Simon", age: 43},
+                {name: "Jacob", age: 27},
+                {name: "Nephi", age: 29},
+                {name: "Christian", age: 34},
+                {name: "Tiancum", age: 43},
+                {name: "Jacob", age: 27}
+            ];
+            self.tableParams = new NgTableParams({ count: 5}, { counts: [5, 10, 25], data: data, filterDelay: 0});
+        })
+        .directive('prettycode', function() {
+            return {
+                restrict: 'A',
+                scope: {
+                    'code': '=prettycode',
+                    'prettyLang': '@prettyLang'
+                },
+                link: function postLink(scope, element, attrs) {
+                    scope.$watch('code', function(code) {
+                        if (angular.isUndefined(code)) {
+                            return;
+                        }
+                        element.html(hljs.highlight(scope.prettyLang || 'html', code).value);
+                    });
+                    element.html(hljs.highlight(scope.prettyLang || 'html', element.text()).value);
                 }
-            });
-            def.resolve(names);
-            return def.promise;
-        };
-
-        $scope.$watch('tableParams', function(params) {
-            // use build-in angular filter
-            var orderedData = params.sorting ? 
-                                $filter('orderBy')(data, params.orderBy()) :
-                                data;
-            orderedData = params.filter ? 
-                                $filter('filter')(orderedData, params.filter) :
-                                orderedData;
-
-            params.total = orderedData.length; // set total for recalc pagination
-            $scope.users = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
-        }, true);
-    });
-    return app;
-});
+            };
+        })
+        .controller('menuController', function(){
+            var self = this;
+            self.sections = [{
+                title: 'Intro',
+                hasMore: false,
+                url: '#/',
+                items: [{
+                    title: 'Real world example',
+                    url: '#/intro/demo-real-world'
+                }]
+            }, {
+                title: 'Loading data',
+                hasMore: false,
+                items: [{
+                    title: 'Overview',
+                    url: '#/loading/overview'
+                }, {
+                    title: 'Managed array',
+                    url: '#/loading/demo-managed-array'
+                }, {
+                    title: 'Lazy loading managed array',
+                    url: '#/loading/demo-lazy-loaded'
+                }, {
+                    title: 'External array (eg server-side)',
+                    url: '#/loading/demo-external-array'
+                }]
+            }, {
+                title: 'Pagination',
+                hasMore: true,
+                items: [{
+                    title: 'Basic example',
+                    url: '#/pagination/demo-pager-basic'
+                }, {
+                    title: 'Change page / page controls programmatically',
+                    url: '#/pagination/demo-api'
+                }, {
+                    title: 'Custom template',
+                    url: '#/demo/todo'
+                }]
+            }, {
+                title: 'Sorting',
+                hasMore: true,
+                items: [{
+                    title: 'Basic example',
+                    url: '#/sorting/demo-sorting-basic'
+                }, {
+                    title: 'Change sort order programmatically',
+                    url: '#/sorting/demo-api'
+                }, {
+                    title: 'Enable sorting programmatically',
+                    url: '#/sorting/demo-enabling'
+                }]
+            }, {
+                title: 'Filtering',
+                hasMore: true,
+                items: [{
+                    title: 'Basic example',
+                    url: '#/filtering/demo-filtering-basic'
+                }, {
+                    title: 'Nested property filters',
+                    url: '#/filtering/demo-nested-property'
+                }, {
+                    title: 'Select filters',
+                    url: '#/filtering/demo-select'
+                }, {
+                    title: 'Custom filter template',
+                    url: '#/filtering/demo-custom-template'
+                }, {
+                    title: 'Multiple template filters',
+                    url: '#/filtering/demo-multi-template'
+                }, {
+                    title: 'Change filter values programmatically',
+                    url: '#/filtering/demo-api'
+                }, {
+                    title: 'Enable filters programmatically',
+                    url: '#/filtering/demo-enabling'
+                }, {
+                    title: 'Customize filter algorithm',
+                    url: '#/filtering/demo-customize-algorithm'
+                }]
+            }, {
+                title: 'Grouping',
+                hasMore: true,
+                items: [{
+                    title: 'Basic example',
+                    url: '#/grouping/demo-grouping-basic'
+                }, {
+                    title: 'Custom grouping function',
+                    url: '#/grouping/demo-grouping-fn'
+                }, {
+                    title: 'Summary row',
+                    url: '#/grouping/demo-summary'
+                }, {
+                    title: 'Change grouping programmatically',
+                    url: '#/grouping/demo-api'
+                }, {
+                    title: 'Enable grouping programmatically',
+                    url: '#/grouping/demo-enabling'
+                }]
+            }, {
+                title: 'Formatting table',
+                hasMore: true,
+                items: [{
+                    title: '<em>ngTable</em>: Data cell template',
+                    url: '#/formatting/demo-cell-values'
+                }, {
+                    title: '<em>ngTableDynamic</em>: Data cell template (via JS)',
+                    url: '#/formatting/demo-dynamic-js-values'
+                }, {
+                    title: '<em>ngTableDynamic</em>: Data cell template (via HTML)',
+                    url: '#/formatting/demo-dynamic-html-values'
+                }, {
+                    title: 'Data row template',
+                    url: '#/formatting/demo-row'
+                }, {
+                    title: 'Header cell template - basic',
+                    url: '#/formatting/demo-header-cell-basic'
+                }, {
+                    title: 'Header cell template - full',
+                    url: '#/formatting/demo-header-cell-full'
+                }, {
+                    title: 'Custom header',
+                    url: '#/formatting/demo-custom-header'
+                }]
+            }, {
+                title: 'Working with columns',
+                hasMore: false,
+                items: [{
+                    title: 'Show/hide columns',
+                    url: '#/columns/demo-visibility'
+                }, {
+                    title: 'Reorder columns',
+                    url: '#/columns/demo-reordering'
+                }]
+            }, {
+                title: 'Editing data',
+                hasMore: false,
+                items: [{
+                    title: 'Inline row edit',
+                    url: '#/editing/demo-inline'
+                }, {
+                    title: 'Batch table edit',
+                    url: '#/editing/demo-batch'
+                }]
+            }, {
+                title: 'Events',
+                hasMore: false,
+                items: [{
+                    title: 'Example',
+                    url: '#/demo/todo'
+                }]
+            }, {
+                title: 'Global customizations',
+                hasMore: false,
+                items: [{
+                    title: 'Response interceptors',
+                    url: '#/demo/todo'
+                }, {
+                    title: 'Change default parameters and settings',
+                    url: '#/demo/todo'
+                }, {
+                    title: 'Replace default filter/sorting algorithm',
+                    url: '#/demo/todo'
+                }]
+            }, {
+                title: 'Miscellaneous',
+                hasMore: false,
+                items: [{
+                    title: 'Saving params in url',
+                    url: '#/demo/todo'
+                }]
+            }, {
+                title: 'Plugins',
+                hasMore: false,
+                items: [{
+                    title: 'Resize columns',
+                    url: '#/demo/todo'
+                }, {
+                    title: 'Export to CSV',
+                    url: '#/demo/todo'
+                }]
+            }];
+        });
+})();
