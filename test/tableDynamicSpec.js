@@ -31,7 +31,7 @@ describe('ng-table-dynamic', function() {
         beforeEach(inject(function($compile, $q, NgTableParams) {
             elm = angular.element(
                     '<div>' +
-                    '<table ng-table-dynamic="tableParams with cols" show-filter="true">' +
+                    '<table ng-table-dynamic="tableParams with cols">' +
                     '<tr ng-repeat="user in $data">' +
                     '<td ng-repeat="col in $columns">{{user[col.field]}}</td>' +
                     '</tr>' +
@@ -201,7 +201,7 @@ describe('ng-table-dynamic', function() {
         beforeEach(inject(function($compile, $q, NgTableParams) {
             elm = angular.element(
                     '<div>' +
-                    '<table ng-table-dynamic="tableParams with cols" show-filter="true">' +
+                    '<table ng-table-dynamic="tableParams with cols">' +
                     '<tr ng-repeat="user in $data">' +
                     '<td ng-repeat="col in $columns">{{user[col.field]}}</td>' +
                     '</tr>' +
@@ -332,7 +332,7 @@ describe('ng-table-dynamic', function() {
         var elm;
         beforeEach(inject(function($compile, NgTableParams) {
             elm = angular.element(
-                    '<table ng-table-dynamic="tableParams with cols" show-filter="true">' +
+                    '<table ng-table-dynamic="tableParams with cols">' +
                     '<tr ng-repeat="user in $data">' +
                     '<td ng-repeat="col in $columns">{{user[col.field]}}</td>' +
                     '</tr>' +
@@ -534,10 +534,11 @@ describe('ng-table-dynamic', function() {
             beforeEach(inject(function($compile, NgTableParams) {
 
                 ageFilter = { age: 'text'};
-                function getFilter(paramsScope){
-                    if (paramsScope.$column.title() === 'Name of user') {
+                function getFilter(paramsScope, locals){
+                    var $column = (paramsScope.$column || locals.$column);
+                    if ($column.title() === 'Name of user') {
                         return {username: 'text'};
-                    } else if (paramsScope.$column.title() === 'Age') {
+                    } else if ($column.title() === 'Age') {
                         return ageFilter;
                     }
                 }
@@ -603,7 +604,7 @@ describe('ng-table-dynamic', function() {
         beforeEach(inject(function ($compile, $q, NgTableParams) {
             elm = angular.element(
                 '<div>' +
-                '<table ng-table-dynamic="tableParams with cols" show-filter="true">' +
+                '<table ng-table-dynamic="tableParams with cols">' +
                 '<tr ng-repeat="user in $data">' +
                 "<td ng-repeat=\"col in $columns\">{{user[col.field]}}</td>" +
                 '</tr>' +

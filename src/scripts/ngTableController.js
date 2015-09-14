@@ -178,6 +178,10 @@
                     $scope.$parent.$watch($attrs.showFilter, function(value) {
                         $scope.show_filter = value;
                     });
+                } else {
+                    $scope.$watch(hasFilterColumn, function(value){
+                        $scope.show_filter = value;
+                    })
                 }
 
                 $scope.$groupRow = {};
@@ -208,6 +212,26 @@
                 return ($scope.$columns || []).filter(function(c){
                     return c.show($scope);
                 });
+            }
+
+            function hasFilterColumn(){
+                if (!$scope.$columns) return false;
+
+                return some($scope.$columns, function($column){
+                    return $column.filter($scope, { $column: $column});
+                });
+            }
+
+            function some(array, predicate){
+                var found = false;
+                for (var i = 0; i < array.length; i++) {
+                    var obj = array[i];
+                    if (predicate(obj)){
+                        found = true;
+                        break;
+                    }
+                }
+                return found;
             }
 
             function commonInit(){

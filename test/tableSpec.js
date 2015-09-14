@@ -49,7 +49,7 @@ describe('ng-table', function() {
         beforeEach(inject(function($compile, $q) {
             elm = angular.element(
                     '<div>' +
-                    '<table ng-table="tableParams" show-filter="true">' +
+                    '<table ng-table="tableParams">' +
                     '<tr ng-repeat="user in $data">' +
                     '<td data-header-title="\'Sort by Name\'" data-title="nameTitle()" filter="{ \'name\': \'text\' }" sortable="\'name\'" data-header-class="getCustomClass($column)"' +
                         ' ng-if="showName">' +
@@ -423,7 +423,7 @@ describe('ng-table', function() {
             beforeEach(inject(function($compile) {
                 elm = angular.element(
                         '<div>' +
-                        '<table ng-table="tableParams" show-filter="true">' +
+                        '<table ng-table="tableParams">' +
                         '<tr ng-repeat="user in $data">' +
                         '<td header-class="captureColumn($column)" title="\'Name\'" ' +
                             'filter="usernameFilter">{{user.name}}</td>' +
@@ -510,7 +510,7 @@ describe('ng-table', function() {
                 elm = angular.element(
                         '<div>' +
                         '<script type="text/ng-template" id="ng-table/filters/customNum.html"><input type="number" id="{{name}}"/></script>' +
-                        '<table ng-table="tableParams" show-filter="true">' +
+                        '<table ng-table="tableParams">' +
                         '<tr ng-repeat="user in $data">' +
                         '<td header-class="captureColumn($column)" title="\'Age\'" ' +
                             'filter="{ \'age\': \'ng-table/filters/customNum.html\' }">{{user.age}}</td>' +
@@ -538,7 +538,7 @@ describe('ng-table', function() {
             beforeEach(inject(function($compile) {
                 elm = angular.element(
                         '<div>' +
-                        '<table ng-table="tableParams" show-filter="true">' +
+                        '<table ng-table="tableParams">' +
                         '<tr ng-repeat="user in $data">' +
                         '<td header-class="captureColumn($column)" title="\'Name\'" ' +
                         'filter="{ \'name\': \'text\', \'age\': \'text\' }">{{user.name}}</td>' +
@@ -589,7 +589,7 @@ describe('ng-table', function() {
                 elm = angular.element(
                         '<div>' +
                         '<script type="text/ng-template" id="ng-table/filters/number.html"><input type="number" name="{{name}}"/></script>' +
-                        '<table ng-table="tableParams" show-filter="true">' +
+                        '<table ng-table="tableParams">' +
                         '<tr ng-repeat="user in $data">' +
                         '<td title="\'Name\'" filter="getFilter($column)">{{user.name}}</td>' +
                         '<td title="\'Age\'" filter="getFilter($column)">{{user.age}}</td>' +
@@ -649,7 +649,7 @@ describe('ng-table', function() {
             beforeEach(inject(function($compile) {
                 elm = angular.element(
                     '<div>' +
-                    '<table ng-table="tableParams" show-filter="true">' +
+                    '<table ng-table="tableParams">' +
                     '<tr ng-repeat="user in $data">' +
                     '<td header-class="captureColumn($column)" title="\'Name\'" '
                     + 'filter="usernameFilter">{{user.name}}</td>' +
@@ -699,7 +699,7 @@ describe('ng-table', function() {
             beforeEach(inject(function($compile) {
                 elm = angular.element(
                     '<div>' +
-                    '<table ng-table="tableParams" show-filter="true">' +
+                    '<table ng-table="tableParams">' +
                     '<tr ng-repeat="user in $data">' +
                     '<td header-class="captureColumn($column)" title="\'Age\'" '
                     + 'filter="ageFilter">{{user.age}}</td>' +
@@ -739,6 +739,45 @@ describe('ng-table', function() {
                 expect($capturedColumn.filter).toBeDefined();
                 expect($capturedColumn.filter()).toBe(scope.ageFilter);
             });
+        });
+    });
+
+    describe('show-filter', function(){
+        var elm;
+        beforeEach(inject(function($compile) {
+            elm = angular.element(
+                '<div>' +
+                '<table ng-table="tableParams" show-filter="showFilterRow">' +
+                '<tr ng-repeat="user in $data">' +
+                '<td title="\'Age\'" filter="{ age: \'number\'}">{{user.age}}</td>' +
+                '</tr>' +
+                '</table>' +
+                '</div>');
+
+            scope.showFilterRow = true;
+            scope.tableParams = createNgTableParams();
+
+            $compile(elm)(scope);
+            scope.$digest();
+        }));
+
+        it('when true, should display filter row', function() {
+            var filterRow = elm.find('thead').find('tr').eq(1);
+            expect(filterRow.hasClass('ng-table-filters')).toBe(true);
+            expect(filterRow.hasClass('ng-hide')).toBe(false);
+        });
+
+        it('when false, should hide filter row', function() {
+            // given
+            scope.showFilterRow = false;
+
+            // when
+            scope.$digest();
+
+            // then
+            var filterRow = elm.find('thead').find('tr').eq(1);
+            expect(filterRow.hasClass('ng-table-filters')).toBe(true);
+            expect(filterRow.hasClass('ng-hide')).toBe(true);
         });
     });
 
@@ -872,7 +911,7 @@ describe('ng-table', function() {
             beforeEach(inject(function($compile) {
                 elm = angular.element(
                     '<div>' +
-                    '<table ng-table="tableParams" show-filter="true">' +
+                    '<table ng-table="tableParams">' +
                     '<tr class="ng-table-group" ng-repeat-start="group in $groups"></tr>' +
                     '<tr ng-repeat-end="user in group.data">' +
                     '<td title="\'Name\'" groupable="\'name\'">{{user.name}}</td>' +
