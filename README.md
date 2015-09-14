@@ -1,11 +1,88 @@
 Table + AngularJS
 =================
-[![Build Status](https://travis-ci.org/esvit/ng-table.png)](https://travis-ci.org/esvit/ng-table) [![Coverage Status](https://coveralls.io/repos/esvit/ng-table/badge.png)](https://coveralls.io/r/esvit/ng-table)
+
+[![Join the chat at https://gitter.im/esvit/ng-table](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/esvit/ng-table?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/esvit/ng-table.svg)](https://travis-ci.org/esvit/ng-table) [![Coverage Status](https://coveralls.io/repos/esvit/ng-table/badge.png)](https://coveralls.io/r/esvit/ng-table)
 
 Code licensed under New BSD License.
 
 This directive allow to liven your tables. It support sorting, filtering and pagination.
 Header row with titles and filters automatic generated on compilation step.
+
+## Depreciation notice
+
+The following behaviours are depreciated and will be removed before the 1.0.0 release.
+
+The 1.0.0 release is expected to land in 2-3 weeks.
+
+### 1. `ngTableAfterReloadData` event will be removed
+
+Eventing no longer uses *direct* calls $scope.$emit. Instead a strongly typed pub/sub service (`ngTableEventsChannel`) is used.
+
+**To migrate**
+
+*Previously:*
+
+```js
+    $scope.$on('ngTableAfterReloadData', yourHandler)
+```
+
+*Now:*
+
+```js
+    ngTableEventsChannel.onAfterReloadData(yourHandler, $scope)
+```
+
+### 2. `$scope` removed from `NgTableParams`
+
+Because of 1. above, `NgTableParams` no longer requires a reference to `$scope`. 
+
+A reference to `$scope` was largely an internal requirement so there should be no code change required on your part.
+
+### 3. `getData` signature change
+
+The `$defer` paramater supplied to your `getData` method has been removed. Instead your `getData` method should return an array or a promise that resolves to an array.
+
+**To migrate**
+
+*Previously:*
+
+```js
+    var tp = new NgTableParams({}, { getData: getData });
+    
+    function getData($defer, params){
+        // snip
+        $defer.resolve(yourDataArray);
+    }
+```
+
+*Now:*
+
+```js
+    var tp = new NgTableParams({}, { getData: getData });
+    
+    function getData(params){
+        // snip
+        return yourDataArrayOrPromise;
+    }
+```
+
+### 4. `ngTableParams` renamed to `NgTableParams`
+
+**To migrate**
+
+*Previously:*
+
+```js
+    var tp = new ngTableParams();
+```
+
+*Now:*
+
+```js
+    var tp = new NgTableParams();
+```
+
 
 ## Installing via Bower
 ```
@@ -40,7 +117,7 @@ Please be responsible, the open source community is not there to guess your prob
 
 2. give a precise description mentionning angular version, ng-table version.
 
-3. give a way to reproduce your issue, the best would be with a <strong>running example</strong>, you can use [plunkr](http://plnkr.co/). Note if you want to mimic ajax loading behaviour you can use [$timeout](https://docs.angularjs.org/api/ng/service/$timeout) angular service or [$httpBackend](https://docs.angularjs.org/api/ng/service/$httpBackend).
+3. give a way to reproduce your issue, the best would be with a <strong>running example</strong>, you can use [plunkr](http://plnkr.co/), or [codepen](http://codepen.io/). **Tip:** See below for a list of base codepen's you can fork
 
 4. isolate your code sample on the probable issue to avoid pollution and noise.
 
@@ -49,23 +126,14 @@ Please be responsible, the open source community is not there to guess your prob
 Note that 80% of the open issues are actually not issues but "problem" due to developpers laziness or lack of investigation. These "issues" are a waste of time for us and especially if we have to setup a sample to reproduce the issue which those developpers could have done. Any open issue which does not fulfill this contract will be closed without investigation.
 
 
-## Examples (from simple to complex)
+## Examples
 
-* [Pagination](http://bazalt-cms.com/ng-table/example/1)
-* [Sorting](http://bazalt-cms.com/ng-table/example/3)
-* [Filtering](http://bazalt-cms.com/ng-table/example/4)
-* [Cell template](http://bazalt-cms.com/ng-table/example/8)
-* [Row template](http://bazalt-cms.com/ng-table/example/9)
-* [Params in url](http://bazalt-cms.com/ng-table/example/5)
-* [Ajax](http://bazalt-cms.com/ng-table/example/6)
-* [Table with hidden pagination](http://bazalt-cms.com/ng-table/example/7)
-* [Custom template(pagination)](http://bazalt-cms.com/ng-table/example/2)
-* [Custom filters](http://bazalt-cms.com/ng-table/example/11)
-* [Table with checkboxes](http://bazalt-cms.com/ng-table/example/10)
-* [Table with grouping](http://bazalt-cms.com/ng-table/example/12)
-* [Table with grouping with callback](http://bazalt-cms.com/ng-table/example/13)
-* [Table with external control of data](http://bazalt-cms.com/ng-table/example/14)
-* [Export to CSV](http://bazalt-cms.com/ng-table/example/15)
+* [Demo site](http://ng-table.com/)
+* Codepen examples (**Tip**: fork these to create your own examples);
+    * [`ngTable`: inmemory list](http://codepen.io/christianacca/pen/VLqVeo?editors=101)
+    * [`ngTable`: server-side list](http://codepen.io/christianacca/pen/VLqqjP?editors=101)
+    * [`ngTableDynamic`: inmemory list](http://codepen.io/christianacca/pen/jPxgzY?editors=101)
+    * [`ngTableDynamic`: server-side list](http://codepen.io/christianacca/pen/JdwwrR/?editors=101)
 
 ## Compatibility
 
