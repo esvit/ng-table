@@ -174,6 +174,11 @@
                     $scope.params = params;
                 }), false);
 
+                setupFilterRowBindingsToInternalScope();
+                setupGroupRowBindingsToInternalScope();
+            };
+
+            function setupFilterRowBindingsToInternalScope(){
                 if ($attrs.showFilter) {
                     $scope.$parent.$watch($attrs.showFilter, function(value) {
                         $scope.show_filter = value;
@@ -184,6 +189,14 @@
                     })
                 }
 
+                if ($attrs.disableFilter) {
+                    $scope.$parent.$watch($attrs.disableFilter, function(value) {
+                        $scope.$filterRow.disabled = value;
+                    });
+                }
+            }
+
+            function setupGroupRowBindingsToInternalScope(){
                 $scope.$groupRow = {};
                 if ($attrs.showGroup) {
                     var showGroupGetter = $parse($attrs.showGroup);
@@ -191,6 +204,7 @@
                         $scope.$groupRow.show = value;
                     });
                     if (showGroupGetter.assign){
+                        // setup two-way databinding thus allowing ngTableGrowRow to assign to the showGroup expression
                         $scope.$watch('$groupRow.show', function(value) {
                             showGroupGetter.assign($scope.$parent, value);
                         });
@@ -200,13 +214,7 @@
                         $scope.$groupRow.show = newValue;
                     });
                 }
-
-                if ($attrs.disableFilter) {
-                    $scope.$parent.$watch($attrs.disableFilter, function(value) {
-                        $scope.$filterRow.disabled = value;
-                    });
-                }
-            };
+            }
 
             function getVisibleColumns(){
                 return ($scope.$columns || []).filter(function(c){
