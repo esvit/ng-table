@@ -49,9 +49,11 @@
          *
          * @param {Object} column an existing $column or simple column data object
          * @param {Scope} defaultScope the $scope to supply to the $column getter methods when not supplied by caller
+         * @param {Array} columns a reference to the columns array to make available on the context supplied to the
+         * $column getter methods
          * @returns {Object} a $column object
          */
-        function buildColumn(column, defaultScope){
+        function buildColumn(column, defaultScope, columns){
             // note: we're not modifying the original column object. This helps to avoid unintended side affects
             var extendedCol = Object.create(column);
             var defaults = createDefaults();
@@ -78,11 +80,13 @@
                     // satisfy the arguments expected by the function returned by parsedAttribute in the ngTable directive
                     var getterFn = extendedCol[prop1];
                     extendedCol[prop1] = function () {
-                        if (arguments.length === 0) {
-                            return getterFn.call(column, defaultScope);
-                        } else {
-                            return getterFn.apply(column, arguments);
-                        }
+                        var scope = arguments[0] || defaultScope;
+                        var context = Object.create(scope);
+                        angular.extend(context, {
+                            $column: extendedCol,
+                            $columns: columns
+                        });
+                        return getterFn.call(column, context);
                     };
                     if (getterFn.assign){
                         extendedCol[prop1].assign = getterFn.assign;

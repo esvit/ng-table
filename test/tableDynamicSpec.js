@@ -38,8 +38,8 @@ describe('ng-table-dynamic', function() {
                     '</table>' +
                     '</div>');
 
-            function getCustomClass(parmasScope){
-                if (parmasScope.$column.title().indexOf('Money') !== -1){
+            function getCustomClass(context){
+                if (context.$column.title().indexOf('Money') !== -1){
                     return 'moneyHeaderClass';
                 } else{
                     return 'customClass';
@@ -534,11 +534,10 @@ describe('ng-table-dynamic', function() {
             beforeEach(inject(function($compile, NgTableParams) {
 
                 ageFilter = { age: 'text'};
-                function getFilter(paramsScope, locals){
-                    var $column = (paramsScope.$column || locals.$column);
-                    if ($column.title() === 'Name of user') {
+                function getFilter(paramsScope){
+                    if (paramsScope.$column.title() === 'Name of user') {
                         return {username: 'text'};
-                    } else if ($column.title() === 'Age') {
+                    } else if (paramsScope.$column.title() === 'Age') {
                         return ageFilter;
                     }
                 }

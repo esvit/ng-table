@@ -71,13 +71,11 @@
                             }
 
                             var localValue;
-                            var getter = function (scope, locals) {
+                            var getter = function (context) {
                                 if (localValue !== undefined){
                                     return localValue;
                                 }
-                                return $parse(expr)(scope, angular.extend(locals || {}, {
-                                    $columns: columns
-                                }));
+                                return $parse(expr)(context);
                             };
                             getter.assign = function($scope, value){
                                 var parsedExpr = $parse(expr);

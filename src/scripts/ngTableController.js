@@ -111,9 +111,7 @@
             this.loadFilterData = function ($columns) {
                 angular.forEach($columns, function ($column) {
                     var result;
-                    result = $column.filterData($scope, {
-                        $column: $column
-                    });
+                    result = $column.filterData($scope);
                     if (!result) {
                         delete $column.filterData;
                         return;
@@ -141,9 +139,11 @@
             };
 
             this.buildColumns = function (columns) {
-                return columns.map(function(col){
-                    return ngTableColumn.buildColumn(col, $scope)
-                })
+                var result = [];
+                columns.forEach(function(col){
+                    result.push(ngTableColumn.buildColumn(col, $scope, result));
+                });
+                return result
             };
 
             this.parseNgTableDynamicExpr = function (attr) {
@@ -218,7 +218,7 @@
                 if (!$scope.$columns) return false;
 
                 return some($scope.$columns, function($column){
-                    return $column.filter($scope, { $column: $column});
+                    return $column.filter($scope);
                 });
             }
 
