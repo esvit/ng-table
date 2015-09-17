@@ -459,9 +459,11 @@
          *
          * @param {Object} column an existing $column or simple column data object
          * @param {Scope} defaultScope the $scope to supply to the $column getter methods when not supplied by caller
+         * @param {Array} columns a reference to the columns array to make available on the context supplied to the
+         * $column getter methods
          * @returns {Object} a $column object
          */
-        function buildColumn(column, defaultScope){
+        function buildColumn(column, defaultScope, columns){
             // note: we're not modifying the original column object. This helps to avoid unintended side affects
             var extendedCol = Object.create(column);
             var defaults = createDefaults();
@@ -488,11 +490,13 @@
                     // satisfy the arguments expected by the function returned by parsedAttribute in the ngTable directive
                     var getterFn = extendedCol[prop1];
                     extendedCol[prop1] = function () {
-                        if (arguments.length === 0) {
-                            return getterFn.call(column, defaultScope);
-                        } else {
-                            return getterFn.apply(column, arguments);
-                        }
+                        var scope = arguments[0] || defaultScope;
+                        var context = Object.create(scope);
+                        angular.extend(context, {
+                            $column: extendedCol,
+                            $columns: columns
+                        });
+                        return getterFn.call(column, context);
                     };
                     if (getterFn.assign){
                         extendedCol[prop1].assign = getterFn.assign;
@@ -540,6 +544,7 @@
                 prevParamsMemento,
                 errParamsMemento,
                 isCommittedDataset = false,
+                initialEvents = [],
                 log = function() {
                     if (settings.debugMode && $log.debug) {
                         $log.debug.apply($log, arguments);
@@ -677,7 +682,16 @@
                             this.page(1); // reset page as a new dataset has been supplied
                         }
                         isCommittedDataset = false;
-                        ngTableEventsChannel.publishDatasetChanged(this, newSettings.dataset, originalDataset);
+
+                        var fireEvent = function () {
+                            ngTableEventsChannel.publishDatasetChanged(self, newSettings.dataset, originalDataset);
+                        };
+
+                        if (initialEvents){
+                            initialEvents.push(fireEvent);
+                        } else {
+                            fireEvent();
+                        }
                     }
                     log('ngTable: set settings', settings);
                     return this;
@@ -1268,6 +1282,12 @@
             this.parameters(baseParameters, true);
 
             ngTableEventsChannel.publishAfterCreated(this);
+            // run events during construction after the initial create event. That way a consumer
+            // can subscribe to all events for a table without "dropping" an event
+            angular.forEach(initialEvents, function(event){
+                event();
+            });
+            initialEvents = null;
 
             return this;
         };
@@ -1399,9 +1419,7 @@
             this.loadFilterData = function ($columns) {
                 angular.forEach($columns, function ($column) {
                     var result;
-                    result = $column.filterData($scope, {
-                        $column: $column
-                    });
+                    result = $column.filterData($scope);
                     if (!result) {
                         delete $column.filterData;
                         return;
@@ -1429,9 +1447,11 @@
             };
 
             this.buildColumns = function (columns) {
-                return columns.map(function(col){
-                    return ngTableColumn.buildColumn(col, $scope)
-                })
+                var result = [];
+                columns.forEach(function(col){
+                    result.push(ngTableColumn.buildColumn(col, $scope, result));
+                });
+                return result
             };
 
             this.parseNgTableDynamicExpr = function (attr) {
@@ -1462,12 +1482,29 @@
                     $scope.params = params;
                 }), false);
 
+                setupFilterRowBindingsToInternalScope();
+                setupGroupRowBindingsToInternalScope();
+            };
+
+            function setupFilterRowBindingsToInternalScope(){
                 if ($attrs.showFilter) {
                     $scope.$parent.$watch($attrs.showFilter, function(value) {
                         $scope.show_filter = value;
                     });
+                } else {
+                    $scope.$watch(hasFilterColumn, function(value){
+                        $scope.show_filter = value;
+                    })
                 }
 
+                if ($attrs.disableFilter) {
+                    $scope.$parent.$watch($attrs.disableFilter, function(value) {
+                        $scope.$filterRow.disabled = value;
+                    });
+                }
+            }
+
+            function setupGroupRowBindingsToInternalScope(){
                 $scope.$groupRow = {};
                 if ($attrs.showGroup) {
                     var showGroupGetter = $parse($attrs.showGroup);
@@ -1475,6 +1512,7 @@
                         $scope.$groupRow.show = value;
                     });
                     if (showGroupGetter.assign){
+                        // setup two-way databinding thus allowing ngTableGrowRow to assign to the showGroup expression
                         $scope.$watch('$groupRow.show', function(value) {
                             showGroupGetter.assign($scope.$parent, value);
                         });
@@ -1484,18 +1522,32 @@
                         $scope.$groupRow.show = newValue;
                     });
                 }
-
-                if ($attrs.disableFilter) {
-                    $scope.$parent.$watch($attrs.disableFilter, function(value) {
-                        $scope.$filterRow.disabled = value;
-                    });
-                }
-            };
+            }
 
             function getVisibleColumns(){
                 return ($scope.$columns || []).filter(function(c){
                     return c.show($scope);
                 });
+            }
+
+            function hasFilterColumn(){
+                if (!$scope.$columns) return false;
+
+                return some($scope.$columns, function($column){
+                    return $column.filter($scope);
+                });
+            }
+
+            function some(array, predicate){
+                var found = false;
+                for (var i = 0; i < array.length; i++) {
+                    var obj = array[i];
+                    if (predicate(obj)){
+                        found = true;
+                        break;
+                    }
+                }
+                return found;
             }
 
             function commonInit(){
@@ -1597,13 +1649,11 @@
                             }
 
                             var localValue;
-                            var getter = function (scope, locals) {
+                            var getter = function (context) {
                                 if (localValue !== undefined){
                                     return localValue;
                                 }
-                                return $parse(expr)(scope, angular.extend(locals || {}, {
-                                    $columns: columns
-                                }));
+                                return $parse(expr)(context);
                             };
                             getter.assign = function($scope, value){
                                 var parsedExpr = $parse(expr);
@@ -2193,7 +2243,7 @@
 })();
 
 angular.module('ngTable').run(['$templateCache', function ($templateCache) {
-	$templateCache.put('ng-table/filterRow.html', '<tr ng-show="show_filter" class="ng-table-filters"> <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter" ng-class="params.settings().filterOptions.filterLayout===\'horizontal\' ? \'filter-horizontal\' : \'\'"> <div ng-repeat="(name, filter) in $column.filter(this)" ng-include="config.getTemplateUrl(filter)" class="filter-cell" ng-class="[getFilterCellCss($column.filter(this), params.settings().filterOptions.filterLayout), $last ? \'last\' : \'\']"> </div> </th> </tr> ');
+	$templateCache.put('ng-table/filterRow.html', '<tr ng-show="show_filter" class="ng-table-filters"> <th data-title-text="{{$column.titleAlt(this) || $column.title(this)}}" ng-repeat="$column in $columns" ng-if="$column.show(this)" class="filter {{$column.class(this)}}" ng-class="params.settings().filterOptions.filterLayout===\'horizontal\' ? \'filter-horizontal\' : \'\'"> <div ng-repeat="(name, filter) in $column.filter(this)" ng-include="config.getTemplateUrl(filter)" class="filter-cell" ng-class="[getFilterCellCss($column.filter(this), params.settings().filterOptions.filterLayout), $last ? \'last\' : \'\']"> </div> </th> </tr> ');
 	$templateCache.put('ng-table/filters/number.html', '<input type="number" name="{{name}}" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="input-filter form-control" placeholder="{{getFilterPlaceholderValue(filter, name)}}"/> ');
 	$templateCache.put('ng-table/filters/select-multiple.html', '<select ng-options="data.id as data.title for data in $column.data" ng-disabled="$filterRow.disabled" multiple ng-multiple="true" ng-model="params.filter()[name]" class="filter filter-select-multiple form-control" name="{{name}}"> </select> ');
 	$templateCache.put('ng-table/filters/select.html', '<select ng-options="data.id as data.title for data in $selectData" ng-table-select-filter-ds="$column" ng-disabled="$filterRow.disabled" ng-model="params.filter()[name]" class="filter filter-select form-control" name="{{name}}"> <option style="display:none" value=""></option> </select> ');

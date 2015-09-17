@@ -1,3 +1,73 @@
+<a name="1.0.0-beta.5"></a>
+# 1.0.0-beta.5 (2015-09-18)
+
+
+## Bug Fixes
+
+- **NgTableParams:** afterCreated should be the very first event to fire
+  ([84d4220c](https://github.com/esvit/ng-table/commit/84d4220c1a1b61731773f5b5dc6861070dc9f99b))
+- **filterRow.html:** header-class should also apply to filter row
+  ([eed65436](https://github.com/esvit/ng-table/commit/eed65436acf4aa8d655492034e755dbbc5e73a1a))
+- **ngTableController:** reference to $column not always available in $column getter functions
+  ([adddb27d](https://github.com/esvit/ng-table/commit/adddb27de0abd4fb100ff4998ff6af83cbb6e13b))
+
+
+## Features
+
+- **ngTableController:** display the filter row by default when applicable
+  ([103b2be4](https://github.com/esvit/ng-table/commit/103b2be40fc703bf30acb782118d1bf4d5a1bd8e))
+
+
+## Breaking Changes
+
+- **NgTableParams:** due to [84d4220c](https://github.com/esvit/ng-table/commit/84d4220c1a1b61731773f5b5dc6861070dc9f99b),
+
+
+The order of events firing has changed.
+
+Previously the `datasetChanged` event would fire after the `afterCreated` event. Now `afterCreated`
+event will fires first.
+
+- **filterRow.html:** due to [eed65436](https://github.com/esvit/ng-table/commit/eed65436acf4aa8d655492034e755dbbc5e73a1a),
+
+
+A css class specified using the header-class will now be added to the filter row header cell and not
+just the sorting row.
+
+If you want to continue to apply the css rules *only* to the cell in the sorting header row you
+will now need to qualify your css rule with the '.header' css class.
+
+So the following:
+
+```css
+.my-customer-header {
+    /* rules */
+}
+```
+
+... will need to change to:
+
+```css
+.header.my-customer-header {
+    /* rules */
+}
+```
+
+- **ngTableController:** due to [adddb27d](https://github.com/esvit/ng-table/commit/adddb27de0abd4fb100ff4998ff6af83cbb6e13b),
+
+
+A context object combines and replaces the `$scope` and `locals` argument originally supplied to
+`$column` getter functions.
+
+This context object prototypically inherits from the original `$scope` and has the fields from the
+original `locals` argument as own properties.
+
+**It change is very unlikely to affect you**
+
+`ngTableColumn.buildColumn` now expects a third parameter - a reference to the `$columns`
+array that will contain the column being built
+
+
 <a name="1.0.0-beta.4"></a>
 # 1.0.0-beta.4 (2015-09-13)
 
