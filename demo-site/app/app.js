@@ -203,8 +203,11 @@
                 title: 'Events',
                 hasMore: false,
                 items: [{
-                    title: 'Example',
-                    url: '#/demo/todo'
+                    title: 'Subscribe to events',
+                    url: '#/events/demo-subscribe'
+                }, {
+                    title: 'Unsubscribe from events',
+                    url: '#/events/demo-unsubscribe'
                 }]
             }, {
                 title: 'Global customizations',
