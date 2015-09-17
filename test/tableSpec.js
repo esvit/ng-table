@@ -139,17 +139,28 @@ describe('ng-table', function() {
             var rows = thead.find('tr');
             var titles = angular.element(rows[0]).find('th');
 
-            expect(angular.element(titles[0]).hasClass('header')).toBeTruthy();
-            expect(angular.element(titles[1]).hasClass('header')).toBeTruthy();
-            expect(angular.element(titles[2]).hasClass('header')).toBeTruthy();
+            expect(angular.element(titles[0]).hasClass('header')).toBe(true);
+            expect(angular.element(titles[1]).hasClass('header')).toBe(true);
+            expect(angular.element(titles[2]).hasClass('header')).toBe(true);
 
-            expect(angular.element(titles[0]).hasClass('sortable')).toBeTruthy();
-            expect(angular.element(titles[1]).hasClass('sortable')).toBeTruthy();
-            expect(angular.element(titles[2]).hasClass('sortable')).toBeFalsy();
+            expect(angular.element(titles[0]).hasClass('sortable')).toBe(true);
+            expect(angular.element(titles[1]).hasClass('sortable')).toBe(true);
+            expect(angular.element(titles[2]).hasClass('sortable')).toBe(false);
 
-            expect(angular.element(titles[0]).hasClass('customClass')).toBeTruthy();
-            expect(angular.element(titles[1]).hasClass('customClass')).toBeTruthy();
-            expect(angular.element(titles[2]).hasClass('moneyHeaderClass')).toBeTruthy();
+            expect(angular.element(titles[0]).hasClass('customClass')).toBe(true);
+            expect(angular.element(titles[1]).hasClass('customClass')).toBe(true);
+            expect(angular.element(titles[2]).hasClass('moneyHeaderClass')).toBe(true);
+
+
+            var filterCells = angular.element(rows[1]).find('th');
+
+            expect(angular.element(filterCells[0]).hasClass('filter')).toBe(true);
+            expect(angular.element(filterCells[1]).hasClass('filter')).toBe(true);
+            expect(angular.element(filterCells[2]).hasClass('filter')).toBe(true);
+
+            expect(angular.element(filterCells[0]).hasClass('customClass')).toBe(true);
+            expect(angular.element(filterCells[1]).hasClass('customClass')).toBe(true);
+            expect(angular.element(filterCells[2]).hasClass('moneyHeaderClass')).toBe(true);
         });
 
         it('should create table header titles', function() {
