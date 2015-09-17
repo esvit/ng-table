@@ -1778,6 +1778,27 @@ describe('NgTableParams', function () {
                 // then
                 expect(callCount).toBe(2);
             });
+
+            it('should fire after afterCreated event', function(){
+                // given
+                var events = [];
+                ngTableEventsChannel.onAfterReloadData(function(/*params, newVal, oldVal*/){
+                    events.push('afterReloadData');
+                });
+                ngTableEventsChannel.onAfterCreated(function(/*params*/){
+                    events.push('afterCreated');
+                });
+
+                // when
+                var params = createNgTableParams({}, {dataset: [1,2,3,4,5,6]});
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(events[0]).toEqual('afterCreated');
+                expect(events[1]).toEqual('afterReloadData');
+            });
+
         });
 
         describe('pagesChanged', function(){
@@ -1851,6 +1872,26 @@ describe('NgTableParams', function () {
 
                 // then
                 expect(callCount).toBe(1);
+            });
+
+            it('should fire after afterCreated event', function(){
+                // given
+                var events = [];
+                ngTableEventsChannel.onPagesChanged(function(/*params, newVal, oldVal*/){
+                    events.push('pagesChanged');
+                });
+                ngTableEventsChannel.onAfterCreated(function(/*params*/){
+                    events.push('afterCreated');
+                });
+
+                // when
+                var params = createNgTableParams({ count: 5 }, { counts: [5,10], dataset: [1,2,3,4,5,6]});
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(events[0]).toEqual('afterCreated');
+                expect(events[1]).toEqual('pagesChanged');
             });
         });
 
@@ -1932,6 +1973,25 @@ describe('NgTableParams', function () {
                     expect(params.settings().dataset).toBe(newVal);
                 });
                 params.settings({ dataset: newDs});
+            });
+
+            it('should fire after afterCreated event', function(){
+                // given
+                var events = [];
+                var initialDs = [1, 2];
+                ngTableEventsChannel.onDatasetChanged(function(/*params, newVal, oldVal*/){
+                    events.push('datasetChanged');
+                });
+                ngTableEventsChannel.onAfterCreated(function(/*params*/){
+                    events.push('afterCreated');
+                });
+
+                // when
+                var params = createNgTableParams({ dataset: initialDs});
+
+                // then
+                expect(events[0]).toEqual('afterCreated');
+                expect(events[1]).toEqual('datasetChanged');
             });
         });
     })

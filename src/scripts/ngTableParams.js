@@ -30,6 +30,7 @@
                 prevParamsMemento,
                 errParamsMemento,
                 isCommittedDataset = false,
+                initialEvents = [],
                 log = function() {
                     if (settings.debugMode && $log.debug) {
                         $log.debug.apply($log, arguments);
@@ -167,7 +168,16 @@
                             this.page(1); // reset page as a new dataset has been supplied
                         }
                         isCommittedDataset = false;
-                        ngTableEventsChannel.publishDatasetChanged(this, newSettings.dataset, originalDataset);
+
+                        var fireEvent = function () {
+                            ngTableEventsChannel.publishDatasetChanged(self, newSettings.dataset, originalDataset);
+                        };
+
+                        if (initialEvents){
+                            initialEvents.push(fireEvent);
+                        } else {
+                            fireEvent();
+                        }
                     }
                     log('ngTable: set settings', settings);
                     return this;
@@ -758,6 +768,12 @@
             this.parameters(baseParameters, true);
 
             ngTableEventsChannel.publishAfterCreated(this);
+            // run events during construction after the initial create event. That way a consumer
+            // can subscribe to all events for a table without "dropping" an event
+            angular.forEach(initialEvents, function(event){
+                event();
+            });
+            initialEvents = null;
 
             return this;
         };
