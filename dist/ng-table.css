@@ -96,9 +96,6 @@
 .ng-table .ng-table-group-toggle {
   margin-right: 5px;
 }
-.ng-table + .pagination {
-  margin-top: 0;
-}
 @media only screen and (max-width: 800px) {
   .ng-table-responsive {
     border-bottom: 1px solid #999999;
@@ -146,6 +143,9 @@
   .ng-table-responsive tr {
     display: block;
   }
+}
+.ng-table-pagination {
+  margin-top: 0;
 }
 .ng-table-group-selector:before,
 .ng-table-group-selector:after,

@@ -103,9 +103,6 @@
     .ng-table-group-toggle {
         margin-right: 5px;
     }
-    & + .pagination {
-        margin-top: 0;
-    }
 }
 
 @media only screen and (max-width: 800px) {
@@ -160,10 +157,12 @@
     }
 
     .ng-table-pager {}
-    .ng-table-pagination {}
     .ng-table-counts {}
 }
 
+.ng-table-pagination {
+    margin-top: 0;
+}
 .ng-table-group-selector:before,
 .ng-table-group-selector:after,
 .filter:before,
