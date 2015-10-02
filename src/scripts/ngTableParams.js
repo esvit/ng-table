@@ -691,7 +691,7 @@
                         var groupField = Object.keys(group)[0];
                         sortDirection = group[groupField];
                         groupFn = function(item){
-                            return item[groupField];
+                            return getPath(item, groupField);
                         };
                     }
 
@@ -728,6 +728,26 @@
                         // restore the real options
                         settings.dataOptions = originalDataOptions;
                     });
+                }
+
+                function getPath (obj, ks) {
+                    // origianl source https://github.com/documentcloud/underscore-contrib
+
+                    if (typeof ks == "string") ks = ks.split(".");
+
+                    // If we have reached an undefined property
+                    // then stop executing and return undefined
+                    if (obj === undefined) return void 0;
+
+                    // If the path array has no more elements, we've reached
+                    // the intended property and return its value
+                    if (ks.length === 0) return obj;
+
+                    // If we still have elements in the path array and the current
+                    // value is null, stop executing and return undefined
+                    if (obj === null) return void 0;
+
+                    return getPath(obj[ks[0]], ks.slice(1));
                 }
             }
 

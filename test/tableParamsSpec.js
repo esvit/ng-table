@@ -183,6 +183,27 @@ describe('NgTableParams', function () {
             expect(params.group()).toEqual({ age: 'asc' });
         });
 
+        it('one group (nested property)', function () {
+            var params = new NgTableParams({
+                group: 'details.personal.age'
+            }, {
+                groupOptions: { defaultSort: 'desc' }
+            });
+
+            expect(params.hasGroup()).toBe(true);
+            expect(params.hasGroup('details.personal.age')).toBe(true);
+            expect(params.hasGroup('details.personal.age', 'desc')).toBe(true);
+            expect(params.group()).toEqual({ 'details.personal.age': 'desc' });
+
+            params.group('details.country');
+            expect(params.hasGroup('details.country', 'desc')).toBe(true);
+            expect(params.group()).toEqual({ 'details.country': 'desc' });
+
+            params.group('details.country', 'asc');
+            expect(params.hasGroup('details.country', 'asc')).toBe(true);
+            expect(params.group()).toEqual({ 'details.country': 'asc' });
+        });
+
         it('one group function', function () {
             var params = new NgTableParams({
                 group: angular.identity
@@ -652,6 +673,261 @@ describe('NgTableParams', function () {
                     data: [
                         { 'name': 'Perry', 'role': 'Customer Service' },
                         { 'name': 'Eaton', 'role': 'Customer Service' }
+                    ]
+                }
+            ]);
+        });
+    });
+
+    describe('getGroups with nested property', function(){
+
+        var dataset;
+        beforeEach(function(){
+            dataset = [
+                { 'details': { 'name': 'Hanson', 'role': 'Accounting' } },
+                { 'details': { 'name': 'Eaton', 'role': 'Customer Service' } },
+                { 'details': { 'name': 'Perry', 'role': 'Customer Service' } },
+                { 'details': { 'name': 'George', 'role': 'Accounting' } },
+                { 'details': { 'name': 'Jennings', 'role': 'Asset Management' } },
+                { 'details': { 'name': 'Whitney', 'role': 'Accounting' } },
+                { 'details': { 'name': 'Weaver', 'role': 'Payroll' } },
+                { 'details': { 'name': 'Gibson', 'role': 'Payroll' } },
+                { 'details': { 'name': 'Wells', 'role': 'Media Relations' } },
+                { 'details': { 'name': 'Willis', 'role': 'Finances' } },
+                { 'details': { 'name': 'Donovan', 'role': 'Customer Relations' } },
+                { 'details': { 'name': 'Mcdonald', 'role': 'Finances' } },
+                { 'details': { 'name': 'Young', 'role': 'Asset Management' } }
+            ];
+        });
+
+
+        it('should group data then apply paging to groups', function () {
+            var tp = createNgTableParams({ count: 2, group: { 'details.role': '' } }, { dataset: dataset });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Accounting',
+                    data: [
+                        { 'details': { 'name': 'Hanson', 'role': 'Accounting' } },
+                        { 'details': { 'name': 'George', 'role': 'Accounting' } },
+                        { 'details': { 'name': 'Whitney', 'role': 'Accounting' } }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Customer Service',
+                    data: [
+                        { 'details': { 'name': 'Eaton', 'role': 'Customer Service' } },
+                        { 'details': { 'name': 'Perry', 'role': 'Customer Service' } }
+                    ]
+                }
+            ]);
+        });
+
+        it('should sort data, then group, then page groups', function () {
+            var tp = createNgTableParams({
+                count: 2,
+                sorting: { 'details.name': 'desc'},
+                group: { 'details.role': '' }
+            }, { dataset: dataset });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Asset Management',
+                    data: [
+                        { 'details': { 'name': 'Young', 'role': 'Asset Management' } },
+                        { 'details': { 'name': 'Jennings', 'role': 'Asset Management' } }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Finances',
+                    data: [
+                        { 'details': { 'name': 'Willis', 'role': 'Finances' } },
+                        { 'details': { 'name': 'Mcdonald', 'role': 'Finances' } }
+                    ]
+                }
+            ]);
+        });
+
+        it('should use group function to group data', function () {
+            var grouper = function (item) {
+                return item.details.name[0];
+            };
+            grouper.sortDirection = '';
+            var tp = createNgTableParams({
+                count: 2,
+                sorting: {'details.name': 'desc'},
+                group: grouper
+            }, {dataset: dataset});
+
+            var actualRoleGroups;
+            tp.reload().then(function (groups) {
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Y',
+                    data: [
+                        { 'details': { 'name': 'Young', 'role': 'Asset Management' } }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'W',
+                    data: [
+                        { 'details': { 'name': 'Willis', 'role': 'Finances' } },
+                        { 'details': { 'name': 'Whitney', 'role': 'Accounting' } },
+                        { 'details': { 'name': 'Wells', 'role': 'Media Relations' } },
+                        { 'details': { 'name': 'Weaver', 'role': 'Payroll' } }
+                    ]
+                }
+            ]);
+        });
+
+        it('should filter and sort data, then group, then page groups', function () {
+            var tp = createNgTableParams({
+                count: 2,
+                sorting: { 'details.name': 'desc' },
+                filter: { 'details.name': 'e' },
+                group: { 'details.role': '' }
+            }, {
+                dataset: dataset
+            });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Accounting',
+                    data: [
+                        { 'details': { 'name': 'Whitney', 'role': 'Accounting' } },
+                        { 'details': { 'name': 'George', 'role': 'Accounting' } }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Media Relations',
+                    data: [
+                        { 'details': { 'name': 'Wells', 'role': 'Media Relations' } }
+                    ]
+                }
+            ]);
+        });
+
+        it('should filter and sort data, then group, then apply group sortDirection, and finally page groups', function () {
+            var tp = createNgTableParams({
+                count: 3,
+                sorting: { 'details.name': 'desc' },
+                filter: { 'details.name': 'e' },
+                group: { 'details.role': 'desc' }
+            }, {
+                dataset: dataset,
+                groupOptions: {
+                    // this value will be overridden by group: { role: 'desc' }
+                    defaultSort: undefined
+                }
+            });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Payroll',
+                    data: [
+                        { 'details': { 'name': 'Weaver', 'role': 'Payroll' } }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Media Relations',
+                    data: [
+                        { 'details': { 'name': 'Wells', 'role': 'Media Relations' } }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Customer Service',
+                    data: [
+                        { 'details': { 'name': 'Perry', 'role': 'Customer Service' } },
+                        { 'details': { 'name': 'Eaton', 'role': 'Customer Service' } }
+                    ]
+                }
+            ]);
+        });
+
+        it('should use sortDirection defined on group function to sort groups', function () {
+            var groupFn = function(item){
+                return item.details.role;
+            };
+            groupFn.sortDirection = 'desc';
+            var tp = createNgTableParams({
+                count: 3,
+                sorting: { 'details.name': 'desc' },
+                filter: { 'details.name': 'e' },
+                group: groupFn
+            }, {
+                dataset: dataset,
+                groupOptions: {
+                    // this value will be overridden by groupFn.sortDirection
+                    defaultSort: undefined
+                }
+            });
+
+            var actualRoleGroups;
+            tp.reload().then(function(groups){
+                actualRoleGroups = groups;
+            });
+            $rootScope.$digest();
+
+            expect(actualRoleGroups).toEqual([
+                {
+                    $hideRows: false,
+                    value: 'Payroll',
+                    data: [
+                        { 'details': { 'name': 'Weaver', 'role': 'Payroll' } }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Media Relations',
+                    data: [
+                        { 'details': { 'name': 'Wells', 'role': 'Media Relations' } }
+                    ]
+                },
+                {
+                    $hideRows: false,
+                    value: 'Customer Service',
+                    data: [
+                        { 'details': { 'name': 'Perry', 'role': 'Customer Service' } },
+                        { 'details': { 'name': 'Eaton', 'role': 'Customer Service' } }
                     ]
                 }
             ]);
