@@ -47,26 +47,34 @@
                     // - note that the original column object is being "proxied"; this is important
                     //   as it ensure that any changes to the original object will be returned by the "getter"
                     (function(prop1){
-                        var getterFn = function () {
-                            return column[prop1];
+                        var getterSetter = function getterSetter(/*[value] || [$scope, locals]*/) {
+                            if (arguments.length === 1 && !isScopeLike(arguments[0])) {
+                                getterSetter.assign(null, arguments[0]);
+                            } else {
+                                return column[prop1];
+                            }
                         };
-                        getterFn.assign = function($scope, value){
+                        getterSetter.assign = function($scope, value){
                             column[prop1] = value;
                         };
-                        extendedCol[prop1] = getterFn;
+                        extendedCol[prop1] = getterSetter;
                     })(prop);
                 }
                 (function(prop1){
                     // satisfy the arguments expected by the function returned by parsedAttribute in the ngTable directive
                     var getterFn = extendedCol[prop1];
                     extendedCol[prop1] = function () {
-                        var scope = arguments[0] || defaultScope;
-                        var context = Object.create(scope);
-                        angular.extend(context, {
-                            $column: extendedCol,
-                            $columns: columns
-                        });
-                        return getterFn.call(column, context);
+                        if (arguments.length === 1 && !isScopeLike(arguments[0])){
+                            getterFn.assign(null, arguments[0]);
+                        } else {
+                            var scope = arguments[0] || defaultScope;
+                            var context = Object.create(scope);
+                            angular.extend(context, {
+                                $column: extendedCol,
+                                $columns: columns
+                            });
+                            return getterFn.call(column, context);
+                        }
                     };
                     if (getterFn.assign){
                         extendedCol[prop1].assign = getterFn.assign;
@@ -93,13 +101,21 @@
 
         function createGetterSetter(initialValue){
             var value = initialValue;
-            var getter = function (/*$scope, locals*/){
-                return value;
+            var getterSetter = function getterSetter(/*[value] || [$scope, locals]*/){
+                if (arguments.length === 1 && !isScopeLike(arguments[0])) {
+                    getterSetter.assign(null, arguments[0]);
+                } else {
+                    return value;
+                }
             };
-            getter.assign = function($scope, newValue){
+            getterSetter.assign = function($scope, newValue){
                 value = newValue;
             };
-            return getter;
+            return getterSetter;
+        }
+
+        function isScopeLike(object){
+            return object != null && angular.isFunction(object.$new);
         }
     }]);
 })();

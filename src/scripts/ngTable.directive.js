@@ -109,11 +109,11 @@
                             show: el.attr("ng-if") ? parsedAttribute('ng-if') : undefined
                         });
 
-                        if (groupRow){
+                        if (groupRow || el.attr("ng-if")){
                             // change ng-if to bind to our column definition which we know will be writable
-                            // because this will potentially increase the $watch count, only do so when we definitely
-                            // need to change visibility of the columns.
-                            // currently only ngTableGroupRow directive needs this
+                            // because this will potentially increase the $watch count, only do so if we already have an
+                            // ng-if or when we definitely need to change visibility of the columns.
+                            // currently only ngTableGroupRow directive needs to change visibility
                             setAttrValue('ng-if', '$columns[' + (columns.length - 1) + '].show(this)');
                         }
                     });
