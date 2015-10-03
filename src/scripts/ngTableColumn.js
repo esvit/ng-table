@@ -16,31 +16,11 @@
      */
     angular.module('ngTable').factory('ngTableColumn', [function () {
 
-        function createDefaults(){
-            return {
-                'class': createGetterSetter(''),
-                filter: createGetterSetter(false),
-                groupable: createGetterSetter(false),
-                filterData: angular.noop,
-                headerTemplateURL: createGetterSetter(false),
-                headerTitle: createGetterSetter(''),
-                sortable: createGetterSetter(false),
-                show: createGetterSetter(true),
-                title: createGetterSetter(''),
-                titleAlt: createGetterSetter('')
-            };
-        }
+        return {
+            buildColumn: buildColumn
+        };
 
-        function createGetterSetter(initialValue){
-            var value = initialValue;
-            var getter = function (/*$scope, locals*/){
-                return value;
-            };
-            getter.assign = function($scope, newValue){
-                value = newValue;
-            };
-            return getter;
-        }
+        //////////////
 
         /**
          * @ngdoc method
@@ -96,8 +76,30 @@
             return extendedCol;
         }
 
-        return {
-            buildColumn: buildColumn
-        };
+        function createDefaults(){
+            return {
+                'class': createGetterSetter(''),
+                filter: createGetterSetter(false),
+                groupable: createGetterSetter(false),
+                filterData: angular.noop,
+                headerTemplateURL: createGetterSetter(false),
+                headerTitle: createGetterSetter(''),
+                sortable: createGetterSetter(false),
+                show: createGetterSetter(true),
+                title: createGetterSetter(''),
+                titleAlt: createGetterSetter('')
+            };
+        }
+
+        function createGetterSetter(initialValue){
+            var value = initialValue;
+            var getter = function (/*$scope, locals*/){
+                return value;
+            };
+            getter.assign = function($scope, newValue){
+                value = newValue;
+            };
+            return getter;
+        }
     }]);
 })();
