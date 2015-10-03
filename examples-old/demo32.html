@@ -75,12 +75,15 @@
 
 <div ng-controller="DemoCtrl" class="demo-reponsiveTable clearfix">
 
-    <table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped">
+    <button class="btn btn-default" ng-click="removeFilters()">Remove filters</button>
+    <button class="btn btn-default" ng-click="addFilters()">Add filters</button>
+
+    <table ng-table="tableParams" class="table table-bordered table-striped">
         <tr ng-repeat="user in $data">
-            <td title="'Full Name'" title-alt="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
+            <td title="'Full Name'" title-alt="'Name'" sortable="'name'" filter="filters.name">
                 {{user.name}}
             </td>
-            <td title="'Age'" sortable="'age'" filter="{ 'age': 'text' }">
+            <td title="'Age'" sortable="'age'" filter="filters.age">
                 {{user.age}}
             </td>
         </tr>
@@ -110,6 +113,22 @@
                     {name: "Enos", age: 34}
                 ];
                 $scope.data = data;
+
+                $scope.removeFilters = function(){
+                    $scope.filters = { name: false, age: false };
+                };
+                $scope.addFilters = function(){
+                    $scope.filters = {
+                        name: {
+                            'name': 'text'
+                        },
+                        age: {
+                            'age': 'number'
+                        }
+                    };
+                };
+
+            $scope.addFilters();
 
                 $scope.tableParams = new NgTableParams({
                     page: 1,            // show first page

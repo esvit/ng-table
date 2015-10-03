@@ -21,16 +21,22 @@
 <body ng-app="main">
 <h1>Export to CSV</h1>
 
-<div ng-controller="DemoCtrl">
+<div ng-controller="DemoCtrl as demo">
 
     <a class="btn btn-primary" ng-mousedown="csv.generate()" ng-href="{{ csv.link() }}" download="test.csv">Export to CSV</a>
 
-    <table ng-table="tableParams" class="table" export-csv="csv">
+    <div style="margin-bottom: 20px">
+        <label class="checkbox-inline" ng-repeat="col in demo.columns">
+            <input type="checkbox" ng-model-options="{ getterSetter: true }" ng-model="col.show"/> {{col.title()}}
+        </label>
+    </div>
+
+    <table ng-table="demo.tableParams" class="table" export-csv="csv" ng-table-columns-binding="demo.columns">
         <tr ng-repeat="user in $data">
-            <td data-title="'Name'">
+            <td data-title="'Name'" ng-if="true">
                 {{user.name}}
             </td>
-            <td data-title="'Age'">
+            <td data-title="'Age'" ng-if="true" filter="{ age: 'text'}">
                 {{user.age}}
             </td>
         </tr>
@@ -39,6 +45,7 @@
     <script>
         var app = angular.module('main', ['ngTable', 'ngTableExport']).
                 controller('DemoCtrl', function($scope, NgTableParams, $sce) {
+                    var self = this;
                     var data = [{name: "Moroni", age: 50},
                         {name: "Tiancum", age: 43},
                         {name: "Jacob", age: 27},
@@ -57,14 +64,9 @@
                         {name: "Nephi", age: 29},
                         {name: "Enos", age: 34}];
 
-                    $scope.tableParams = new NgTableParams({
-                        page: 1,            // show first page
-                        count: 10           // count per page
+                self.tableParams = new NgTableParams({
                     }, {
-                        total: data.length, // length of data
-                        getData: function($defer, params) {
-                            $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                        }
+                        dataset: data
                     });
                 });
     </script>
