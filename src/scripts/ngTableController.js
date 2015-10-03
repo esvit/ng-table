@@ -184,7 +184,7 @@
                         $scope.show_filter = value;
                     });
                 } else {
-                    $scope.$watch(hasFilterColumn, function(value){
+                    $scope.$watch(hasVisibleFilterColumn, function(value){
                         $scope.show_filter = value;
                     })
                 }
@@ -222,11 +222,11 @@
                 });
             }
 
-            function hasFilterColumn(){
+            function hasVisibleFilterColumn(){
                 if (!$scope.$columns) return false;
 
                 return some($scope.$columns, function($column){
-                    return $column.filter($scope);
+                    return $column.show($scope) && $column.filter($scope);
                 });
             }
 
