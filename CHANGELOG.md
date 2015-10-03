@@ -1,3 +1,23 @@
+<a name="1.0.0-beta.6"></a>
+# 1.0.0-beta.6 (2015-10-03)
+
+
+## Bug Fixes
+
+- **ngTableController:** should not show filter row when all filterable columns are hidden
+  ([9ba4f473](https://github.com/esvit/ng-table/commit/9ba4f473676a94605f6e14755c7d453fa4705bce))
+- **pager:** removed margin around buttons
+  ([7e6919ea](https://github.com/esvit/ng-table/commit/7e6919ea6b88bfee39ea14bd975b2a21b416e286))
+
+
+## Features
+
+- **NgTableParams:** support grouping on nested properties
+  ([2ec9d189](https://github.com/esvit/ng-table/commit/2ec9d18937693b8df42588aa84fa5cb74fb5037b))
+- **ngTableColumn:** allow $column fields to be model bound as getter/setter's
+  ([e705fd9a](https://github.com/esvit/ng-table/commit/e705fd9a930504054e00a6ed2040c9e203b97bca))
+  
+  
 <a name="1.0.0-beta.5"></a>
 # 1.0.0-beta.5 (2015-09-18)
 

@@ -426,31 +426,11 @@
      */
     angular.module('ngTable').factory('ngTableColumn', [function () {
 
-        function createDefaults(){
-            return {
-                'class': createGetterSetter(''),
-                filter: createGetterSetter(false),
-                groupable: createGetterSetter(false),
-                filterData: angular.noop,
-                headerTemplateURL: createGetterSetter(false),
-                headerTitle: createGetterSetter(''),
-                sortable: createGetterSetter(false),
-                show: createGetterSetter(true),
-                title: createGetterSetter(''),
-                titleAlt: createGetterSetter('')
-            };
-        }
+        return {
+            buildColumn: buildColumn
+        };
 
-        function createGetterSetter(initialValue){
-            var value = initialValue;
-            var getter = function (/*$scope, locals*/){
-                return value;
-            };
-            getter.assign = function($scope, newValue){
-                value = newValue;
-            };
-            return getter;
-        }
+        //////////////
 
         /**
          * @ngdoc method
@@ -477,26 +457,34 @@
                     // - note that the original column object is being "proxied"; this is important
                     //   as it ensure that any changes to the original object will be returned by the "getter"
                     (function(prop1){
-                        var getterFn = function () {
-                            return column[prop1];
+                        var getterSetter = function getterSetter(/*[value] || [$scope, locals]*/) {
+                            if (arguments.length === 1 && !isScopeLike(arguments[0])) {
+                                getterSetter.assign(null, arguments[0]);
+                            } else {
+                                return column[prop1];
+                            }
                         };
-                        getterFn.assign = function($scope, value){
+                        getterSetter.assign = function($scope, value){
                             column[prop1] = value;
                         };
-                        extendedCol[prop1] = getterFn;
+                        extendedCol[prop1] = getterSetter;
                     })(prop);
                 }
                 (function(prop1){
                     // satisfy the arguments expected by the function returned by parsedAttribute in the ngTable directive
                     var getterFn = extendedCol[prop1];
                     extendedCol[prop1] = function () {
-                        var scope = arguments[0] || defaultScope;
-                        var context = Object.create(scope);
-                        angular.extend(context, {
-                            $column: extendedCol,
-                            $columns: columns
-                        });
-                        return getterFn.call(column, context);
+                        if (arguments.length === 1 && !isScopeLike(arguments[0])){
+                            getterFn.assign(null, arguments[0]);
+                        } else {
+                            var scope = arguments[0] || defaultScope;
+                            var context = Object.create(scope);
+                            angular.extend(context, {
+                                $column: extendedCol,
+                                $columns: columns
+                            });
+                            return getterFn.call(column, context);
+                        }
                     };
                     if (getterFn.assign){
                         extendedCol[prop1].assign = getterFn.assign;
@@ -506,9 +494,39 @@
             return extendedCol;
         }
 
-        return {
-            buildColumn: buildColumn
-        };
+        function createDefaults(){
+            return {
+                'class': createGetterSetter(''),
+                filter: createGetterSetter(false),
+                groupable: createGetterSetter(false),
+                filterData: angular.noop,
+                headerTemplateURL: createGetterSetter(false),
+                headerTitle: createGetterSetter(''),
+                sortable: createGetterSetter(false),
+                show: createGetterSetter(true),
+                title: createGetterSetter(''),
+                titleAlt: createGetterSetter('')
+            };
+        }
+
+        function createGetterSetter(initialValue){
+            var value = initialValue;
+            var getterSetter = function getterSetter(/*[value] || [$scope, locals]*/){
+                if (arguments.length === 1 && !isScopeLike(arguments[0])) {
+                    getterSetter.assign(null, arguments[0]);
+                } else {
+                    return value;
+                }
+            };
+            getterSetter.assign = function($scope, newValue){
+                value = newValue;
+            };
+            return getterSetter;
+        }
+
+        function isScopeLike(object){
+            return object != null && angular.isFunction(object.$new);
+        }
     }]);
 })();
 
@@ -1205,7 +1223,7 @@
                         var groupField = Object.keys(group)[0];
                         sortDirection = group[groupField];
                         groupFn = function(item){
-                            return item[groupField];
+                            return getPath(item, groupField);
                         };
                     }
 
@@ -1242,6 +1260,26 @@
                         // restore the real options
                         settings.dataOptions = originalDataOptions;
                     });
+                }
+
+                function getPath (obj, ks) {
+                    // origianl source https://github.com/documentcloud/underscore-contrib
+
+                    if (typeof ks == "string") ks = ks.split(".");
+
+                    // If we have reached an undefined property
+                    // then stop executing and return undefined
+                    if (obj === undefined) return void 0;
+
+                    // If the path array has no more elements, we've reached
+                    // the intended property and return its value
+                    if (ks.length === 0) return obj;
+
+                    // If we still have elements in the path array and the current
+                    // value is null, stop executing and return undefined
+                    if (obj === null) return void 0;
+
+                    return getPath(obj[ks[0]], ks.slice(1));
                 }
             }
 
@@ -1492,7 +1530,7 @@
                         $scope.show_filter = value;
                     });
                 } else {
-                    $scope.$watch(hasFilterColumn, function(value){
+                    $scope.$watch(hasVisibleFilterColumn, function(value){
                         $scope.show_filter = value;
                     })
                 }
@@ -1530,11 +1568,11 @@
                 });
             }
 
-            function hasFilterColumn(){
+            function hasVisibleFilterColumn(){
                 if (!$scope.$columns) return false;
 
                 return some($scope.$columns, function($column){
-                    return $column.filter($scope);
+                    return $column.show($scope) && $column.filter($scope);
                 });
             }
 
@@ -1687,11 +1725,11 @@
                             show: el.attr("ng-if") ? parsedAttribute('ng-if') : undefined
                         });
 
-                        if (groupRow){
+                        if (groupRow || el.attr("ng-if")){
                             // change ng-if to bind to our column definition which we know will be writable
-                            // because this will potentially increase the $watch count, only do so when we definitely
-                            // need to change visibility of the columns.
-                            // currently only ngTableGroupRow directive needs this
+                            // because this will potentially increase the $watch count, only do so if we already have an
+                            // ng-if or when we definitely need to change visibility of the columns.
+                            // currently only ngTableGroupRow directive needs to change visibility
                             setAttrValue('ng-if', '$columns[' + (columns.length - 1) + '].show(this)');
                         }
                     });
