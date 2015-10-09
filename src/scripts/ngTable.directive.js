@@ -16,8 +16,8 @@
      * @description
      * Directive that instantiates {@link ngTableController ngTableController}.
      */
-    angular.module('ngTable').directive('ngTable', ['$q', '$parse',
-        function($q, $parse) {
+    angular.module('ngTable').directive('ngTable', ['$q', '$parse','$interpolateProvider'
+        function($q, $parse, $interpolateProvider) {
             'use strict';
 
             return {
@@ -91,7 +91,7 @@
                         };
                         var titleExpr = getAttrValue('title-alt') || getAttrValue('title');
                         if (titleExpr){
-                            el.attr('data-title-text', '{{' + titleExpr + '}}'); // this used in responsive table
+                            el.attr('data-title-text', $interpolateProvider.startSymbol() + titleExpr + $interpolateProvider.endSymbol()); // this used in responsive table
                         }
                         // NOTE TO MAINTAINERS: if you add extra fields to a $column be sure to extend ngTableColumn with
                         // a corresponding "safe" default
