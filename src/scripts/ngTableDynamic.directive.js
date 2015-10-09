@@ -18,7 +18,7 @@
      * A dynamic version of the {@link ngTable ngTable} directive that accepts a dynamic list of columns
      * definitions to render
      */
-    angular.module('ngTable').directive('ngTableDynamic', [function (){
+    angular.module('ngTable').directive('ngTableDynamic', ['$interpolateProvider',function ($interpolateProvider){
 
         return {
             restrict: 'A',
@@ -48,7 +48,7 @@
                     // this used in responsive table
                     var titleExpr = getAttrValue('title');
                     if (!titleExpr){
-                        el.attr('data-title-text', '{{$columns[$index].titleAlt(this) || $columns[$index].title(this)}}');
+                        el.attr('data-title-text', $interpolateProvider.startSymbol()+'$columns[$index].titleAlt(this) || $columns[$index].title(this)'+$interpolateProvider.endSymbol());
                     }
                     var showExpr = el.attr('ng-if');
                     if (!showExpr){
