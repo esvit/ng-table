@@ -1,3 +1,13 @@
+<a name="1.0.0-beta.7"></a>
+# 1.0.0-beta.7 (2015-10-18)
+
+
+## Bug Fixes
+
+- **ngTableParams:** reload is never triggered once reload has failed once
+  ([4369926c](https://github.com/esvit/ng-table/commit/4369926c9dcdf37defee96436e18d02544ae2587))
+
+
 <a name="1.0.0-beta.6"></a>
 # 1.0.0-beta.6 (2015-10-03)
 
