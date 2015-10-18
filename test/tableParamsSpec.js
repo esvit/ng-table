@@ -1009,13 +1009,13 @@ describe('NgTableParams', function () {
             expect(tp.isDataReloadRequired()).toBe(false);
         });
 
-        it('should return true when getData fails', inject(function($q){
+        it('should return false when getData fails', inject(function($q){
             tp.settings({ getData: function(){
                 return $q.reject('bad response');
             }});
             tp.reload();
             scope.$digest();
-            expect(tp.isDataReloadRequired()).toBe(true);
+            expect(tp.isDataReloadRequired()).toBe(false);
         }));
 
         it('should detect direct changes to parameters', inject(function($q){
@@ -1157,7 +1157,7 @@ describe('NgTableParams', function () {
             }});
             tp.reload();
             scope.$digest();
-            expect(tp.hasFilterChanges()).toBe(true);
+            expect(tp.hasFilterChanges()).toBe(false);
         }));
 
         it('should detect direct changes to filters', inject(function($q){

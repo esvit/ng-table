@@ -1110,7 +1110,7 @@ describe('ng-table', function() {
             scope.$digest();
 
             // then
-            expect(tp.isDataReloadRequired()).toBe(true);
+            expect(tp.isDataReloadRequired()).toBe(false);
             expect(tp.settings().getData.calls.count()).toBe(2);
         }));
 

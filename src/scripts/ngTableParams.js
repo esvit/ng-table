@@ -429,6 +429,9 @@
              * @name NgTableParams#isDataReloadRequired
              * @description Return true when a change to this `NgTableParams` instance should require the reload method
              * to be run so as to ensure the data presented to the user reflects the `NgTableParams`
+             *
+             * Note that this method will return false when the reload method has run but fails. In this case
+             * `hasErrorState` will return true.
              */
             this.isDataReloadRequired = function(){
                 // note: using != as want to treat null and undefined the same
@@ -581,8 +584,6 @@
                     return data;
                 }).catch(function(reason){
                     errParamsMemento = prevParamsMemento;
-                    prevParamsMemento = null;
-                    isCommittedDataset = false;
                     // "rethrow"
                     return $q.reject(reason);
                 });
