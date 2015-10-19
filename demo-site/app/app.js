@@ -214,10 +214,10 @@
                 hasMore: false,
                 items: [{
                     title: 'Response interceptors',
-                    url: '#/demo/todo'
+                    url: '#/global-customization/demo-response-interceptors'
                 }, {
                     title: 'Change default parameters and settings',
-                    url: '#/demo/todo'
+                    url: '#/global-customization/demo-defaults'
                 }, {
                     title: 'Replace default filter/sorting algorithm',
                     url: '#/demo/todo'
