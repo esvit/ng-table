@@ -48,7 +48,7 @@
                     defaultSort: 'asc', // set to 'asc' or 'desc' to apply sorting to groups
                     isExpanded: true
                 },
-                defaultFettingsFns = getDefaultSettingFns();
+                defaultSettingsFns = getDefaultSettingFns();
 
             this.data = [];
 
@@ -606,7 +606,7 @@
                 // don't debounce by default filter input when working with small synchronous datasets
                 if (settings.filterOptions.filterDelay === defaultFilterOptions.filterDelay &&
                     settings.total <= settings.filterOptions.filterDelayThreshold &&
-                    settings.getData === defaultFettingsFns.getData){
+                    settings.getData === defaultSettingsFns.getData){
                     settings.filterOptions.filterDelay = 0;
                 }
             }
@@ -783,7 +783,7 @@
                 sortingIndicator: 'span'
             };
 
-            this.settings(defaultFettingsFns);
+            this.settings(defaultSettingsFns);
             this.settings(ngTableDefaults.settings);
             this.settings(baseSettings);
             this.parameters(baseParameters, true);
