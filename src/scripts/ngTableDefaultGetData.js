@@ -20,11 +20,11 @@
      * @name ngTableDefaultGetDataProvider
      * @description Allows for the configuration of the ngTableDefaultGetData service.
      *
-     * Set filterFilterName to the name of a angular filter that knows how to take `NgTableParams.filter()`
-     * to restrict an array of data.
+     * Set filterFilterName to the name of a angular filter that knows how to apply the values returned by
+     * `NgTableParams.filter()` to restrict an array of data.
      *
-     * Set sortingFilterName to the name of a angular filter that knows how to take `NgTableParams.orderBy()`
-     * to sort an array of data.
+     * Set sortingFilterName to the name of a angular filter that knows how to apply the values returned by
+     * `NgTableParams.orderBy()` to sort an array of data.
      *
      * Out of the box the `ngTableDefaultGetData` service will be configured to use the angular `filter` and `orderBy`
      * filters respectively
