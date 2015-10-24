@@ -247,11 +247,13 @@
                 ngTableEventsChannel.onPagesChanged(bindPagesToScope, $scope, isMyPublisher);
 
                 function bindDataToScope(params, newDatapage){
+                    var visibleColumns = getVisibleColumns();
                     if (params.hasGroup()) {
                         $scope.$groups = newDatapage || [];
-                        $scope.$groups.visibleColumnCount = getVisibleColumns().length;
+                        $scope.$groups.visibleColumnCount = visibleColumns.length;
                     } else {
                         $scope.$data = newDatapage;
+                        $scope.$data.visibleColumnCount = visibleColumns.length;
                     }
                 }
 
