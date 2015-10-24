@@ -203,18 +203,21 @@
                 title: 'Events',
                 hasMore: false,
                 items: [{
-                    title: 'Example',
-                    url: '#/demo/todo'
+                    title: 'Subscribe to events',
+                    url: '#/events/demo-subscribe'
+                }, {
+                    title: 'Unsubscribe from events',
+                    url: '#/events/demo-unsubscribe'
                 }]
             }, {
                 title: 'Global customizations',
                 hasMore: false,
                 items: [{
                     title: 'Response interceptors',
-                    url: '#/demo/todo'
+                    url: '#/global-customization/demo-response-interceptors'
                 }, {
                     title: 'Change default parameters and settings',
-                    url: '#/demo/todo'
+                    url: '#/global-customization/demo-defaults'
                 }, {
                     title: 'Replace default filter/sorting algorithm',
                     url: '#/demo/todo'

@@ -13,8 +13,8 @@
                 Hand <code>NgTableParams</code> an in-memory array and let it do the filtering, sorting and paging
                 on that array. Eg:<br/>
 <pre style="margin-top:10px" data-prettycode pretty-lang="js">
-var data = [{ name: 'christian', age: 21 }, { name: 'anthony', age: 88 }];
-var tp = new NgTableParams({}, { data: data });
+var dataset = [{ name: 'christian', age: 21 }, { name: 'anthony', age: 88 }];
+var tp = new NgTableParams({}, { dataset: dataset });
 </pre>
             </dd>
             <dt>2. External array</dt>
@@ -23,7 +23,11 @@ var tp = new NgTableParams({}, { data: data });
                 data. Eg:<br/>
 <pre style="margin-top:10px" data-prettycode pretty-lang="js">
 var tp = new NgTableParams({}, { getData: function(params){
-    /* code to fetch data that matches the params values */
+    /* code to fetch data that matches the params values EG: */
+    return executeQuery(params).then(function(data){
+        params.total(data.inlineCount);
+        return data.results;
+    });
 }});
 </pre>
             </dd>
