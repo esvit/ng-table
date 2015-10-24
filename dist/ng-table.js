@@ -258,11 +258,11 @@
      * @name ngTableDefaultGetDataProvider
      * @description Allows for the configuration of the ngTableDefaultGetData service.
      *
-     * Set filterFilterName to the name of a angular filter that knows how to take `NgTableParams.filter()`
-     * to restrict an array of data.
+     * Set filterFilterName to the name of a angular filter that knows how to apply the values returned by
+     * `NgTableParams.filter()` to restrict an array of data.
      *
-     * Set sortingFilterName to the name of a angular filter that knows how to take `NgTableParams.orderBy()`
-     * to sort an array of data.
+     * Set sortingFilterName to the name of a angular filter that knows how to apply the values returned by
+     * `NgTableParams.orderBy()` to sort an array of data.
      *
      * Out of the box the `ngTableDefaultGetData` service will be configured to use the angular `filter` and `orderBy`
      * filters respectively
@@ -580,7 +580,7 @@
                     defaultSort: 'asc', // set to 'asc' or 'desc' to apply sorting to groups
                     isExpanded: true
                 },
-                defaultFettingsFns = getDefaultSettingFns();
+                defaultSettingsFns = getDefaultSettingFns();
 
             this.data = [];
 
@@ -1138,7 +1138,7 @@
                 // don't debounce by default filter input when working with small synchronous datasets
                 if (settings.filterOptions.filterDelay === defaultFilterOptions.filterDelay &&
                     settings.total <= settings.filterOptions.filterDelayThreshold &&
-                    settings.getData === defaultFettingsFns.getData){
+                    settings.getData === defaultSettingsFns.getData){
                     settings.filterOptions.filterDelay = 0;
                 }
             }
@@ -1315,7 +1315,7 @@
                 sortingIndicator: 'span'
             };
 
-            this.settings(defaultFettingsFns);
+            this.settings(defaultSettingsFns);
             this.settings(ngTableDefaults.settings);
             this.settings(baseSettings);
             this.parameters(baseParameters, true);
@@ -1594,11 +1594,13 @@
                 ngTableEventsChannel.onPagesChanged(bindPagesToScope, $scope, isMyPublisher);
 
                 function bindDataToScope(params, newDatapage){
+                    var visibleColumns = getVisibleColumns();
                     if (params.hasGroup()) {
                         $scope.$groups = newDatapage || [];
-                        $scope.$groups.visibleColumnCount = getVisibleColumns().length;
+                        $scope.$groups.visibleColumnCount = visibleColumns.length;
                     } else {
                         $scope.$data = newDatapage;
+                        $scope.$data.visibleColumnCount = visibleColumns.length;
                     }
                 }
 

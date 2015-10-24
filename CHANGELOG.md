@@ -1,3 +1,13 @@
+<a name="1.0.0-beta.8"></a>
+# 1.0.0-beta.8 (2015-10-24)
+
+
+## Features
+
+- **ngTableController:** add visibleColumnCount to the the current $data array
+  ([8e0b1095](https://github.com/esvit/ng-table/commit/8e0b1095611b1ce44deec0dd8c286d863874be83))
+
+
 <a name="1.0.0-beta.7"></a>
 # 1.0.0-beta.7 (2015-10-18)
 
