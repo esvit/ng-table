@@ -1487,7 +1487,7 @@
 
             this.buildColumns = function (columns) {
                 var result = [];
-                columns.forEach(function(col){
+                (columns || []).forEach(function(col){
                     result.push(ngTableColumn.buildColumn(col, $scope, result));
                 });
                 return result
@@ -1599,7 +1599,7 @@
                         $scope.$groups = newDatapage || [];
                         $scope.$groups.visibleColumnCount = visibleColumns.length;
                     } else {
-                        $scope.$data = newDatapage;
+                        $scope.$data = newDatapage || [];
                         $scope.$data.visibleColumnCount = visibleColumns.length;
                     }
                 }

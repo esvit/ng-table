@@ -1,3 +1,16 @@
+<a name="1.0.0-beta.9"></a>
+# 1.0.0-beta.9 (2015-11-10)
+
+
+## Bug Fixes
+
+- **ngTableController:**
+  - handle null data array
+  ([e33e03dd](https://github.com/esvit/ng-table/commit/e33e03dd4d86efdcf0407ccf6890b3071050f69a))
+  - handle null columns array
+  ([be6fa198](https://github.com/esvit/ng-table/commit/be6fa19816d154c3278b4659b0d06a207dd77a43))
+
+
 <a name="1.0.0-beta.8"></a>
 # 1.0.0-beta.8 (2015-10-24)
 
