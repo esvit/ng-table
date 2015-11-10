@@ -252,7 +252,7 @@
                         $scope.$groups = newDatapage || [];
                         $scope.$groups.visibleColumnCount = visibleColumns.length;
                     } else {
-                        $scope.$data = newDatapage;
+                        $scope.$data = newDatapage || [];
                         $scope.$data.visibleColumnCount = visibleColumns.length;
                     }
                 }
