@@ -140,7 +140,7 @@
 
             this.buildColumns = function (columns) {
                 var result = [];
-                columns.forEach(function(col){
+                (columns || []).forEach(function(col){
                     result.push(ngTableColumn.buildColumn(col, $scope, result));
                 });
                 return result

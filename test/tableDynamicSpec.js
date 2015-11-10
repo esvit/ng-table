@@ -196,7 +196,7 @@ describe('ng-table-dynamic', function() {
             expect(angular.element(filterRow.find('th')[1]).find('select').length).toBe(1);
         }));
     });
-   describe('add column', function(){
+   describe('changing column list', function(){
         var elm;
         beforeEach(inject(function($compile, $q, NgTableParams) {
             elm = angular.element(
@@ -250,7 +250,7 @@ describe('ng-table-dynamic', function() {
             scope.$digest();
         }));
 
-        it('should create table header', function() {
+        it('adding new column should update table header', function() {
             var newCol =  {
                  'class': 'moneyadd',
                  field: 'money',
@@ -274,13 +274,47 @@ describe('ng-table-dynamic', function() {
             expect(angular.element(titles[1]).text().trim()).toBe('Age');
             expect(angular.element(titles[2]).text().trim()).toBe('Money');
 
-            expect(angular.element(rows[1]).hasClass('ng-table-filters')).toBeTruthy();
-            var filters = angular.element(rows[1]).find('th');
+            var filterRow = angular.element(rows[1]);
+            expect(filterRow.hasClass('ng-table-filters')).toBeTruthy();
+            expect(filterRow.hasClass("ng-hide")).toBe(false);
+
+            var filters = filterRow.find('th');
             expect(filters.length).toBe(3);
             expect(angular.element(filters[0]).hasClass('filter')).toBeTruthy();
             expect(angular.element(filters[1]).hasClass('filter')).toBeTruthy();
             expect(angular.element(filters[2]).hasClass('filter')).toBeTruthy();
 
+        });
+
+        it('removing new column should update table header', function() {
+            scope.cols.splice(0, 1);
+            scope.$digest();
+            var thead = elm.find('thead');
+            expect(thead.length).toBe(1);
+
+            var rows = thead.find('tr');
+            var titles = angular.element(rows[0]).find('th');
+            expect(titles.length).toBe(1);
+            expect(angular.element(titles[0]).text().trim()).toBe('Age');
+
+            var filterRow = angular.element(rows[1]);
+            expect(filterRow.hasClass("ng-hide")).toBe(true);
+        });
+
+        it('setting columns to null should remove all table columns from header', function() {
+            scope.cols = null;
+            scope.$digest();
+            var thead = elm.find('thead');
+            expect(thead.length).toBe(1);
+
+            var rows = thead.find('tr');
+            var titles = angular.element(rows[0]).find('th');
+            expect(titles.length).toBe(0);
+
+            var filterRow = angular.element(rows[1]);
+            expect(filterRow.hasClass("ng-hide")).toBe(true);
+
+            expect(filterRow.find('th').length).toBe(0);
         });
 
     });
