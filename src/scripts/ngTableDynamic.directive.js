@@ -62,8 +62,10 @@
                     controller.compileDirectiveTemplates();
 
                     scope.$watchCollection(expr.columns, function (newCols/*, oldCols*/) {
-                        scope.$columns = controller.buildColumns(newCols);
-                        controller.loadFilterData(scope.$columns);
+                        if (newCols) {
+                            scope.$columns = controller.buildColumns(newCols);
+                            controller.loadFilterData(scope.$columns);
+                        }
                     });
                 };
             }
