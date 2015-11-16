@@ -25,7 +25,7 @@ angular.module("myApp", ["ngTable"]);
                 </li>
                 <li>In your html file within the controller where you plan to use <code>ng-table</code>, add:<br>
 <pre style="margin-top:10px" data-prettycode pretty-lang="html">
-&lt;table ng-table=&quot;vm.tableParams&quot; class=&quot;table&quot; show-filter=&quot;true&quot;&gt;
+&lt;table ng-table=&quot;tableParams&quot; class=&quot;table&quot; show-filter=&quot;true&quot;&gt;
     &lt;tr ng-repeat=&quot;user in $data&quot;&gt;
         &lt;td title=&quot;'Name'&quot; filter=&quot;{ name: 'text'}&quot; sortable=&quot;'name'&quot;&gt;
             {{user.name}}&lt;/td&gt;
@@ -37,9 +37,8 @@ angular.module("myApp", ["ngTable"]);
                 </li>
                 <li>In your javascript file within the controller where you plan to use <code>ng-table</code>, declare:<br> </li>
 <pre style="margin-top:10px" data-prettycode pretty-lang="js">
-var self = this;
 var data = [{name: "Moroni", age: 50} /*,*/];
-self.tableParams = new NgTableParams({}, { dataset: data});
+$scope.tableParams = new NgTableParams({}, { dataset: data});
 </pre>
             </ol>
         </div>
