@@ -144,6 +144,16 @@ module.exports = function(grunt) {
                     module: 'ngTable'
                 }
             }
-        }
+        },
+
+		release : {
+			options : {
+				bump: false, //default: false
+				add: false, //default: true
+				commit: false, //default: true
+				tagName : 'v<%= version %>', //default: '<%= version %>'
+				additionalFiles: ['bower.json']
+			}
+		}
     });
 };

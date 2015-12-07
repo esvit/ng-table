@@ -27,6 +27,7 @@
     "grunt-contrib-uglify": "0.8.x",
     "grunt-contrib-watch": "~0.6.x",
     "grunt-hustler": "0.11.2",
+    "grunt-release": "0.13.0",
     "gulp": "~3.8.11",
     "gulp-browserify": "~0.5.1",
     "gulp-gh-pages": "^0.5.1",
