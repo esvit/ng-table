@@ -1227,7 +1227,7 @@ describe('NgTableParams', function () {
                 if (tp.settings().getData.calls.count() > 2){
                     return $q.reject('bad response');
                 }
-                return [1,2];
+                return $q.when([1,2]);
             }});
 
             // when, then
@@ -1283,7 +1283,6 @@ describe('NgTableParams', function () {
 
         it('shim should return the getData "$defer" promise', inject(function(ngTableGetDataBcShim){
             // given
-            var callCount = 0;
             var adaptedFn = ngTableGetDataBcShim(originalGetDataFn);
 
             // when
@@ -1305,7 +1304,6 @@ describe('NgTableParams', function () {
 
         it('shim should return the data', inject(function(ngTableGetDataBcShim){
             // given
-            var callCount = 0;
             var adaptedFn = ngTableGetDataBcShim(originalGetDataFn);
 
             // when
@@ -1585,7 +1583,6 @@ describe('NgTableParams', function () {
                 var tp = createNgTableParams({ interceptors: [interceptor]});
 
                 // when
-                var actualData;
                 tp.reload();
                 scope.$digest();
 
@@ -1938,7 +1935,6 @@ describe('NgTableParams', function () {
 
                 function test(event){
                     // given
-                    var cbCount = 0;
                     ngTableEventsChannel['on' + event](function(params){
                         actualPublisher = params;
                     });
@@ -2263,7 +2259,7 @@ describe('NgTableParams', function () {
                 });
 
                 // when
-                var params = createNgTableParams({ dataset: initialDs});
+                createNgTableParams({ dataset: initialDs});
 
                 // then
                 expect(events[0]).toEqual('afterCreated');

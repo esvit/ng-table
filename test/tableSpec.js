@@ -1,3 +1,9 @@
+/// <reference path="../typings/ngtable/ngtable.d.ts" />
+
+function stuff() {
+    var tbl = new NgTableParams();
+}
+
 describe('ng-table', function() {
     var dataset = [
         { id: 1, name: "Moroni", age: 50, money: -10 },
