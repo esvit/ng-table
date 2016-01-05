@@ -68,15 +68,15 @@
 
             /////////
 
-            function getTemplateUrl(filterValue, filterKey){
-                if (angular.isObject(filterValue)){
-                    filterValue = filterValue.id;
+            function getTemplateUrl(filterDef, filterKey){
+                if (angular.isObject(filterDef)){
+                    filterDef = filterDef.id;
                 }
-                if (filterValue.indexOf('/') !== -1){
-                    return filterValue;
+                if (filterDef.indexOf('/') !== -1){
+                    return filterDef;
                 }
 
-                return service.getUrlForAlias(filterValue, filterKey);
+                return service.getUrlForAlias(filterDef, filterKey);
             }
 
             function getUrlForAlias(aliasName/*, filterKey*/){
