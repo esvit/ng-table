@@ -7,9 +7,9 @@ Code licensed under New BSD License.
 This directive allow to liven your tables. It support sorting, filtering and pagination.
 Header row with titles and filters automatic generated on compilation step.
 
-## Depreciation notice
+## Deprecation notice
 
-The following behaviours are depreciated and will be removed before the 1.0.0 release.
+The following behaviours are deprecated and will be removed before the 1.0.0 release.
 
 The 1.0.0 release is expected to land in 2-3 weeks.
 
