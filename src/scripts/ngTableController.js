@@ -100,6 +100,9 @@
                         'ng-table-pagination': 'params',
                         'template-url': 'templates.pagination'
                     });
+                    if (headerTemplate) {
+                        $compile(headerTemplate)($scope);
+                    }
                     var pagerPosition = $attrs.pagerPosition ? $attrs.pagerPosition : 'bottom';
                     if (pagerPosition == 'bottom') {
                         $element.after(paginationTemplate);
@@ -116,9 +119,6 @@
                         });
                         $element.after(paginationTemplate);
                         $compile(paginationTemplate)($scope);
-                    }
-                    if (headerTemplate) {
-                        $compile(headerTemplate)($scope);
                     }
                 }
             };
