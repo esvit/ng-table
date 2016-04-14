@@ -7,81 +7,6 @@ Code licensed under New BSD License.
 This directive allow to liven your tables. It support sorting, filtering and pagination.
 Header row with titles and filters automatic generated on compilation step.
 
-## Depreciation notice
-
-The following behaviours are depreciated and will be removed before the 1.0.0 release.
-
-The 1.0.0 release is expected to land in 2-3 weeks.
-
-### 1. `ngTableAfterReloadData` event will be removed
-
-Eventing no longer uses *direct* calls $scope.$emit. Instead a strongly typed pub/sub service (`ngTableEventsChannel`) is used.
-
-**To migrate**
-
-*Previously:*
-
-```js
-    $scope.$on('ngTableAfterReloadData', yourHandler)
-```
-
-*Now:*
-
-```js
-    ngTableEventsChannel.onAfterReloadData(yourHandler, $scope)
-```
-
-### 2. `$scope` removed from `NgTableParams`
-
-Because of 1. above, `NgTableParams` no longer requires a reference to `$scope`. 
-
-A reference to `$scope` was largely an internal requirement so there should be no code change required on your part.
-
-### 3. `getData` signature change
-
-The `$defer` paramater supplied to your `getData` method has been removed. Instead your `getData` method should return an array or a promise that resolves to an array.
-
-**To migrate**
-
-*Previously:*
-
-```js
-    var tp = new NgTableParams({}, { getData: getData });
-    
-    function getData($defer, params){
-        // snip
-        $defer.resolve(yourDataArray);
-    }
-```
-
-*Now:*
-
-```js
-    var tp = new NgTableParams({}, { getData: getData });
-    
-    function getData(params){
-        // snip
-        return yourDataArrayOrPromise;
-    }
-```
-
-### 4. `ngTableParams` renamed to `NgTableParams`
-
-**To migrate**
-
-*Previously:*
-
-```js
-    var tp = new ngTableParams();
-```
-
-*Now:*
-
-```js
-    var tp = new NgTableParams();
-```
-
-
 ## Installing via Bower
 ```
 bower install ng-table
@@ -102,6 +27,63 @@ The karma task will try to open Firefox and Chrome as browser in which to run th
 ## Configuring ng-table
 For a list of configuration options available, see [Configuring your table with NgTableParams](https://github.com/esvit/ng-table/wiki/Configuring-your-table-with-ngTableParams)
 
+## Basic Usage
+
+```html
+<!-- View HTML -->
+<table ng-table="tableParams">
+  <tr ng-repeat="row in $data">
+    <thead>
+      <th>Col1</th>
+      <th>Col2</th>
+    </thead>
+    <tbody>
+      <td>{{row.col1}}</td>
+      <td>{{row.col2}}</td>
+    </tbody>
+  </tr>
+</table>
+```
+```js
+// Controller JS
+var Api = $resource('/data');
+var params = {
+  page: 1, // start on first page
+  count: 10  // initial rows per page
+};
+var settings = {
+  counts: [10, 50],  // rows per page options
+  total: 100, // for accurate pagination, size of dataset
+  data: [],  // initial dataset
+  getData: function($defer, params) {
+    Api.get({page: params.page()},
+      function(res) {
+        $defer.resolve(res);
+      }
+    );
+  }
+};
+$scope.tableParams = new ngTableParams(params, settings);
+```
+
+## Examples
+
+See [ng-table.com](http://ng-table.com). Note that these examples use the V1.0 alpha release.
+
+## Automatic Paginating
+
+**Config**
+
+Paginating is handled automagically by ng-table and it based on params set in ngTableParams: `count`, `page`, and `total`. Pagination is not possible when the size of the dataset is not known. If you do not set `ngTableParams.total()`, ng-table will not attempt to paginate for you (though you can still manage pages programmatically with `ngTableParams.page()`.
+
+**Hiding "rows per page" controls**
+
+By default ng-table adds an input to allow users to choose between 10, 25, 50, or 100 rows per page. You can hide this by configuring a `new ngTableParams(params, settings);` where `var settings = {counts: []};`
+
+## Automatic Headers
+If you do not define a `<thead>` inside your ng-table, one will be created for you based on the contents of your table's `<td>` tags. Set a `<td title="'Title'">` attribute to customize your column title.
+
+For tables where data is fetched asynchronously, ng-table will saturate your ng-repeat with a collection of `undefined` data so that can infer table headers from the DOM. This may cause unexpected behavior, so it is recommended that you define your own `<thead>` when fetching asynchronously.
 
 ## Updates
 
@@ -120,18 +102,6 @@ Please be responsible, the open source community is not there to guess your prob
 4. isolate your code sample on the probable issue to avoid pollution and noise.
 
 5. Close your issue when a solution has been found (and share it with the community)
-
-Note that 80% of the open issues are actually not issues but "problem" due to developpers laziness or lack of investigation. These "issues" are a waste of time for us and especially if we have to setup a sample to reproduce the issue which those developpers could have done. Any open issue which does not fulfill this contract will be closed without investigation.
-
-
-## Examples
-
-* [Demo site](http://ng-table.com/)
-* Codepen examples (**Tip**: fork these to create your own examples);
-    * [`ngTable`: inmemory list](http://codepen.io/christianacca/pen/VLqVeo?editors=101)
-    * [`ngTable`: server-side list](http://codepen.io/christianacca/pen/VLqqjP?editors=101)
-    * [`ngTableDynamic`: inmemory list](http://codepen.io/christianacca/pen/jPxgzY?editors=101)
-    * [`ngTableDynamic`: server-side list](http://codepen.io/christianacca/pen/JdwwrR/?editors=101)
 
 ## Compatibility
 
