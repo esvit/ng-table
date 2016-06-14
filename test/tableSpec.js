@@ -493,6 +493,9 @@ describe('ng-table', function () {
                     else if (colDef.id === 1) {
                         return ageFilter;
                     }
+                    else {
+                        return undefined;
+                    }
                 };
                 scope.tableParams = createNgTableParams();
                 scope.$digest();

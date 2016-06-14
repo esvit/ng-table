@@ -650,6 +650,8 @@ describe('ng-table', function() {
                         return {username: 'text'};
                     } else if (colDef.id === 1) {
                         return ageFilter;
+                    } else {
+                        return undefined;
                     }
                 };
                 scope.tableParams = createNgTableParams<IPerson>();

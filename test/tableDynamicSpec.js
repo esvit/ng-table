@@ -473,6 +473,9 @@ describe('ng-table-dynamic', function () {
                     else if (paramsScope.$column.title() === 'Age') {
                         return ageFilter;
                     }
+                    else {
+                        return undefined;
+                    }
                 }
                 scope.cols = [
                     { field: 'name', title: 'Name of user', filter: getFilter },
