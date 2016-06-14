@@ -30,10 +30,17 @@ module.exports = function (config) {
         reporters: ['progress', 'coverage'],
 
         autoWatch: true,
-        browsers: ['Chrome'],
+        browsers: ['PhantomJS'],
         coverageReporter: {
             type: 'lcov',
             dir: 'out/coverage'
-        }
+        },
+        plugins:[
+            'karma-jasmine',
+            'karma-coverage',
+            'karma-phantomjs-launcher',
+            'karma-chrome-launcher',
+            'karma-firefox-launcher'
+        ]
     });
 };

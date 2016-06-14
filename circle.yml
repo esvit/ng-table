@@ -1,0 +1,19 @@
+machine:
+  node:
+    version: 0.10.45
+
+dependencies:
+  pre:
+    - npm install -g grunt-cli
+    - npm install -g bower
+    - npm install -g karma-cli
+    - npm prune && npm install
+    - bower prune && bower install
+    - grunt
+  cache_directories:
+    - node_modules
+    - bower_components
+
+test:
+  override:
+    - npm test
