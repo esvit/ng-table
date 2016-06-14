@@ -46,10 +46,13 @@
     "load-grunt-tasks": "~0.2.0",
     "lodash": "~3.7.0",
     "phantomjs-prebuilt": "2.1.7",
-    "qq": "^0.3.5"
+    "qq": "^0.3.5",
+    "typescript": "1.8.10"
   },
   "scripts": {
-    "test": "karma start --single-run --no-auto-watch"
+    "test": "karma start --single-run --no-auto-watch",
+    "tsc": "node_modules/.bin/tsc",
+    "tsc:w": "node_modules/.bin/tsc -w"
   },
   "dependencies": {},
   "peerDependencies": {
