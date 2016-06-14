@@ -48,7 +48,8 @@
   "scripts": {
     "test": "karma start --single-run --no-auto-watch"
   },
-  "dependencies": {
+  "dependencies": {},
+  "peerDependencies": {
     "angular": "^1.2"
   }
 }
