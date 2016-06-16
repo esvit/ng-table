@@ -1,0 +1,12 @@
+{
+  "name": "ng-table",
+  "globalDependencies": {
+    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
+    "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
+    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
+    "karma-jasmine": "github:DefinitelyTyped/DefinitelyTyped/karma-jasmine/karma-jasmine.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
+    "angular-mocks": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-mocks.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
+    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
+    "ng-table": "github:DefinitelyTyped/DefinitelyTyped/ng-table/ng-table.d.ts#1315d46f8066eec8c197914da88e98629ebc2254"
+  }
+}
