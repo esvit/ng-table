@@ -10,7 +10,7 @@ CONTRIBUTING
 4. Run the build: `grunt`
     - builds dist/ng-table.js and associated files
 
-5. Run the tests: `karma start`
+5. Run the tests: `npm test`
     - ie prove existing code before making your changes
 
 6. Make changes in source folder (`src`)

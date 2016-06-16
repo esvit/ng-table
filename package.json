@@ -52,10 +52,10 @@
   },
   "scripts": {
     "postinstall": "npm run typings",
-    "test": "karma start --single-run --no-auto-watch",
-    "tsc": "node_modules/.bin/tsc",
-    "tsc:w": "node_modules/.bin/tsc -w",
-    "typings": "node_modules/.bin/typings install"
+    "test": "npm run tsc && karma start --single-run --no-auto-watch",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "typings": "typings install"
   },
   "dependencies": {},
   "peerDependencies": {
