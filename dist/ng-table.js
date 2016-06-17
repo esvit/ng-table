@@ -218,15 +218,15 @@
 
             /////////
 
-            function getTemplateUrl(filterValue, filterKey){
-                if (angular.isObject(filterValue)){
-                    filterValue = filterValue.id;
+            function getTemplateUrl(filterDef, filterKey){
+                if (angular.isObject(filterDef)){
+                    filterDef = filterDef.id;
                 }
-                if (filterValue.indexOf('/') !== -1){
-                    return filterValue;
+                if (filterDef.indexOf('/') !== -1){
+                    return filterDef;
                 }
 
-                return service.getUrlForAlias(filterValue, filterKey);
+                return service.getUrlForAlias(filterDef, filterKey);
             }
 
             function getUrlForAlias(aliasName/*, filterKey*/){
@@ -379,43 +379,6 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-(function(){
-    'use strict';
-
-    // todo: remove shim after an acceptable depreciation period
-
-    angular.module('ngTable')
-        .factory('ngTableGetDataBcShim', ngTableGetDataBcShim);
-
-    ngTableGetDataBcShim.$inject = ['$q'];
-
-    function ngTableGetDataBcShim($q){
-
-        return createWrapper;
-
-        function createWrapper(getDataFn){
-            return function getDataShim(/*args*/){
-                var $defer = $q.defer();
-                var pData = getDataFn.apply(this, [$defer].concat(Array.prototype.slice.call(arguments)));
-                if (!pData) {
-                    // If getData resolved the $defer, and didn't promise us data,
-                    //   create a promise from the $defer. We need to return a promise.
-                    pData = $defer.promise;
-                }
-                return pData;
-            }
-        }
-    }
-})();
-
-/**
- * ngTable: Table + Angular JS
- *
- * @author Vitalii Savchuk <esvit666@gmail.com>
- * @url https://github.com/esvit/ng-table/
- * @license New BSD License <http://creativecommons.org/licenses/BSD/>
- */
-
 (function () {
     /**
      * @ngdoc service
@@ -546,7 +509,7 @@
      * @description Parameters manager for ngTable
      */
 
-    angular.module('ngTable').factory('NgTableParams', ['$q', '$log', '$filter', 'ngTableDefaults', 'ngTableGetDataBcShim', 'ngTableDefaultGetData', 'ngTableEventsChannel', function($q, $log, $filter, ngTableDefaults, ngTableGetDataBcShim, ngTableDefaultGetData, ngTableEventsChannel) {
+    angular.module('ngTable').factory('NgTableParams', ['$q', '$log', '$filter', 'ngTableDefaults', 'ngTableDefaultGetData', 'ngTableEventsChannel', function($q, $log, $filter, ngTableDefaults, ngTableDefaultGetData, ngTableEventsChannel) {
         var isNumber = function(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
         };
@@ -674,16 +637,6 @@
                     if (angular.isArray(newSettings.dataset)) {
                         //auto-set the total from passed in dataset
                         newSettings.total = newSettings.dataset.length;
-                    }
-
-                    // todo: remove the backwards compatibility shim and the following two if blocks
-                    if (newSettings.getData && newSettings.getData.length > 1){
-                        // support the old getData($defer, params) api
-                        newSettings.getDataFnAdaptor = ngTableGetDataBcShim;
-                    }
-                    if (newSettings.getGroups && newSettings.getGroups.length > 2){
-                        // support the old getGroups($defer, params) api
-                        newSettings.getGroupsFnAdaptor = ngTableGetDataBcShim;
                     }
 
                     var originalDataset = settings.dataset;
@@ -1090,9 +1043,9 @@
                 isCommittedDataset = true;
 
                 if (self.hasGroup()) {
-                    pData = runInterceptorPipeline(runGetGroups);
+                    pData = runInterceptorPipeline($q.when(settings.getGroups(self)));
                 } else {
-                    pData = runInterceptorPipeline(runGetData);
+                    pData = runInterceptorPipeline($q.when(settings.getData(self)));
                 }
 
                 log('ngTable: reload data');
@@ -1107,11 +1060,6 @@
                     // subscribers can always set a filter to only receive the event when data !== oldData
                     ngTableEventsChannel.publishAfterReloadData(self, data, oldData);
                     self.reloadPages();
-
-                    // todo: remove after acceptable depreciation period
-                    if (settings.$scope) {
-                        settings.$scope.$emit('ngTableAfterReloadData');
-                    }
 
                     return data;
                 }).catch(function(reason){
@@ -1155,17 +1103,7 @@
                 }
             })();
 
-            function runGetData(){
-                var getDataFn = settings.getDataFnAdaptor(settings.getData);
-                return $q.when(getDataFn.call(settings, self));
-            }
-
-            function runGetGroups(){
-                var getGroupsFn = settings.getGroupsFnAdaptor(settings.getGroups);
-                return $q.when(getGroupsFn.call(settings, self));
-            }
-
-            function runInterceptorPipeline(fetchFn){
+            function runInterceptorPipeline(fetchedData){
                 var interceptors = settings.interceptors || [];
 
                 return interceptors.reduce(function(result, interceptor){
@@ -1176,14 +1114,12 @@
                     }, function(reason){
                         return rejectFn(reason, self);
                     });
-                }, fetchFn());
+                }, fetchedData);
             }
 
             function getDefaultSettingFns(){
 
                 return {
-                    getDataFnAdaptor: angular.identity,
-                    getGroupsFnAdaptor: angular.identity,
                     getData: getData,
                     getGroups: getGroups
                 };
@@ -1231,8 +1167,7 @@
                     var settings = params.settings();
                     var originalDataOptions = settings.dataOptions;
                     settings.dataOptions = { applyPaging: false };
-                    var adaptedFn = settings.getDataFnAdaptor(settings.getData);
-                    var gotData = $q.when(adaptedFn.call(settings, params));
+                    var gotData = $q.when(settings.getData(params));
                     return gotData.then(function(data) {
                         var groups = {};
                         angular.forEach(data, function(item) {
@@ -1300,8 +1235,6 @@
              * @description configuration settings for `NgTableParams`
              */
             var settings = {
-                // todo: remove $scope after acceptable depreciation period as no longer required
-                $scope: null, // set by ngTable controller
                 $loading: false,
                 dataset: null, //allows data to be set when table is initialized
                 total: 0,
@@ -1330,15 +1263,6 @@
 
             return this;
         };
-        return NgTableParams;
-    }]);
-
-    /**
-     * @ngdoc service
-     * @name ngTableParams
-     * @description Backwards compatible shim for lowercase 'n' in NgTableParams
-     */
-    angular.module('ngTable').factory('ngTableParams', ['NgTableParams', function(NgTableParams) {
         return NgTableParams;
     }]);
 })();
