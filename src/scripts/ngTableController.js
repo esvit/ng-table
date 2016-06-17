@@ -100,11 +100,26 @@
                         'ng-table-pagination': 'params',
                         'template-url': 'templates.pagination'
                     });
-                    $element.after(paginationTemplate);
                     if (headerTemplate) {
                         $compile(headerTemplate)($scope);
                     }
-                    $compile(paginationTemplate)($scope);
+                    var pagerPosition = $attrs.pagerPosition ? $attrs.pagerPosition : 'bottom';
+                    if (pagerPosition == 'bottom') {
+                        $element.after(paginationTemplate);
+                        $compile(paginationTemplate)($scope);
+                    } else if (pagerPosition == 'top') {
+                        $element.before(paginationTemplate);
+                        $compile(paginationTemplate)($scope);
+                    } else if (pagerPosition == 'both') {
+                        $element.before(paginationTemplate);
+                        $compile(paginationTemplate)($scope);
+                        var paginationTemplate = angular.element(document.createElement('div')).attr({
+                            'ng-table-pagination': 'params',
+                            'template-url': 'templates.pagination'
+                        });
+                        $element.after(paginationTemplate);
+                        $compile(paginationTemplate)($scope);
+                    }
                 }
             };
 
