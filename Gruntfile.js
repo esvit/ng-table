@@ -58,7 +58,6 @@ module.exports = function(grunt) {
                     'src/scripts/ngTableEventsChannel.js',
                     'src/scripts/ngTableFilterConfig.js',
                     'src/scripts/ngTableDefaultGetData.js',
-                    'src/scripts/ngTableGetDataBcShim.js',
                     'src/scripts/ngTableColumn.js',
                     'src/scripts/ngTableParams.js',
                     'src/scripts/ngTableController.js',
