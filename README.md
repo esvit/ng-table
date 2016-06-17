@@ -13,6 +13,7 @@ Header row with titles and filters automatic generated on compilation step.
 ### Upgrade from 0.8.3
 
 It's recommended to upgrade in two jumps:
+
 1. Upgrade to version 1.0.0-beta.9, making any changes to your application code neccessary to work with this version
 2. Refactor your application to remove any code that depended on depreciated behaviours that where removed in the 1.0.0 release
 3. Install 1.0.0 (should now be a drop in replacement for 1.0.0-beta.9)
@@ -21,6 +22,7 @@ It's recommended to upgrade in two jumps:
 ### Upgrade from version earlier than 0.8.3
 
 It's recommended to upgrade in three jumps:
+
 1. Upgrade to version 0.8.3, making any changes to your application code neccessary to work with this version
     * EG: `bower install ng-table#0.8.3 --save`
 3. Follow the guide above to upgrade from 0.8.3 -> 1.0.0-beta.9 -> 1.0.0
