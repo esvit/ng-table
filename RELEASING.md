@@ -7,7 +7,7 @@ RELEASING
 
 2. Minify source files: `grunt`
 
-3. Make the test pass: `karma start`
+3. Make the test pass: `npm test`
 
 4. Update CHANGELOG.md: 
     1. `node changelog.js n.n.n` where `n.n.n` is the version number used in step 1. above
