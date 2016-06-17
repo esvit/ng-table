@@ -7,85 +7,43 @@ Code licensed under New BSD License.
 This directive allow to liven your tables. It support sorting, filtering and pagination.
 Header row with titles and filters automatic generated on compilation step.
 
-## Depreciation notice
 
-The following behaviours are depreciated and will be removed before the 1.0.0 release.
+## Upgrading from an earlier version?
 
-The 1.0.0 release is expected to land in 2-3 weeks.
+### Upgrade from 0.8.3
 
-### 1. `ngTableAfterReloadData` event will be removed
+It's recommended to upgrade in two jumps:
+1. Upgrade to version 1.0.0-beta.9, making any changes to your application code neccessary to work with this version
+2. Refactor your application to remove any code that depended on depreciated behaviours that where removed in the 1.0.0 release
+3. Install 1.0.0 (should now be a drop in replacement for 1.0.0-beta.9)
 
-Eventing no longer uses *direct* calls $scope.$emit. Instead a strongly typed pub/sub service (`ngTableEventsChannel`) is used.
 
-**To migrate**
+### Upgrade from version earlier than 0.8.3
 
-*Previously:*
+It's recommended to upgrade in three jumps:
+1. Upgrade to version 0.8.3, making any changes to your application code neccessary to work with this version
+    * EG: `bower install ng-table#0.8.3 --save`
+3. Follow the guide above to upgrade from 0.8.3 -> 1.0.0-beta.9 -> 1.0.0
 
-```js
-    $scope.$on('ngTableAfterReloadData', yourHandler)
+**Tips**
+* To install an earlier version of ng-table (1.0.0-beta.9 in this case): `bower install ng-table#1.0.0-beta.9 --save`
+* Read the [CHANGELOG.md](CHANGELOG.md). Each release details the breaking changes and migration guidance
+
+
+
+## Installing
+
+**Bower**
+```
+bower install ng-table --save
 ```
 
-*Now:*
-
-```js
-    ngTableEventsChannel.onAfterReloadData(yourHandler, $scope)
+**NPM**
 ```
-
-### 2. `$scope` removed from `NgTableParams`
-
-Because of 1. above, `NgTableParams` no longer requires a reference to `$scope`. 
-
-A reference to `$scope` was largely an internal requirement so there should be no code change required on your part.
-
-### 3. `getData` signature change
-
-The `$defer` paramater supplied to your `getData` method has been removed. Instead your `getData` method should return an array or a promise that resolves to an array.
-
-**To migrate**
-
-*Previously:*
-
-```js
-    var tp = new NgTableParams({}, { getData: getData });
-    
-    function getData($defer, params){
-        // snip
-        $defer.resolve(yourDataArray);
-    }
+npm install ng-table --save
 ```
+**IMPORTANT: the version on npm is out of date**. Waiting on project owner to grant publish rights.
 
-*Now:*
-
-```js
-    var tp = new NgTableParams({}, { getData: getData });
-    
-    function getData(params){
-        // snip
-        return yourDataArrayOrPromise;
-    }
-```
-
-### 4. `ngTableParams` renamed to `NgTableParams`
-
-**To migrate**
-
-*Previously:*
-
-```js
-    var tp = new ngTableParams();
-```
-
-*Now:*
-
-```js
-    var tp = new NgTableParams();
-```
-
-
-## Installing via Bower
-```
-bower install ng-table
-```
 
 ## Development
 We use Karma to ensure the quality of the code. The easiest way to run these checks is to use grunt:
@@ -94,13 +52,14 @@ We use Karma to ensure the quality of the code. The easiest way to run these che
 npm install -g grunt-cli
 npm install && bower install
 grunt
+npm test
 ```
 
 The karma task will try to open Firefox and Chrome as browser in which to run the tests. Make sure this is available or change the configuration in `karma.conf.js`
 
 
 ## Configuring ng-table
-For a list of configuration options available, see [Configuring your table with NgTableParams](https://github.com/esvit/ng-table/wiki/Configuring-your-table-with-ngTableParams)
+For a list of configuration options available, see [examples website](http://ng-table.com/)
 
 
 ## Updates
