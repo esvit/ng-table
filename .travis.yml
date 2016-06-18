@@ -9,7 +9,7 @@ before_install:
 
 install:
   - npm prune && npm install
-  - bower prune && bower install
+  - npm run init
   - grunt
 
 script:

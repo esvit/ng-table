@@ -51,7 +51,7 @@
     "typings": "^1.2.0"
   },
   "scripts": {
-    "postinstall": "npm run typings",
+    "init": "bower prune && bower install && npm run typings",
     "test": "npm run tsc && karma start --single-run --no-auto-watch",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
