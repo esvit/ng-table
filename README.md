@@ -44,8 +44,17 @@ bower install ng-table --save
 ```
 npm install ng-table --save
 ```
-**IMPORTANT: the version on npm is out of date**. Waiting on project owner to grant publish rights.
 
+## Using Typescript?
+
+Install the type definition files for ng-table:
+```
+typings install ng-table --global --save
+```
+**WARNING: type definitions are in-flux**. The type definitions on [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/ng-table) 
+(installed by above command) are depreciated. New definitions will be published to [typed-ng-table](https://github.com/christianacca/typed-ng-table).
+
+The changes will mostly involve reorganising the existing types into different typescript namespaces.
 
 ## Development
 We use Karma to ensure the quality of the code. The easiest way to run these checks is to use grunt:
