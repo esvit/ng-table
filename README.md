@@ -49,12 +49,11 @@ npm install ng-table --save
 
 Install the type definition files for ng-table:
 ```
-typings install ng-table --global --save
+typings install github:christianacca/typed-ng-table/typings.json#930b5a14174e594d6167691ed0938be42a6b06aa --global --save
 ```
-**WARNING: type definitions are in-flux**. The type definitions on [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/ng-table) 
-(installed by above command) are depreciated. New definitions will be published to [typed-ng-table](https://github.com/christianacca/typed-ng-table).
+**WARNING:**. The type definitions on [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/ng-table) 
+and [@types/ng-table](https://www.npmjs.com/package/@types/ng-table) are depreciated.
 
-The changes will mostly involve reorganising the existing types into different typescript namespaces.
 
 ## Development
 We use Karma to ensure the quality of the code. The easiest way to run these checks is to use grunt:
