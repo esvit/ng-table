@@ -93,6 +93,7 @@
                 headerTemplateURL: createGetterSetter(false),
                 headerTitle: createGetterSetter(''),
                 sortable: createGetterSetter(false),
+                defaultSort: createGetterSetter(''),
                 show: createGetterSetter(true),
                 title: createGetterSetter(''),
                 titleAlt: createGetterSetter('')

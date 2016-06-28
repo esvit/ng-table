@@ -101,6 +101,7 @@
                             titleAlt: parsedAttribute('title-alt'),
                             headerTitle: parsedAttribute('header-title'),
                             sortable: parsedAttribute('sortable'),
+                            defaultSort: parsedAttribute('defaultSort'),
                             'class': parsedAttribute('header-class'),
                             filter: parsedAttribute('filter'),
                             groupable: parsedAttribute('groupable'),

@@ -25,7 +25,7 @@
             if (!parsedSortable) {
                 return;
             }
-            var defaultSort = $scope.params.settings().defaultSort;
+            var defaultSort = ($column.defaultSort && $column.defaultSort()) || $scope.params.settings().defaultSort;
             var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
             var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
             var sortingParams = (event.ctrlKey || event.metaKey) ? $scope.params.sorting() : {};
