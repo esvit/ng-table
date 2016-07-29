@@ -9,7 +9,7 @@ before_install:
 
 install:
   - npm prune && npm install
-  - npm run init
+  - npm run setup
   - grunt
 
 script:

@@ -5,7 +5,7 @@ CONTRIBUTING
 
 2. `npm install`
 
-3. `npm init`
+3. `npm run setup`
 
 4. Run the build: `grunt`
     - builds dist/ng-table.js and associated files
