@@ -6,22 +6,18 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-(function(){
-    'use strict';
+angular.module('ngTable')
+    .directive('ngTableFilterRow', ngTableFilterRow);
 
-    angular.module('ngTable')
-        .directive('ngTableFilterRow', ngTableFilterRow);
+ngTableFilterRow.$inject = [];
 
-    ngTableFilterRow.$inject = [];
-
-    function ngTableFilterRow(){
-        var directive = {
-            restrict: 'E',
-            replace: true,
-            templateUrl: 'ng-table/filterRow.html',
-            scope: true,
-            controller: 'ngTableFilterRowController'
-        };
-        return directive;
-    }
-})();
+function ngTableFilterRow(){
+    var directive = {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'ng-table/filterRow.html',
+        scope: true,
+        controller: 'ngTableFilterRowController'
+    };
+    return directive;
+}

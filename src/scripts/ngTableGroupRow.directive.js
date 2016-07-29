@@ -6,23 +6,19 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-(function(){
-    'use strict';
+angular.module('ngTable')
+    .directive('ngTableGroupRow', ngTableGroupRow);
 
-    angular.module('ngTable')
-        .directive('ngTableGroupRow', ngTableGroupRow);
+ngTableGroupRow.$inject = [];
 
-    ngTableGroupRow.$inject = [];
-
-    function ngTableGroupRow(){
-        var directive = {
-            restrict: 'E',
-            replace: true,
-            templateUrl: 'ng-table/groupRow.html',
-            scope: true,
-            controller: 'ngTableGroupRowController',
-            controllerAs: 'dctrl'
-        };
-        return directive;
-    }
-})();
+function ngTableGroupRow(){
+    var directive = {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'ng-table/groupRow.html',
+        scope: true,
+        controller: 'ngTableGroupRowController',
+        controllerAs: 'dctrl'
+    };
+    return directive;
+}

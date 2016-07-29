@@ -6,16 +6,13 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-(function () {
-    /**
-     * @ngdoc object
-     * @name ngTableDefaultParams
-     * @module ngTable
-     * @description Default Parameters for ngTable
-     */
-    angular.module('ngTable')
-        .value('ngTableDefaults', {
-            params: {},
-            settings: {}
-        });
-})();
+/**
+ * @ngdoc object
+ * @name ngTableDefaultParams
+ * @module ngTable
+ * @description Default Parameters for ngTable
+ */
+angular.module('ngTable').value('ngTableDefaults',{
+    params: {},
+    settings: {}
+});
