@@ -696,7 +696,7 @@
                             result = orderByFn(result, orderBy);
                         }
 
-                        return ngTableDefaultGetData.applyPaging(result, params);
+                        return result;
                     }).finally(function(){
                         // restore the real options
                         settings.dataOptions = originalDataOptions;
