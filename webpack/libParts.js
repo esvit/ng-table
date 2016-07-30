@@ -12,6 +12,7 @@ function createLibraryParts(rootDir, env = {}) {
 
     return {
         asUmdLibrary,
+        banner,
         extractSass,
         excludeAngular,
         forEnvironment,
@@ -41,6 +42,17 @@ function createLibraryParts(rootDir, env = {}) {
                 libraryTarget: 'umd',
                 umdNamedDefine: false
             }
+        };
+    }
+
+    function banner() {
+        // warning: this conflicts with ExtractTextPlugin used to extract styles into seperate bundle
+        const text = `/*! ngTable v${pkg.version} by Vitalii Savchuk(esvit666@gmail.com) - ` +
+            'https://github.com/esvit/ng-table - New BSD License */\n';
+        return {
+            plugins: [
+                new webpack.BannerPlugin({ banner: text, entryOnly: true })
+            ]
         };
     }
 
@@ -159,6 +171,7 @@ function createLibraryParts(rootDir, env = {}) {
                         screw_ie8: true, // eslint-disable-line
                         warnings: false,
                     },
+                    comments: false,
                     sourceMap: true
                 })
             ]
