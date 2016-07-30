@@ -1,5 +1,5 @@
-@table-border-color: #999;
-@cell-border-color: #eee;
+$table-border-color: #999;
+$cell-border-color: #eee;
 
 .ng-table {
     th {
@@ -107,11 +107,11 @@
 
 @media only screen and (max-width: 800px) {
     .ng-table-responsive {
-        border-bottom: 1px solid @table-border-color;
+        border-bottom: 1px solid $table-border-color;
         tr {
-            border-top: 1px solid @table-border-color;
-            border-left: 1px solid @table-border-color;
-            border-right: 1px solid @table-border-color;
+            border-top: 1px solid $table-border-color;
+            border-left: 1px solid $table-border-color;
+            border-right: 1px solid $table-border-color;
         }
         td:before {
             position: absolute;
@@ -141,7 +141,7 @@
         }
         td {
             border: none;
-            border-bottom: 1px solid @cell-border-color;
+            border-bottom: 1px solid $cell-border-color;
             position: relative;
             padding-left: 50%;
             white-space: normal;

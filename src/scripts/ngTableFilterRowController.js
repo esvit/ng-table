@@ -6,8 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-angular.module('ngTable')
-    .controller('ngTableFilterRowController', ngTableFilterRowController);
+import angular from 'angular';
 
 ngTableFilterRowController.$inject = ['$scope', 'ngTableFilterConfig'];
 
@@ -33,3 +32,5 @@ function ngTableFilterRowController($scope, ngTableFilterConfig){
         }
     };
 }
+
+export { ngTableFilterRowController };

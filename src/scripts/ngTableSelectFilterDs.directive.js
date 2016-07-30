@@ -6,6 +6,8 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+import angular from 'angular';
+
 /**
  * @ngdoc directive
  * @name ngTableSelectFilterDs
@@ -20,9 +22,6 @@
  *
  * This directive is is focused on providing a datasource to an `ngOptions` directive
  */
-angular.module('ngTable')
-    .directive('ngTableSelectFilterDs', ngTableSelectFilterDs);
-
 ngTableSelectFilterDs.$inject = [];
 
 function ngTableSelectFilterDs(){
@@ -76,3 +75,5 @@ function ngTableSelectFilterDsController($scope, $parse, $attrs, $q){
         return $q.when(data);
     }
 }
+
+export { ngTableSelectFilterDs };

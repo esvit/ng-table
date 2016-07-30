@@ -9,7 +9,7 @@ dependencies:
     - npm install -g karma-cli
     - npm prune && npm install
     - npm run setup
-    - grunt
+    - npm run build
   cache_directories:
     - node_modules
     - bower_components

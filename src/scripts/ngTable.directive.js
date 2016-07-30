@@ -5,7 +5,7 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-
+import angular from 'angular';
     
 /**
  * @ngdoc directive
@@ -16,8 +16,6 @@
  * @description
  * Directive that instantiates {@link ngTableController ngTableController}.
  */
-angular.module('ngTable').directive('ngTable', ngTable);
-
 ngTable.$inject = ['$q', '$parse'];
 
 function ngTable($q, $parse) {
@@ -129,3 +127,5 @@ function ngTable($q, $parse) {
         }
     }
 }
+
+export { ngTable };

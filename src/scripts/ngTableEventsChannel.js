@@ -6,8 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-angular.module('ngTable')
-    .factory('ngTableEventsChannel', ngTableEventsChannel);
+import angular from 'angular';
 
 ngTableEventsChannel.$inject = ['$rootScope'];
 
@@ -91,3 +90,5 @@ function ngTableEventsChannel($rootScope){
         return Array.prototype.slice.call(array, n == null ? 1 : n);
     }
 }
+
+export { ngTableEventsChannel };

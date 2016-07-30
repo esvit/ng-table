@@ -6,9 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-
-angular.module('ngTable')
-    .provider('ngTableDefaultGetData', ngTableDefaultGetDataProvider);
+import angular from 'angular';
 
 ngTableDefaultGetDataProvider.$inject = [];
 
@@ -128,3 +126,5 @@ function ngTableDefaultGetDataProvider(){
         }
     }
 }
+
+export { ngTableDefaultGetDataProvider };

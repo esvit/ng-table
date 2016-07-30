@@ -6,14 +6,14 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+import angular from 'angular';
+
 /**
  * @ngdoc directive
  * @name ngTablePagination
  * @module ngTable
  * @restrict A
  */
-angular.module('ngTable').directive('ngTablePagination', ngTablePagination);
-
 ngTablePagination.$inject = ['$compile', 'ngTableEventsChannel'];
 
 function ngTablePagination($compile, ngTableEventsChannel) {
@@ -47,3 +47,5 @@ function ngTablePagination($compile, ngTableEventsChannel) {
         }
     };
 }
+
+export { ngTablePagination };

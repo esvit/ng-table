@@ -6,18 +6,17 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+import angular from 'angular';
+
 /**
  * @ngdoc service
  * @name NgTableParams
  * @module ngTable
  * @description Parameters manager for ngTable
  */
+ngTableParamsFactory.$inject = ['$q', '$log', '$filter', 'ngTableDefaults', 'ngTableDefaultGetData', 'ngTableEventsChannel'];
 
-angular.module('ngTable').factory('NgTableParams', factory);
-
-factory.$inject = ['$q', '$log', '$filter', 'ngTableDefaults', 'ngTableDefaultGetData', 'ngTableEventsChannel'];
-
-function factory($q, $log, $filter, ngTableDefaults, ngTableDefaultGetData, ngTableEventsChannel) {
+function ngTableParamsFactory($q, $log, $filter, ngTableDefaults, ngTableDefaultGetData, ngTableEventsChannel) {
 
     return NgTableParams;
     
@@ -776,3 +775,5 @@ function factory($q, $log, $filter, ngTableDefaults, ngTableDefaultGetData, ngTa
         return this;
     }
 }
+
+export { ngTableParamsFactory };

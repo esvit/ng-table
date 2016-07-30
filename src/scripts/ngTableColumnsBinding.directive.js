@@ -6,9 +6,6 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-angular.module('ngTable')
-    .directive('ngTableColumnsBinding', ngTableColumnsBinding);
-
 ngTableColumnsBinding.$inject = ["$parse"];
 
 /**
@@ -37,3 +34,5 @@ function ngTableColumnsBinding($parse){
         }
     }
 }
+
+export { ngTableColumnsBinding };

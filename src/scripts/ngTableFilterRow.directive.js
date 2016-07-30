@@ -6,8 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-angular.module('ngTable')
-    .directive('ngTableFilterRow', ngTableFilterRow);
+import templateUrl  from '../ng-table/filterRow.html';
 
 ngTableFilterRow.$inject = [];
 
@@ -15,9 +14,11 @@ function ngTableFilterRow(){
     var directive = {
         restrict: 'E',
         replace: true,
-        templateUrl: 'ng-table/filterRow.html',
+        templateUrl: templateUrl,
         scope: true,
         controller: 'ngTableFilterRowController'
     };
     return directive;
 }
+
+export { ngTableFilterRow };

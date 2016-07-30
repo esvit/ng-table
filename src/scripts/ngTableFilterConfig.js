@@ -6,8 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-angular.module('ngTable')
-    .provider('ngTableFilterConfig', ngTableFilterConfigProvider);
+import angular from 'angular';
 
 ngTableFilterConfigProvider.$inject = [];
 
@@ -81,3 +80,5 @@ function ngTableFilterConfigProvider(){
         }
     }
 }
+
+export { ngTableFilterConfigProvider };

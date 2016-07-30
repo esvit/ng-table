@@ -6,8 +6,8 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-angular.module('ngTable')
-    .controller('ngTableGroupRowController', ngTableGroupRowController);
+import angular from 'angular';
+
 
 ngTableGroupRowController.$inject = ['$scope'];
 
@@ -111,3 +111,5 @@ function ngTableGroupRowController($scope){
         return $scope.params.reload();
     }
 }
+
+export { ngTableGroupRowController };

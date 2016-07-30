@@ -6,8 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-angular.module('ngTable')
-    .directive('ngTableGroupRow', ngTableGroupRow);
+import templateUrl  from '../ng-table/groupRow.html';
 
 ngTableGroupRow.$inject = [];
 
@@ -15,10 +14,12 @@ function ngTableGroupRow(){
     var directive = {
         restrict: 'E',
         replace: true,
-        templateUrl: 'ng-table/groupRow.html',
+        templateUrl: templateUrl,
         scope: true,
         controller: 'ngTableGroupRowController',
         controllerAs: 'dctrl'
     };
     return directive;
 }
+
+export { ngTableGroupRow };

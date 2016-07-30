@@ -10,7 +10,7 @@ before_install:
 install:
   - npm prune && npm install
   - npm run setup
-  - grunt
+  - npm run build
 
 script:
   - npm test

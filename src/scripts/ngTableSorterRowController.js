@@ -6,9 +6,6 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-angular.module('ngTable')
-    .controller('ngTableSorterRowController', ngTableSorterRowController);
-
 ngTableSorterRowController.$inject = ['$scope'];
 
 function ngTableSorterRowController($scope){
@@ -32,3 +29,5 @@ function ngTableSorterRowController($scope){
         });
     }
 }
+
+export { ngTableSorterRowController };

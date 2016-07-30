@@ -6,6 +6,8 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+import angular from 'angular';
+
 /**
  * @ngdoc object
  * @name ngTableController
@@ -13,8 +15,6 @@
  * @description
  * Each {@link ngTable ngTable} directive creates an instance of `ngTableController`
  */
-angular.module('ngTable').controller('ngTableController', ngTableController);
-
 ngTableController.$inject = [
     '$scope', 'NgTableParams', '$timeout', '$parse', '$compile', '$attrs', '$element', 'ngTableColumn', 'ngTableEventsChannel'
 ];
@@ -271,3 +271,5 @@ function ngTableController($scope, NgTableParams, $timeout, $parse, $compile, $a
 
     commonInit();
 }
+
+export { ngTableController };

@@ -6,6 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+import angular from 'angular';
 
 /**
  * @ngdoc service
@@ -14,8 +15,6 @@
  * @description
  * Service to construct a $column definition used by {@link ngTable ngTable} directive
  */
-angular.module('ngTable').factory('ngTableColumn', ngTableColumn);
-
 ngTableColumn.$inject = [];
 
 function ngTableColumn() {
@@ -122,3 +121,5 @@ function ngTableColumn() {
         return object != null && angular.isFunction(object.$new);
     }
 }
+
+export { ngTableColumn };

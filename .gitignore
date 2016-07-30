@@ -6,3 +6,5 @@ out
 typings
 npm-debug.log
 test/*.js
+# redundant webpack build artifacts produced by ExtractTextPlugin
+dist/styles.*

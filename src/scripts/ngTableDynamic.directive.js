@@ -6,6 +6,8 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+import angular from 'angular';
+
 /**
  * @ngdoc directive
  * @name ngTableDynamic
@@ -16,8 +18,6 @@
  * A dynamic version of the {@link ngTable ngTable} directive that accepts a dynamic list of columns
  * definitions to render
  */
-angular.module('ngTable').directive('ngTableDynamic', ngTableDynamic);
-
 ngTableDynamic.$inject = [];
 
 function ngTableDynamic(){
@@ -71,3 +71,5 @@ function ngTableDynamic(){
         }
     };
 }
+
+export { ngTableDynamic };

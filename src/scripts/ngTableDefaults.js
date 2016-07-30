@@ -12,7 +12,9 @@
  * @module ngTable
  * @description Default Parameters for ngTable
  */
-angular.module('ngTable').value('ngTableDefaults',{
+var ngTableDefaults = {
     params: {},
     settings: {}
-});
+};
+
+export { ngTableDefaults };

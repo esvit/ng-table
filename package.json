@@ -9,7 +9,10 @@
   },
   "main": "dist/ng-table.js",
   "devDependencies": {
+    "angular": "^1.5.8",
     "coveralls": "~2.11.0",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^2.0.0-beta.3",
     "grunt": "~0.4.2",
     "grunt-contrib-clean": "~0.4.0",
     "grunt-contrib-concat": "~0.3.0",
@@ -20,6 +23,7 @@
     "grunt-contrib-uglify": "0.8.x",
     "grunt-contrib-watch": "~0.6.x",
     "grunt-hustler": "0.11.2",
+    "html-loader": "^0.4.3",
     "jasmine-core": "^2.3.4",
     "karma": "0.13.22",
     "karma-chrome-launcher": "1.0.1",
@@ -30,16 +34,29 @@
     "karma-phantomjs-launcher": "1.0.0",
     "load-grunt-tasks": "~0.2.0",
     "lodash": "~3.7.0",
+    "ngtemplate-loader": "github:wearymonkey/ngtemplate-loader#63e3461d8b1298de913e3528766068260915ae1f",
+    "node-sass": "^3.8.0",
     "phantomjs-prebuilt": "2.1.7",
+    "sass-loader": "^4.0.0",
+    "style-loader": "^0.13.1",
     "typescript": "1.8.10",
-    "typings": "^1.2.0"
+    "typings": "^1.2.0",
+    "webpack": "^2.1.0-beta.20",
+    "webpack-dev-server": "^2.1.0-beta.0",
+    "webpack-merge": "^0.14.1"
   },
   "scripts": {
+    "build": "webpack --env.debug",
+    "build:prod": "webpack --env.prod",
+    "build:full": "webpack --env.prod --env.debug",
     "setup": "bower prune && bower install && npm run typings",
     "test": "npm run tsc && karma start --single-run --no-auto-watch",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "typings": "typings install"
+    "typings": "typings install",
+    "watch:debug": "webpack --watch --env.debug",
+    "watch": "webpack --watch",
+    "webpack": "webpack"
   },
   "dependencies": {},
   "peerDependencies": {
