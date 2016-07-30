@@ -5,7 +5,7 @@ RELEASING
     - package.json
     - bower.json
 
-2. Minify source files: `grunt`
+2. Minify source files: `npm run build:full`
 
 3. Make the test pass: `npm test`
 
