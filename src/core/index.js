@@ -1,4 +1,4 @@
-import angular from 'angular';
+import * as angular from 'angular';
 import { ngTableDefaultGetDataProvider } from './ngTableDefaultGetData';
 import { ngTableDefaults } from './ngTableDefaults';
 import { ngTableParamsFactory } from './ngTableParams';

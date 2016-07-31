@@ -5,7 +5,7 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-import angular from 'angular';
+import * as angular from 'angular';
     
 /**
  * @ngdoc directive

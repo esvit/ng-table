@@ -1,4 +1,4 @@
-import angular from 'angular';
+import * as angular from 'angular';
 import { ngTable } from './ngTable.directive';
 import { ngTableColumn } from './ngTableColumn';
 import { ngTableColumnsBinding } from './ngTableColumnsBinding.directive';
