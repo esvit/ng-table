@@ -24,7 +24,7 @@ module.exports = function (config) {
 
         // generate js files from html templates
         preprocessors: {
-            '*.js': 'coverage'
+            './dist/ng-table.js': ['coverage']
         },
 
         reporters: ['progress', 'coverage'],
@@ -34,13 +34,6 @@ module.exports = function (config) {
         coverageReporter: {
             type: 'lcov',
             dir: 'out/coverage'
-        },
-        plugins:[
-            'karma-jasmine',
-            'karma-coverage',
-            'karma-phantomjs-launcher',
-            'karma-chrome-launcher',
-            'karma-firefox-launcher'
-        ]
+        }
     });
 };
