@@ -56,12 +56,11 @@ and [@types/ng-table](https://www.npmjs.com/package/@types/ng-table) are depreci
 
 
 ## Development
-We use Karma to ensure the quality of the code. The easiest way to run these checks is to use grunt:
+We use Karma to ensure the quality of the code. The easiest way to run these checks is to use `npm test`:
 
 ```sh
-npm install -g grunt-cli
-npm install && bower install
-grunt
+npm install && npm run setup
+npm run build
 npm test
 ```
 
