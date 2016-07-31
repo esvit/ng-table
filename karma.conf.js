@@ -28,12 +28,16 @@ module.exports = function (config) {
         },
 
         reporters: ['progress', 'coverage'],
-
+        colors: true,
+        logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: ['PhantomJS'],
         coverageReporter: {
-            type: 'lcov',
-            dir: 'out/coverage'
+            reporters: [
+                { type: 'lcov', dir: 'out/coverage' },
+                { type: 'json', dir: 'out/coverage' },
+                { type: 'text-summary' }
+            ]
         }
     });
 };
