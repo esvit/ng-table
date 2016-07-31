@@ -6,7 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-import templateUrl  from '../ng-table/groupRow.html';
+import templateUrl  from './groupRow.html';
 
 ngTableGroupRow.$inject = [];
 

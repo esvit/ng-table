@@ -25,13 +25,7 @@ function createLibraryParts(rootDir, env = {}) {
         const filename = env.prod ? `[name].min.js` : `[name].js`;
         return {
             entry: {
-                [libraryName]: [
-                    // todo: use an index.js file to require in the html templates
-                    path.join(rootDir, 'src', 'ng-table', 'header.html'),
-                    path.join(rootDir, 'src', 'ng-table', 'pager.html'),
-                    ...getHtmlFilters(),
-                    path.join(rootDir, 'index.js')
-                ]
+                [libraryName]: path.join(rootDir, 'index.js')
             },
             // tells webpack not to include in bundle require'd node specific objects (eg path)
             target: 'node',
@@ -132,19 +126,13 @@ function createLibraryParts(rootDir, env = {}) {
         }
     }
 
-
-    function getHtmlFilters() {
-        const filtersPath = path.join(rootDir, 'src', 'ng-table', 'filters');
-        return fs.readdirSync(filtersPath).map(name => path.join(filtersPath, name));
-    }
-
     function inlineHtmlTemplates() {
         return {
             module: {
                 loaders: [
                     {
                         test: /\.html$/,
-                        loader: 'ngtemplate?requireAngular&relativeTo=/src/!html'
+                        loader: 'ngtemplate?requireAngular&relativeTo=/src/browser/&prefix=ng-table/!html'
                     }
                 ]
             }

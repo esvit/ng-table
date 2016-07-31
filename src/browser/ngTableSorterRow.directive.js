@@ -6,7 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-import templateUrl  from '../ng-table/sorterRow.html';
+import templateUrl  from './sorterRow.html';
 
 ngTableSorterRow.$inject = [];
 
