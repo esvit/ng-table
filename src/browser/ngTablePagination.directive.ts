@@ -5,8 +5,15 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-"use strict";
-var ng1 = require('angular');
+
+import * as ng1 from 'angular';
+import { IEventsChannel, IPageButton } from '../core'
+import { ITableScope } from './ngTableController';
+
+interface IScopeExtensions {
+    pages: IPageButton[]
+}
+
 /**
  * @ngdoc directive
  * @name ngTablePagination
@@ -14,7 +21,9 @@ var ng1 = require('angular');
  * @restrict A
  */
 ngTablePagination.$inject = ['$compile', '$document', 'ngTableEventsChannel'];
-function ngTablePagination($compile, $document, ngTableEventsChannel) {
+
+function ngTablePagination<T>($compile: ng1.ICompileService, $document: ng1.IDocumentService, ngTableEventsChannel: IEventsChannel) {
+
     return {
         restrict: 'A',
         scope: {
@@ -22,13 +31,15 @@ function ngTablePagination($compile, $document, ngTableEventsChannel) {
             'templateUrl': '='
         },
         replace: false,
-        link: function (scope, element /*, attrs*/) {
-            ngTableEventsChannel.onAfterReloadData(function (pubParams) {
+        link: function(scope: ITableScope<T> & IScopeExtensions, element: ng1.IAugmentedJQuery/*, attrs*/) {
+
+            ngTableEventsChannel.onAfterReloadData<T>(function(pubParams) {
                 scope.pages = pubParams.generatePagesArray();
-            }, scope, function (pubParams) {
+            }, scope, function(pubParams){
                 return pubParams === scope.params;
             });
-            scope.$watch('templateUrl', function (templateUrl) {
+
+            scope.$watch<string>('templateUrl', function(templateUrl) {
                 if (templateUrl === undefined) {
                     return;
                 }
@@ -39,4 +50,5 @@ function ngTablePagination($compile, $document, ngTableEventsChannel) {
         }
     };
 }
-exports.ngTablePagination = ngTablePagination;
+
+export { ngTablePagination };

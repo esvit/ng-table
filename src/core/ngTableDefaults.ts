@@ -5,15 +5,18 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-"use strict";
+
+import { IDefaults } from './public-interfaces';
+
 /**
  * @ngdoc object
  * @name ngTableDefaultParams
  * @module ngTable
  * @description Default Parameters for ngTable
  */
-var ngTableDefaults = {
+var ngTableDefaults : IDefaults = {
     params: {},
     settings: {}
 };
-exports.ngTableDefaults = ngTableDefaults;
+
+export { ngTableDefaults };

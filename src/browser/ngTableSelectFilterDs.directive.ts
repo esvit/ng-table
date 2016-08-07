@@ -5,7 +5,18 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-"use strict";
+
+import * as ng1 from 'angular';
+import { IColumnDef, SelectData, ISelectDataFunc, ISelectOption } from './public-interfaces';
+
+interface IInputAttributes extends ng1.IAttributes {
+    ngTableSelectFilterDs: string;
+}
+
+interface IScopeExtensions {
+    $selectData: ISelectOption[]
+}
+
 /**
  * @ngdoc directive
  * @name ngTableSelectFilterDs
@@ -21,37 +32,43 @@
  * This directive is is focused on providing a datasource to an `ngOptions` directive
  */
 ngTableSelectFilterDs.$inject = [];
-function ngTableSelectFilterDs() {
+
+function ngTableSelectFilterDs(){
     // note: not using isolated or child scope "by design"
     // this is to allow this directive to be combined with other directives that do
+
     var directive = {
         restrict: 'A',
         controller: ngTableSelectFilterDsController
     };
     return directive;
 }
-exports.ngTableSelectFilterDs = ngTableSelectFilterDs;
+
 ngTableSelectFilterDsController.$inject = ['$scope', '$parse', '$attrs', '$q'];
-function ngTableSelectFilterDsController($scope, $parse, $attrs, $q) {
-    var $column;
+function ngTableSelectFilterDsController($scope: ng1.IScope & IScopeExtensions, $parse: ng1.IParseService, $attrs: IInputAttributes, $q: ng1.IQService){
+
+    var $column: IColumnDef;
     init();
-    function init() {
+
+    function init(){
         $column = $parse($attrs.ngTableSelectFilterDs)($scope);
-        $scope.$watch(function () {
+        $scope.$watch<SelectData>(function(){
             return $column && $column.data;
         }, bindDataSource);
     }
-    function bindDataSource() {
-        getSelectListData($column).then(function (data) {
-            if (data && !hasEmptyOption(data)) {
-                data.unshift({ id: '', title: '' });
+
+    function bindDataSource(){
+        getSelectListData($column).then(function(data){
+            if (data && !hasEmptyOption(data)){
+                data.unshift({ id: '', title: ''});
             }
             data = data || [];
             $scope.$selectData = data;
         });
     }
-    function hasEmptyOption(data) {
-        var isMatch;
+
+    function hasEmptyOption(data: ISelectOption[]) {
+        var isMatch: boolean;
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
             if (item && item.id === '') {
@@ -61,13 +78,15 @@ function ngTableSelectFilterDsController($scope, $parse, $attrs, $q) {
         }
         return isMatch;
     }
-    function getSelectListData($column) {
+
+    function getSelectListData($column: IColumnDef) {
         var dataInput = $column.data;
         if (dataInput instanceof Array) {
             return $q.when(dataInput);
-        }
-        else {
+        } else {
             return $q.when(dataInput && dataInput());
         }
     }
 }
+
+export { ngTableSelectFilterDs };

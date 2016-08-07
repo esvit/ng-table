@@ -5,12 +5,10 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-
-import templateUrl  from './sorterRow.html';
-
+"use strict";
+var templateUrl = require('./sorterRow.html');
 ngTableSorterRow.$inject = [];
-
-function ngTableSorterRow(){
+function ngTableSorterRow() {
     var directive = {
         restrict: 'E',
         replace: true,
@@ -20,5 +18,4 @@ function ngTableSorterRow(){
     };
     return directive;
 }
-
-export { ngTableSorterRow };
+exports.ngTableSorterRow = ngTableSorterRow;

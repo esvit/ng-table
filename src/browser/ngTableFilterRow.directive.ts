@@ -5,10 +5,12 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-"use strict";
+
 var templateUrl = require('./filterRow.html');
+
 ngTableFilterRow.$inject = [];
-function ngTableFilterRow() {
+
+function ngTableFilterRow(){
     var directive = {
         restrict: 'E',
         replace: true,
@@ -18,4 +20,5 @@ function ngTableFilterRow() {
     };
     return directive;
 }
-exports.ngTableFilterRow = ngTableFilterRow;
+
+export { ngTableFilterRow };

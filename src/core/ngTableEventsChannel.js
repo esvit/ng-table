@@ -5,11 +5,9 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-
-import * as angular from 'angular';
-
+"use strict";
+var ng1 = require('angular');
 ngTableEventsChannel.$inject = ['$rootScope'];
-
 /**
  * @ngdoc service
  * @name ngTableEventsChannel
@@ -22,73 +20,76 @@ ngTableEventsChannel.$inject = ['$rootScope'];
  * * datasetChanged - raised when `settings` receives a new data array
  * * pagesChanged - raised when a new pages array has been generated
  */
-function ngTableEventsChannel($rootScope){
-
+function ngTableEventsChannel($rootScope) {
     var events = {};
-    events = addChangeEvent('afterCreated', events);
-    events = addChangeEvent('afterReloadData', events);
-    events = addChangeEvent('datasetChanged', events);
-    events = addChangeEvent('pagesChanged', events);
+    events = addTableParamsEvent('afterCreated', events);
+    events = addTableParamsEvent('afterReloadData', events);
+    events = addTableParamsEvent('datasetChanged', events);
+    events = addTableParamsEvent('pagesChanged', events);
     return events;
-
     //////////
-
-    function addChangeEvent(eventName, target){
+    function addTableParamsEvent(eventName, target) {
         var fnName = eventName.charAt(0).toUpperCase() + eventName.substring(1);
-        var event = {};
-        event['on' + fnName] = createEventSubscriptionFn(eventName);
-        event['publish' + fnName] = createPublishEventFn(eventName);
-        return angular.extend(target, event);
+        var event = (_a = {},
+            _a['on' + fnName] = createEventSubscriptionFn(eventName),
+            _a['publish' + fnName] = createPublishEventFn(eventName),
+            _a
+        );
+        return ng1.extend(target, event);
+        var _a;
     }
-
-    function createEventSubscriptionFn(eventName){
-
-        return function subscription(handler/*[, eventSelector or $scope][, eventSelector]*/){
-            var eventSelector = angular.identity;
+    function createEventSubscriptionFn(eventName) {
+        return function subscription(handler, eventSelectorOrScope, eventSelector) {
+            var actualEvtSelector;
             var scope = $rootScope;
-
-            if (arguments.length === 2){
-                if (angular.isFunction(arguments[1].$new)) {
-                    scope = arguments[1];
-                } else {
-                    eventSelector = arguments[1]
-                }
-            } else if (arguments.length > 2){
-                scope = arguments[1];
-                eventSelector = arguments[2];
+            if (isScopeLike(eventSelectorOrScope)) {
+                scope = eventSelectorOrScope;
+                actualEvtSelector = createEventSelectorFn(eventSelector);
             }
-
-            // shorthand for subscriber to only receive events from a specific publisher instance
-            if (angular.isObject(eventSelector)) {
-                var requiredPublisher = eventSelector;
-                eventSelector = function(publisher){
-                    return publisher === requiredPublisher;
-                }
+            else {
+                actualEvtSelector = createEventSelectorFn(eventSelectorOrScope);
             }
-
-            return scope.$on('ngTable:' + eventName, function(event, params/*, ...args*/){
+            return scope.$on('ngTable:' + eventName, function (event, params) {
+                var eventArgs = [];
+                for (var _i = 2; _i < arguments.length; _i++) {
+                    eventArgs[_i - 2] = arguments[_i];
+                }
                 // don't send events published by the internal NgTableParams created by ngTableController
-                if (params.isNullInstance) return;
-
-                var eventArgs = rest(arguments, 2);
+                if (params.isNullInstance)
+                    return;
                 var fnArgs = [params].concat(eventArgs);
-                if (eventSelector.apply(this, fnArgs)){
+                if (actualEvtSelector.apply(this, fnArgs)) {
                     handler.apply(this, fnArgs);
                 }
             });
+        };
+        function createEventSelectorFn(eventSelector) {
+            if (!eventSelector) {
+                return function (publisher) { return true; };
+            }
+            else if (isEventSelectorFunc(eventSelector)) {
+                return eventSelector;
+            }
+            else {
+                // shorthand for subscriber to only receive events from a specific publisher instance
+                return function (publisher) { return publisher === eventSelector; };
+            }
+        }
+        function isEventSelectorFunc(val) {
+            return typeof val === 'function';
+        }
+        function isScopeLike(val) {
+            return val && typeof val.$new === 'function';
         }
     }
-
-    function createPublishEventFn(eventName){
-        return function publish(/*args*/){
-            var fnArgs = ['ngTable:' + eventName].concat(Array.prototype.slice.call(arguments));
-            $rootScope.$broadcast.apply($rootScope, fnArgs);
-        }
-    }
-
-    function rest(array, n) {
-        return Array.prototype.slice.call(array, n == null ? 1 : n);
+    function createPublishEventFn(eventName) {
+        return function publish() {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            $rootScope.$broadcast.apply($rootScope, ['ngTable:' + eventName].concat(args));
+        };
     }
 }
-
-export { ngTableEventsChannel };
+exports.ngTableEventsChannel = ngTableEventsChannel;

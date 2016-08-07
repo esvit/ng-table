@@ -5,8 +5,17 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-"use strict";
+
+import * as ng1 from 'angular';
+import { ITableScope } from './ngTableController';
+import { IColumnDef } from './public-interfaces';
+
+interface IInputAttributes extends ng1.IAttributes {
+    ngTableColumnsBinding: string;
+}
+
 ngTableColumnsBinding.$inject = ["$parse"];
+
 /**
  * @ngdoc directive
  * @name ngTableColumnsBinding
@@ -15,21 +24,23 @@ ngTableColumnsBinding.$inject = ["$parse"];
  *
  * This allows the $columns array to be accessed outside of the html table markup
  */
-function ngTableColumnsBinding($parse) {
+function ngTableColumnsBinding<T>($parse: ng1.IParseService){
     var directive = {
         restrict: 'A',
         require: 'ngTable',
         link: linkFn
     };
     return directive;
-    function linkFn($scope, $element, $attrs) {
+
+    function linkFn($scope: ITableScope<T>, $element: ng1.IAugmentedJQuery, $attrs: IInputAttributes){
         var setter = $parse($attrs.ngTableColumnsBinding).assign;
-        if (setter) {
-            $scope.$watch('$columns', function (newColumns) {
+        if (setter){
+            $scope.$watch<IColumnDef[]>('$columns', function(newColumns){
                 var shallowClone = (newColumns || []).slice(0);
                 setter($scope, shallowClone);
             });
         }
     }
 }
-exports.ngTableColumnsBinding = ngTableColumnsBinding;
+
+export { ngTableColumnsBinding };

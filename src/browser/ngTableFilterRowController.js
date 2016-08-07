@@ -5,32 +5,25 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-
-import * as angular from 'angular';
-
+"use strict";
 ngTableFilterRowController.$inject = ['$scope', 'ngTableFilterConfig'];
-
-function ngTableFilterRowController($scope, ngTableFilterConfig){
-
+function ngTableFilterRowController($scope, ngTableFilterConfig) {
     $scope.config = ngTableFilterConfig;
-
-    $scope.getFilterCellCss = function (filter, layout){
+    $scope.getFilterCellCss = function (filter, layout) {
         if (layout !== 'horizontal') {
             return 's12';
         }
-
         var size = Object.keys(filter).length;
-        var width = parseInt(12 / size, 10);
+        var width = parseInt((12 / size).toString(), 10);
         return 's' + width;
     };
-
-    $scope.getFilterPlaceholderValue = function(filterValue/*, filterName*/){
-        if (angular.isObject(filterValue)) {
-            return filterValue.placeholder;
-        } else {
+    $scope.getFilterPlaceholderValue = function (filterDef, filterKey) {
+        if (typeof filterDef === 'string') {
             return '';
+        }
+        else {
+            return filterDef.placeholder;
         }
     };
 }
-
-export { ngTableFilterRowController };
+exports.ngTableFilterRowController = ngTableFilterRowController;

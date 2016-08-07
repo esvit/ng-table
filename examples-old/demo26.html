@@ -16,9 +16,9 @@
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="../bower_components/angular/angular.js"></script>
-    <script src="../dist/ng-table.js"></script>
+    <script src="dist/ng-table.js"></script>
     <script src="js/ng-table-resizable-columns.js"></script>
-    <link rel="stylesheet" href="../dist/ng-table.css">
+    <link rel="stylesheet" href="dist/ng-table.css">
 </head>
 <body ng-app="main">
 
@@ -66,7 +66,7 @@
                     count: 10           // count per page
                 }, {
                     total: data.length, // length of data
-                    getData: function ($defer, params) {
+                    getData: function (params) {
                         // use built-in angular filter
                         var filteredData = params.filter() ?
                                 $filter('filter')(data, params.filter()) :
@@ -76,7 +76,7 @@
                                 data;
 
                         params.total(orderedData.length); // set total for recalc pagination
-                        $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                        return orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
                     }
                 });
             })

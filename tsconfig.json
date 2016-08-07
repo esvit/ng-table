@@ -8,10 +8,14 @@
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "suppressImplicitAnyIndexErrors": true
   },
   "exclude": [
     "dist",
     "node_modules"
-  ]
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "useWebpackText": true //Allows loaders to be chained to awesome-typescript-loader.
+  }
 }

@@ -6,7 +6,6 @@
     "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
     "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
     "karma-jasmine": "github:DefinitelyTyped/DefinitelyTyped/karma-jasmine/karma-jasmine.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
-    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
-    "ng-table": "github:christianacca/typed-ng-table/typings.json#930b5a14174e594d6167691ed0938be42a6b06aa"
+    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a"
   }
 }

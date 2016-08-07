@@ -5,12 +5,10 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-
-import templateUrl  from './groupRow.html';
-
+"use strict";
+var templateUrl = require('./groupRow.html');
 ngTableGroupRow.$inject = [];
-
-function ngTableGroupRow(){
+function ngTableGroupRow() {
     var directive = {
         restrict: 'E',
         replace: true,
@@ -21,5 +19,4 @@ function ngTableGroupRow(){
     };
     return directive;
 }
-
-export { ngTableGroupRow };
+exports.ngTableGroupRow = ngTableGroupRow;

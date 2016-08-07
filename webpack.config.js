@@ -15,7 +15,8 @@ function createConfig(env, parts) {
         parts.extractSass([
             path.join(__dirname, 'src', 'styles', 'ng-table.scss')
         ]),
-        parts.forEnvironment()
+        parts.forEnvironment(),
+        parts.typescript()
         // todo: conflicts with ExtractTextPlugin
         //,parts.banner()
     );

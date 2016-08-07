@@ -5,90 +5,114 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-"use strict";
+
+import * as ng1 from 'angular';
+import { DataResult, IGroupingFunc, Grouping } from '../core';
+import { IColumnDef } from './public-interfaces';
+import { ITableScope } from './ngTableController';
+
+interface IScopeExtensions<T> {
+    $selGroup: IGroupingFunc<any> | string;
+    $selGroupTitle: string;
+    getGroupables(): Array<IGroupingFunc<any> | IColumnDef>
+    getGroupTitle(group: IGroupingFunc<any> | IColumnDef): string;
+    getVisibleColumns(): IColumnDef[];
+    groupBy(group: IGroupingFunc<any> | IColumnDef): void;
+    isSelectedGroup(group: IGroupingFunc<any> | IColumnDef): boolean;
+    toggleDetail(): ng1.IPromise<Array<DataResult<T>>>
+}
+
 ngTableGroupRowController.$inject = ['$scope'];
-function ngTableGroupRowController($scope) {
-    var groupFns = [];
+
+function ngTableGroupRowController<T>($scope: ITableScope<T> & IScopeExtensions<T>){
+
+    var groupFns: Array<IGroupingFunc<any> | IColumnDef> = [];
+
     init();
-    function init() {
+
+    function init(){
         $scope.getGroupables = getGroupables;
         $scope.getGroupTitle = getGroupTitle;
         $scope.getVisibleColumns = getVisibleColumns;
         $scope.groupBy = groupBy;
         $scope.isSelectedGroup = isSelectedGroup;
         $scope.toggleDetail = toggleDetail;
+
         $scope.$watch('params.group()', setGroup, true);
     }
-    function changeSortDirection() {
-        var newDirection;
+
+    function changeSortDirection(){
+        var newDirection: string;
         if ($scope.params.hasGroup($scope.$selGroup, 'asc')) {
             newDirection = 'desc';
-        }
-        else if ($scope.params.hasGroup($scope.$selGroup, 'desc')) {
+        } else if ($scope.params.hasGroup($scope.$selGroup, 'desc')){
             newDirection = '';
-        }
-        else {
+        } else {
             newDirection = 'asc';
         }
         $scope.params.group($scope.$selGroup, newDirection);
     }
-    function findGroupColumn(groupKey) {
+
+    function findGroupColumn(groupKey: IGroupingFunc<any> | string) {
         return $scope.$columns.filter(function ($column) {
             return $column.groupable($scope) === groupKey;
         })[0];
     }
-    function getGroupTitle(group) {
+
+    function getGroupTitle(group: IGroupingFunc<any> | IColumnDef){
         return isGroupingFunc(group) ? group.title : group.title($scope);
     }
-    function getGroupables() {
+
+    function getGroupables(){
         var groupableCols = $scope.$columns.filter(function ($column) {
             return !!$column.groupable($scope);
         });
         return groupFns.concat(groupableCols);
     }
-    function getVisibleColumns() {
-        return $scope.$columns.filter(function ($column) {
+
+    function getVisibleColumns(){
+        return $scope.$columns.filter(function($column){
             return $column.show($scope);
-        });
+        })
     }
-    function groupBy(group) {
-        if (isSelectedGroup(group)) {
+
+    function groupBy(group: IGroupingFunc<any> | IColumnDef){
+        if (isSelectedGroup(group)){
             changeSortDirection();
-        }
-        else {
-            if (isGroupingFunc(group)) {
+        } else {
+            if (isGroupingFunc(group)){
                 $scope.params.group(group);
-            }
-            else {
+            } else{
                 // it's OK, we know that groupable will return a string
                 // this is guaranteed by getGroupables returning only
                 // columns that return (truthy) strings
-                $scope.params.group(group.groupable($scope));
+                $scope.params.group(group.groupable($scope) as string);
             }
         }
     }
-    function isGroupingFunc(val) {
+
+    function isGroupingFunc(val: IColumnDef | Grouping<any>): val is IGroupingFunc<any> {
         return typeof val === 'function';
     }
-    function isSelectedGroup(group) {
-        if (isGroupingFunc(group)) {
+
+    function isSelectedGroup(group: IGroupingFunc<any> | IColumnDef){
+        if (isGroupingFunc(group)){
             return group === $scope.$selGroup;
-        }
-        else {
+        } else {
             return group.groupable($scope) === $scope.$selGroup;
         }
     }
-    function setGroup(grouping) {
+
+    function setGroup(grouping: Grouping<any>){
         var existingGroupCol = findGroupColumn($scope.$selGroup);
-        if (existingGroupCol && existingGroupCol.show.assign) {
+        if (existingGroupCol && existingGroupCol.show.assign){
             existingGroupCol.show.assign($scope, true);
         }
         if (isGroupingFunc(grouping)) {
             groupFns = [grouping];
             $scope.$selGroup = grouping;
             $scope.$selGroupTitle = grouping.title;
-        }
-        else {
+        } else {
             // note: currently only one group is implemented
             var groupKey = Object.keys(grouping || {})[0];
             var groupedColumn = findGroupColumn(groupKey);
@@ -101,9 +125,11 @@ function ngTableGroupRowController($scope) {
             }
         }
     }
-    function toggleDetail() {
+
+    function toggleDetail(){
         $scope.params.settings().groupOptions.isExpanded = !$scope.params.settings().groupOptions.isExpanded;
         return $scope.params.reload();
     }
 }
-exports.ngTableGroupRowController = ngTableGroupRowController;
+
+export { ngTableGroupRowController };

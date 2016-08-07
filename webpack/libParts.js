@@ -16,7 +16,8 @@ function createLibraryParts(rootDir, env = {}) {
         extractSass,
         excludeAngular,
         forEnvironment,
-        inlineHtmlTemplates
+        inlineHtmlTemplates,
+        typescript
     };
 
     /////
@@ -25,7 +26,7 @@ function createLibraryParts(rootDir, env = {}) {
         const filename = env.prod ? `[name].min.js` : `[name].js`;
         return {
             entry: {
-                [libraryName]: path.join(rootDir, 'index.js')
+                [libraryName]: path.join(rootDir, 'index.ts')
             },
             // tells webpack not to include in bundle require'd node specific objects (eg path)
             target: 'node',
@@ -132,7 +133,7 @@ function createLibraryParts(rootDir, env = {}) {
                 loaders: [
                     {
                         test: /\.html$/,
-                        loader: 'ngtemplate?requireAngular&relativeTo=/src/browser/&prefix=ng-table/!html'
+                        loaders: ['ngtemplate?requireAngular&relativeTo=/src/browser/&prefix=ng-table/', 'html']
                     }
                 ]
             }
@@ -163,6 +164,24 @@ function createLibraryParts(rootDir, env = {}) {
                     sourceMap: true
                 })
             ]
+        };
+    }
+
+    function typescript() {
+        const tsconfigPath = path.resolve('..', rootDir, 'tsconfig.json')
+        return {
+            // Currently we need to add '.ts' to the resolve.extensions array.
+            resolve: {
+                extensions: ['', '.ts', '.tsx', '.js', '.jsx']
+            },
+            module: {
+                loaders: [
+                    {
+                        test: /\.ts$/,
+                        loader: `awesome-typescript?tsconfig=${tsconfigPath}`
+                    }
+                ]
+            }
         };
     }
 }
