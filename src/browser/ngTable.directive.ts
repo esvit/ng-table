@@ -5,38 +5,51 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
+import { IAugmentedJQuery, IDirective, IQService, IParseService, IPromise, IScope } from 'angular';
 import * as ng1 from 'angular';
-import { IColumnDef, ColumnFieldContext, IColumnField, IFilterTemplateDefMap, SelectData, ITableController } from './public-interfaces';
-import { ITableInputAttributes } from './ngTableController';
-    
+import { 
+    IColumnDef, ColumnFieldContext, IColumnField, IFilterTemplateDefMap, SelectData, ITableController, 
+    ITableInputAttributes 
+} from './public-interfaces';
+
 interface IScopeExtensions {
     $columns: IColumnDef[]
 }
 
-/**
- * @ngdoc directive
- * @name ngTable
- * @module ngTable
- * @restrict A
- *
- * @description
- * Directive that instantiates {@link ngTableController ngTableController}.
- */
 ngTable.$inject = ['$q', '$parse'];
 
-function ngTable($q: ng1.IQService, $parse: ng1.IParseService) {
+/**
+ * Directive that instantiates {@link ngTableController ngTableController}.
+ * @ngdoc directive
+ * @name ngTable
+ * @example
+ * 
+ * ```html
+ * <table ng-table="$ctrl.tableParams" show-filter="true" class="table table-bordered">
+ *  <tr ng-repeat="user in $data">
+ *      <td data-title="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
+ *          {{user.name}}
+ *      </td>
+ *      <td data-title="'Age'" sortable="'age'" filter="{ 'age': 'text' }">
+ *          {{user.age}}
+ *      </td>
+ *  </tr>
+ * </table>
+ * ```
+ */
+export function ngTable($q: IQService, $parse: IParseService) : IDirective {
 
     return {
         restrict: 'A',
         priority: 1001,
         scope: true,
         controller: 'ngTableController',
-        compile: function(element: ng1.IAugmentedJQuery) {
+        compile: function(element: IAugmentedJQuery) {
             var columns: IColumnDef[] = [],
                 i = 0,
-                dataRow: ng1.IAugmentedJQuery,
-                groupRow: ng1.IAugmentedJQuery,
-                rows: ng1.IAugmentedJQuery[] = [];
+                dataRow: IAugmentedJQuery,
+                groupRow: IAugmentedJQuery,
+                rows: IAugmentedJQuery[] = [];
 
             ng1.forEach(element.find('tr'), function(tr) {
                 rows.push(ng1.element(tr))
@@ -111,7 +124,7 @@ function ngTable($q: ng1.IQService, $parse: ng1.IParseService) {
                     filter: parsedAttribute<IFilterTemplateDefMap>('filter'),
                     groupable: parsedAttribute<string | boolean>('groupable'),
                     headerTemplateURL: parsedAttribute<string | boolean>('header'),
-                    filterData: parsedAttribute<ng1.IPromise<SelectData> | SelectData>('filter-data'),
+                    filterData: parsedAttribute<IPromise<SelectData> | SelectData>('filter-data'),
                     show: el.attr("ng-if") ? parsedAttribute<boolean>('ng-if') : undefined
                 });
 
@@ -123,7 +136,7 @@ function ngTable($q: ng1.IQService, $parse: ng1.IParseService) {
                     setAttrValue('ng-if', '$columns[' + (columns.length - 1) + '].show(this)');
                 }
             });
-            return function(scope: ng1.IScope & IScopeExtensions, element: ng.IAugmentedJQuery, attrs: ITableInputAttributes, controller: ITableController) {
+            return function(scope: IScope & IScopeExtensions, element: IAugmentedJQuery, attrs: ITableInputAttributes, controller: ITableController) {
                 scope.$columns = columns = controller.buildColumns(columns);
 
                 controller.setupBindingsToInternalScope(attrs.ngTable);
@@ -133,5 +146,3 @@ function ngTable($q: ng1.IQService, $parse: ng1.IParseService) {
         }
     }
 }
-
-export { ngTable };

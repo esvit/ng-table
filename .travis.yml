@@ -1,25 +1,32 @@
 language: node_js
 node_js:
-  - node
+- node
+
+addons:
+  sauce_connect: true
+
+env:
+  global:
+  - secure: gnwapHmalQ00mis28sRZQwmrkOWU7CyIyU3iKc1bixgGKZu6dhMUwQt2WA8HDkOLgSxSCSMigtzwuPvkxH6CRLbMnYwCDkCHZS9SvjrOLX+jZkORbSKRJUjlkRS3cjkY9AzKOYAOngAN07j0iqvsKx6UtdtEvA4QVM/ToQzVfi0=
+  - secure: J9OuScEujGDV/JKBvOz7pgh/hzA6QEqJKo8wtQprsSuUnP1zdUvlRV+oKuGXAGnfsFlr/aw+7+djz4QbqITQeQDJaQ4Ui4/M8dfDp4kLKGH6U8obrnX79IERjgKZubs17dW+NcbIt6pNzJavOdLlvAZiQtQMcdXbHI+Xa0PoTHs=
 
 before_install:
-  - npm install -g karma-cli
-  - npm install -g grunt-cli
-  - npm install -g bower
+- npm install -g karma-cli
 
 install:
-  - npm prune && npm install
-  - npm run setup
-  - npm run build
+- npm prune && npm install
+- npm run setup:demo-apps
+
+before_script:
+- npm run build:all
+- '[ "${TRAVIS_PULL_REQUEST}" = "true" ] || npm run e2e-server:ci'
 
 script:
-  - npm test
+- npm test
+- '[ "${TRAVIS_PULL_REQUEST}" = "true" ] || npm run e2e:ci'
 
-after_success:
-  cat out/coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+after_success: cat out/coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 cache:
   directories:
-    - node_modules
-    - bower_components
-  
+  - node_modules

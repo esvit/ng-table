@@ -6,10 +6,13 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-import * as ng1 from 'angular';
+import { IScope } from 'angular';
 import { IFilterConfig, IFilterTemplateDef, IFilterTemplateDefMap } from './public-interfaces';
 
-interface IScopeExtensions {
+/**
+ * @private
+ */
+export interface IScopeExtensions {
     config: IFilterConfig;
     getFilterCellCss(filter: IFilterTemplateDefMap, layout: string): string;
     getFilterPlaceholderValue(filterDef: string | IFilterTemplateDef, filterKey?: string): string;
@@ -17,7 +20,10 @@ interface IScopeExtensions {
 
 ngTableFilterRowController.$inject = ['$scope', 'ngTableFilterConfig'];
 
-function ngTableFilterRowController($scope: ng1.IScope & IScopeExtensions, ngTableFilterConfig: IFilterConfig){
+/**
+ * Controller for the {@link ngTableFilterRow ngTableFilterRow} directive
+ */
+export function ngTableFilterRowController($scope: IScope & IScopeExtensions, ngTableFilterConfig: IFilterConfig){
 
     $scope.config = ngTableFilterConfig;
 
@@ -39,5 +45,3 @@ function ngTableFilterRowController($scope: ng1.IScope & IScopeExtensions, ngTab
         }
     };
 }
-
-export { ngTableFilterRowController };

@@ -14,15 +14,13 @@ interface IScopeExtensions {
     pages: IPageButton[]
 }
 
-/**
- * @ngdoc directive
- * @name ngTablePagination
- * @module ngTable
- * @restrict A
- */
 ngTablePagination.$inject = ['$compile', '$document', 'ngTableEventsChannel'];
 
-function ngTablePagination<T>($compile: ng1.ICompileService, $document: ng1.IDocumentService, ngTableEventsChannel: IEventsChannel) {
+/**
+ * Directive that renders the table pagination controls
+ * @ngdoc directive
+ */
+export function ngTablePagination<T>($compile: ng1.ICompileService, $document: ng1.IDocumentService, ngTableEventsChannel: IEventsChannel): ng1.IDirective {
 
     return {
         restrict: 'A',
@@ -50,5 +48,3 @@ function ngTablePagination<T>($compile: ng1.ICompileService, $document: ng1.IDoc
         }
     };
 }
-
-export { ngTablePagination };

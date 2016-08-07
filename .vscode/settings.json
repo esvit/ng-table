@@ -8,10 +8,16 @@
 	
 	// Controls if the editor will insert spaces for tabs. Accepted values:  "auto", true, false. If set to "auto", the value will be guessed when a file is opened.
 	"editor.insertSpaces": true,
+
+	"editor.snippetSuggestions": "bottom",
 	
 	"files.exclude": {
         "**/.git": true,
         "**/.DS_Store": true,
-		"**/*.js": {"when": "$(basename).ts"}
+		"**/*.js": {"when": "$(basename).ts"},
+		"src/browser/*.d.ts": true,
+		"src/browser/*.js.map": true,
+		"src/core/*.d.ts": true,
+		"src/core/*.js.map": true
     }
 }

@@ -1,9 +1,7 @@
 RELEASING
 ============
 
-1. Update [semver](http://semver.org/) version number in:
-    - package.json
-    - bower.json
+1. Update [semver](http://semver.org/) version number in `package.json`
 
 2. Minify source files: `npm run build:full`
 
@@ -16,7 +14,6 @@ RELEASING
 
 5. Check in the following updated files to git:
     - dist/*.*
-    - bower.json 
     - package.json
     - CHANGELOG.md
 

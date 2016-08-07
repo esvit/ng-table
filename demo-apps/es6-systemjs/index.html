@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/ng-table/dist/ng-table.css">
+
+     <!-- Polyfill(s) for older browsers; note: we do NOT need this for say current vs of chrome -->
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="system.config.js"></script>
+    <script>
+        System.import("index.js");
+    </script>
+</head>
+
+<body>
+
+    <h1>ng-table sample app (ES2015+SystemJS)</h1>
+
+    <my-table></my-table>
+
+</body>
+
+</html>

@@ -35,11 +35,6 @@ It's recommended to upgrade in three jumps:
 
 ## Installing
 
-**Bower**
-```
-bower install ng-table --save
-```
-
 **NPM**
 ```
 npm install ng-table --save
@@ -59,12 +54,9 @@ and [@types/ng-table](https://www.npmjs.com/package/@types/ng-table) are depreci
 We use Karma to ensure the quality of the code. The easiest way to run these checks is to use `npm test`:
 
 ```sh
-npm install && npm run setup
-npm run build
+npm install
 npm test
 ```
-
-The karma task will try to open Firefox and Chrome as browser in which to run the tests. Make sure this is available or change the configuration in `karma.conf.js`
 
 
 ## Configuring ng-table
@@ -90,6 +82,7 @@ Please be responsible, the open source community is not there to guess your prob
 5. Close your issue when a solution has been found (and share it with the community)
 
 Note that 80% of the open issues are actually not issues but "problem" due to developpers laziness or lack of investigation. These "issues" are a waste of time for us and especially if we have to setup a sample to reproduce the issue which those developpers could have done. Any open issue which does not fulfill this contract will be closed without investigation.
+
 
 
 ## Examples

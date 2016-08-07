@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "es6",
     "moduleResolution": "node",
-    "sourceMap": false,
+    "sourceMap": true,
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
@@ -11,11 +12,10 @@
     "noImplicitReturns": true,
     "suppressImplicitAnyIndexErrors": true
   },
-  "exclude": [
-    "dist",
-    "node_modules"
+  "include": [
+    "src/**/*",
+    "test/**/*",
+    "./*"
   ],
-  "awesomeTypescriptLoaderOptions": {
-    "useWebpackText": true //Allows loaders to be chained to awesome-typescript-loader.
-  }
+  "exclude": ["node_modules"]
 }

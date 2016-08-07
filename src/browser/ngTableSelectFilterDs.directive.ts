@@ -17,23 +17,19 @@ interface IScopeExtensions {
     $selectData: ISelectOption[]
 }
 
+ngTableSelectFilterDs.$inject = [];
+
 /**
- * @ngdoc directive
- * @name ngTableSelectFilterDs
- * @module ngTable
- * @restrict A
- *
- * @description
  * Takes the array returned by $column.filterData and makes it available as `$selectData` on the `$scope`.
  *
  * The resulting `$selectData` array will contain an extra item that is suitable to represent the user
  * "deselecting" an item from a `<select>` tag
  *
  * This directive is is focused on providing a datasource to an `ngOptions` directive
+ * @ngdoc directive
+ * @private
  */
-ngTableSelectFilterDs.$inject = [];
-
-function ngTableSelectFilterDs(){
+function ngTableSelectFilterDs(): ng1.IDirective{
     // note: not using isolated or child scope "by design"
     // this is to allow this directive to be combined with other directives that do
 

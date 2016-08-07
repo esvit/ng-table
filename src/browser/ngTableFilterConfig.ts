@@ -11,7 +11,12 @@ import { IFilterConfig, IFilterConfigValues, IFilterTemplateDef } from './public
 
 ngTableFilterConfigProvider.$inject = [];
 
-function ngTableFilterConfigProvider() {
+/**
+ * The angular provider used to configure the behaviour of the `ngTableFilterConfig` service.
+ * 
+ * Implements the {@link IFilterConfigProvider IFilterConfigProvider} interface
+ */
+export function ngTableFilterConfigProvider() {
     var config: IFilterConfigValues;
     var defaultConfig: IFilterConfigValues = {
         defaultBaseUrl: 'ng-table/filters/',
@@ -85,5 +90,3 @@ function ngTableFilterConfigProvider() {
 
     }
 }
-
-export { ngTableFilterConfigProvider };

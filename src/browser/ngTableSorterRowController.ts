@@ -5,23 +5,32 @@
  * @url https://github.com/esvit/ng-table/
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
-import * as ng1 from 'angular';
+import { IAngularEvent } from 'angular';
 import { ISortingValues } from '../core';
 import { IColumnDef } from './public-interfaces';
 import { ITableScope } from './ngTableController';
 
-interface IScopeExtensions {
+/**
+ * @private
+ */
+export interface IScopeExtensions {
     sortBy($column: IColumnDef, event: IAugmentedMouseEvent): void;
 }
 
-interface IAugmentedMouseEvent extends ng1.IAngularEvent {
+/**
+ * @private
+ */
+export interface IAugmentedMouseEvent extends IAngularEvent {
     ctrlKey: boolean;
     metaKey: boolean;
 }
 
 ngTableSorterRowController.$inject = ['$scope'];
 
-function ngTableSorterRowController<T>($scope: ITableScope<T> & IScopeExtensions) {
+/**
+ * Controller for the {@link ngTableSorterRow ngTableSorterRow} directive
+ */
+export function ngTableSorterRowController<T>($scope: ITableScope<T> & IScopeExtensions) {
 
     $scope.sortBy = sortBy;
 
@@ -44,5 +53,3 @@ function ngTableSorterRowController<T>($scope: ITableScope<T> & IScopeExtensions
 
     }
 }
-
-export { ngTableSorterRowController };

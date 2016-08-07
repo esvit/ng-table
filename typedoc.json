@@ -1,0 +1,17 @@
+{
+  "mode": "file",
+  "out": "docs",
+  "exclude": "node_modules",
+  "theme": "default",
+  "ignoreCompilerErrors": "true",
+  "includeDeclarations": "true",
+  "experimentalDecorators": "true",
+  "emitDecoratorMetadata": "true",
+  "target": "ES6",
+  "moduleResolution": "node",
+  "preserveConstEnums": "true",
+  "stripInternal": "true",
+  "suppressExcessPropertyErrors": "true",
+  "suppressImplicitAnyIndexErrors": "true",
+  "module": "umd"
+}

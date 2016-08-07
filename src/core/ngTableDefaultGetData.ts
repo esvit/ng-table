@@ -10,9 +10,7 @@ import * as ng1 from 'angular';
 import { IDefaultGetDataProvider, IDefaultGetData, IFilterFunc, INgTableParams } from './public-interfaces';
 
 /**
- * @ngdoc provider
- * @name ngTableDefaultGetDataProvider
- * @description Allows for the configuration of the ngTableDefaultGetData service.
+ * Allows for the configuration of the ngTableDefaultGetData service.
  *
  * Set filterFilterName to the name of a angular filter that knows how to apply the values returned by
  * `NgTableParams.filter()` to restrict an array of data.
@@ -22,8 +20,10 @@ import { IDefaultGetDataProvider, IDefaultGetData, IFilterFunc, INgTableParams }
  *
  * Out of the box the `ngTableDefaultGetData` service will be configured to use the angular `filter` and `orderBy`
  * filters respectively
+ * 
+ * @ngdoc provider
  */
-class ngTableDefaultGetDataProvider implements IDefaultGetDataProvider {
+export class ngTableDefaultGetDataProvider implements IDefaultGetDataProvider {
     filterFilterName = 'filter';
     sortingFilterName = 'orderBy';
     $get: ($filter: ng1.IFilterService) => IDefaultGetData<any>;
@@ -34,13 +34,9 @@ class ngTableDefaultGetDataProvider implements IDefaultGetDataProvider {
         ngTableDefaultGetData.$inject = ['$filter'];
 
         /**
+         * Implementation of the {@link IDefaultGetData IDefaultGetData} interface
+         * 
          * @ngdoc service
-         * @name ngTableDefaultGetData
-         * @description A default implementation of the getData function that will apply the `filter`, `orderBy` and
-         * paging values from the `NgTableParams` instance supplied to the data array supplied.
-         *
-         * The outcome will be to return the resulting array and to assign the total item count after filtering
-         * to the `total` of the `NgTableParams` instance supplied
          */
         function ngTableDefaultGetData<T>($filter: ng1.IFilterService): IDefaultGetData<T> {
 
@@ -126,5 +122,3 @@ class ngTableDefaultGetDataProvider implements IDefaultGetDataProvider {
         }
     }
 }
-
-export { ngTableDefaultGetDataProvider };

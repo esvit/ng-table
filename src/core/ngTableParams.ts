@@ -12,17 +12,15 @@ import {
     IGroupValues, IGroupingFunc, IGroupSettings, IPageButton, IParamValues, ISettings, ISortingValues, INgTableParams, 
     ITableParamsConstructor } from './public-interfaces'
 
-/**
- * @ngdoc service
- * @name NgTableParams
- * @module ngTable
- * @description Parameters manager for ngTable
- */
 ngTableParamsFactory.$inject = [
     '$q', '$log', '$filter', 'ngTableDefaults', 'ngTableDefaultGetData', 'ngTableEventsChannel'
 ];
 
-function ngTableParamsFactory<T>(
+/**
+ * Implmenentation of the {@link INgTableParams INgTableParams} interface
+ * @ngdoc service
+ */
+export function ngTableParamsFactory<T>(
     $q: ng1.IQService, $log: ng1.ILogService, $filter: ng1.IFilterService, ngTableDefaults: IDefaults, 
     ngTableDefaultGetData: IDefaultGetData<any>, ngTableEventsChannel: IEventsChannel) {
 
@@ -703,5 +701,3 @@ function ngTableParamsFactory<T>(
         return this;
     }
 }
-
-export { ngTableParamsFactory };

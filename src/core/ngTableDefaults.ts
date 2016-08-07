@@ -9,14 +9,10 @@
 import { IDefaults } from './public-interfaces';
 
 /**
+ * Default values for ngTable
  * @ngdoc object
- * @name ngTableDefaultParams
- * @module ngTable
- * @description Default Parameters for ngTable
  */
-var ngTableDefaults : IDefaults = {
+export var ngTableDefaults : IDefaults = {
     params: {},
     settings: {}
 };
-
-export { ngTableDefaults };

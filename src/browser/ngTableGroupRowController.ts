@@ -6,12 +6,15 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-import * as ng1 from 'angular';
+import { IPromise } from 'angular';
 import { DataResult, IGroupingFunc, Grouping } from '../core';
 import { IColumnDef } from './public-interfaces';
 import { ITableScope } from './ngTableController';
 
-interface IScopeExtensions<T> {
+/**
+ * @private
+ */
+export interface IScopeExtensions<T> {
     $selGroup: IGroupingFunc<any> | string;
     $selGroupTitle: string;
     getGroupables(): Array<IGroupingFunc<any> | IColumnDef>
@@ -19,12 +22,15 @@ interface IScopeExtensions<T> {
     getVisibleColumns(): IColumnDef[];
     groupBy(group: IGroupingFunc<any> | IColumnDef): void;
     isSelectedGroup(group: IGroupingFunc<any> | IColumnDef): boolean;
-    toggleDetail(): ng1.IPromise<Array<DataResult<T>>>
+    toggleDetail(): IPromise<Array<DataResult<T>>>
 }
 
 ngTableGroupRowController.$inject = ['$scope'];
 
-function ngTableGroupRowController<T>($scope: ITableScope<T> & IScopeExtensions<T>){
+/**
+ * Controller for the {@link ngTableGroupRow ngTableGroupRow} directive
+ */
+export function ngTableGroupRowController<T>($scope: ITableScope<T> & IScopeExtensions<T>){
 
     var groupFns: Array<IGroupingFunc<any> | IColumnDef> = [];
 
@@ -131,5 +137,3 @@ function ngTableGroupRowController<T>($scope: ITableScope<T> & IScopeExtensions<
         return $scope.params.reload();
     }
 }
-
-export { ngTableGroupRowController };

@@ -3,7 +3,7 @@ CONTRIBUTING
 
 1. Fork the repo.
 
-2. `npm install && npm run setup`
+2. `npm install`
 
 3. Run the build: `npm run build:full`
     - builds dist/ng-table.js and associated files

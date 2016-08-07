@@ -6,23 +6,33 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+import { IScope } from 'angular';
 import * as ng1 from 'angular';
 import { IColumnDef, IDynamicTableColDef } from './public-interfaces';
 
-interface IColumnBuilder {
-    buildColumn(column: IColumnDef | IDynamicTableColDef, defaultScope: ng1.IScope, columns: IColumnDef[]): IColumnDef
+/**
+ * @private
+ * Definition of the service used to construct a table $column used by {@link ngTable ngTable} directive
+ */
+export interface IColumnBuilder {
+    /**
+     * Creates a $column for use within a header template
+     *
+     * @param column the initial definition for $column to build
+     * @param defaultScope the $scope to supply to the $column getter methods when not supplied by caller
+     * @param columns a reference to the $columns array to make available on the context supplied to the
+     * $column getter methods
+     */
+    buildColumn(column: IColumnDef | IDynamicTableColDef, defaultScope: IScope, columns: Array<IColumnDef | IDynamicTableColDef>): IColumnDef | IDynamicTableColDef
 }
 
-/**
- * @ngdoc service
- * @name ngTableColumn
- * @module ngTable
- * @description
- * Service to construct a $column definition used by {@link ngTable ngTable} directive
- */
 ngTableColumn.$inject = [];
 
-function ngTableColumn(): IColumnBuilder {
+/**
+ * @private
+ * Service to construct a $column definition used by {@link ngTable ngTable} directive
+ */
+export function ngTableColumn(): IColumnBuilder {
 
     return {
         buildColumn: buildColumn
@@ -30,18 +40,7 @@ function ngTableColumn(): IColumnBuilder {
 
     //////////////
 
-    /**
-     * @ngdoc method
-     * @name ngTableColumn#buildColumn
-     * @description Creates a $column for use within a header template
-     *
-     * @param {Object} column an existing $column or simple column data object
-     * @param {Scope} defaultScope the $scope to supply to the $column getter methods when not supplied by caller
-     * @param {Array} columns a reference to the columns array to make available on the context supplied to the
-     * $column getter methods
-     * @returns {Object} a $column object
-     */
-    function buildColumn(column: IColumnDef | IDynamicTableColDef, defaultScope: ng1.IScope, columns: IColumnDef[]): IColumnDef{
+    function buildColumn(column: IColumnDef | IDynamicTableColDef, defaultScope: IScope, columns: IColumnDef[]): IColumnDef | IDynamicTableColDef {
         // note: we're not modifying the original column object. This helps to avoid unintended side affects
         var extendedCol = Object.create(column);
         var defaults = createDefaults();
@@ -62,7 +61,7 @@ function ngTableColumn(): IColumnBuilder {
                             return column[prop1];
                         }
                     };
-                    (getterSetter as any).assign = function($scope: ng1.IScope, value: any){
+                    (getterSetter as any).assign = function($scope: IScope, value: any){
                         column[prop1] = value;
                     };
                     extendedCol[prop1] = getterSetter;
@@ -116,7 +115,7 @@ function ngTableColumn(): IColumnBuilder {
                 return value;
             }
         };
-        (getterSetter as any).assign = function($scope: ng1.IScope, newValue: any){
+        (getterSetter as any).assign = function($scope: IScope, newValue: any){
             value = newValue;
         };
         return getterSetter;
@@ -126,5 +125,3 @@ function ngTableColumn(): IColumnBuilder {
         return object != null && ng1.isFunction(object.$new);
     }
 }
-
-export { ngTableColumn, IColumnBuilder };

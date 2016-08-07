@@ -10,7 +10,15 @@ var templateUrl = require('./sorterRow.html');
 
 ngTableSorterRow.$inject = [];
 
-function ngTableSorterRow(){
+/**
+ * directive that renders the sorting header row for a table 
+ * @ngdoc directive
+ * @example
+ * ```html
+ * <ng-table-sorter-row></ng-table-sorter-row>
+ * ```
+ */
+export function ngTableSorterRow(){
     var directive = {
         restrict: 'E',
         replace: true,
@@ -20,5 +28,3 @@ function ngTableSorterRow(){
     };
     return directive;
 }
-
-export { ngTableSorterRow };

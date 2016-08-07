@@ -12,18 +12,10 @@ import { IEventsChannel, InternalTableParams, INgTableParams } from './public-in
 ngTableEventsChannel.$inject = ['$rootScope'];
 
 /**
+ * Implementation of the {@link IEventsChannel IEventsChannel} interface
  * @ngdoc service
- * @name ngTableEventsChannel
- * @description strongly typed pub/sub for `NgTableParams`
- *
- * Supported events:
- *
- * * afterCreated - raised when a new instance of `NgTableParams` has finished being constructed
- * * afterReloadData - raised when the `reload` event has finished loading new data
- * * datasetChanged - raised when `settings` receives a new data array
- * * pagesChanged - raised when a new pages array has been generated
  */
-function ngTableEventsChannel($rootScope: ng1.IRootScopeService): IEventsChannel {
+export function ngTableEventsChannel($rootScope: ng1.IRootScopeService): IEventsChannel {
 
     var events = {};
     events = addTableParamsEvent('afterCreated', events);
@@ -99,5 +91,3 @@ function ngTableEventsChannel($rootScope: ng1.IRootScopeService): IEventsChannel
         }
     }
 }
-
-export { ngTableEventsChannel };

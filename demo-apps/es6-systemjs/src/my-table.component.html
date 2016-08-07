@@ -1,0 +1,10 @@
+<table ng-table="$ctrl.tableParams" show-filter="true" class="table table-condensed table-bordered">
+    <tr ng-repeat="user in $data">
+        <td data-title="'Name'" header-class="'text-left'" sortable="'name'" filter="{ 'name': 'text' }">
+            {{user.name}}
+        </td>
+        <td data-title="'Age'" header-class="'text-right'" sortable="'age'" filter="{ 'age': 'text' }">
+            {{user.age}}
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,51 @@
+{
+  "name": "ng-table-demo-app-es6-systemjs",
+  "version": "1.0.0",
+  "dependencies": {
+    "@types/angular": {
+      "version": "1.5.16",
+      "from": "@types/angular@>=1.5.13 <2.0.0",
+      "resolved": "https://registry.npmjs.org/@types/angular/-/angular-1.5.16.tgz"
+    },
+    "@types/jquery": {
+      "version": "2.0.32",
+      "from": "@types/jquery@*",
+      "resolved": "https://registry.npmjs.org/@types/jquery/-/jquery-2.0.32.tgz"
+    },
+    "angular": {
+      "version": "1.5.8",
+      "from": "angular@1.5.8",
+      "resolved": "https://registry.npmjs.org/angular/-/angular-1.5.8.tgz"
+    },
+    "bootstrap": {
+      "version": "3.3.7",
+      "from": "bootstrap@3.3.7",
+      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.7.tgz"
+    },
+    "core-js": {
+      "version": "2.4.1",
+      "from": "core-js@latest",
+      "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.4.1.tgz"
+    },
+    "ng-table": {
+      "version": "2.0.0",
+      "from": "..\\..",
+      "resolved": "file:..\\.."
+    },
+    "systemjs": {
+      "version": "0.19.36",
+      "from": "systemjs@0.19.36",
+      "resolved": "https://registry.npmjs.org/systemjs/-/systemjs-0.19.36.tgz"
+    },
+    "systemjs-plugin-babel": {
+      "version": "0.0.15",
+      "from": "systemjs-plugin-babel@0.0.15",
+      "resolved": "https://registry.npmjs.org/systemjs-plugin-babel/-/systemjs-plugin-babel-0.0.15.tgz"
+    },
+    "when": {
+      "version": "3.7.7",
+      "from": "when@>=3.7.5 <4.0.0",
+      "resolved": "https://registry.npmjs.org/when/-/when-3.7.7.tgz"
+    }
+  }
+}

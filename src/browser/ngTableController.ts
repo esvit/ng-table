@@ -6,15 +6,22 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+import { 
+    IAttributes, IAugmentedJQuery, ICompileService, IDocumentService, IParseService, IPromise, IScope, 
+    ITimeoutService 
+} from 'angular';
 import * as ng1 from 'angular';
-import { DataResult, IDataRowGroup, INgTableParams, IEventsChannel, IPageButton, ITableParamsConstructor } from '../core';
-import { IColumnDef, IDynamicTableColDef, SelectData } from './public-interfaces';
+import { 
+    DataResult, DataResults, IDataRowGroup, GroupedDataResults, INgTableParams, IEventsChannel, 
+    IPageButton, ITableParamsConstructor 
+} from '../core';
+import { IColumnDef, IDynamicTableColDef, SelectData, ITableInputAttributes } from './public-interfaces';
 import { IColumnBuilder } from './ngTableColumn';
 
-type DataResults<T> = T[] & { visibleColumnCount: number };
-type GroupedDataResults<T> = IDataRowGroup<T>[] & { visibleColumnCount: number };
-
-interface ITableScope<T> extends ng1.IScope {
+/**
+ * @private
+ */
+export interface ITableScope<T> extends IScope {
     $columns: IColumnDef[];
     $loading: boolean;
     $filterRow: {
@@ -34,30 +41,16 @@ interface ITableScope<T> extends ng1.IScope {
     params: INgTableParams<T>
 }
 
-interface ITableInputAttributes extends ng1.IAttributes {
-    disableFilter?: string;
-    ngTable?: string;
-    ngTableDynamic?: string;
-    showFilter?: string;
-    showGroup?: string;
-    templateHeader?: string;
-    templatePagination?: string;
-}
-
-/**
- * @ngdoc object
- * @name ngTableController
- *
- * @description
- * Each {@link ngTable ngTable} directive creates an instance of `ngTableController`
- */
 ngTableController.$inject = [
     '$scope', 'NgTableParams', '$timeout', '$parse', '$compile', '$attrs', '$element', '$document', 'ngTableColumn', 'ngTableEventsChannel'
 ];
 
-function ngTableController<T>(
-    $scope: ITableScope<T>, NgTableParams: ITableParamsConstructor<T>, $timeout: ng1.ITimeoutService, $parse: ng1.IParseService,
-    $compile: ng1.ICompileService, $attrs: ng1.IAttributes & ITableInputAttributes, $element: ng1.IAugmentedJQuery, $document: ng1.IDocumentService,
+/**
+ * The controller for the {@link ngTable ngTable} and {@link ngTableDynamic ngTableDynamic} directives
+ */
+export function ngTableController<T>(
+    $scope: ITableScope<T>, NgTableParams: ITableParamsConstructor<T>, $timeout: ITimeoutService, $parse: IParseService,
+    $compile: ICompileService, $attrs: IAttributes & ITableInputAttributes, $element: IAugmentedJQuery, $document: IDocumentService,
     ngTableColumn: IColumnBuilder, ngTableEventsChannel: IEventsChannel) {
     var isFirstTimeLoad = true;
     $scope.$filterRow = { disabled: false };
@@ -71,7 +64,7 @@ function ngTableController<T>(
     }
 
     var delayFilter = (function () {
-        var timer: ng1.IPromise<any>;
+        var timer: IPromise<any>;
         return function (callback: (...args: any[]) => void, ms: number) {
             $timeout.cancel(timer);
             timer = $timeout(callback, ms);
@@ -122,7 +115,7 @@ function ngTableController<T>(
                 pagination: ($attrs.templatePagination ? $attrs.templatePagination : 'ng-table/pager.html')
             };
             $element.addClass('ng-table');
-            var headerTemplate: ng1.IAugmentedJQuery = null;
+            var headerTemplate: IAugmentedJQuery = null;
 
             // $element.find('> thead').length === 0 doesn't work on jqlite
             var theadFound = false;
@@ -152,7 +145,7 @@ function ngTableController<T>(
             var result = $column.filterData($scope);
             if (!result) {
                 delete $column.filterData;
-                return;
+                return undefined;
             }
 
             if (isPromiseLike(result)) {
@@ -172,13 +165,13 @@ function ngTableController<T>(
             }
         });
 
-        function isPromiseLike(val: any): val is ng1.IPromise<SelectData> {
+        function isPromiseLike(val: any): val is IPromise<SelectData> {
             return val && typeof val === 'object' && typeof val.then === 'function';
         }
     };
 
     this.buildColumns = function (columns: Array<IColumnDef | IDynamicTableColDef>) {
-        var result: IColumnDef[] = [];
+        var result: Array<IColumnDef | IDynamicTableColDef> = [];
         (columns || []).forEach(function (col) {
             result.push(ngTableColumn.buildColumn(col, $scope, result));
         });
@@ -306,5 +299,3 @@ function ngTableController<T>(
 
     commonInit();
 }
-
-export { ngTableController, ITableInputAttributes, ITableScope };

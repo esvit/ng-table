@@ -6,35 +6,39 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
+import { IAugmentedJQuery, IDirective, IScope } from 'angular';
 import * as ng1 from 'angular';
-import { IColumnDef, IDynamicTableColDef, ITableController } from './public-interfaces';
-import { ITableInputAttributes } from './ngTableController';
+import { IColumnDef, IDynamicTableColDef, ITableController, ITableInputAttributes } from './public-interfaces';
 
 interface IScopeExtensions {
     $columns: IColumnDef[]
 }
 
-/**
- * @ngdoc directive
- * @name ngTableDynamic
- * @module ngTable
- * @restrict A
- *
- * @description
- * A dynamic version of the {@link ngTable ngTable} directive that accepts a dynamic list of columns
- * definitions to render
- */
 ngTableDynamic.$inject = [];
 
-function ngTableDynamic(){
+/**
+ * A dynamic version of the {@link ngTable ngTable} directive that accepts a dynamic list of columns
+ * definitions to render
+ * @ngdoc directive
+ *
+ * @example
+ * ```html
+ * <table ng-table-dynamic="$ctrl.tableParams with $ctrl.cols" class="table">
+ *  <tr ng-repeat="row in $data">
+ *    <td ng-repeat="col in $columns">{{row[col.field]}}</td>
+ *  </tr>
+ * </table>
+ * ```
+ */
+export function ngTableDynamic () : IDirective{
 
     return {
         restrict: 'A',
         priority: 1001,
         scope: true,
         controller: 'ngTableController',
-        compile: function(tElement: ng1.IAugmentedJQuery) {
-            var row: ng1.IAugmentedJQuery;
+        compile: function(tElement: IAugmentedJQuery) {
+            var row: IAugmentedJQuery;
 
             // IE 8 fix :not(.ng-table-group) selector
             ng1.forEach(tElement.find('tr'), function(tr) {
@@ -44,7 +48,7 @@ function ngTableDynamic(){
                 }
             });
             if (!row) {
-                return;
+                return undefined;
             }
 
             ng1.forEach(row.find('td'), function(item) {
@@ -63,7 +67,7 @@ function ngTableDynamic(){
                     el.attr('ng-if', '$columns[$index].show(this)');
                 }
             });
-            return function (scope: ng1.IScope & IScopeExtensions, element: ng1.IAugmentedJQuery, attrs: ITableInputAttributes, controller: ITableController) {
+            return function (scope: IScope & IScopeExtensions, element: IAugmentedJQuery, attrs: ITableInputAttributes, controller: ITableController) {
                 var expr = controller.parseNgTableDynamicExpr(attrs.ngTableDynamic);
 
                 controller.setupBindingsToInternalScope(expr.tableParams);
@@ -77,5 +81,3 @@ function ngTableDynamic(){
         }
     };
 }
-
-export { ngTableDynamic };

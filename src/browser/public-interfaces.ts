@@ -1,24 +1,19 @@
-import * as ng1 from 'angular';
+import { IAttributes, IPromise, IScope } from 'angular';
 
-export type ColumnFieldContext = ng.IScope & {
+/**
+ * The scope available to a table column getter
+ */
+export type ColumnFieldContext = IScope & {
     $column?: IColumnDef;
     $columns: IColumnDef[];
 }
 
+/**
+ * Signature of a getter/setter on a {@link IColumnDef} instance
+ */
 export interface IColumnField<T> {
     (context?: ColumnFieldContext): T;
-    assign($scope: ng.IScope, value: T): void;
-}
-
-export interface ITableController {
-    buildColumns(columns: Array<IColumnDef | IDynamicTableColDef>): IColumnDef[];
-    compileDirectiveTemplates(): void;
-    loadFilterData($columns: IColumnDef[]): ng1.IPromise<SelectData> | SelectData;
-    parseNgTableDynamicExpr(expr: string): {
-        tableParams: string;
-        columns: string;
-    }
-    setupBindingsToInternalScope(tableParamsExpr?: string): void;
+    assign($scope: IScope, value: T): void;
 }
 
 /**
@@ -27,10 +22,12 @@ export interface ITableController {
  * `tr` data row tag.
  *
  * @example
+ * ```html
  * <tr>
  *  <td data-title="'Name of User'" filter="{ username: 'text'}" sortable="'username'" />
  *  <td data-title="'Age of User'" filter="{ age: 'number'}" sortable="'age'" />
  * </tr>
+ * ```
  */
 export interface IColumnDef {
     /**
@@ -57,7 +54,7 @@ export interface IColumnDef {
      * At the creation of the `NgTableParams` this field will be called and the result then assigned
      * to the `data` field of this column.
      */
-    filterData: IColumnField<ng.IPromise<SelectData> | SelectData>;
+    filterData: IColumnField<IPromise<SelectData> | SelectData>;
     /**
      * The name of the data row field that will be used to group on, or false when this column
      * does not support grouping
@@ -97,12 +94,16 @@ export interface IColumnDef {
 
 export type DynamicTableColField<T> = IDynamicTableColFieldFunc<T> | T;
 
+
+/**
+ * Signature of a getter/setter on a {@link IDynamicTableColDef} instance
+ */
 export interface IDynamicTableColFieldFunc<T> {
     (context: ColumnFieldContext): T;
 }
 
 /**
- * The definition of the column supplied to a ngTableDynamic directive.
+ * The definition of the column supplied to a {@link ngTableDynamic} directive.
  */
 export interface IDynamicTableColDef {
     /**
@@ -119,7 +120,7 @@ export interface IDynamicTableColDef {
      * At the creation of the `NgTableParams` this field will be called and the result then assigned
      * to the `data` field of this column.
      */
-    filterData?: DynamicTableColField<ng.IPromise<SelectData> | SelectData>;
+    filterData?: DynamicTableColField<IPromise<SelectData> | SelectData>;
     /**
      * The name of the data row field that will be used to group on, or false when this column
      * does not support grouping
@@ -193,13 +194,19 @@ export interface IFilterConfigProvider {
  * A key value-pair map where the key is the name of a field in a data row and the value is the definition
  * for the template used to render a filter cell in the header of a html table.
  * Where the value is supplied as a string this should either be url to a html template or an alias to a url registered
- * using the `ngTableFilterConfigProvider`
+ * using the {@link ngTableFilterConfigProvider}
  * @example
+ * ```js
  * vm.ageFilter = { "age": "number" }
+ * ```
  * @example
+ * ```js
  * vm.ageFilter = { "age": "my/custom/ageTemplate.html" }
+ * ```
  * @example
+ * ```js
  * vm.ageFilter = { "age": { id: "number", placeholder: "Age of person"} }
+ * ```
  */
 export interface IFilterTemplateDefMap {
     [name: string]: string | IFilterTemplateDef
@@ -210,7 +217,7 @@ export interface IFilterTemplateDefMap {
  */
 export interface IFilterTemplateDef {
     /**
-     * A url to a html template of an alias to a url registered using the `ngTableFilterConfigProvider`
+     * A url to a html template or an alias to a url registered using the {@link ngTableFilterConfigProvider}
      */
     id: string,
     /**
@@ -230,7 +237,7 @@ export interface IFilterConfig {
     config: IFilterConfigValues,
     /**
      * Return the url of the html filter template for the supplied definition and key.
-     * For more information see the documentation for `IFilterTemplateMap`
+     * For more information see the documentation for {@link IFilterTemplateMap}
      */
     getTemplateUrl(filterDef: string | IFilterTemplateDef, filterKey?: string): string,
     /**
@@ -241,11 +248,44 @@ export interface IFilterConfig {
 
 export type SelectData = ISelectOption[] | ISelectDataFunc
 
+/**
+ * An object to be rendered as a html select option
+ */
 export interface ISelectOption {
     id: string | number;
     title: string;
 }
 
+/**
+ * Signature of a function that will return the options that will be rendered by a html select
+ */
 export interface ISelectDataFunc {
-    (): ISelectOption[] | ng.IPromise<ISelectOption[]>
+    (): ISelectOption[] | IPromise<ISelectOption[]>
+}
+
+/**
+ * The definition of the html attributes accepted by the {@link ngTable ngTable} and {@link ngTableDynamic} directives
+ */
+export interface ITableInputAttributes extends IAttributes {
+    disableFilter?: string;
+    ngTable?: string;
+    ngTableDynamic?: string;
+    showFilter?: string;
+    showGroup?: string;
+    templateHeader?: string;
+    templatePagination?: string;
+}
+
+/**
+ * The public members of the {@link ngTableController}
+ */
+export interface ITableController {
+    buildColumns(columns: Array<IColumnDef | IDynamicTableColDef>): IColumnDef[];
+    compileDirectiveTemplates(): void;
+    loadFilterData($columns: IColumnDef[]): IPromise<SelectData> | SelectData;
+    parseNgTableDynamicExpr(expr: string): {
+        tableParams: string;
+        columns: string;
+    }
+    setupBindingsToInternalScope(tableParamsExpr?: string): void;
 }
