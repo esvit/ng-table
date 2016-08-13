@@ -7,6 +7,12 @@ Code licensed under New BSD License.
 This directive allow to liven your tables. It support sorting, filtering and pagination.
 Header row with titles and filters automatic generated on compilation step.
 
+## Bower package *deprecation* notice
+
+Updates to this library will be **no longer published to bower**.
+
+Updates to this library will be published to npm only.
+
 
 ## Upgrading from an earlier version?
 
@@ -35,15 +41,18 @@ It's recommended to upgrade in three jumps:
 
 ## Installing
 
-**Bower**
-```
-bower install ng-table --save
-```
-
 **NPM**
 ```
 npm install ng-table --save
 ```
+
+**CDN**
+
+You can download the distribution files directly from [npmcdn](https://npmcdn.com/ng-table/dist/)
+
+## Getting started
+
+Please follow the getting started steps [here](http://ng-table.com/)
 
 ## Using Typescript?
 
