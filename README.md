@@ -48,7 +48,7 @@ npm install ng-table --save
 
 **CDN**
 
-You can download the distribution files directly from [npmcdn](https://npmcdn.com/ng-table/dist/)
+You can download the distribution files directly from [unpkg](https://unpkg.com/ng-table/dist/)
 
 ## Getting started
 
