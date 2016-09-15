@@ -621,7 +621,7 @@
                         ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
 
                         if (self.data && self.data.length === 0 && self.total() > 0) {
-                            self.page(self.page() - 1);
+                            self.page(1);
                         }
                     }
                 }
