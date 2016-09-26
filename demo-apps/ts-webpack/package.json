@@ -6,26 +6,15 @@
   "description": "ng-table example app; app written in typescript; webpack to load scripts",
   "private": true,
   "scripts": {
-    "_linklocal": "node ../../node_modules/linklocal/bin/linklocal.js",
-    "build:lib": "cd ../../ && npm run tsc",
     "prebuild": "npm run clean",
     "build": "node ../../node_modules/webpack/bin/webpack.js --env.debug",
     "prebuild:prod": "npm run clean",
     "build:prod": "node ../../node_modules/webpack/bin/webpack.js --progress --env.prod",
     "clean": "node ../../node_modules/shx/lib/cli.js rm -rf build build-stats.json",
-    "preinstall-dep": "npm run unlinklocal",
-    "install-dep": "npm install",
-    "postinstall-dep": "npm run linklocal",
-    "linklocal": "npm run _linklocal && npm prune",
-    "setup:local": "node ../../node_modules/npm-run-all/bin/npm-run-all --parallel build:lib linklocal",
-    "server": "node ../../node_modules/http-server/bin/http-server build -c-1 -o",
+    "serve": "node ../../node_modules/http-server/bin/http-server build -c-1 -o",
     "start": "node ../../node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --env.debug",
     "stats": "node ../../node_modules/webpack/bin/webpack.js --env.prod --profile --json > build-stats.json",
     "tsc": "node ../../node_modules/typescript/lib/typescript.js",
-    "unlinklocal": "npm run _linklocal -- unlink && npm i",
-    "preuninstall-dep": "npm run unlinklocal",
-    "uninstall-dep": "npm uninstall",
-    "postuninstall-dep": "npm run linklocal",
     "validate": "node ../../node_modules/webpack-validator/dist/bin/webpack-validator.js webpack.config.js"
   },
   "keywords": [],
@@ -34,5 +23,7 @@
     "bootstrap-css-only": "^3.3.6",
     "ng-table": "file:../.."
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/angular": "^1.5.13"
+  }
 }

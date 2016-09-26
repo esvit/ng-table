@@ -11,6 +11,7 @@
   "module": "index.js",
   "typings": "index.d.ts",
   "devDependencies": {
+    "@types/angular": "^1.5.13",
     "@types/angular-mocks": "^1.5.4",
     "@types/jasmine": "^2.2.33",
     "@types/karma-jasmine": "0.0.27",
@@ -38,7 +39,6 @@
     "karma-phantomjs-launcher": "1.0.1",
     "karma-spec-reporter": "0.0.26",
     "karma-webpack": "^1.8.0",
-    "linklocal": "git://github.com/theoy/linklocal#3f939171c3c925f2af831d78a3f2fbf9caa3002e",
     "lodash": "~3.7.0",
     "ngtemplate-loader": "git://github.com/wearymonkey/ngtemplate-loader#63e3461d8b1298de913e3528766068260915ae1f",
     "node-sass": "^3.8.0",
@@ -61,7 +61,7 @@
     "webpack-validator": "^2.2.7"
   },
   "scripts": {
-    "build:all": "npm-run-all --parallel build tsc --serial build:demo-apps",
+    "build:all": "npm-run-all --parallel build:full tsc --serial build:demo-apps",
     "build:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm run build\"",
     "build": "webpack --progress --profile --env.debug",
     "build:prod": "webpack  --progress --profile --env.prod",
@@ -77,24 +77,23 @@
     "e2e": "protractor e2e/protractor.config.js",
     "e2e:ci": "protractor e2e/protractor-travis.config",
     "poste2e": "node ./scripts/open-e2e-report",
-    "presetup:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm install\"",
-    "setup:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm run linklocal\"",
-    "setup": "npm-run-all --parallel setup:demo-apps update-webdriver",
+    "setup:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm install\"",
+    "_setup:common": "npm-run-all --parallel build tsc --serial setup:demo-apps",
+    "setup:ci": "npm run _setup:common",
+    "setup": "npm-run-all --parallel _setup:common update-webdriver",
     "shrinkwrap:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm shrinkwrap --dev\"",
     "test": "karma start --single-run --no-auto-watch",
     "test:debug": "karma start --no-single-run --no-auto-watch",
     "tsc": "tsc",
-    "unlink:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm run unlinklocal\"",
     "update-webdriver": "webdriver-manager update",
     "validate-webpack": "webpack-validator webpack.config.js --env.dev --env.test --env.prod",
     "watch:debug": "webpack --watch --env.debug",
     "watch": "webpack --watch",
     "webpack": "webpack"
   },
-  "dependencies": {
-    "@types/angular": "^1.5.13"
-  },
+  "dependencies": {},
   "peerDependencies": {
+    "@types/angular": "^1.5.13",
     "angular": "^1.2"
   }
 }

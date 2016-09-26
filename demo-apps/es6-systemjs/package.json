@@ -6,21 +6,10 @@
   "description": "ng-table example app; app written in es2015; systemjs to load scripts",
   "private": true,
   "scripts": {
-    "_linklocal": "node ../../node_modules/linklocal/bin/linklocal.js",
-    "build:lib": "cd ../../ && npm run build",
     "build": "echo \"Nothing to build\"",
     "clean": "echo \"Nothing to clean\"",
-    "preinstall-dep": "npm run unlinklocal",
-    "install-dep": "npm install",
-    "postinstall-dep": "npm run linklocal",
-    "linklocal": "npm run _linklocal && npm prune",
-    "server": "node ../../node_modules/http-server/bin/http-server -c-1 -o",
-    "setup:local": "node ../../node_modules/npm-run-all/bin/npm-run-all --parallel build:lib linklocal",
-    "start": "npm run server",
-    "unlinklocal": "npm run _linklocal -- unlink && npm i",
-    "preuninstall-dep": "npm run unlinklocal",
-    "uninstall-dep": "npm uninstall",
-    "postuninstall-dep": "npm run linklocal"
+    "server": "node ../../node_modules/http-server/bin/http-server -c-1",
+    "start": "npm run server -- -o"
   },
   "keywords": [],
   "dependencies": {
@@ -30,5 +19,8 @@
     "ng-table": "file:../../",
     "systemjs": "0.19.36",
     "systemjs-plugin-babel": "0.0.15"
+  },
+  "devDependencies": {
+    "@types/angular": "^1.5.13"
   }
 }

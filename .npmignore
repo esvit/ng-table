@@ -1,6 +1,7 @@
 .vscode/
 .idea/
 .temp/
+# redundant webpack build artifacts produced by ExtractTextPlugin
 bundles/styles.*
 demo-apps/
 demo-site/

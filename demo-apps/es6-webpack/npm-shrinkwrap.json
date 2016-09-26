@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "dependencies": {
     "@types/angular": {
-      "version": "1.5.16",
+      "version": "1.5.14",
       "from": "@types/angular@>=1.5.13 <2.0.0",
-      "resolved": "https://registry.npmjs.org/@types/angular/-/angular-1.5.16.tgz"
+      "resolved": "https://registry.npmjs.org/@types/angular/-/angular-1.5.14.tgz",
+      "dev": true
     },
     "@types/jquery": {
-      "version": "2.0.32",
+      "version": "1.10.31",
       "from": "@types/jquery@*",
-      "resolved": "https://registry.npmjs.org/@types/jquery/-/jquery-2.0.32.tgz"
+      "resolved": "https://registry.npmjs.org/@types/jquery/-/jquery-1.10.31.tgz",
+      "dev": true
     },
     "acorn": {
       "version": "3.3.0",

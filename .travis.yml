@@ -15,10 +15,10 @@ before_install:
 
 install:
 - npm prune && npm install
-- npm run setup:demo-apps
+- npm run setup:ci
 
 before_script:
-- npm run build:all
+- npm run build:demo-apps
 - '[ "${TRAVIS_PULL_REQUEST}" = "true" ] || npm run e2e-server:ci'
 
 script:
