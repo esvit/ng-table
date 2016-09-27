@@ -1371,11 +1371,28 @@
                         'ng-table-pagination': 'params',
                         'template-url': 'templates.pagination'
                     });
-                    $element.after(paginationTemplate);
                     if (headerTemplate) {
                         $compile(headerTemplate)($scope);
                     }
-                    $compile(paginationTemplate)($scope);
+
+                    // this allows to add the attribute table-pagination-top to ngTable
+                    // so you will see the pagination at the top
+                    if(typeof($attrs.tablePaginationTop) !== 'undefined') {
+                      var topTemplate = paginationTemplate.clone();
+                      $element.parent().prepend(topTemplate);
+                      $compile(topTemplate)($scope);
+                    }
+
+                    // this rewrites the original behaviour, you need to add the attribute table-pagination-bottom
+                    // so you will see the pagination at the bottom as the original
+                    if(typeof($attrs.tablePaginationBottom) !== 'undefined') {
+                      var bottomTemplate = paginationTemplate.clone();
+                      $element.parent().append(bottomTemplate);
+                      $compile(bottomTemplate)($scope);
+                    }
+
+                    // finally you can use the two at the same time
+                    // is a good user experience when the ngTable shows a big number of rows
                 }
             };
 
