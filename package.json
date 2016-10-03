@@ -13,6 +13,9 @@
   "release": {
     "branch": "typescript"
   },
+  "publishConfig": {
+    "tag": "next"
+  },
   "devDependencies": {
     "@types/angular": "^1.5.13",
     "@types/angular-mocks": "^1.5.4",
