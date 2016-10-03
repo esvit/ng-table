@@ -4,7 +4,6 @@ machine:
 
 dependencies:
   pre:
-    - npm install -g karma-cli
     - npm prune && npm install
     - npm run setup:ci && npm run build:demo-apps
   cache_directories:
