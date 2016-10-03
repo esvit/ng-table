@@ -10,6 +10,9 @@
   "main": "bundles/ng-table.js",
   "module": "index.js",
   "typings": "index.d.ts",
+  "release": {
+    "branch": "typescript"
+  },
   "devDependencies": {
     "@types/angular": "^1.5.13",
     "@types/angular-mocks": "^1.5.4",
