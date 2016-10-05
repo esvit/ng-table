@@ -17,6 +17,6 @@ CONTRIBUTING
 
 7. Commit changes:
     - include ONLY source files ie do NOT commit files under the dist/ folder
-    - use a commit message that follows [conventions](https://github.com/ajoslin/conventional-changelog/blob/master/conventions/angular.md)
+    - use a commit message that follows [conventions](https://github.com/conventional-changelog/conventional-changelog-angular/blob/master/convention.md)
 
 8. Push your changes to your fork and submit a pull request
