@@ -29,3 +29,7 @@ script:
 after_success: 
 - cat out/coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 - npm run semantic-release
+
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
