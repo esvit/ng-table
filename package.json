@@ -11,7 +11,10 @@
   "module": "index.js",
   "typings": "index.d.ts",
   "release": {
-    "branch": "typescript"
+    "branch": "typescript",
+    "fallbackTags": {
+      "next": "latest"
+    }
   },
   "publishConfig": {
     "tag": "next"
