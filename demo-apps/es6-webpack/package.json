@@ -29,16 +29,8 @@
   },
   "keywords": [],
   "dependencies": {
-    "angular": "1.5.8",
-    "bootstrap-css-only": "^3.3.6",
+    "angular": "file:../../node_modules/angular",
+    "bootstrap-css-only": "file:../../node_modules/bootstrap-css-only",
     "ng-table": "file:../../"
-  },
-  "devDependencies": {
-    "babel-core": "^6.13.2",
-    "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.13.2",
-    "babel-preset-es2016": "^6.11.3",
-    "babel-preset-stage-2": "^6.13.0",
-    "webpack": "^2.1.0-beta.22"
   }
 }

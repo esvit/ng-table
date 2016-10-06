@@ -24,11 +24,11 @@
   },
   "keywords": [],
   "dependencies": {
-    "angular": "1.5.8",
-    "bootstrap": "3.3.7",
-    "core-js": "^2.4.1",
+    "angular": "file:../../node_modules/angular",
+    "bootstrap": "file:../../node_modules/bootstrap",
+    "core-js": "file:../../node_modules/core-js",
     "ng-table": "file:../../",
-    "systemjs": "0.19.36",
-    "systemjs-plugin-babel": "0.0.15"
+    "systemjs": "file:../../node_modules/systemjs",
+    "systemjs-plugin-babel": "file:../../node_modules/systemjs-plugin-babel"
   }
 }

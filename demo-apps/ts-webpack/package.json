@@ -30,9 +30,8 @@
   },
   "keywords": [],
   "dependencies": {
-    "angular": "1.5.8",
-    "bootstrap-css-only": "^3.3.6",
+    "angular": "file:../../node_modules/angular",
+    "bootstrap-css-only": "file:../../node_modules/bootstrap-css-only",
     "ng-table": "file:../.."
-  },
-  "devDependencies": {}
+  }
 }
