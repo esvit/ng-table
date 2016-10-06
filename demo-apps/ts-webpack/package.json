@@ -10,7 +10,7 @@
     "build": "node ../../node_modules/webpack/bin/webpack.js --env.debug",
     "prebuild:prod": "npm run clean",
     "build:prod": "node ../../node_modules/webpack/bin/webpack.js --progress --env.prod",
-    "clean": "node ../../node_modules/shx/lib/cli.js rm -rf build build-stats.json",
+    "clean": "node ../../node_modules/shx/lib/cli.js rm -rf build build-stats.json src/**/*.js src/**/*.js.map",
     "serve": "node ../../node_modules/http-server/bin/http-server build -c-1 -o",
     "start": "node ../../node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --env.debug",
     "stats": "node ../../node_modules/webpack/bin/webpack.js --env.prod --profile --json > build-stats.json",
