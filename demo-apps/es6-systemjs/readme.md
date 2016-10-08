@@ -7,7 +7,7 @@
 
 ## Running sample App
 
-1. cd demo-apps/es6-systemjs (this directory)
-2. `npm install && npm run linklocal`
+1. If you haven't already done so: `npm run setup`
+2. `demo-apps/es6-systemjs` (this directory)
 3. `npm start`
-    * runs http-server to serve this app's index.html
+    * runs `http-server` to serve this app's index.html

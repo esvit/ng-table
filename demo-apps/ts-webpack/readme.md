@@ -7,7 +7,7 @@
 
 ## Running sample App
 
-1. cd demo-apps/ts-webpack (this directory)
-2. `npm install && npm run linklocal`
+1. If you haven't already done so: `npm run setup`
+2. `demo-apps/ts-webpack` (this directory)
 3. `npm start`
-    * runs webpack-dev-server to serve this app's index.html
+    * runs `webpack-dev-server` to serve this app's index.html
