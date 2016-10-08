@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="css/docs.css">
     <link rel="stylesheet" href="css/social.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://raw.githubusercontent.com/esvit/ng-table/master/dist/ng-table.min.css">
+    <link rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css">
 
     <!--[if lt IE 9]>
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -15,7 +15,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-sanitize.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-resource.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-route.js"></script>
-    <script src="js/ng-table.min.js"></script>
+    <script src="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.js"></script>
     <script src="js/embed-codepen.min.js"></script>
 
     <script src="js/angular-social.js"></script>
@@ -35,7 +35,6 @@
     <div class="col-md-3">
 
         <div class="bs-docs-sidebar hidden-print" role="complementary">
-
             <a style="display: block" href="http://www.eliftech.com/#contact" target="_blank" class="bs-callout bs-callout-danger">
                 <span class="text-muted">If you need professional support with<br/> your angular projects
                 or even hire a full stack dev team, contact this company</span> http://www.eliftech.com/.
@@ -43,8 +42,9 @@
             </a>
 
             <ul class="nav bs-docs-sidenav" ng-controller="menuController as menu">
-                <li>
-                    <h1><a href="#/">ngTable</a></h1>
+                <li class="clearfix">
+                    <h1 class="pull-left"><a href="#/">ngTable</a></h1>
+                    <a href="api-docs/index.html" class="btn btn-default btn-lg pull-right" role="button">API Docs</a>
                 </li>
                 <li class="active" ng-repeat="section in menu.sections">
                     <a ng-href="{{ section.url }}" ng-click="section.hasMore && (section.isOpen = !section.isOpen)"
