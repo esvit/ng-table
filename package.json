@@ -100,7 +100,7 @@
     "preserve:api-docs": "npm run doc",
     "serve:api-docs": "http-server docs -o -c-1",
     "serve:demo": "cd demo-apps/es5 && npm start",
-    "_setup:common": "npm-run-all --parallel build tsc --serial install:demo-apps link:demo-apps",
+    "_setup:common": "npm-run-all --parallel build:full tsc --serial install:demo-apps link:demo-apps",
     "setup:ci": "npm run _setup:common",
     "setup": "npm-run-all --parallel _setup:common update-webdriver",
     "test": "karma start --single-run --no-auto-watch",
