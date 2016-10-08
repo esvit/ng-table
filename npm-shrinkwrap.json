@@ -1,6 +1,6 @@
 {
   "name": "ng-table",
-  "version": "2.0.0",
+  "version": "0.0.0-semantic-release",
   "dependencies": {
     "@types/angular": {
       "version": "1.5.14",

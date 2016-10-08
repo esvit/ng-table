@@ -7,16 +7,14 @@
   "private": true,
   "scripts": {
     "_linklocal": "node ../../node_modules/linklocal/bin/linklocal.js",
-    "build:lib": "cd ../../ && npm run build",
     "build": "echo \"Nothing to build\"",
     "clean": "echo \"Nothing to clean\"",
+    "postinstall": "npm run linklocal",
     "preinstall-dep": "npm run unlinklocal",
     "install-dep": "npm install",
     "postinstall-dep": "npm run linklocal",
     "linklocal": "npm run _linklocal && npm prune",
-    "server": "node ../../node_modules/http-server/bin/http-server -c-1 -o",
-    "setup:local": "node ../../node_modules/npm-run-all/bin/npm-run-all --parallel build:lib linklocal",
-    "start": "npm run server",
+    "start": "node ../../node_modules/http-server/bin/http-server -c-1 -o",
     "unlinklocal": "npm run _linklocal -- unlink && npm i",
     "preuninstall-dep": "npm run unlinklocal",
     "uninstall-dep": "npm uninstall",
@@ -24,8 +22,8 @@
   },
   "keywords": [],
   "dependencies": {
-    "angular": "1.5.8",
-    "bootstrap": "3.3.7",
+    "angular": "file:../../node_modules/angular",
+    "bootstrap": "file:../../node_modules/bootstrap",
     "ng-table": "file:../../"
   }
 }

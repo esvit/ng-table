@@ -1,6 +1,6 @@
 {
   "name": "ng-table",
-  "version": "2.0.0",
+  "version": "0.0.0-semantic-release",
   "author": "Vitalii Savchuk <esvit666@gmail.com>",
   "license": "BSD",
   "repository": {
@@ -10,6 +10,15 @@
   "main": "bundles/ng-table.js",
   "module": "index.js",
   "typings": "index.d.ts",
+  "release": {
+    "branch": "typescript",
+    "fallbackTags": {
+      "next": "latest"
+    }
+  },
+  "publishConfig": {
+    "tag": "next"
+  },
   "devDependencies": {
     "@types/angular-mocks": "^1.5.4",
     "@types/jasmine": "^2.2.33",
@@ -57,6 +66,7 @@
     "protractor-jasmine2-screenshot-reporter": "^0.3.2",
     "resolve-url-loader": "^1.6.0",
     "sass-loader": "^4.0.0",
+    "semantic-release": "^4.3.5",
     "shx": "^0.1.4",
     "style-loader": "^0.13.1",
     "systemjs": "^0.19.36",
@@ -71,7 +81,7 @@
     "webpack-validator": "^2.2.7"
   },
   "scripts": {
-    "build:all": "npm-run-all --parallel build tsc --serial build:demo-apps",
+    "build:all": "npm-run-all --parallel build:full tsc --serial build:demo-apps",
     "build:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm run build\"",
     "build": "webpack --progress --profile --env.debug",
     "build:prod": "webpack  --progress --profile --env.prod",
@@ -87,9 +97,12 @@
     "e2e": "protractor e2e/protractor.config.js",
     "e2e:ci": "protractor e2e/protractor-travis.config",
     "poste2e": "node ./scripts/open-e2e-report",
-    "presetup:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm install\"",
-    "setup:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm run linklocal\"",
-    "setup": "npm-run-all --parallel setup:demo-apps update-webdriver",
+    "install:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm install\"",
+    "link:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm run linklocal\"",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "_setup:common": "npm-run-all --parallel build tsc --serial install:demo-apps",
+    "setup:ci": "npm run _setup:common",
+    "setup": "npm-run-all --parallel _setup:common update-webdriver",
     "shrinkwrap:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm shrinkwrap --dev\"",
     "test": "karma start --single-run --no-auto-watch",
     "test:debug": "karma start --no-single-run --no-auto-watch",

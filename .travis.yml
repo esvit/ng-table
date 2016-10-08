@@ -1,32 +1,35 @@
+sudo: false
 language: node_js
 node_js:
 - node
-
+cache:
+  directories:
+  - node_modules
+notifications:
+  email: false
 addons:
   sauce_connect: true
-
 env:
   global:
   - secure: gnwapHmalQ00mis28sRZQwmrkOWU7CyIyU3iKc1bixgGKZu6dhMUwQt2WA8HDkOLgSxSCSMigtzwuPvkxH6CRLbMnYwCDkCHZS9SvjrOLX+jZkORbSKRJUjlkRS3cjkY9AzKOYAOngAN07j0iqvsKx6UtdtEvA4QVM/ToQzVfi0=
   - secure: J9OuScEujGDV/JKBvOz7pgh/hzA6QEqJKo8wtQprsSuUnP1zdUvlRV+oKuGXAGnfsFlr/aw+7+djz4QbqITQeQDJaQ4Ui4/M8dfDp4kLKGH6U8obrnX79IERjgKZubs17dW+NcbIt6pNzJavOdLlvAZiQtQMcdXbHI+Xa0PoTHs=
 
-before_install:
-- npm install -g karma-cli
-
 install:
 - npm prune && npm install
-- npm run setup:demo-apps
+- npm run setup:ci
 
 before_script:
-- npm run build:all
+- npm run build:demo-apps
 - '[ "${TRAVIS_PULL_REQUEST}" = "true" ] || npm run e2e-server:ci'
 
 script:
 - npm test
 - '[ "${TRAVIS_PULL_REQUEST}" = "true" ] || npm run e2e:ci'
 
-after_success: cat out/coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+after_success: 
+- cat out/coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+- npm run semantic-release
 
-cache:
-  directories:
-  - node_modules
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
