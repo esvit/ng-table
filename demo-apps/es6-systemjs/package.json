@@ -9,7 +9,6 @@
     "_linklocal": "node ../../node_modules/linklocal/bin/linklocal.js",
     "build": "echo \"Nothing to build\"",
     "clean": "echo \"Nothing to clean\"",
-    "postinstall": "npm run linklocal",
     "preinstall-dep": "npm run unlinklocal",
     "install-dep": "npm install",
     "postinstall-dep": "npm run linklocal",

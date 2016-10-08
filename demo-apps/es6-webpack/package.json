@@ -12,7 +12,6 @@
     "prebuild:prod": "npm run clean",
     "build:prod": "node ../../node_modules/webpack/bin/webpack.js --env.prod",
     "clean": "node ../../node_modules/shx/lib/cli.js rm -rf build build-stats.json",
-    "postinstall": "npm run linklocal",
     "preinstall-dep": "npm run unlinklocal",
     "install-dep": "npm install",
     "postinstall-dep": "npm run linklocal",
