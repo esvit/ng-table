@@ -32,7 +32,6 @@
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-es2016": "^6.11.3",
     "babel-preset-stage-2": "^6.13.0",
-    "bootstrap": "^3.3.7",
     "bootstrap-css-only": "^3.3.6",
     "bulk": "git+https://github.com/kumarharsh/bulk.git#68ac8daa57191f7ea79279b22b0876cf4ab19575",
     "core-js": "^2.4.1",

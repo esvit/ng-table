@@ -22,7 +22,7 @@
   "keywords": [],
   "dependencies": {
     "angular": "file:../../node_modules/angular",
-    "bootstrap": "file:../../node_modules/bootstrap",
+    "bootstrap-css-only": "file:../../node_modules/bootstrap-css-only",
     "core-js": "file:../../node_modules/core-js",
     "ng-table": "file:../../",
     "systemjs": "file:../../node_modules/systemjs",

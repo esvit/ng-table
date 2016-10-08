@@ -1126,12 +1126,6 @@
       "resolved": "https://registry.npmjs.org/boom/-/boom-2.10.1.tgz",
       "dev": true
     },
-    "bootstrap": {
-      "version": "3.3.7",
-      "from": "bootstrap@latest",
-      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.7.tgz",
-      "dev": true
-    },
     "bootstrap-css-only": {
       "version": "3.3.6",
       "from": "bootstrap-css-only@3.3.6",
