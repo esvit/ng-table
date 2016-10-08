@@ -1,6 +1,7 @@
 Table + AngularJS
 =================
 [![Build Status](https://travis-ci.org/esvit/ng-table.svg)](https://travis-ci.org/esvit/ng-table) [![Coverage Status](https://coveralls.io/repos/esvit/ng-table/badge.png)](https://coveralls.io/r/esvit/ng-table)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 Code licensed under New BSD License.
 
@@ -85,6 +86,11 @@ For work in IE < 9 need jQuery, just add:
   <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <![endif]-->
 ```
+
+## Want to contribute?
+
+See the [contributing](CONTRIBUTING.md) guidelines.
+
 ---
 
 This project is part of [Bazalt CMS](http://bazalt-cms.com/).
