@@ -24,4 +24,4 @@ test/**/*.js
 bundles
 build
 build-stats.json
-docs
+api-docs

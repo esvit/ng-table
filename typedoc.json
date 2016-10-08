@@ -1,6 +1,6 @@
 {
   "mode": "file",
-  "out": "docs",
+  "out": "demo-site/api-docs",
   "exclude": "node_modules",
   "theme": "default",
   "ignoreCompilerErrors": "true",
@@ -13,5 +13,6 @@
   "stripInternal": "true",
   "suppressExcessPropertyErrors": "true",
   "suppressImplicitAnyIndexErrors": "true",
-  "module": "umd"
+  "module": "umd",
+  "readme": "none"
 }
