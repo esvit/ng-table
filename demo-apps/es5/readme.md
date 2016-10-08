@@ -7,10 +7,7 @@
 
 ## Running sample App
 
-1. cd demo-apps/es5
-2. `npm install`
-3. `npm run setup:local`
-    * runs the ng-table build to create the library distibutable code (including `ng-table.js`)
-    * in this app's node_modules, creates a symlink reference to the library distibutable code
-4. `npm start`
+1. cd demo-apps/es5 (this directory)
+2. `npm install && npm run linklocal`
+3. `npm start`
     * runs http-server to serve this app's index.html

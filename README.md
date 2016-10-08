@@ -35,6 +35,11 @@ Please follow the getting started steps [here](http://ng-table.com/)
 ## Examples
 
 * [Demo site](http://ng-table.com/)
+* Sample apps:
+    * [ES5](demo-apps/es5/readme.md)
+    * [ES2015 + SystemJS](demo-apps/es6-systemjs/readme.md)
+    * [ES2015 + Webpack](demo-apps/es6-webpack/readme.md)
+    * [Typescript + Webpack](demo-apps/ts-webpack/readme.md)
 * Codepen examples (**Tip**: fork these to create your own examples);
     * [`ngTable`: inmemory list](http://codepen.io/christianacca/pen/VLqVeo?editors=101)
     * [`ngTable`: server-side list](http://codepen.io/christianacca/pen/VLqqjP?editors=101)
