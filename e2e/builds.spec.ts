@@ -1,6 +1,6 @@
 import { DemoNgTablePage } from './demo-ng-table.po';
 
-describe('ng-table', () => {
+describe('ng-table builds', () => {
 
     describe('es5', () => {
         const demoPageUrl = 'es5/index.html';

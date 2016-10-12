@@ -1,18 +1,21 @@
 CONTRIBUTING
 ============
 
-1. Fork the repo.
-2. `npm install && npm run setup`
-3. Prove existing code before making changes:
+1. Fork the repo and clone locally
+2. In locally cloned repo: `npm install && npm run setup`
+3. Prove existing code:
     * Run the unit tests: `npm test`
     * Run the end-to-end tests:
         * In one terminal window: `npm run e2e-server`
         * In another terminal window: `npm run e2e`
-4. Make changes in source folder (`src`)
-5. Make the tests pass (see above)
-6. Commit changes: `npm run commit`
+4. Make changes in `src` folder
+    * **Tip**: use `npm run test:w` to verify your changes on save
+5. Add additional unit tests in `test` folder. These should cover your changes
+6. *Optionally* add end-to-end tests in `e2e` folder
+7. Prove changes (run step 3 above)
+8. Commit changes: `npm run cm`
     - why use **npm** and not **git** to commit? See "Conventional commit message" section below
-7. Push your changes to your fork and submit a pull request
+9. Push your changes to your fork and submit a pull request
 
 
 ## Conventional commit message
@@ -31,4 +34,4 @@ To help you to follow these conventions this project uses [Commitizen](https://g
 
 Commitizen provides a command line tool that will help you create a commit message that matches these conventions.
 
-To lauch this tool, we use `npm run commit`.
+To lauch this tool we use `npm run cm`.
