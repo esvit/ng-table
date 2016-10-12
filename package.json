@@ -11,13 +11,13 @@
   "module": "index.js",
   "typings": "index.d.ts",
   "release": {
-    "branch": "typescript",
+    "branch": "master",
     "fallbackTags": {
       "next": "latest"
     }
   },
   "publishConfig": {
-    "tag": "next"
+    "tag": "latest"
   },
   "devDependencies": {
     "@types/angular-mocks": "^1.5.4",
