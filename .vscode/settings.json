@@ -18,6 +18,8 @@
 		"src/browser/*.d.ts": true,
 		"src/browser/*.js.map": true,
 		"src/core/*.d.ts": true,
-		"src/core/*.js.map": true
+		"src/core/*.js.map": true,
+		"test/**/*.d.ts": true,
+		"test/**/*.js.map": true
     }
 }
