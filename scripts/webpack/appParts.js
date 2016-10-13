@@ -114,7 +114,7 @@ function createAppParts(rootDir, env = {}) {
     function inlineImages(sizeLimit = 1024) {
         return {
             module: {
-                loaders: [
+                rules: [
                     {
                         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
                         loader: `url?limit=${sizeLimit}&name=[path][name]-[hash].[ext]`
@@ -127,7 +127,7 @@ function createAppParts(rootDir, env = {}) {
     function inlineHtmlTemplates() {
         return {
             module: {
-                loaders: [
+                rules: [
                     {
                         test: /\.html$/,
                         loaders: ['ngtemplate?requireAngular&relativeTo=/src/&prefix=demo-app/', 'html'],
@@ -144,7 +144,7 @@ function createAppParts(rootDir, env = {}) {
     function inlineNgTableHtmlTemplates() {
         return {
             module: {
-                loaders: [
+                rules: [
                     {
                         test: /ng-table[\/\\]src[\/\\].*\.html$/,
                         loaders: ['ngtemplate?requireAngular&relativeTo=/src/browser/&prefix=ng-table/', 'html']
@@ -179,7 +179,7 @@ function createAppParts(rootDir, env = {}) {
         }
         return {
             module: {
-                loaders: [
+                rules: [
                     {
                         test: /\.scss$/,
                         loader: extractor.extract({
@@ -201,19 +201,19 @@ function createAppParts(rootDir, env = {}) {
         // note: would like to use sourcemaps in a deployed website (ie outside of dev-server)
         // but these do not work with relative paths (see the configuration of ouput options 
         // in this file for more details)
-        let loaders;
+        let loader;
         if ((env.debug || env.prod) && isDevServer) {
-            loaders = 'style!css?sourceMap!resolve-url!sass?sourceMap';
+            loader = 'style!css?sourceMap!resolve-url!sass?sourceMap';
         } else {
             // note: the 
-            loaders = 'style!css!resolve-url!sass?sourceMap';
+            loader = 'style!css!resolve-url!sass?sourceMap';
         }
         return {
             module: {
-                loaders: [
+                rules: [
                     {
                         test: /\.scss$/,
-                        loader: loaders,
+                        loader: loader,
                         exclude: [...excludeFiles]
                     }
                 ]

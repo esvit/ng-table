@@ -19,7 +19,7 @@ function createParts(rootDir, env) {
     function es6() {
         return {
             module: {
-                loaders: [
+                rules: [
                     { test: /\.js$/, loaders: ['babel?cacheDirectory'], exclude: /node_modules/ }
                 ]
             }
@@ -85,8 +85,9 @@ function createParts(rootDir, env) {
     function testCoverage() {
         return {
             module: {
-                postLoaders: [
+                rules: [
                     {
+                        enforce: 'post',
                         test: /\.ts$/,
                         exclude: [
                             /\.spec\.ts$/,
@@ -104,10 +105,10 @@ function createParts(rootDir, env) {
         return {
             // Currently we need to add '.ts' to the resolve.extensions array.
             resolve: {
-                extensions: ['', '.ts', '.tsx', '.js', '.jsx']
+                extensions: ['.ts', '.tsx', '.js', '.jsx']
             },
             module: {
-                loaders: [
+                rules: [
                     {
                         test: /\.ts$/,
                         exclude: /node_modules/,

@@ -77,21 +77,21 @@ function createLibraryParts(rootDir, env = {}) {
 
         const filename = env.prod ? `${libraryName}.min.css` : `${libraryName}.css`;
         const extractor = new ExtractTextPlugin(filename);
-        let loaders;
+        let loader;
         if (env.debug || env.prod) {
-            loaders = 'css?sourceMap!sass?sourceMap';
+            loader = 'css?sourceMap!sass?sourceMap';
         } else {
-            loaders = 'css!sass';
+            loader = 'css!sass';
         }
         return {
             entry: {
                 styles: files
             },
             module: {
-                loaders: [
+                rules: [
                     {
                         test: /\.scss$/,
-                        loader: extractor.extract(loaders),
+                        loader: extractor.extract(loader),
                         include: files
                     }
                 ]
@@ -105,7 +105,7 @@ function createLibraryParts(rootDir, env = {}) {
     function inlineHtmlTemplates() {
         return {
             module: {
-                loaders: [
+                rules: [
                     {
                         test: /\.html$/,
                         loaders: ['ngtemplate?requireAngular&relativeTo=/src/browser/&prefix=ng-table/', 'html']
