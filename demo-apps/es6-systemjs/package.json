@@ -9,15 +9,9 @@
     "_linklocal": "node ../../node_modules/linklocal/bin/linklocal.js",
     "build": "echo \"Nothing to build\"",
     "clean": "echo \"Nothing to clean\"",
-    "preinstall-dep": "npm run unlinklocal",
-    "install-dep": "npm install",
-    "postinstall-dep": "npm run linklocal",
     "linklocal": "npm run _linklocal && npm prune",
     "start": "node ../../node_modules/http-server/bin/http-server -c-1 -o",
-    "unlinklocal": "npm run _linklocal -- unlink && npm i",
-    "preuninstall-dep": "npm run unlinklocal",
-    "uninstall-dep": "npm uninstall",
-    "postuninstall-dep": "npm run linklocal"
+    "unlinklocal": "npm run _linklocal -- unlink && npm i"
   },
   "keywords": [],
   "dependencies": {
