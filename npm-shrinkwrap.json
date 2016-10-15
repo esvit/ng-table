@@ -2891,9 +2891,9 @@
       "dev": true
     },
     "highlight.js": {
-      "version": "9.6.0",
+      "version": "9.7.0",
       "from": "highlight.js@>=9.0.0 <10.0.0",
-      "resolved": "https://registry.npmjs.org/highlight.js/-/highlight.js-9.6.0.tgz",
+      "resolved": "https://registry.npmjs.org/highlight.js/-/highlight.js-9.7.0.tgz",
       "dev": true
     },
     "hoek": {
@@ -7057,21 +7057,15 @@
       "dev": true
     },
     "typedoc": {
-      "version": "0.4.5",
-      "from": "typedoc@>=0.4.5 <0.5.0",
-      "resolved": "https://registry.npmjs.org/typedoc/-/typedoc-0.4.5.tgz",
+      "version": "0.5.0",
+      "from": "typedoc@0.5.0",
+      "resolved": "https://registry.npmjs.org/typedoc/-/typedoc-0.5.0.tgz",
       "dev": true,
       "dependencies": {
         "lodash": {
-          "version": "4.15.0",
+          "version": "4.16.4",
           "from": "lodash@>=4.13.1 <5.0.0",
-          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.15.0.tgz",
-          "dev": true
-        },
-        "typescript": {
-          "version": "1.8.10",
-          "from": "typescript@1.8.10",
-          "resolved": "https://registry.npmjs.org/typescript/-/typescript-1.8.10.tgz",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.16.4.tgz",
           "dev": true
         }
       }
