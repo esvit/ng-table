@@ -107,9 +107,9 @@
       "dev": true
     },
     "@types/selenium-webdriver": {
-      "version": "2.53.30",
-      "from": "@types/selenium-webdriver@>=2.53.30 <2.54.0",
-      "resolved": "https://registry.npmjs.org/@types/selenium-webdriver/-/selenium-webdriver-2.53.30.tgz",
+      "version": "2.53.33",
+      "from": "@types/selenium-webdriver@2.53.33",
+      "resolved": "https://registry.npmjs.org/@types/selenium-webdriver/-/selenium-webdriver-2.53.33.tgz",
       "dev": true
     },
     "abbrev": {
