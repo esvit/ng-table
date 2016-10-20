@@ -6415,7 +6415,7 @@
     },
     "semantic-release": {
       "version": "4.3.5",
-      "from": "semantic-release@>=4.3.5 <5.0.0",
+      "from": "semantic-release@latest",
       "resolved": "https://registry.npmjs.org/semantic-release/-/semantic-release-4.3.5.tgz",
       "dev": true,
       "dependencies": {
@@ -7078,7 +7078,7 @@
     },
     "typescript": {
       "version": "2.0.3",
-      "from": "typescript@latest",
+      "from": "typescript@2.0.3",
       "resolved": "https://registry.npmjs.org/typescript/-/typescript-2.0.3.tgz",
       "dev": true
     },
