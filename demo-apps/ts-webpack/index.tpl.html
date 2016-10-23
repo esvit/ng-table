@@ -13,10 +13,8 @@
 </head>
 
 <body class="site-background" ng-app="demo-app">
-    <div class="logoImage"></div>
-    <h1>ng-table sample app (Typescript+Webpack)</h1>
 
-    <my-table></my-table>
+    <app-root></app-root>
 
     <% for (var chunk in htmlWebpackPlugin.files.chunks) { if (htmlWebpackPlugin.files.chunks[chunk].css.length === 0) {%>
     <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
