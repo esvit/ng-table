@@ -218,6 +218,12 @@
       "resolved": "https://registry.npmjs.org/angular-route/-/angular-route-1.5.8.tgz",
       "dev": true
     },
+    "angular1-template-loader": {
+      "version": "0.1.0",
+      "from": "angular1-template-loader@latest",
+      "resolved": "https://registry.npmjs.org/angular1-template-loader/-/angular1-template-loader-0.1.0.tgz",
+      "dev": true
+    },
     "ansi": {
       "version": "0.3.1",
       "from": "ansi@>=0.3.1 <0.4.0",

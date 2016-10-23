@@ -1,5 +1,5 @@
-const templateUrl = require('./app.component.html');
+import { IComponentOptions } from 'angular';
 
-export const appComponent = {
-    templateUrl
-};
+export class AppComponent implements IComponentOptions {
+    templateUrl = './app.component.html'
+}

@@ -1,12 +1,10 @@
+import { IComponentOptions } from 'angular';
 import { ITableParamsConstructor, INgTableParams } from 'ng-table';
 
-const templateUrl = require('./my-table.component.html');
-
-interface Person {
-    name: string;
-    age: number;
+export class MyTableComponent implements IComponentOptions {
+    controller = MyTableController;
+    templateUrl = './my-table.component.html';
 }
-
 class MyTableController {
     tableParams: INgTableParams<Person>;
     static $inject = ['NgTableParams'];
@@ -37,9 +35,7 @@ class MyTableController {
     }
 }
 
-const myTableComponent = {
-    templateUrl: templateUrl,
-    controller: MyTableController
-};
-
-export { myTableComponent };
+interface Person {
+    name: string;
+    age: number;
+}

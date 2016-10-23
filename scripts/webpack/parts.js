@@ -112,7 +112,7 @@ function createParts(rootDir, env) {
                     {
                         test: /\.ts$/,
                         exclude: /node_modules/,
-                        loader: `awesome-typescript?tsconfig=${tsconfigPath}`
+                        loader: `awesome-typescript?tsconfig=${tsconfigPath}!angular1-template`
                     }
                 ]
             }

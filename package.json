@@ -28,6 +28,7 @@
     "angular": "^1.5.8",
     "angular-mocks": "^1.5.8",
     "angular-route": "^1.5.8",
+    "angular1-template-loader": "^0.1.0",
     "awesome-typescript-loader": "^2.2.4",
     "babel-core": "^6.14.0",
     "babel-loader": "^6.2.5",
