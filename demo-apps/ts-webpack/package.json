@@ -22,7 +22,9 @@
   "keywords": [],
   "dependencies": {
     "angular": "file:../../node_modules/angular",
+    "angular-route": "file:../../node_modules/angular-route",
     "bootstrap-css-only": "file:../../node_modules/bootstrap-css-only",
     "ng-table": "file:../.."
-  }
+  },
+  "devDependencies": {}
 }
