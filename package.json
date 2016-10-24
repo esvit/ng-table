@@ -108,6 +108,7 @@
     "poste2e-only": "node ./scripts/open-e2e-report",
     "install:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm install\"",
     "link:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm run linklocal\"",
+    "postmerge": "npm i && npm run update-webdriver",
     "precommit": "npm run tsc",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "serve:demo": "cd demo-apps/es5 && npm start",
