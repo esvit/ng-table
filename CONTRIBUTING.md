@@ -5,17 +5,24 @@ CONTRIBUTING
 2. In locally cloned repo: `npm install && npm run setup`
 3. Prove existing code:
     * Run the unit tests: `npm test`
-    * Run the end-to-end tests:
-        * In one terminal window: `npm run e2e-server`
-        * In another terminal window: `npm run e2e`
+    * Run the end-to-end tests (see section below)
 4. Make changes in `src` folder
     * **Tip**: use `npm run test:w` to verify your changes on save
 5. Add additional unit tests in `test` folder. These should cover your changes
 6. *Optionally* add end-to-end tests in `e2e` folder
-7. Prove changes (run step 3 above)
+7. Prove changes:
+    * Run the unit tests: `npm test`
+    * Run the end-to-end tests (see section below)
 8. Commit changes: `npm run cm`
     - why use **npm** and not **git** to commit? See "Conventional commit message" section below
 9. Push your changes to your fork and submit a pull request
+
+
+## Running end-to-end tests
+
+* In one terminal window: `npm run e2e-server`
+* In another terminal window: `npm run e2e`
+    * **Tip**: use `npm run e2e-only` if you already have built source code (ie you've `npm run setup` or `npm run build:all`)
 
 
 ## Conventional commit message
