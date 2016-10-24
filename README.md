@@ -53,8 +53,7 @@ As of v2.0.0 ngTable is written in typescript and so you do NOT have to install 
 
 By installing the [ng-table package from npm](https://www.npmjs.com/package/ng-table), you will get typescript intellisense for all ng-table exported types.
 
-**WARNING:**. The type definitions on [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/ng-table) 
-and [@types/ng-table](https://www.npmjs.com/package/@types/ng-table) are depreciated.
+**WARNING:**. The type definitions on [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/ng-table) are depreciated.
 
 
 ## Upgrading from an earlier version?
@@ -91,6 +90,17 @@ For work in IE < 9 need jQuery, just add:
   <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <![endif]-->
 ```
+
+
+## Building from sources
+
+1. Clone: `git clone https://github.com/esvit/ng-table.git`
+2. Install: `npm install` 
+3. Build: `npm run tsc && npm run build:full`
+
+* To locally build and serve docs site: `npm run doc && npm run serve:docs-site`
+* To locally serve the demo: `npm run serve:demo`
+
 
 ## Want to contribute?
 
