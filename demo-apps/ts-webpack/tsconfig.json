@@ -8,7 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
-    "noEmitOnError": true,
+    "noEmitOnError": true, // WARNING: NOT WORKING in webpack ie a compiler error still results in bundled JS
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "suppressImplicitAnyIndexErrors": true
