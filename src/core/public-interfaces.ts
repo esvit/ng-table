@@ -545,6 +545,18 @@ export interface IEventSelectorFunc {
 export interface IPagesChangedListener {
     (publisher: INgTableParams<any>, newPages: IPageButton[], oldPages: IPageButton[]): any
 }
+/**
+* Signature of the event hander that is registered to receive the *afterDataFiltered* event
+*/
+export interface IAfterDataFilteredListener<T> {
+    (publisher: IDefaultGetData<T>, params: INgTableParams<T>, newData: DataResult<T>[] ): any
+}
+/**
+* Signature of the event hander that is registered to receive the *afterDataSorted* event
+*/
+export interface IAfterDataSortedListener<T> {
+    (publisher: IDefaultGetData<T>, params: INgTableParams<T>, newData: DataResult<T>[] ): any
+}
 
 /**
  * Signature of the function used to explicitly unregister an event handler so that it stops
@@ -647,9 +659,50 @@ export interface IEventsChannel {
      * @return a unregistration function that when called will unregister the `listener`
      */
     onPagesChanged<T>(listener: IPagesChangedListener, eventFilter?: EventSelector<T>): IUnregistrationFunc;
+    /**
+     * Subscribe to receive notification whenever a `ngTableDefaultGetData` instance filters data
+     * Optionally supply an `eventFilter` to restrict which events that should trigger the `listener` to be called.
+     *
+     * @param listener the function that will be called when the event fires
+     * @param scope the angular `$scope` that will limit the lifetime of the event subscription
+     * @param eventFilter either the specific `IDefaultGetData` instance you want to receive events for or a predicate function that should return true to receive the event
+     * @return a unregistration function that when called will unregister the `listener`
+     */
+    onAfterDataFiltered<T>(listener: IAfterDataFilteredListener<T>, scope: IScope, eventFilter?: EventSelector<T> ): IUnregistrationFunc;
+    /**
+     * Subscribe to receive notification whenever a `ngTableDefaultGetData` instance filters data
+     * Optionally supply an `eventFilter` to restrict which events that should trigger the `listener` to be called.
+     *
+     * @param listener the function that will be called when the event fires
+     * @param eventFilter either the specific `IDefaultGetData` instance you want to receive events for or a predicate function that should return true to receive the event
+     * @return a unregistration function that when called will unregister the `listener`
+     */
+    onAfterDataFiltered<T>(listener: IAfterDataFilteredListener<T>, eventFilter?: EventSelector<T> ): IUnregistrationFunc; 
+    /**
+     * Subscribe to receive notification whenever a `ngTableDefaultGetData` instance orders data
+     * Optionally supply an `eventFilter` to restrict which events that should trigger the `listener` to be called.
+     *
+     * @param listener the function that will be called when the event fires
+     * @param scope the angular `$scope` that will limit the lifetime of the event subscription
+     * @param eventFilter either the specific `IDefaultGetData` instance you want to receive events for or a predicate function that should return true to receive the event
+     * @return a unregistration function that when called will unregister the `listener`
+     */
+    onAfterDataSorted<T>(listener: IAfterDataSortedListener<T>, scope: IScope, eventFilter?: EventSelector<T> ): IUnregistrationFunc;
+    /**
+     * Subscribe to receive notification whenever a `ngTableDefaultGetData` instance orders data
+     * Optionally supply an `eventFilter` to restrict which events that should trigger the `listener` to be called.
+     *
+     * @param listener the function that will be called when the event fires
+     * @param eventFilter either the specific `IDefaultGetData` instance you want to receive events for or a predicate function that should return true to receive the event
+     * @return a unregistration function that when called will unregister the `listener`
+     */
+    onAfterDataSorted<T>(listener: IAfterDataSortedListener<T>, eventFilter?: EventSelector<T> ): IUnregistrationFunc;
 
     publishAfterCreated<T>(publisher: INgTableParams<T>): void;
     publishAfterReloadData<T>(publisher: INgTableParams<T>, newData: T[], oldData: T[]): void;
     publishDatasetChanged<T>(publisher: INgTableParams<T>, newDataset: T[], oldDataset: T[]): void;
     publishPagesChanged<T>(publisher: INgTableParams<T>, newPages: IPageButton[], oldPages: IPageButton[]): void;
+    publishAfterDataFiltered<T>(publisher: IDefaultGetData<T>, params: INgTableParams<T>, newData: T[]): void;
+    publishAfterDataSorted<T>(publisher: IDefaultGetData<T>, params: INgTableParams<T>, newData: T[]): void;
 }
+

@@ -7,7 +7,7 @@
  */
 
 import * as ng1 from 'angular';
-import { IDefaultGetDataProvider, IDefaultGetData, IFilterFunc, INgTableParams } from './public-interfaces';
+import { IDefaultGetDataProvider, IDefaultGetData, IFilterFunc, INgTableParams, IEventsChannel } from './public-interfaces';
 
 /**
  * Allows for the configuration of the ngTableDefaultGetData service.
@@ -26,21 +26,23 @@ import { IDefaultGetDataProvider, IDefaultGetData, IFilterFunc, INgTableParams }
 export class ngTableDefaultGetDataProvider implements IDefaultGetDataProvider {
     filterFilterName = 'filter';
     sortingFilterName = 'orderBy';
-    $get: ($filter: ng1.IFilterService) => IDefaultGetData<any>;
+    $get: ($filter: ng1.IFilterService, ngTableEventsChannel: IEventsChannel) => IDefaultGetData<any>;
     constructor() {
         var provider = this;
         this.$get = ngTableDefaultGetData;
 
-        ngTableDefaultGetData.$inject = ['$filter'];
+        ngTableDefaultGetData.$inject = ['$filter', 'ngTableEventsChannel'];
 
         /**
          * Implementation of the {@link IDefaultGetData IDefaultGetData} interface
          * 
          * @ngdoc service
          */
-        function ngTableDefaultGetData<T>($filter: ng1.IFilterService): IDefaultGetData<T> {
+        function ngTableDefaultGetData<T>($filter: ng1.IFilterService, ngTableEventsChannel: IEventsChannel): IDefaultGetData<T> {
 
             var defaultDataOptions = { applyFilter: true, applySort: true, applyPaging: true };
+
+            var self = this;
 
             (getData as IDefaultGetData<T>).applyPaging = applyPaging;
             (getData as IDefaultGetData<T>).getFilterFn = getFilterFn;
@@ -96,7 +98,11 @@ export class ngTableDefaultGetDataProvider implements IDefaultGetDataProvider {
                 var options = ng1.extend({}, defaultDataOptions, params.settings().dataOptions);
 
                 var fData = options.applyFilter ? applyFilter(data, params) : data;
+                ngTableEventsChannel.publishAfterDataFiltered(self, params, fData);
+
                 var orderedData = options.applySort ? applySort(fData, params) : fData;
+                ngTableEventsChannel.publishAfterDataSorted(self, params,orderedData);
+
                 return options.applyPaging ? applyPaging(orderedData, params) : orderedData;
             }
 

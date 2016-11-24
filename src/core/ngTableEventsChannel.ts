@@ -22,6 +22,8 @@ export function ngTableEventsChannel($rootScope: ng1.IRootScopeService): IEvents
     events = addTableParamsEvent('afterReloadData', events);
     events = addTableParamsEvent('datasetChanged', events);
     events = addTableParamsEvent('pagesChanged', events);
+    events = addTableParamsEvent('afterDataFiltered', events);
+    events = addTableParamsEvent('afterDataSorted', events);
     return events as IEventsChannel;
 
     //////////

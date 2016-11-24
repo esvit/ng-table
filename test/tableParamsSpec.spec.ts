@@ -2159,5 +2159,87 @@ describe('NgTableParams', () => {
                 expect(events[1]).toEqual('datasetChanged');
             });
         });
+
+        describe('afterDataFiltered', () => {
+            it('should fire when a reload completes - no filter', () => {
+                // given
+                ngTableEventsChannel.onAfterDataFiltered((getData, params, newVal) => {
+                    actualPublisher = params;
+                    actualEventArgs = [newVal];
+                });
+                var data = [1,2,3];
+                var params = createNgTableParams({ count: 5 }, { counts: [5, 10], dataset: data });
+
+                // when
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(actualPublisher).toBe(params);
+                expect(actualEventArgs).toEqual([data]);
+            });
+
+            it('should fire when a reload completes and the data is filtered', () => {
+                // given
+                ngTableEventsChannel.onAfterDataFiltered((getData, params, newVal) => {
+                    actualPublisher = params;
+                    actualEventArgs = [newVal];
+                });
+
+                var initialDs  = [10, 10, 101, 5];
+                var expectedDs = [10, 10, 101];  // when filtered with "10"
+                var params = createNgTableParams({ dataset: initialDs });
+                params.filter({ $: "10" });
+                
+                // when
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(actualPublisher).toBe(params);
+                expect(actualEventArgs).toEqual([expectedDs]);
+            });
+        });
+
+        describe('afterDataSorted', () => {
+            it('should fire when a reload completes - no order', () => {
+                // given
+                ngTableEventsChannel.onAfterDataSorted((getData, params, newVal) => {
+                    actualPublisher = params;
+                    actualEventArgs = [newVal];
+                });
+                var data = [1,2,3];
+                var params = createNgTableParams({ count: 5 }, { counts: [5, 10], dataset: data });
+
+                // when
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(actualPublisher).toBe(params);
+                expect(actualEventArgs).toEqual([data]);
+            });
+
+            it('should fire when a reload completes and the data is filtered', () => {
+                // given
+                ngTableEventsChannel.onAfterDataSorted((getData, params, newVal) => {
+                    actualPublisher = params;
+                    actualEventArgs = [newVal];
+                });
+
+                var initialDs  = [10, 10, 101, 5];
+                var expectedDs = [10, 10, 101];  // when filtered with "10"
+                var params = createNgTableParams({ dataset: initialDs });
+                params.filter({ $: "10" });
+                
+                // when
+                params.reload();
+                scope.$digest();
+
+                // then
+                expect(actualPublisher).toBe(params);
+                expect(actualEventArgs).toEqual([expectedDs]);
+            });
+        });
     })
 });
