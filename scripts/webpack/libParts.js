@@ -79,9 +79,9 @@ function createLibraryParts(rootDir, env = {}) {
         const extractor = new ExtractTextPlugin(filename);
         let loader;
         if (env.debug || env.prod) {
-            loader = 'css?sourceMap!sass?sourceMap';
+            loader = 'css-loader?sourceMap!sass-loader?sourceMap';
         } else {
-            loader = 'css!sass';
+            loader = 'css-loader!sass-loader';
         }
         return {
             entry: {
@@ -108,7 +108,7 @@ function createLibraryParts(rootDir, env = {}) {
                 rules: [
                     {
                         test: /\.html$/,
-                        loaders: ['ngtemplate?requireAngular&relativeTo=/src/browser/&prefix=ng-table/', 'html']
+                        loaders: ['ngtemplate-loader?requireAngular&relativeTo=/src/browser/&prefix=ng-table/', 'html-loader']
                     }
                 ]
             }

@@ -20,7 +20,7 @@ function createParts(rootDir, env) {
         return {
             module: {
                 rules: [
-                    { test: /\.js$/, loaders: ['babel?cacheDirectory'], exclude: /node_modules/ }
+                    { test: /\.js$/, loaders: ['babel-loader?cacheDirectory'], exclude: /node_modules/ }
                 ]
             }
         }
@@ -29,8 +29,6 @@ function createParts(rootDir, env) {
     function prodOptimize() {
         return {
             plugins: [
-                // doesn't save anything in this small app. npm@3 mostly takes care of this
-                new webpack.optimize.DedupePlugin(),
                 new webpack.LoaderOptionsPlugin({
                     minimize: true,
                     debug: false,
@@ -93,7 +91,7 @@ function createParts(rootDir, env) {
                             /\.spec\.ts$/,
                             /node_modules/
                         ],
-                        loader: 'istanbul-instrumenter'
+                        loader: 'istanbul-instrumenter-loader'
                     }
                 ]
             }
@@ -112,7 +110,7 @@ function createParts(rootDir, env) {
                     {
                         test: /\.ts$/,
                         exclude: /node_modules/,
-                        loader: `awesome-typescript?tsconfig=${tsconfigPath}!angular1-template`
+                        loaders: [`awesome-typescript-loader?tsconfig=${tsconfigPath}`, 'angular1-template-loader']
                     }
                 ]
             }
