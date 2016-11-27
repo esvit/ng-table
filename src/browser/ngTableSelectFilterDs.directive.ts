@@ -9,11 +9,17 @@
 import * as ng1 from 'angular';
 import { IColumnDef, SelectData, ISelectDataFunc, ISelectOption } from './public-interfaces';
 
-interface IInputAttributes extends ng1.IAttributes {
+/**
+ * @private
+ */
+export interface IInputAttributes extends ng1.IAttributes {
     ngTableSelectFilterDs: string;
 }
 
-interface IScopeExtensions {
+/**
+ * @private
+ */
+export interface IScopeExtensions {
     $selectData: ISelectOption[]
 }
 
@@ -26,44 +32,46 @@ ngTableSelectFilterDs.$inject = [];
  * "deselecting" an item from a `<select>` tag
  *
  * This directive is is focused on providing a datasource to an `ngOptions` directive
- * @ngdoc directive
- * @private
  */
-function ngTableSelectFilterDs(): ng1.IDirective{
+function ngTableSelectFilterDs(): ng1.IDirective {
     // note: not using isolated or child scope "by design"
     // this is to allow this directive to be combined with other directives that do
 
     var directive = {
         restrict: 'A',
-        controller: ngTableSelectFilterDsController
+        controller: NgTableSelectFilterDsController
     };
     return directive;
 }
 
-ngTableSelectFilterDsController.$inject = ['$scope', '$parse', '$attrs', '$q'];
-function ngTableSelectFilterDsController($scope: ng1.IScope & IScopeExtensions, $parse: ng1.IParseService, $attrs: IInputAttributes, $q: ng1.IQService){
+/**
+ * @private
+ */
+export class NgTableSelectFilterDsController {
+    static $inject = ['$scope', '$parse', '$attrs', '$q'];
+    $column: IColumnDef;
+    constructor(
+        private $scope: ng1.IScope & IScopeExtensions,
+        $parse: ng1.IParseService,
+        private $attrs: IInputAttributes,
+        private $q: ng1.IQService) {
 
-    var $column: IColumnDef;
-    init();
-
-    function init(){
-        $column = $parse($attrs.ngTableSelectFilterDs)($scope);
-        $scope.$watch<SelectData>(function(){
-            return $column && $column.data;
-        }, bindDataSource);
+        this.$column = $parse($attrs.ngTableSelectFilterDs)($scope);
+        $scope.$watch<SelectData>(
+            () => this.$column && this.$column.data,
+            () => { this.bindDataSource(); });
     }
-
-    function bindDataSource(){
-        getSelectListData($column).then(function(data){
-            if (data && !hasEmptyOption(data)){
-                data.unshift({ id: '', title: ''});
+    private bindDataSource() {
+        this.getSelectListData(this.$column).then(data => {
+            if (data && !this.hasEmptyOption(data)) {
+                data.unshift({ id: '', title: '' });
             }
             data = data || [];
-            $scope.$selectData = data;
+            this.$scope.$selectData = data;
         });
     }
 
-    function hasEmptyOption(data: ISelectOption[]) {
+    private hasEmptyOption(data: ISelectOption[]) {
         var isMatch: boolean;
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
@@ -75,14 +83,13 @@ function ngTableSelectFilterDsController($scope: ng1.IScope & IScopeExtensions, 
         return isMatch;
     }
 
-    function getSelectListData($column: IColumnDef) {
+    private getSelectListData($column: IColumnDef) {
         var dataInput = $column.data;
         if (dataInput instanceof Array) {
-            return $q.when(dataInput);
+            return this.$q.when(dataInput);
         } else {
-            return $q.when(dataInput && dataInput());
+            return this.$q.when(dataInput && dataInput());
         }
     }
 }
-
 export { ngTableSelectFilterDs };

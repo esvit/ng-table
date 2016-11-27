@@ -96,7 +96,7 @@ For work in IE < 9 need jQuery, just add:
 
 1. Clone: `git clone https://github.com/esvit/ng-table.git`
 2. Install: `npm install` 
-3. Build: `npm run tsc && npm run build:full`
+3. Build: `npm run build:full`
 
 * To locally build and serve docs site: `npm run doc && npm run serve:docs-site`
 * To locally serve the demo: `npm run serve:demo`

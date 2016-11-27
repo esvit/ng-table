@@ -7,41 +7,65 @@
  */
 
 import * as ng1 from 'angular';
-import { IDefaultGetDataProvider, IDefaultGetData, IFilterFunc, INgTableParams, IEventsChannel } from './public-interfaces';
+import { IFilterFilter, IFilterOrderBy, IFilterService, IPromise, IServiceProvider} from 'angular';
+import { IFilterFunc } from '../filtering';
+import { NgTableParams } from '../ngTableParams';
+import { NgTableEventsChannel } from '../ngTableEventsChannel';
+
 
 /**
- * Allows for the configuration of the ngTableDefaultGetData service.
+ * A default implementation of the getData function that will apply the `filter`, `orderBy` and
+ * paging values from the {@link NgTableParams} instance supplied to the data array supplied.
  *
- * Set filterFilterName to the name of a angular filter that knows how to apply the values returned by
- * `NgTableParams.filter()` to restrict an array of data.
- *
- * Set sortingFilterName to the name of a angular filter that knows how to apply the values returned by
- * `NgTableParams.orderBy()` to sort an array of data.
- *
- * Out of the box the `ngTableDefaultGetData` service will be configured to use the angular `filter` and `orderBy`
- * filters respectively
- * 
- * @ngdoc provider
+ * A call to this function will:
+ * - return the resulting array
+ * - assign the total item count after filtering to the `total` of the `NgTableParams` instance supplied
  */
-export class ngTableDefaultGetDataProvider implements IDefaultGetDataProvider {
+export interface IDefaultGetData<T> {
+    (data: T[], params: NgTableParams<T>): T[];
+    /**
+     * Convenience function that this service will use to apply paging to the data rows.
+     *
+     * Returns a slice of rows from the `data` array supplied and sets the `NgTableParams.total()`
+     * on the `params` instance supplied to `data.length`
+     */
+    applyPaging(data: T[], params: NgTableParams<any>): T[],
+    /**
+     * Returns a reference to the function that this service will use to filter data rows
+     */
+    getFilterFn(params: NgTableParams<T>): IFilterFunc<T>,
+    /**
+     * Returns a reference to the function that this service will use to sort data rows
+     */
+    getOrderByFn(params?: NgTableParams<T>): IFilterOrderBy
+}
+
+/**
+ * Implementation of the {@link IDefaultGetDataProvider} interface
+ */
+export class NgTableDefaultGetDataProvider implements IServiceProvider {
+    /**
+     * The name of a angular filter that knows how to apply the values returned by
+     * `NgTableParams.filter()` to restrict an array of data.
+     * (defaults to the angular `filter` filter service)
+     */
     filterFilterName = 'filter';
+    /**
+     * The name of a angular filter that knows how to apply the values returned by
+    * `NgTableParams.orderBy()` to sort an array of data.
+    * (defaults to the angular `orderBy` filter service)
+    */
     sortingFilterName = 'orderBy';
-    $get: ($filter: ng1.IFilterService, ngTableEventsChannel: IEventsChannel) => IDefaultGetData<any>;
+    $get: ($filter: IFilterService, ngTableEventsChannel: NgTableEventsChannel) => IDefaultGetData<any>;
     constructor() {
         var provider = this;
         this.$get = ngTableDefaultGetData;
 
         ngTableDefaultGetData.$inject = ['$filter', 'ngTableEventsChannel'];
 
-        /**
-         * Implementation of the {@link IDefaultGetData IDefaultGetData} interface
-         * 
-         * @ngdoc service
-         */
-        function ngTableDefaultGetData<T>($filter: ng1.IFilterService, ngTableEventsChannel: IEventsChannel): IDefaultGetData<T> {
+        function ngTableDefaultGetData<T>($filter: IFilterService, ngTableEventsChannel: NgTableEventsChannel): IDefaultGetData<T> {
 
             var defaultDataOptions = { applyFilter: true, applySort: true, applyPaging: true };
-
             var self = this;
 
             (getData as IDefaultGetData<T>).applyPaging = applyPaging;
@@ -50,20 +74,20 @@ export class ngTableDefaultGetDataProvider implements IDefaultGetDataProvider {
 
             return getData as IDefaultGetData<T>;
 
-            function getFilterFn(params: INgTableParams<T>): IFilterFunc<T> {
+            function getFilterFn(params: NgTableParams<T>): IFilterFunc<T> {
                 var filterOptions = params.settings().filterOptions;
                 if (ng1.isFunction(filterOptions.filterFn)) {
                     return filterOptions.filterFn;
                 } else {
-                    return $filter<ng1.IFilterFilter>(filterOptions.filterFilterName || provider.filterFilterName);
+                    return $filter<IFilterFilter>(filterOptions.filterFilterName || provider.filterFilterName);
                 }
             }
 
-            function getOrderByFn(params: INgTableParams<T>) {
-                return $filter<ng1.IFilterOrderBy>(provider.sortingFilterName);
+            function getOrderByFn(params: NgTableParams<T>) {
+                return $filter<IFilterOrderBy>(provider.sortingFilterName);
             }
 
-            function applyFilter(data: T[], params: INgTableParams<T>): T[] {
+            function applyFilter(data: T[], params: NgTableParams<T>): T[] {
                 if (!params.hasFilter()) {
                     return data;
                 }
@@ -78,19 +102,19 @@ export class ngTableDefaultGetDataProvider implements IDefaultGetDataProvider {
                 return filterFn.call(params, data, parsedFilter, params.settings().filterOptions.filterComparator);
             }
 
-            function applyPaging(data: T[], params: INgTableParams<T>): T[] {
+            function applyPaging(data: T[], params: NgTableParams<any>): T[] {
                 var pagedData = data.slice((params.page() - 1) * params.count(), params.page() * params.count());
                 params.total(data.length); // set total for recalc pagination
                 return pagedData;
             }
 
-            function applySort(data: T[], params: INgTableParams<T>): T[] {
+            function applySort(data: T[], params: NgTableParams<T>): T[] {
                 var orderBy = params.orderBy();
                 var orderByFn = getOrderByFn(params);
                 return orderBy.length ? orderByFn(data, orderBy) : data;
             }
 
-            function getData(data: T[], params: INgTableParams<T>): T[] {
+            function getData(data: T[], params: NgTableParams<T>): T[] {
                 if (data == null) {
                     return [];
                 }

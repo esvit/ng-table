@@ -24,7 +24,8 @@ export function ngTableSorterRow(){
         replace: true,
         templateUrl: templateUrl,
         scope: true,
-        controller: 'ngTableSorterRowController'
+        controller: 'ngTableSorterRowController',
+        controllerAs: '$ctrl'
     };
     return directive;
 }

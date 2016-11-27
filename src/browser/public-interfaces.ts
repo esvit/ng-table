@@ -176,21 +176,6 @@ export interface IFilterConfigValues {
 }
 
 /**
- * The angular provider used to configure the behaviour of the `ngTableFilterConfig` service
- */
-export interface IFilterConfigProvider {
-    $get: IFilterConfig;
-    /**
-     * Reset back to factory defaults the config values that `ngTableFilterConfig` service will use
-     */
-    resetConfigs(): void;
-    /**
-     * Set the config values used by `ngTableFilterConfig` service
-     */
-    setConfig(customConfig: IFilterConfigValues): void;
-}
-
-/**
  * A key value-pair map where the key is the name of a field in a data row and the value is the definition
  * for the template used to render a filter cell in the header of a html table.
  * Where the value is supplied as a string this should either be url to a html template or an alias to a url registered
@@ -226,26 +211,6 @@ export interface IFilterTemplateDef {
     placeholder: string
 }
 
-/**
- * Exposes configuration values and methods used to return the location of the html
- * templates used to render the filter row of an ng-table directive
- */
-export interface IFilterConfig {
-    /**
-     * Readonly copy of the final values used to configure the service.
-     */
-    config: IFilterConfigValues,
-    /**
-     * Return the url of the html filter template for the supplied definition and key.
-     * For more information see the documentation for {@link IFilterTemplateMap}
-     */
-    getTemplateUrl(filterDef: string | IFilterTemplateDef, filterKey?: string): string,
-    /**
-     * Return the url of the html filter template registered with the alias supplied
-     */
-    getUrlForAlias(aliasName: string, filterKey?: string): string
-}
-
 export type SelectData = ISelectOption[] | ISelectDataFunc
 
 /**
@@ -274,18 +239,4 @@ export interface ITableInputAttributes extends IAttributes {
     showGroup?: string;
     templateHeader?: string;
     templatePagination?: string;
-}
-
-/**
- * The public members of the {@link ngTableController}
- */
-export interface ITableController {
-    buildColumns(columns: Array<IColumnDef | IDynamicTableColDef>): IColumnDef[];
-    compileDirectiveTemplates(): void;
-    loadFilterData($columns: IColumnDef[]): IPromise<SelectData> | SelectData;
-    parseNgTableDynamicExpr(expr: string): {
-        tableParams: string;
-        columns: string;
-    }
-    setupBindingsToInternalScope(tableParamsExpr?: string): void;
 }

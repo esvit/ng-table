@@ -13,40 +13,28 @@ import { ITableScope } from './ngTableController';
 /**
  * @private
  */
-export interface IScopeExtensions {
-    sortBy($column: IColumnDef, event: IAugmentedMouseEvent): void;
-}
-
-/**
- * @private
- */
 export interface IAugmentedMouseEvent extends IAngularEvent {
     ctrlKey: boolean;
     metaKey: boolean;
 }
-
-ngTableSorterRowController.$inject = ['$scope'];
-
 /**
  * Controller for the {@link ngTableSorterRow ngTableSorterRow} directive
  */
-export function ngTableSorterRowController<T>($scope: ITableScope<T> & IScopeExtensions) {
+export class NgTableSorterRowController<T> {
+    static $inject = ['$scope'];
+    constructor(private $scope: ITableScope<T>) {}
 
-    $scope.sortBy = sortBy;
-
-    ///////////
-
-    function sortBy($column: IColumnDef, event: IAugmentedMouseEvent) {
+    sortBy($column: IColumnDef, event: IAugmentedMouseEvent) {
         var parsedSortable = $column.sortable && $column.sortable();
         if (!parsedSortable || typeof parsedSortable !== 'string') {
             return;
         } else {
-            var defaultSort = $scope.params.settings().defaultSort;
+            var defaultSort = this.$scope.params.settings().defaultSort;
             var inverseSort = (defaultSort === 'asc' ? 'desc' : 'asc');
-            var sorting = $scope.params.sorting() && $scope.params.sorting()[parsedSortable] && ($scope.params.sorting()[parsedSortable] === defaultSort);
-            var sortingParams: ISortingValues = (event.ctrlKey || event.metaKey) ? $scope.params.sorting() : {};
+            var sorting = this.$scope.params.sorting() && this.$scope.params.sorting()[parsedSortable] && (this.$scope.params.sorting()[parsedSortable] === defaultSort);
+            var sortingParams: ISortingValues = (event.ctrlKey || event.metaKey) ? this.$scope.params.sorting() : {};
             sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
-            $scope.params.parameters({
+            this.$scope.params.parameters({
                 sorting: sortingParams
             });
         }

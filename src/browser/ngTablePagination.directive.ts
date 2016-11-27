@@ -7,7 +7,7 @@
  */
 
 import * as ng1 from 'angular';
-import { IEventsChannel, IPageButton } from '../core'
+import { NgTableEventsChannel, IPageButton } from '../core'
 import { ITableScope } from './ngTableController';
 
 interface IScopeExtensions {
@@ -20,7 +20,7 @@ ngTablePagination.$inject = ['$compile', '$document', 'ngTableEventsChannel'];
  * Directive that renders the table pagination controls
  * @ngdoc directive
  */
-export function ngTablePagination<T>($compile: ng1.ICompileService, $document: ng1.IDocumentService, ngTableEventsChannel: IEventsChannel): ng1.IDirective {
+export function ngTablePagination<T>($compile: ng1.ICompileService, $document: ng1.IDocumentService, ngTableEventsChannel: NgTableEventsChannel): ng1.IDirective {
 
     return {
         restrict: 'A',

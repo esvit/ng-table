@@ -1,0 +1,30 @@
+<small>Grouped table</small>
+<table ng-table="$ctrl.tableParams" class="table table-condensed table-bordered table-hover">
+    <colgroup>
+        <col width="60%" />
+        <col width="20%" />
+        <col width="20%" />
+    </colgroup>
+    <tr class="ng-table-group" ng-repeat-start="group in $groups">
+        <td colspan="3">
+            <a href="" ng-click="group.$hideRows = !group.$hideRows">
+                <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
+                <strong>{{ group.value }}</strong>
+            </a>
+        </td>
+    </tr>
+    <tr ng-hide="group.$hideRows" ng-repeat="user in group.data" ng-repeat-end>
+        <td sortable="'country'" data-title="'Country'" groupable="'country'" ng-if="false">
+            {{user.country}}
+        </td>
+        <td sortable="'name'" data-title="'Name'" groupable="'name'">
+            {{user.name}}
+        </td>
+        <td sortable="'age'" data-title="'Age'" groupable="'age'">
+            {{user.age}}
+        </td>
+        <td sortable="'money'" data-title="'Money'">
+            {{user.money}}
+        </td>
+    </tr>
+</table>

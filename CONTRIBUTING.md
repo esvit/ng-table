@@ -3,6 +3,7 @@ CONTRIBUTING
 
 1. Fork the repo and clone locally
 2. In locally cloned repo: `npm install && npm run setup`
+    * This will the build fro the library and all the demo apps
 3. Prove existing code:
     * Run the unit tests: `npm test`
     * Run the end-to-end tests (see section below)

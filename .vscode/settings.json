@@ -15,11 +15,13 @@
         "**/.git": true,
         "**/.DS_Store": true,
 		"**/*.js": {"when": "$(basename).ts"},
-		"src/browser/*.d.ts": true,
-		"src/browser/*.js.map": true,
-		"src/core/*.d.ts": true,
-		"src/core/*.js.map": true,
+		"src/**/*.d.ts": true,
+		"src/**/*.js.map": true,
 		"test/**/*.d.ts": true,
-		"test/**/*.js.map": true
+		"test/**/*.js.map": true,
+		"bundles/": true,
+		"demo-apps/**/build/": true,
+		"demo-site/api-docs/": true,
+		"out/": true
     }
 }
