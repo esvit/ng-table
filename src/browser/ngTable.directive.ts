@@ -8,9 +8,9 @@
 import { IAugmentedJQuery, IDirective, IQService, IParseService, IPromise, IScope } from 'angular';
 import * as ng1 from 'angular';
 import { 
-    IColumnDef, ColumnFieldContext, IColumnField, IFilterTemplateDefMap, SelectData, ITableController, 
-    ITableInputAttributes 
+    IColumnDef, ColumnFieldContext, IColumnField, IFilterTemplateDefMap, SelectData, ITableInputAttributes 
 } from './public-interfaces';
+import { NgTableController } from './ngTableController';
 
 interface IScopeExtensions {
     $columns: IColumnDef[]
@@ -19,7 +19,7 @@ interface IScopeExtensions {
 ngTable.$inject = ['$q', '$parse'];
 
 /**
- * Directive that instantiates {@link ngTableController ngTableController}.
+ * Directive that instantiates {@link NgTableController NgTableController}.
  * @ngdoc directive
  * @name ngTable
  * @example
@@ -136,7 +136,7 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
                     setAttrValue('ng-if', '$columns[' + (columns.length - 1) + '].show(this)');
                 }
             });
-            return function(scope: IScope & IScopeExtensions, element: IAugmentedJQuery, attrs: ITableInputAttributes, controller: ITableController) {
+            return function(scope: IScope & IScopeExtensions, element: IAugmentedJQuery, attrs: ITableInputAttributes, controller: NgTableController<any, IColumnDef>) {
                 scope.$columns = columns = controller.buildColumns(columns);
 
                 controller.setupBindingsToInternalScope(attrs.ngTable);

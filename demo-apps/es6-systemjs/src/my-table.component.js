@@ -1,11 +1,11 @@
-import 'ng-table';
+import { NgTableParams } from 'ng-table';
 
 // note: because of Firefox (v45-v48) native class syntax causes a problem in angular.
 // This is not likely going to be fixed in angular as it's a bug in the browser deviating from the spec
 // Therefore if you do not want a transpiler step, you will NOT be able to use class syntax
 // For more details see: https://github.com/angular/angular.js/issues/14240#issuecomment-197418167
 
-function MyTableController(NgTableParams) {
+function MyTableController() {
     var data = [
         { name: "Moroni", age: 50 },
         { name: "Tiancum", age: 43 },
@@ -31,7 +31,7 @@ function MyTableController(NgTableParams) {
     });
 }
 
-MyTableController.$inject = ['NgTableParams'];
+MyTableController.$inject = [];
 
 const myTableComponent = {
     templateUrl: 'src/my-table.component.html',

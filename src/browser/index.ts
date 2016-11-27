@@ -1,18 +1,18 @@
 import * as angular from 'angular';
 import { ngTable } from './ngTable.directive';
-import { ngTableColumn } from './ngTableColumn';
+import { NgTableColumn } from './ngTableColumn';
 import { ngTableColumnsBinding } from './ngTableColumnsBinding.directive';
-import { ngTableController } from './ngTableController';
+import { NgTableController } from './ngTableController';
 import { ngTableDynamic } from './ngTableDynamic.directive';
-import { ngTableFilterConfigProvider } from './ngTableFilterConfig';
+import { NgTableFilterConfigProvider, NgTableFilterConfig } from './ngTableFilterConfig';
 import { ngTableFilterRow } from './ngTableFilterRow.directive';
-import { ngTableFilterRowController } from './ngTableFilterRowController';
+import { NgTableFilterRowController } from './ngTableFilterRowController';
 import { ngTableGroupRow } from './ngTableGroupRow.directive';
-import { ngTableGroupRowController } from './ngTableGroupRowController';
+import { NgTableGroupRowController } from './ngTableGroupRowController';
 import { ngTablePagination } from './ngTablePagination.directive';
 import { ngTableSelectFilterDs } from './ngTableSelectFilterDs.directive';
 import { ngTableSorterRow } from './ngTableSorterRow.directive';
-import { ngTableSorterRowController } from './ngTableSorterRowController';
+import { NgTableSorterRowController } from './ngTableSorterRowController';
 import './filters/number.html';
 import './filters/select.html';
 import './filters/select-multiple.html';
@@ -20,20 +20,21 @@ import './filters/text.html';
 import './pager.html';
 import './header.html';
 
-export default angular.module('ngTable-browser', [])
+const ngTableBrowserModule = angular.module('ngTable-browser', [])
     .directive('ngTable', ngTable)
-    .factory('ngTableColumn', ngTableColumn)
+    .service('ngTableColumn', NgTableColumn)
     .directive('ngTableColumnsBinding', ngTableColumnsBinding)
-    .controller('ngTableController', ngTableController)
+    .controller('ngTableController', NgTableController)
     .directive('ngTableDynamic', ngTableDynamic)
-    .provider('ngTableFilterConfig', ngTableFilterConfigProvider as any)
+    .provider('ngTableFilterConfig', NgTableFilterConfigProvider)
     .directive('ngTableFilterRow', ngTableFilterRow)
-    .controller('ngTableFilterRowController', ngTableFilterRowController)
+    .controller('ngTableFilterRowController', NgTableFilterRowController)
     .directive('ngTableGroupRow', ngTableGroupRow)
-    .controller('ngTableGroupRowController', ngTableGroupRowController)
+    .controller('ngTableGroupRowController', NgTableGroupRowController)
     .directive('ngTablePagination', ngTablePagination)
     .directive('ngTableSelectFilterDs', ngTableSelectFilterDs)
     .directive('ngTableSorterRow', ngTableSorterRow)
-    .controller('ngTableSorterRowController', ngTableSorterRowController);
+    .controller('ngTableSorterRowController', NgTableSorterRowController);
 
 export * from './public-interfaces';
+export { NgTableController, NgTableFilterConfigProvider, NgTableFilterConfig, ngTableBrowserModule };

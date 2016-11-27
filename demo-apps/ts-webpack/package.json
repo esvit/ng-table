@@ -14,7 +14,7 @@
     "clean": "node ../../node_modules/shx/lib/cli.js rm -rf build build-stats.json src/**/*.js src/**/*.js.map",
     "linklocal": "npm run _linklocal && npm prune",
     "serve": "node ../../node_modules/http-server/bin/http-server build -c-1 -o",
-    "start": "node ../../node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --env.debug",
+    "start": "node ../../node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --env.debug --open",
     "stats": "node ../../node_modules/webpack/bin/webpack.js --env.prod --profile --json > build-stats.json",
     "unlinklocal": "npm run _linklocal -- unlink && npm i",
     "validate": "node ../../node_modules/webpack-validator/dist/bin/webpack-validator.js webpack.config.js"

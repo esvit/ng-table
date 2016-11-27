@@ -1,9 +1,8 @@
 import { IControllerService, IQService, IScope } from 'angular';
 import * as ng1 from 'angular';
 import {
-    IDataRowGroup, IDefaultGetData, IDefaults, IEventsChannel, IGroupingFunc, IGroupValues, InternalTableParams,
-    INgTableParams, IPageButton, IParamValues, ISettings, ITableParamsConstructor,
-    default as coreModule
+    IDataRowGroup, IDefaultGetData, IDefaults, NgTableEventsChannel, IGroupingFunc, IGroupValues, InternalTableParams,
+    NgTableParams, IPageButton, IParamValues, ISettings, ngTableCoreModule
 } from '../src/core';
 
 describe('NgTableParams', () => {
@@ -12,10 +11,9 @@ describe('NgTableParams', () => {
     }
 
     var scope: IScope,
-        NgTableParams: ITableParamsConstructor<any>,
         $rootScope: IScopeWithPrivates;
     
-    beforeAll(() => expect(coreModule).toBeDefined());
+    beforeAll(() => expect(ngTableCoreModule).toBeDefined());
 
     beforeEach(ng1.mock.module("ngTable-core"));
     beforeEach(() => {
@@ -30,15 +28,14 @@ describe('NgTableParams', () => {
         });
     });
 
-    beforeEach(inject(($controller: IControllerService, _$rootScope_: IScopeWithPrivates, _NgTableParams_: ITableParamsConstructor<any>) => {
+    beforeEach(inject(($controller: IControllerService, _$rootScope_: IScopeWithPrivates) => {
         $rootScope = _$rootScope_;
         scope = $rootScope.$new();
-        NgTableParams = _NgTableParams_;
     }));
 
-    function createNgTableParams<T>(initialParams?: IParamValues<T>, settings?: ISettings<T>): INgTableParams<T>;
-    function createNgTableParams<T>(settings?: ISettings<T>): INgTableParams<T>;
-    function createNgTableParams<T>(settings?: any): INgTableParams<T> {
+    function createNgTableParams<T>(initialParams?: IParamValues<T>, settings?: ISettings<T>): NgTableParams<T>;
+    function createNgTableParams<T>(settings?: ISettings<T>): NgTableParams<T>;
+    function createNgTableParams<T>(settings?: any): NgTableParams<T> {
         var initialParams: IParamValues<T>;
         if (arguments.length === 2) {
             initialParams = arguments[0];
@@ -61,7 +58,7 @@ describe('NgTableParams', () => {
     describe('generatePagesArray', () => {
         it('should generate pages array using arguments supplied', () => {
             //crap
-            var params = new NgTableParams();
+            var params = new NgTableParams<any>({});
             expect(params.generatePagesArray(1, 30, 10)).toEqual([
                 { type: 'prev', number: 1, active: false },
                 { type: 'first', number: 1, active: false, current: true },
@@ -106,7 +103,7 @@ describe('NgTableParams', () => {
     });
 
     it('NgTableParams `page` parameter', () => {
-        var params = new NgTableParams();
+        var params = new NgTableParams({});
 
         expect(params.page()).toBe(1);
         expect(params.page(2)).toEqual(params);
@@ -309,7 +306,7 @@ describe('NgTableParams', () => {
     describe('settings', () => {
 
         it('defaults', () => {
-            var params = new NgTableParams();
+            var params = new NgTableParams({});
 
             var expectedSettings: ISettings<any> = {
                 $loading: false,
@@ -962,7 +959,7 @@ describe('NgTableParams', () => {
     it('ngTableParams test defaults', inject(($q: IQService, ngTableDefaults: IDefaults) => {
         ngTableDefaults.params.count = 2;
         ngTableDefaults.settings.counts = [];
-        var tp = new NgTableParams();
+        var tp = new NgTableParams({});
 
         expect(tp.count()).toEqual(2);
         expect(tp.page()).toEqual(1);
@@ -973,12 +970,12 @@ describe('NgTableParams', () => {
         expect(settings.filterOptions.filterDelay).toEqual(500);
 
         ngTableDefaults.settings.interceptors = [{ response: ng1.identity }];
-        tp = new NgTableParams();
+        tp = new NgTableParams({});
         expect(tp.settings().interceptors.length).toEqual(1);
     }));
 
     describe('hasFilter', () => {
-        var tp: INgTableParams<any>;
+        var tp: NgTableParams<any>;
 
         beforeEach(inject(() => {
             tp = new NgTableParams({}, {});
@@ -1017,7 +1014,7 @@ describe('NgTableParams', () => {
 
 
     describe('isDataReloadRequired', () => {
-        var tp: INgTableParams<{}>;
+        var tp: NgTableParams<{}>;
 
         beforeEach(inject(() => {
             tp = createNgTableParams();
@@ -1157,7 +1154,7 @@ describe('NgTableParams', () => {
     });
 
     describe('hasFilterChanges', () => {
-        var tp: INgTableParams<{}>;
+        var tp: NgTableParams<{}>;
 
         beforeEach(inject(() => {
             tp = createNgTableParams();
@@ -1240,7 +1237,7 @@ describe('NgTableParams', () => {
     });
 
     describe('hasErrorState', () => {
-        var tp: INgTableParams<{}>;
+        var tp: NgTableParams<{}>;
 
         it('should return false until reload fails', inject(($q: IQService) => {
             // given
@@ -1369,7 +1366,7 @@ describe('NgTableParams', () => {
                 type QueryResult = { total: number, results: number[] };
                 // given
                 var interceptor = {
-                    response: (data: QueryResult, params: INgTableParams<number>) => {
+                    response: (data: QueryResult, params: NgTableParams<number>) => {
                         params.total(data.total);
                         return data.results;
                     }
@@ -1490,8 +1487,8 @@ describe('NgTableParams', () => {
             it('should be able to access tableParams supplied to getData', () => {
                 // given
                 var interceptor = {
-                    actualParams: null as INgTableParams<number>,
-                    response: function (data: number[], params: INgTableParams<number>) {
+                    actualParams: null as NgTableParams<number>,
+                    response: function (data: number[], params: NgTableParams<number>) {
                         this.actualParams = params;
                     }
                 };
@@ -1632,11 +1629,11 @@ describe('NgTableParams', () => {
     describe('events', () => {
 
         var actualEventArgs: any[],
-            actualPublisher: INgTableParams<any>,
+            actualPublisher: NgTableParams<any>,
             fakeTableParams: InternalTableParams<any>,
-            ngTableEventsChannel: IEventsChannel & { [name: string]: Function };
+            ngTableEventsChannel: NgTableEventsChannel & { [name: string]: Function };
 
-        beforeEach(inject((_ngTableEventsChannel_: IEventsChannel & { [name: string]: Function }) => {
+        beforeEach(inject((_ngTableEventsChannel_: NgTableEventsChannel & { [name: string]: Function }) => {
             ngTableEventsChannel = _ngTableEventsChannel_;
             fakeTableParams = {} as any;
             actualPublisher = undefined;
@@ -1832,7 +1829,7 @@ describe('NgTableParams', () => {
 
                 function test(event: string) {
                     // given
-                    ngTableEventsChannel['on' + event](function (params: INgTableParams<any>) {
+                    ngTableEventsChannel['on' + event](function (params: NgTableParams<any>) {
                         actualPublisher = params;
                     });
 
@@ -1850,7 +1847,7 @@ describe('NgTableParams', () => {
 
                 function test(event: string) {
                     // given
-                    ngTableEventsChannel['on' + event](function (params: INgTableParams<any>, ...args: any[]) {
+                    ngTableEventsChannel['on' + event](function (params: NgTableParams<any>, ...args: any[]) {
                         actualPublisher = params;
                         actualEventArgs = args;
                     });

@@ -1,23 +1,23 @@
-import { IFilterConfig, IFilterConfigProvider, default as browserModule } from '../src/browser';
+import { NgTableFilterConfig, NgTableFilterConfigProvider, ngTableBrowserModule } from '../src/browser';
 import * as ng1 from 'angular';
 
 describe('ngTableFilterConfig', () => {
-    let ngTableFilterConfig: IFilterConfig,
-        ngTableFilterConfigProvider: IFilterConfigProvider;
+    let ngTableFilterConfig: NgTableFilterConfig,
+        ngTableFilterConfigProvider: NgTableFilterConfigProvider;
 
-    beforeAll(() => expect(browserModule).toBeDefined());
+    beforeAll(() => expect(ngTableBrowserModule).toBeDefined());
     beforeEach(ng1.mock.module("ngTable-browser"));
     beforeEach(() => {
-        ng1.mock.module((_ngTableFilterConfigProvider_: IFilterConfigProvider) => {
+        ng1.mock.module((_ngTableFilterConfigProvider_: NgTableFilterConfigProvider) => {
             ngTableFilterConfigProvider = _ngTableFilterConfigProvider_;
             ngTableFilterConfigProvider.resetConfigs();
-
         });
     });
 
-    beforeEach(inject((_ngTableFilterConfig_: IFilterConfig) => {
+    beforeEach(inject((_ngTableFilterConfig_: NgTableFilterConfig) => {
         ngTableFilterConfig = _ngTableFilterConfig_;
     }));
+
 
     describe('setConfig', () => {
 
@@ -28,6 +28,7 @@ describe('ngTableFilterConfig', () => {
                     'text': 'custom/url/custom-text.html'
                 }
             });
+            ngTableFilterConfig = ngTableFilterConfigProvider.$get();
             expect(ngTableFilterConfig.config.aliasUrls['text']).toBe('custom/url/custom-text.html');
         });
 
@@ -44,6 +45,7 @@ describe('ngTableFilterConfig', () => {
                 }
             });
 
+            ngTableFilterConfig = ngTableFilterConfigProvider.$get();
             expect(ngTableFilterConfig.config.aliasUrls['text']).toBe('custom/url/text.html');
             expect(ngTableFilterConfig.config.aliasUrls['number']).toBe('custom/url/custom-number.html');
         });
@@ -53,14 +55,17 @@ describe('ngTableFilterConfig', () => {
 
         it('explicit url supplied', () => {
             let explicitUrl = 'path/to/my-template.html';
+            ngTableFilterConfig = ngTableFilterConfigProvider.$get();
             expect(ngTableFilterConfig.getTemplateUrl(explicitUrl)).toBe(explicitUrl);
         });
 
         it('inbuilt alias supplied', () => {
+            ngTableFilterConfig = ngTableFilterConfigProvider.$get();
             expect(ngTableFilterConfig.getTemplateUrl('text')).toBe('ng-table/filters/text.html');
         });
 
         it('custom alias supplied', () => {
+            ngTableFilterConfig = ngTableFilterConfigProvider.$get();
             expect(ngTableFilterConfig.getTemplateUrl('my-template')).toBe('ng-table/filters/my-template.html');
         });
 
@@ -70,6 +75,7 @@ describe('ngTableFilterConfig', () => {
                     'my-template': 'custom/url/my-template.html'
                 }
             });
+            ngTableFilterConfig = ngTableFilterConfigProvider.$get();
             expect(ngTableFilterConfig.getTemplateUrl('my-template')).toBe('custom/url/my-template.html');
         });
 
@@ -79,6 +85,7 @@ describe('ngTableFilterConfig', () => {
                     'text': 'custom/url/custom-text.html'
                 }
             });
+            ngTableFilterConfig = ngTableFilterConfigProvider.$get();
             expect(ngTableFilterConfig.getTemplateUrl('text')).toBe('custom/url/custom-text.html');
         });
     });

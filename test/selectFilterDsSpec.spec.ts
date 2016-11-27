@@ -1,6 +1,6 @@
 import { ICompileService, IScope, ITimeoutService } from 'angular';
 import * as ng1 from 'angular';
-import { SelectData, ISelectOption, default as browserModule } from '../src/browser';
+import { SelectData, ISelectOption, ngTableBrowserModule } from '../src/browser';
 
 describe('ngTableSelectFilterDs directive', () => {
 
@@ -17,7 +17,7 @@ describe('ngTableSelectFilterDs directive', () => {
         elem: string,
         $compile: ICompileService;
 
-    beforeAll(() => expect(browserModule).toBeDefined());
+    beforeAll(() => expect(ngTableBrowserModule).toBeDefined());
     beforeEach(ng1.mock.module('ngTable-browser'));
 
     beforeEach(inject(($rootScope: ITableScope, _$compile_: ICompileService) => {

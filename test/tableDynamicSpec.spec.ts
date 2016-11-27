@@ -1,7 +1,7 @@
 import { IAugmentedJQuery, ICompileService, IQService, IScope } from 'angular';
 import * as ng1 from 'angular';
-import { ngTable } from '../index';
-import { INgTableParams, ITableParamsConstructor } from '../src/core';
+import { ngTableModule } from '../index';
+import { NgTableParams } from '../src/core';
 import { ColumnFieldContext, DynamicTableColField, IDynamicTableColDef, IFilterTemplateDefMap, ISelectOption } from '../src/browser';
 
 describe('ng-table-dynamic', () => {
@@ -20,7 +20,7 @@ describe('ng-table-dynamic', () => {
 }
 
     interface ICustomizedScope extends IScope {
-        tableParams: INgTableParams<IPerson>;
+        tableParams: NgTableParams<IPerson>;
         cols: IExtendedDynamicTableColDef[];
     }
 
@@ -44,7 +44,7 @@ describe('ng-table-dynamic', () => {
         { id: 17, name: "Enos", age: 34, money: -100 }
     ];
 
-    beforeAll(() => expect(ngTable).toBeDefined());
+    beforeAll(() => expect(ngTableModule).toBeDefined());
     beforeEach(ng1.mock.module('ngTable'));
 
     var scope: ICustomizedScope;
@@ -54,7 +54,7 @@ describe('ng-table-dynamic', () => {
 
     describe('basics', () => {
         var elm: IAugmentedJQuery;
-        beforeEach(inject(function ($compile: ICompileService, $q: IQService, NgTableParams: ITableParamsConstructor<any>) {
+        beforeEach(inject(function ($compile: ICompileService, $q: IQService) {
             elm = ng1.element(
                 '<div>' +
                 '<table ng-table-dynamic="tableParams with cols">' +
@@ -80,7 +80,7 @@ describe('ng-table-dynamic', () => {
                 return $q.when(selectOptions);
             }
 
-            scope.tableParams = new NgTableParams({}, {});
+            scope.tableParams = new NgTableParams<IPerson>({}, {});
             scope.cols = [
                 {
                     'class': getCustomClass,
@@ -166,7 +166,7 @@ describe('ng-table-dynamic', () => {
             expect(ng1.element(titles[2]).attr('title').trim()).toBe('Sort by Money');
         });
 
-        it('should show data-title-text', inject(function (NgTableParams: ITableParamsConstructor<IPerson>) {
+        it('should show data-title-text', () => {
             var tbody = elm.find('tbody');
 
             scope.tableParams = new NgTableParams({
@@ -188,9 +188,9 @@ describe('ng-table-dynamic', () => {
             expect(ng1.element(dataCells[0]).attr('data-title-text').trim()).toBe('Name of person');
             expect(ng1.element(dataCells[1]).attr('data-title-text').trim()).toBe('Age');
             expect(ng1.element(dataCells[2]).attr('data-title-text').trim()).toBe('Money');
-        }));
+        });
 
-        it('should show/hide columns', inject(function (NgTableParams: ITableParamsConstructor<IPerson>) {
+        it('should show/hide columns', () => {
             var tbody = elm.find('tbody');
 
             scope.tableParams = new NgTableParams({
@@ -219,11 +219,11 @@ describe('ng-table-dynamic', () => {
             expect(ng1.element(headerRow.find('th')[1]).text().trim()).toBe('Money');
             expect(ng1.element(filterRow.find('th')[0]).find('input').length).toBe(0);
             expect(ng1.element(filterRow.find('th')[1]).find('select').length).toBe(1);
-        }));
+        });
     });
     describe('changing column list', () => {
         var elm: IAugmentedJQuery;
-        beforeEach(inject(function ($compile: ICompileService, $q: IQService, NgTableParams: ITableParamsConstructor<IPerson>) {
+        beforeEach(inject(function ($compile: ICompileService, $q: IQService) {
             elm = ng1.element(
                 '<div>' +
                 '<table ng-table-dynamic="tableParams with cols">' +
@@ -250,7 +250,7 @@ describe('ng-table-dynamic', () => {
                 return def;
             }
 
-            scope.tableParams = new NgTableParams({}, {});
+            scope.tableParams = new NgTableParams<IPerson>({}, {});
             scope.cols = [
                 {
                     'class': getCustomClass,
@@ -346,7 +346,7 @@ describe('ng-table-dynamic', () => {
     describe('title-alt', () => {
 
         var elm: IAugmentedJQuery;
-        beforeEach(inject(function ($compile: ICompileService, NgTableParams: ITableParamsConstructor<IPerson>) {
+        beforeEach(inject(function ($compile: ICompileService) {
             elm = ng1.element(
                 '<table ng-table-dynamic="tableParams with cols">' +
                 '<tr ng-repeat="user in $data">' +
@@ -389,7 +389,7 @@ describe('ng-table-dynamic', () => {
     describe('filters', () => {
 
         var elm: IAugmentedJQuery;
-        beforeEach(inject(function ($compile: ICompileService, NgTableParams: ITableParamsConstructor<IPerson>) {
+        beforeEach(inject(function ($compile: ICompileService) {
             elm = ng1.element(
                 '<table ng-table-dynamic="tableParams with cols">' +
                 '<tr ng-repeat="user in $data">' +
@@ -400,11 +400,11 @@ describe('ng-table-dynamic', () => {
 
         describe('filter specified as alias', () => {
 
-            beforeEach(inject(function ($compile: ICompileService, NgTableParams: ITableParamsConstructor<IPerson>) {
+            beforeEach(inject(function ($compile: ICompileService) {
                 scope.cols = [
                     { field: 'name', filter: { username: 'text' } }
                 ];
-                scope.tableParams = new NgTableParams({}, {});
+                scope.tableParams = new NgTableParams<IPerson>({}, {});
                 $compile(elm)(scope);
                 scope.$digest();
             }));
@@ -436,7 +436,7 @@ describe('ng-table-dynamic', () => {
 
         describe('select filter', () => {
 
-            beforeEach(inject(function ($compile: ICompileService, $q: IQService, NgTableParams: ITableParamsConstructor<IPerson>) {
+            beforeEach(inject(function ($compile: ICompileService, $q: IQService) {
                 scope.cols = [{
                     field: 'name',
                     filter: { username: 'select' },
@@ -450,7 +450,7 @@ describe('ng-table-dynamic', () => {
                         filter: { username3: 'select' },
                         filterData: getNamesAsArray
                     }];
-                scope.tableParams = new NgTableParams({}, {});
+                scope.tableParams = new NgTableParams<IPerson>({}, {});
                 $compile(elm)(scope);
                 scope.$digest();
 
@@ -538,11 +538,11 @@ describe('ng-table-dynamic', () => {
 
         describe('multiple filter inputs', () => {
 
-            beforeEach(inject(function ($compile: ICompileService, NgTableParams: ITableParamsConstructor<IPerson>) {
+            beforeEach(inject(function ($compile: ICompileService) {
                 scope.cols = [
                     { field: 'name', filter: { name: 'text', age: 'text' } }
                 ];
-                scope.tableParams = new NgTableParams({}, {});
+                scope.tableParams = new NgTableParams<IPerson>({}, {});
                 $compile(elm)(scope);
                 scope.$digest();
             }));
@@ -570,7 +570,7 @@ describe('ng-table-dynamic', () => {
         describe('dynamic filter', () => {
 
             var ageFilter: IFilterTemplateDefMap;
-            beforeEach(inject(function ($compile: ICompileService, NgTableParams: ITableParamsConstructor<IPerson>) {
+            beforeEach(inject(function ($compile: ICompileService) {
 
                 ageFilter = { age: 'text' };
                 function getFilter(paramsScope: ColumnFieldContext): IFilterTemplateDefMap {
@@ -587,7 +587,7 @@ describe('ng-table-dynamic', () => {
                     { field: 'name', title: 'Name of user', filter: getFilter },
                     { field: 'age', title: 'Age', filter: getFilter }
                 ];
-                scope.tableParams = new NgTableParams({}, {});
+                scope.tableParams = new NgTableParams<IPerson>({}, {});
 
                 $compile(elm)(scope);
                 scope.$digest();
@@ -641,7 +641,7 @@ describe('ng-table-dynamic', () => {
             return ng1.element(titles).text().trim().split(/\s+/g)
         };
 
-        beforeEach(inject(function ($compile: ICompileService, $q: IQService, NgTableParams: ITableParamsConstructor<IPerson>) {
+        beforeEach(inject(function ($compile: ICompileService, $q: IQService) {
             elm = ng1.element(
                 '<div>' +
                 '<table ng-table-dynamic="tableParams with cols">' +
@@ -651,7 +651,7 @@ describe('ng-table-dynamic', () => {
                 '</table>' +
                 '</div>');
 
-            scope.tableParams = new NgTableParams({}, {});
+            scope.tableParams = new NgTableParams<IPerson>({}, {});
             scope.cols = [
                 {
                     field: 'name',

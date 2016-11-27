@@ -6,17 +6,17 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-import { 
-    IAttributes, IAugmentedJQuery, ICompileService, IDocumentService, IParseService, IPromise, IScope, 
-    ITimeoutService 
+import {
+    IAttributes, IAugmentedJQuery, ICompileService, IDocumentService, IParseService, IPromise, IScope,
+    ITimeoutService
 } from 'angular';
 import * as ng1 from 'angular';
-import { 
-    DataResult, DataResults, IDataRowGroup, GroupedDataResults, INgTableParams, IEventsChannel, 
-    IPageButton, ITableParamsConstructor 
+import {
+    DataResult, DataResults, IDataRowGroup, GroupedDataResults, NgTableParams, NgTableEventsChannel,
+    IPageButton
 } from '../core';
 import { IColumnDef, IDynamicTableColDef, SelectData, ITableInputAttributes } from './public-interfaces';
-import { IColumnBuilder } from './ngTableColumn';
+import { NgTableColumn } from './ngTableColumn';
 
 /**
  * @private
@@ -38,54 +38,84 @@ export interface ITableScope<T> extends IScope {
         header: string;
         pagination: string;
     },
-    params: INgTableParams<T>
+    params: NgTableParams<T>
 }
-
-ngTableController.$inject = [
-    '$scope', 'NgTableParams', '$timeout', '$parse', '$compile', '$attrs', '$element', '$document', 'ngTableColumn', 'ngTableEventsChannel'
-];
 
 /**
  * The controller for the {@link ngTable ngTable} and {@link ngTableDynamic ngTableDynamic} directives
  */
-export function ngTableController<T>(
-    $scope: ITableScope<T>, NgTableParams: ITableParamsConstructor<T>, $timeout: ITimeoutService, $parse: IParseService,
-    $compile: ICompileService, $attrs: IAttributes & ITableInputAttributes, $element: IAugmentedJQuery, $document: IDocumentService,
-    ngTableColumn: IColumnBuilder, ngTableEventsChannel: IEventsChannel) {
-    var isFirstTimeLoad = true;
-    $scope.$filterRow = { disabled: false };
-    $scope.$loading = false;
+export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableColDef> {
+    static $inject = [
+        '$scope', '$timeout', '$parse', '$compile', '$attrs', '$element', '$document', 'ngTableColumn', 'ngTableEventsChannel'
+    ];
+    private delayFilter: (callback: () => void, ms: number) => void;
+    private get hasVisibleFilterColumn() {
+        if (!this.$scope.$columns) return false;
 
-    // until such times as the directive uses an isolated scope, we need to ensure that the check for
-    // the params field only consults the "own properties" of the $scope. This is to avoid seeing the params
-    // field on a $scope higher up in the prototype chain
-    if (!$scope.hasOwnProperty("params")) {
-        $scope.params = new NgTableParams(true);
+        return this.some(this.$scope.$columns, ($column) => {
+            return $column.show(this.$scope) && !!$column.filter(this.$scope);
+        });
+    }
+    constructor(
+        private $scope: ITableScope<TParams>,
+        $timeout: ITimeoutService,
+        private $parse: IParseService,
+        private $compile: ICompileService,
+        private $attrs: IAttributes & ITableInputAttributes,
+        private $element: IAugmentedJQuery,
+        private $document: IDocumentService,
+        private ngTableColumn: NgTableColumn<TCol>,
+        private ngTableEventsChannel: NgTableEventsChannel) {
+
+        var isFirstTimeLoad = true;
+        $scope.$filterRow = { disabled: false };
+        $scope.$loading = false;
+
+        // until such times as the directive uses an isolated scope, we need to ensure that the check for
+        // the params field only consults the "own properties" of the $scope. This is to avoid seeing the params
+        // field on a $scope higher up in the prototype chain
+        if (!$scope.hasOwnProperty("params")) {
+            $scope.params = new NgTableParams<TParams>(true);
+        }
+
+        this.delayFilter = (function () {
+            var timer: IPromise<any>;
+            return (callback: () => void, ms: number) => {
+                $timeout.cancel(timer);
+                timer = $timeout(callback, ms);
+            };
+        })();
+
+        // watch for when a new NgTableParams is bound to the scope
+        // CRITICAL: the watch must be for reference and NOT value equality; this is because NgTableParams maintains
+        // the current data page as a field. Checking this for value equality would be terrible for performance
+        // and potentially cause an error if the items in that array has circular references
+        this.$scope.$watch<NgTableParams<TParams>>('params', (newParams, oldParams) => {
+            if (newParams === oldParams || !newParams) {
+                return;
+            }
+
+            newParams.reload();
+        }, false);
+
+        this.subscribeToTableEvents();
     }
 
-    var delayFilter = (function () {
-        var timer: IPromise<any>;
-        return function (callback: (...args: any[]) => void, ms: number) {
-            $timeout.cancel(timer);
-            timer = $timeout(callback, ms);
-        };
-    })();
-
-    function onDataReloadStatusChange(newStatus: boolean/*, oldStatus*/) {
-        if (!newStatus || $scope.params.hasErrorState()) {
+    private onDataReloadStatusChange(newStatus: boolean/*, oldStatus*/) {
+        if (!newStatus || this.$scope.params.hasErrorState()) {
             return;
         }
 
-        var currentParams = $scope.params;
+        var currentParams = this.$scope.params;
         var filterOptions = currentParams.settings().filterOptions;
 
         if (currentParams.hasFilterChanges()) {
-            var applyFilter = function () {
+            var applyFilter = () => {
                 currentParams.page(1);
                 currentParams.reload();
             };
             if (filterOptions.filterDelay) {
-                delayFilter(applyFilter, filterOptions.filterDelay);
+                this.delayFilter(applyFilter, filterOptions.filterDelay);
             } else {
                 applyFilter();
             }
@@ -94,55 +124,41 @@ export function ngTableController<T>(
         }
     }
 
-    // watch for when a new NgTableParams is bound to the scope
-    // CRITICAL: the watch must be for reference and NOT value equality; this is because NgTableParams maintains
-    // the current data page as a field. Checking this for value equality would be terrible for performance
-    // and potentially cause an error if the items in that array has circular references
-    $scope.$watch<INgTableParams<T>>('params', (newParams, oldParams) => {
-        if (newParams === oldParams || !newParams) {
-            return;
-        }
-
-        newParams.reload();
-    }, false);
-
-    $scope.$watch('params.isDataReloadRequired()', onDataReloadStatusChange);
-
-    this.compileDirectiveTemplates = function () {
-        if (!$element.hasClass('ng-table')) {
-            $scope.templates = {
-                header: ($attrs.templateHeader ? $attrs.templateHeader : 'ng-table/header.html'),
-                pagination: ($attrs.templatePagination ? $attrs.templatePagination : 'ng-table/pager.html')
+    compileDirectiveTemplates() {
+        if (!this.$element.hasClass('ng-table')) {
+            this.$scope.templates = {
+                header: (this.$attrs.templateHeader ? this.$attrs.templateHeader : 'ng-table/header.html'),
+                pagination: (this.$attrs.templatePagination ? this.$attrs.templatePagination : 'ng-table/pager.html')
             };
-            $element.addClass('ng-table');
+            this.$element.addClass('ng-table');
             var headerTemplate: IAugmentedJQuery = null;
 
             // $element.find('> thead').length === 0 doesn't work on jqlite
             var theadFound = false;
-            ng1.forEach($element.children(), function (e) {
+            ng1.forEach(this.$element.children(), (e) => {
                 if (e.tagName === 'THEAD') {
                     theadFound = true;
                 }
             });
             if (!theadFound) {
-                headerTemplate = ng1.element('<thead ng-include="templates.header"></thead>', $document);
-                $element.prepend(headerTemplate);
+                headerTemplate = ng1.element('<thead ng-include="templates.header"></thead>', this.$document);
+                this.$element.prepend(headerTemplate);
             }
             var paginationTemplate = ng1.element(
                 '<div ng-table-pagination="params" template-url="templates.pagination"></div>',
-                $document
+                this.$document
             );
-            $element.after(paginationTemplate);
+            this.$element.after(paginationTemplate);
             if (headerTemplate) {
-                $compile(headerTemplate)($scope);
+                this.$compile(headerTemplate)(this.$scope);
             }
-            $compile(paginationTemplate)($scope);
+            this.$compile(paginationTemplate)(this.$scope);
         }
-    };
+    }
 
-    this.loadFilterData = function ($columns: IColumnDef[]) {
-        ng1.forEach($columns, function ($column) {
-            var result = $column.filterData($scope);
+    loadFilterData($columns: IColumnDef[]) {
+        ng1.forEach($columns, ($column) => {
+            var result = $column.filterData(this.$scope);
             if (!result) {
                 delete $column.filterData;
                 return undefined;
@@ -168,17 +184,18 @@ export function ngTableController<T>(
         function isPromiseLike(val: any): val is IPromise<SelectData> {
             return val && typeof val === 'object' && typeof val.then === 'function';
         }
-    };
+    }
 
-    this.buildColumns = function (columns: Array<IColumnDef | IDynamicTableColDef>) {
-        var result: Array<IColumnDef | IDynamicTableColDef> = [];
-        (columns || []).forEach(function (col) {
-            result.push(ngTableColumn.buildColumn(col, $scope, result));
+    buildColumns(columns: TCol[]): IColumnDef[] {
+        // todo: use strictNullChecks and remove guard clause
+        var result: IColumnDef[] = [];
+        (columns || []).forEach(col => {
+            result.push(this.ngTableColumn.buildColumn(col, this.$scope, result));
         });
         return result
-    };
+    }
 
-    this.parseNgTableDynamicExpr = function (attr: string) {
+    parseNgTableDynamicExpr(attr: string) {
         if (!attr || attr.indexOf(" with ") > -1) {
             var parts = attr.split(/\s+with\s+/);
             return {
@@ -188,79 +205,101 @@ export function ngTableController<T>(
         } else {
             throw new Error('Parse error (expected example: ng-table-dynamic=\'tableParams with cols\')');
         }
-    };
+    }
 
-    this.setupBindingsToInternalScope = function (tableParamsExpr: string) {
+    setupBindingsToInternalScope(tableParamsExpr: string) {
 
         // note: this we're setting up watches to simulate angular's isolated scope bindings
 
         // note: is REALLY important to watch for a change to the ngTableParams *reference* rather than
         // $watch for value equivalence. This is because ngTableParams references the current page of data as
         // a field and it's important not to watch this
-        $scope.$watch<INgTableParams<T>>(tableParamsExpr, function (params) {
+        this.$scope.$watch<NgTableParams<TParams>>(tableParamsExpr, (params) => {
             if (params === undefined) {
                 return;
             }
-            $scope.params = params;
+            this.$scope.params = params;
         }, false);
 
-        setupFilterRowBindingsToInternalScope();
-        setupGroupRowBindingsToInternalScope();
-    };
+        this.setupFilterRowBindingsToInternalScope();
+        this.setupGroupRowBindingsToInternalScope();
+    }
 
-    function setupFilterRowBindingsToInternalScope() {
-        if ($attrs.showFilter) {
-            $scope.$parent.$watch<boolean>($attrs.showFilter, function (value) {
-                $scope.show_filter = value;
+    private setupFilterRowBindingsToInternalScope() {
+        if (this.$attrs.showFilter) {
+            this.$scope.$parent.$watch<boolean>(this.$attrs.showFilter, (value) => {
+                this.$scope.show_filter = value;
             });
         } else {
-            $scope.$watch(hasVisibleFilterColumn, function (value) {
-                $scope.show_filter = value;
+            this.$scope.$watch(() => this.hasVisibleFilterColumn, (value) => {
+                this.$scope.show_filter = value;
             })
         }
 
-        if ($attrs.disableFilter) {
-            $scope.$parent.$watch<boolean>($attrs.disableFilter, function (value) {
-                $scope.$filterRow.disabled = value;
+        if (this.$attrs.disableFilter) {
+            this.$scope.$parent.$watch<boolean>(this.$attrs.disableFilter, (value) => {
+                this.$scope.$filterRow.disabled = value;
             });
         }
     }
 
-    function setupGroupRowBindingsToInternalScope() {
-        $scope.$groupRow = { show: false };
-        if ($attrs.showGroup) {
-            var showGroupGetter = $parse($attrs.showGroup);
-            $scope.$parent.$watch<boolean>(showGroupGetter, function (value) {
-                $scope.$groupRow.show = value;
+    private setupGroupRowBindingsToInternalScope() {
+        this.$scope.$groupRow = { show: false };
+        if (this.$attrs.showGroup) {
+            var showGroupGetter = this.$parse(this.$attrs.showGroup);
+            this.$scope.$parent.$watch<boolean>(showGroupGetter, (value) => {
+                this.$scope.$groupRow.show = value;
             });
             if (showGroupGetter.assign) {
                 // setup two-way databinding thus allowing ngTableGrowRow to assign to the showGroup expression
-                $scope.$watch<boolean>('$groupRow.show', function (value) {
-                    showGroupGetter.assign($scope.$parent, value);
+                this.$scope.$watch<boolean>('$groupRow.show', (value) => {
+                    showGroupGetter.assign(this.$scope.$parent, value);
                 });
             }
         } else {
-            $scope.$watch<boolean>('params.hasGroup()', function (newValue) {
-                $scope.$groupRow.show = newValue;
+            this.$scope.$watch<boolean>('params.hasGroup()', (newValue) => {
+                this.$scope.$groupRow.show = newValue;
             });
         }
     }
 
-    function getVisibleColumns() {
-        return ($scope.$columns || []).filter(function (c) {
-            return c.show($scope);
+    private getVisibleColumns() {
+        return (this.$scope.$columns || []).filter((c) => {
+            return c.show(this.$scope);
         });
     }
 
-    function hasVisibleFilterColumn() {
-        if (!$scope.$columns) return false;
+    private subscribeToTableEvents() {
 
-        return some($scope.$columns, function ($column) {
-            return $column.show($scope) && !!$column.filter($scope);
+        this.$scope.$watch('params.isDataReloadRequired()', (newStatus: boolean/*, oldStatus*/) => {
+            this.onDataReloadStatusChange(newStatus);
         });
+
+        this.ngTableEventsChannel.onAfterReloadData<TParams>(
+            (params, newDatapage) => {
+                var visibleColumns = this.getVisibleColumns();
+                if (params.hasGroup()) {
+                    this.$scope.$groups = (newDatapage || []) as GroupedDataResults<TParams>;
+                    this.$scope.$groups.visibleColumnCount = visibleColumns.length;
+                } else {
+                    this.$scope.$data = (newDatapage || []) as DataResults<TParams>;
+                    this.$scope.$data.visibleColumnCount = visibleColumns.length;
+                }
+            },
+            this.$scope,
+            (publisher) => this.$scope.params === publisher
+        );
+
+        this.ngTableEventsChannel.onPagesChanged<TParams>(
+            (params, newPages) => {
+                this.$scope.pages = newPages;
+            },
+            this.$scope,
+            (publisher) => this.$scope.params === publisher
+        );
     }
 
-    function some<T>(array: T[], predicate: (item: T) => boolean) {
+    private some<T>(array: T[], predicate: (item: T) => boolean) {
         var found = false;
         for (var i = 0; i < array.length; i++) {
             var obj = array[i];
@@ -271,31 +310,4 @@ export function ngTableController<T>(
         }
         return found;
     }
-
-    function commonInit() {
-        ngTableEventsChannel.onAfterReloadData<T>(
-            (params, newDatapage) => {
-                var visibleColumns = getVisibleColumns();
-                if (params.hasGroup()) {
-                    $scope.$groups = (newDatapage || []) as GroupedDataResults<T>;
-                    $scope.$groups.visibleColumnCount = visibleColumns.length;
-                } else {
-                    $scope.$data = (newDatapage || []) as DataResults<T>;
-                    $scope.$data.visibleColumnCount = visibleColumns.length;
-                }
-            },
-            $scope,
-            (publisher) => $scope.params === publisher
-        );
-
-        ngTableEventsChannel.onPagesChanged<T>(
-            (params, newPages) => {
-                $scope.pages = newPages;
-            },
-            $scope,
-            (publisher) => $scope.params === publisher
-        );
-    }
-
-    commonInit();
 }

@@ -25,7 +25,7 @@ export function ngTableGroupRow(){
         templateUrl: templateUrl,
         scope: true,
         controller: 'ngTableGroupRowController',
-        controllerAs: 'dctrl'
+        controllerAs: '$ctrl'
     };
     return directive;
 }

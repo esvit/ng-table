@@ -1,4 +1,7 @@
-import 'ng-table';
+// todo: find out why this causes webpack to create a bundle that throws the error:
+// `Cannot redefine property: NgTableParams`
+
+// import { NgTableParams } from 'ng-table';
 
 const templateUrl = require('./my-table.component.html');
 

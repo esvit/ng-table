@@ -24,7 +24,8 @@ export function ngTableFilterRow(){
         replace: true,
         templateUrl: templateUrl,
         scope: true,
-        controller: 'ngTableFilterRowController'
+        controller: 'ngTableFilterRowController',
+        controllerAs: '$ctrl'
     };
     return directive;
 }
