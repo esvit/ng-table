@@ -15,6 +15,8 @@ function createAppParts(rootDir, env = {}) {
     };
 
     const isDevServer = process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
+    const loadCssWithSourceMaps = ['css-loader?sourceMap', 'resolve-url-loader', 'sass-loader?sourceMap'];
+    const loadCss = ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap'];
 
     return Object.assign({}, commonParts, {
         asAppBundle,
@@ -117,7 +119,7 @@ function createAppParts(rootDir, env = {}) {
                 rules: [
                     {
                         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-                        loader: `url?limit=${sizeLimit}&name=[path][name]-[hash].[ext]`
+                        loader: `url-loader?limit=${sizeLimit}&name=[path][name]-[hash].[ext]`
                     }
                 ]
             }
@@ -130,7 +132,7 @@ function createAppParts(rootDir, env = {}) {
                 rules: [
                     {
                         test: /\.html$/,
-                        loaders: ['ngtemplate?requireAngular&relativeTo=/src/&prefix=demo-app/', 'html'],
+                        loaders: ['ngtemplate-loader?requireAngular&relativeTo=/src/&prefix=demo-app/', 'html-loader'],
                         include: [
                             path.resolve(rootDir, 'src')
                         ],
@@ -147,7 +149,7 @@ function createAppParts(rootDir, env = {}) {
                 rules: [
                     {
                         test: /ng-table[\/\\]src[\/\\].*\.html$/,
-                        loaders: ['ngtemplate?requireAngular&relativeTo=/src/browser/&prefix=ng-table/', 'html']
+                        loaders: ['ngtemplate-loader?requireAngular&relativeTo=/src/browser/&prefix=ng-table/', 'html-loader']
                     }
                 ]
             }
@@ -169,13 +171,13 @@ function createAppParts(rootDir, env = {}) {
 
     function _extractSass(files) {
         const extractor = new ExtractTextPlugin('[name].[chunkhash].css');
-        let loader;
+        let loaders;
         if (env.debug || env.prod) {
             // note: we CAN use source maps for *extracted* css files in a deployed website without 
             // suffering from the problem of image urls not resolving to the correct path
-            loader = 'css?sourceMap!resolve-url!sass?sourceMap';
+            loaders = loadCssWithSourceMaps;
         } else {
-            loader = 'css!resolve-url!sass?sourceMap';
+            loaders = loadCss;
         }
         return {
             module: {
@@ -183,8 +185,8 @@ function createAppParts(rootDir, env = {}) {
                     {
                         test: /\.scss$/,
                         loader: extractor.extract({
-                            fallbackLoader: 'style',
-                            loader: loader
+                            fallbackLoader: 'style-loader',
+                            loader: loaders
                         }),
                         include: files
                     }
@@ -201,19 +203,19 @@ function createAppParts(rootDir, env = {}) {
         // note: would like to use sourcemaps in a deployed website (ie outside of dev-server)
         // but these do not work with relative paths (see the configuration of ouput options 
         // in this file for more details)
-        let loader;
+        let loaders;
         if ((env.debug || env.prod) && isDevServer) {
-            loader = 'style!css?sourceMap!resolve-url!sass?sourceMap';
+            loaders = ['style-loader', ...loadCssWithSourceMaps];
         } else {
             // note: the 
-            loader = 'style!css!resolve-url!sass?sourceMap';
+            loaders = ['style-loader', ...loadCss];
         }
         return {
             module: {
                 rules: [
                     {
                         test: /\.scss$/,
-                        loader: loader,
+                        loaders: loaders,
                         exclude: [...excludeFiles]
                     }
                 ]
