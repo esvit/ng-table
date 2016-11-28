@@ -38,8 +38,8 @@ export class NgTableFilterRowController {
             return 's12';
         }
 
-        var size = Object.keys(filter).length;
-        var width = parseInt((12 / size).toString(), 10);
+        const size = Object.keys(filter).length;
+        const width = parseInt((12 / size).toString(), 10);
         return 's' + width;
     }
 

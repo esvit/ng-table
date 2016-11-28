@@ -1,6 +1,8 @@
 import { FilterComparator } from './filterComparator';
 import { IFilterFunc } from './filterFunc';
 
+export type FilterLayout = 'stack' | 'horizontal';
+
 export interface IFilterSettings<T> {
     /**
      * Use this to determine how items are matched against the filter values.
@@ -36,9 +38,6 @@ export interface IFilterSettings<T> {
     filterFn?: IFilterFunc<T>;
     /**
      * The layout to use when multiple html templates are to rendered in a single table header column.
-     * Available values:
-     * - stack (the default)
-     * - horizontal
      */
-    filterLayout?: string
+    filterLayout?: FilterLayout
 }

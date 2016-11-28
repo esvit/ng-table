@@ -5,7 +5,7 @@ var debug = process.env.npm_lifecycle_event === 'test:debug'
 const webpackConfig = require('./webpack.config')({ test: true, noCoverage: debug });
 
 module.exports = function (config) {
-    let reporters = ['dots', 'spec'];
+    let reporters = ['jasmine-diff', 'dots', 'spec'];
     if (!debug) {
         reporters.push('coverage');
     }

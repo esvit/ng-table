@@ -4,6 +4,7 @@ import { IDefaults } from './ngTableDefaults';
 import { IDataRowGroup, IDataSettings, IDefaultGetData, IGetDataFunc, IInterceptor, IInterceptableGetDataFunc } from './data';
 import { IFilterValues, IFilterSettings } from './filtering';
 import { IGetGroupFunc, IGroupSettings } from './grouping';
+import { SortDirection } from './sorting';
 import { NgTableParams } from './ngTableParams';
 
 /**
@@ -31,7 +32,7 @@ export interface ISettings<T> {
      * The default sort direction that will be used whenever a sorting is supplied that
      * does not define its own sort direction
      */
-    defaultSort?: string;
+    defaultSort?: SortDirection;
     filterOptions?: IFilterSettings<T>;
     groupOptions?: IGroupSettings;
     /**
@@ -93,7 +94,7 @@ export class NgTableSettings {
                 filterDelayThreshold: 10000, // size of dataset array that will trigger the filterDelay being applied
                 filterFilterName: undefined, // when defined overrides ngTableDefaultGetDataProvider.filterFilterName
                 filterFn: undefined, // when defined overrides the filter function that ngTableDefaultGetData uses
-                filterLayout: 'stack' // alternative: 'horizontal'
+                filterLayout: 'stack'
             },
             getData: (params: NgTableParams<any>) => {
                 return this.ngTableDefaultGetData(params.settings().dataset, params);

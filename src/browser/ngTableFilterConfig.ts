@@ -41,7 +41,7 @@ export class NgTableFilterConfigProvider implements IServiceProvider {
      * Set the config values used by `NgTableFilterConfig` service
      */
     setConfig(customConfig: IFilterConfigValues) {
-        var mergeConfig = ng1.extend({}, this.config, customConfig);
+        const mergeConfig = ng1.extend({}, this.config, customConfig);
         mergeConfig.aliasUrls = ng1.extend({}, this.config.aliasUrls, customConfig.aliasUrls);
         this.config = mergeConfig;
     }
@@ -72,7 +72,7 @@ export class NgTableFilterConfig {
      * For more information see the documentation for {@link IFilterTemplateMap}
      */
     getTemplateUrl(filterDef: string | IFilterTemplateDef, filterKey?: string) {
-        var filterName: string;
+        let filterName: string;
         if (typeof filterDef !== 'string') {
             filterName = filterDef.id;
         } else {
