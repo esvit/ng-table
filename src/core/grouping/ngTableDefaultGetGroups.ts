@@ -3,7 +3,7 @@ import * as ng1 from 'angular';
 import { convertSortToOrderBy, isGroupingFun } from '../util';
 import { NgTableParams,  } from '../ngTableParams';
 import { IDataRowGroup, IDefaultGetData, IGetDataFunc } from '../data';
-import { IGetGroupFunc, Grouping, IGroupingFunc } from './';
+import { IGetGroupFunc, Grouping, IGroupingFunc, GroupSort } from './';
 import { ISortingValues } from '../sorting';
 
 ngTableDefaultGetGroups.$inject = ['$q', 'ngTableDefaultGetData'];
@@ -19,30 +19,30 @@ export function ngTableDefaultGetGroups<T>($q: IQService, ngTableDefaultGetData:
 
     function getGroups(params: NgTableParams<T>) {
 
-        var group = params.group();
-        var groupFn: IGroupingFunc<T>;
-        var sortDirection: string = undefined;
+        const group = params.group();
+        let groupFn: IGroupingFunc<T>;
+        let sortDirection: GroupSort = undefined;
         if (isGroupingFun(group)) {
             groupFn = group;
             sortDirection = group.sortDirection;
         } else {
             // currently support for only one group implemented
-            var groupField = Object.keys(group)[0];
+            const groupField = Object.keys(group)[0];
             sortDirection = group[groupField];
             groupFn = item => {
                 return getPath(item, groupField);
             };
         }
 
-        var settings = params.settings();
-        var originalDataOptions = settings.dataOptions;
+        const settings = params.settings();
+        const originalDataOptions = settings.dataOptions;
         settings.dataOptions = { applyPaging: false };
         const getData: IGetDataFunc<T> = settings.getData;
-        var gotData = $q.when(getData(params));
+        const gotData = $q.when(getData(params));
         return gotData.then(data => {
-            var groups: { [name: string]: IDataRowGroup<T> } = {};
+            const groups: { [name: string]: IDataRowGroup<T> } = {};
             ng1.forEach(data, item => {
-                var groupName = groupFn(item);
+                const groupName = groupFn(item);
                 groups[groupName] = groups[groupName] || {
                     data: [],
                     $hideRows: !settings.groupOptions.isExpanded,
@@ -50,13 +50,13 @@ export function ngTableDefaultGetGroups<T>($q: IQService, ngTableDefaultGetData:
                 };
                 groups[groupName].data.push(item);
             });
-            var result: IDataRowGroup<T>[] = [];
-            for (var i in groups) {
+            let result: IDataRowGroup<T>[] = [];
+            for (const i in groups) {
                 result.push(groups[i]);
             }
             if (sortDirection) {
-                var orderByFn = ngTableDefaultGetData.getOrderByFn();
-                var orderBy = convertSortToOrderBy({
+                const orderByFn = ngTableDefaultGetData.getOrderByFn();
+                const orderBy = convertSortToOrderBy({
                     value: sortDirection
                 });
                 result = orderByFn(result, orderBy);

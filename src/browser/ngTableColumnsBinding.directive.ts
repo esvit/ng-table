@@ -33,7 +33,7 @@ ngTableColumnsBinding.$inject = ["$parse"];
  * ```
  */
 export function ngTableColumnsBinding<T>($parse: IParseService) : IDirective {
-    var directive = {
+    const directive = {
         restrict: 'A',
         require: 'ngTable',
         link: linkFn
@@ -41,10 +41,10 @@ export function ngTableColumnsBinding<T>($parse: IParseService) : IDirective {
     return directive;
 
     function linkFn($scope: ITableScope<T>, $element: IAugmentedJQuery, $attrs: IInputAttributes){
-        var setter = $parse($attrs.ngTableColumnsBinding).assign;
+        const setter = $parse($attrs.ngTableColumnsBinding).assign;
         if (setter){
-            $scope.$watch<IColumnDef[]>('$columns', function(newColumns){
-                var shallowClone = (newColumns || []).slice(0);
+            $scope.$watch<IColumnDef[]>('$columns', newColumns => {
+                const shallowClone = (newColumns || []).slice(0);
                 setter($scope, shallowClone);
             });
         }

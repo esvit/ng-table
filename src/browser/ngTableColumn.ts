@@ -22,7 +22,7 @@ function isScopeLike(object: any) {
  * Service to construct a $column definition used by {@link ngTable ngTable} directive
  */
 export class NgTableColumn<TCol extends IColumnDef | IDynamicTableColDef> {
-    static $inject : string[] = [];
+    static $inject: string[] = [];
 
     /**
      * Creates a $column for use within a header template
@@ -34,9 +34,9 @@ export class NgTableColumn<TCol extends IColumnDef | IDynamicTableColDef> {
      */
     buildColumn(column: TCol, defaultScope: IScope, columns: IColumnDef[]): IColumnDef {
         // note: we're not modifying the original column object. This helps to avoid unintended side affects
-        var extendedCol = Object.create(column);
-        var defaults = this.createDefaults();
-        for (var prop in defaults) {
+        const extendedCol = Object.create(column);
+        const defaults = this.createDefaults();
+        for (const prop in defaults) {
             if (extendedCol[prop] === undefined) {
                 extendedCol[prop] = defaults[prop];
             }
@@ -45,40 +45,36 @@ export class NgTableColumn<TCol extends IColumnDef | IDynamicTableColDef> {
                 // - this is to ensure consistency with how ngTable.compile builds columns
                 // - note that the original column object is being "proxied"; this is important
                 //   as it ensure that any changes to the original object will be returned by the "getter"
-                (function (prop1: string) {
-                    var getterSetter = function getterSetter(/*[value] || [$scope, locals]*/) {
-                        if (arguments.length === 1 && !isScopeLike(arguments[0])) {
-                            (getterSetter as any).assign(null, arguments[0]);
-                        } else {
-                            return column[prop1];
-                        }
-                    };
-                    (getterSetter as any).assign = function ($scope: IScope, value: any) {
-                        column[prop1] = value;
-                    };
-                    extendedCol[prop1] = getterSetter;
-                })(prop);
-            }
-            (function (prop1: string) {
-                // satisfy the arguments expected by the function returned by parsedAttribute in the ngTable directive
-                var getterFn = extendedCol[prop1];
-                extendedCol[prop1] = function () {
+                const getterSetter = function getterSetter(/*[value] || [$scope, locals]*/) {
                     if (arguments.length === 1 && !isScopeLike(arguments[0])) {
-                        getterFn.assign(null, arguments[0]);
+                        (getterSetter as any).assign(null, arguments[0]);
                     } else {
-                        var scope = arguments[0] || defaultScope;
-                        var context = Object.create(scope);
-                        ng1.extend(context, {
-                            $column: extendedCol,
-                            $columns: columns
-                        });
-                        return getterFn.call(column, context);
+                        return column[prop];
                     }
                 };
-                if (getterFn.assign) {
-                    extendedCol[prop1].assign = getterFn.assign;
+                (getterSetter as any).assign = function ($scope: IScope, value: any) {
+                    column[prop] = value;
+                };
+                extendedCol[prop] = getterSetter;
+            }
+            // satisfy the arguments expected by the function returned by parsedAttribute in the ngTable directive
+            const getterFn = extendedCol[prop];
+            extendedCol[prop] = function () {
+                if (arguments.length === 1 && !isScopeLike(arguments[0])) {
+                    getterFn.assign(null, arguments[0]);
+                } else {
+                    const scope = arguments[0] || defaultScope;
+                    const context = Object.create(scope);
+                    ng1.extend(context, {
+                        $column: extendedCol,
+                        $columns: columns
+                    });
+                    return getterFn.call(column, context);
                 }
-            })(prop);
+            };
+            if (getterFn.assign) {
+                extendedCol[prop].assign = getterFn.assign;
+            }
         }
         return extendedCol as IColumnDef;
     }
@@ -99,8 +95,8 @@ export class NgTableColumn<TCol extends IColumnDef | IDynamicTableColDef> {
     }
 
     private createGetterSetter(initialValue: any) {
-        var value = initialValue;
-        var getterSetter = function getterSetter(/*[value] || [$scope, locals]*/) {
+        let value = initialValue;
+        const getterSetter = function getterSetter(/*[value] || [$scope, locals]*/) {
             if (arguments.length === 1 && !isScopeLike(arguments[0])) {
                 (getterSetter as any).assign(null, arguments[0]);
             } else {

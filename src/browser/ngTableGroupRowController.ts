@@ -7,7 +7,7 @@
  */
 
 import { IPromise } from 'angular';
-import { DataResult, IGroupingFunc, Grouping } from '../core';
+import { DataResult, IGroupingFunc, Grouping, GroupSort } from '../core';
 import { IColumnDef } from './public-interfaces';
 import { ITableScope } from './ngTableController';
 
@@ -33,7 +33,7 @@ export class NgTableGroupRowController<T> {
     }
 
     getGroupables() {
-        var groupableCols = this.$scope.$columns.filter($column => !!$column.groupable(this.$scope));
+        const groupableCols = this.$scope.$columns.filter($column => !!$column.groupable(this.$scope));
         return this.groupFns.concat(groupableCols);
     }
 
@@ -75,7 +75,7 @@ export class NgTableGroupRowController<T> {
     }
 
     private changeSortDirection() {
-        var newDirection: string;
+        let newDirection: GroupSort;
         if (this.$scope.params.hasGroup(this.$scope.$selGroup, 'asc')) {
             newDirection = 'desc';
         } else if (this.$scope.params.hasGroup(this.$scope.$selGroup, 'desc')) {
@@ -95,7 +95,7 @@ export class NgTableGroupRowController<T> {
     }
 
     private setGroup(grouping: Grouping<any>) {
-        var existingGroupCol = this.findGroupColumn(this.$scope.$selGroup);
+        const existingGroupCol = this.findGroupColumn(this.$scope.$selGroup);
         if (existingGroupCol && existingGroupCol.show.assign) {
             existingGroupCol.show.assign(this.$scope, true);
         }
@@ -105,8 +105,8 @@ export class NgTableGroupRowController<T> {
             this.$scope.$selGroupTitle = grouping.title;
         } else {
             // note: currently only one group is implemented
-            var groupKey = Object.keys(grouping || {})[0];
-            var groupedColumn = this.findGroupColumn(groupKey);
+            const groupKey = Object.keys(grouping || {})[0];
+            const groupedColumn = this.findGroupColumn(groupKey);
             if (groupedColumn) {
                 this.$scope.$selGroupTitle = groupedColumn.title(this.$scope);
                 this.$scope.$selGroup = groupKey;

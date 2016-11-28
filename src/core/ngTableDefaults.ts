@@ -22,7 +22,7 @@ export interface IDefaults {
 /**
  * Default values for ngTable
  */
-export var ngTableDefaults : IDefaults = {
+export let ngTableDefaults : IDefaults = {
     params: {},
     settings: {}
 };

@@ -37,7 +37,7 @@ function ngTableSelectFilterDs(): ng1.IDirective {
     // note: not using isolated or child scope "by design"
     // this is to allow this directive to be combined with other directives that do
 
-    var directive = {
+    const directive = {
         restrict: 'A',
         controller: NgTableSelectFilterDsController
     };
@@ -72,9 +72,9 @@ export class NgTableSelectFilterDsController {
     }
 
     private hasEmptyOption(data: ISelectOption[]) {
-        var isMatch: boolean;
-        for (var i = 0; i < data.length; i++) {
-            var item = data[i];
+        let isMatch: boolean;
+        for (let i = 0; i < data.length; i++) {
+            const item = data[i];
             if (item && item.id === '') {
                 isMatch = true;
                 break;
@@ -84,7 +84,7 @@ export class NgTableSelectFilterDsController {
     }
 
     private getSelectListData($column: IColumnDef) {
-        var dataInput = $column.data;
+        const dataInput = $column.data;
         if (dataInput instanceof Array) {
             return this.$q.when(dataInput);
         } else {

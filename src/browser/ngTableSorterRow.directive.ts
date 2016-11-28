@@ -6,7 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-var templateUrl = require('./sorterRow.html');
+const templateUrl = require('./sorterRow.html');
 
 ngTableSorterRow.$inject = [];
 
@@ -19,7 +19,7 @@ ngTableSorterRow.$inject = [];
  * ```
  */
 export function ngTableSorterRow(){
-    var directive = {
+    const directive = {
         restrict: 'E',
         replace: true,
         templateUrl: templateUrl,

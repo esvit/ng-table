@@ -58,15 +58,15 @@ export class NgTableDefaultGetDataProvider implements IServiceProvider {
     sortingFilterName = 'orderBy';
     $get: ($filter: IFilterService, ngTableEventsChannel: NgTableEventsChannel) => IDefaultGetData<any>;
     constructor() {
-        var provider = this;
+        const provider = this;
         this.$get = ngTableDefaultGetData;
 
         ngTableDefaultGetData.$inject = ['$filter', 'ngTableEventsChannel'];
 
         function ngTableDefaultGetData<T>($filter: IFilterService, ngTableEventsChannel: NgTableEventsChannel): IDefaultGetData<T> {
 
-            var defaultDataOptions = { applyFilter: true, applySort: true, applyPaging: true };
-            var self = this;
+            const defaultDataOptions = { applyFilter: true, applySort: true, applyPaging: true };
+            const self = this;
 
             (getData as IDefaultGetData<T>).applyPaging = applyPaging;
             (getData as IDefaultGetData<T>).getFilterFn = getFilterFn;
@@ -75,7 +75,7 @@ export class NgTableDefaultGetDataProvider implements IServiceProvider {
             return getData as IDefaultGetData<T>;
 
             function getFilterFn(params: NgTableParams<T>): IFilterFunc<T> {
-                var filterOptions = params.settings().filterOptions;
+                const filterOptions = params.settings().filterOptions;
                 if (ng1.isFunction(filterOptions.filterFn)) {
                     return filterOptions.filterFn;
                 } else {
@@ -92,25 +92,25 @@ export class NgTableDefaultGetDataProvider implements IServiceProvider {
                     return data;
                 }
 
-                var filter = params.filter(true);
-                var filterKeys = Object.keys(filter);
-                var parsedFilter = filterKeys.reduce(function (result, key) {
+                const filter = params.filter(true);
+                const filterKeys = Object.keys(filter);
+                const parsedFilter = filterKeys.reduce((result, key) => {
                     result = setPath(result, filter[key], key);
                     return result;
                 }, {});
-                var filterFn = getFilterFn(params);
+                const filterFn = getFilterFn(params);
                 return filterFn.call(params, data, parsedFilter, params.settings().filterOptions.filterComparator);
             }
 
             function applyPaging(data: T[], params: NgTableParams<any>): T[] {
-                var pagedData = data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                const pagedData = data.slice((params.page() - 1) * params.count(), params.page() * params.count());
                 params.total(data.length); // set total for recalc pagination
                 return pagedData;
             }
 
             function applySort(data: T[], params: NgTableParams<T>): T[] {
-                var orderBy = params.orderBy();
-                var orderByFn = getOrderByFn(params);
+                const orderBy = params.orderBy();
+                const orderByFn = getOrderByFn(params);
                 return orderBy.length ? orderByFn(data, orderBy) : data;
             }
 
@@ -119,12 +119,12 @@ export class NgTableDefaultGetDataProvider implements IServiceProvider {
                     return [];
                 }
 
-                var options = ng1.extend({}, defaultDataOptions, params.settings().dataOptions);
+                const options = ng1.extend({}, defaultDataOptions, params.settings().dataOptions);
 
-                var fData = options.applyFilter ? applyFilter(data, params) : data;
+                const fData = options.applyFilter ? applyFilter(data, params) : data;
                 ngTableEventsChannel.publishAfterDataFiltered(self, params, fData);
 
-                var orderedData = options.applySort ? applySort(fData, params) : fData;
+                const orderedData = options.applySort ? applySort(fData, params) : fData;
                 ngTableEventsChannel.publishAfterDataSorted(self, params,orderedData);
 
                 return options.applyPaging ? applyPaging(orderedData, params) : orderedData;
@@ -133,12 +133,12 @@ export class NgTableDefaultGetDataProvider implements IServiceProvider {
             // Sets the value at any depth in a nested object based on the path
             // note: adapted from: underscore-contrib#setPath
             function setPath(obj: any, value: any, path: string) {
-                var keys = path.split('.');
-                var ret = obj;
-                var lastKey = keys[keys.length - 1];
-                var target = ret;
+                const keys = path.split('.');
+                const ret = obj;
+                const lastKey = keys[keys.length - 1];
+                let target = ret;
 
-                var parentPathKeys = keys.slice(0, keys.length - 1);
+                const parentPathKeys = keys.slice(0, keys.length - 1);
                 parentPathKeys.forEach(function (key) {
                     if (!target.hasOwnProperty(key)) {
                         target[key] = {};

@@ -214,7 +214,7 @@ export interface NgTableEventsChannel {
 export class NgTableEventsChannel {
     static $inject = ['$rootScope'];
     constructor(private $rootScope: ng1.IRootScopeService) {
-        var events = this;
+        let events = this;
         events = this.addTableParamsEvent('afterCreated', events);
         events = this.addTableParamsEvent('afterReloadData', events);
         events = this.addTableParamsEvent('datasetChanged', events);
@@ -223,8 +223,8 @@ export class NgTableEventsChannel {
         events = this.addTableParamsEvent('afterDataSorted', events);
     }
     private addTableParamsEvent(eventName: string, target: {}) {
-        var fnName = eventName.charAt(0).toUpperCase() + eventName.substring(1);
-        var event = {
+        const fnName = eventName.charAt(0).toUpperCase() + eventName.substring(1);
+        const event = {
             ['on' + fnName]: this.createEventSubscriptionFn(eventName),
             ['publish' + fnName]: this.createPublishEventFn(eventName)
         };
@@ -242,8 +242,8 @@ export class NgTableEventsChannel {
             eventSelectorOrScope: EventSelector<T> | ng1.IScope,
             eventSelector?: EventSelector<T>) => {
 
-            var actualEvtSelector: (publisher: NgTableParams<any>) => boolean;
-            var scope: ng1.IScope = this.$rootScope;
+            let actualEvtSelector: (publisher: NgTableParams<any>) => boolean;
+            let scope: ng1.IScope = this.$rootScope;
 
             if (isScopeLike(eventSelectorOrScope)) {
                 scope = eventSelectorOrScope;
@@ -256,7 +256,7 @@ export class NgTableEventsChannel {
                 // don't send events published by the internal NgTableParams created by ngTableController
                 if (params.isNullInstance) return;
 
-                var fnArgs = [params].concat(eventArgs);
+                const fnArgs = [params].concat(eventArgs);
                 if (actualEvtSelector.apply(this, fnArgs)) {
                     handler.apply(this, fnArgs);
                 }

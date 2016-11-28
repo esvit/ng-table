@@ -67,7 +67,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
         private ngTableColumn: NgTableColumn<TCol>,
         private ngTableEventsChannel: NgTableEventsChannel) {
 
-        var isFirstTimeLoad = true;
+        const isFirstTimeLoad = true;
         $scope.$filterRow = { disabled: false };
         $scope.$loading = false;
 
@@ -79,7 +79,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
         }
 
         this.delayFilter = (function () {
-            var timer: IPromise<any>;
+            let timer: IPromise<any>;
             return (callback: () => void, ms: number) => {
                 $timeout.cancel(timer);
                 timer = $timeout(callback, ms);
@@ -106,11 +106,11 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
             return;
         }
 
-        var currentParams = this.$scope.params;
-        var filterOptions = currentParams.settings().filterOptions;
+        const currentParams = this.$scope.params;
+        const filterOptions = currentParams.settings().filterOptions;
 
         if (currentParams.hasFilterChanges()) {
-            var applyFilter = () => {
+            const applyFilter = () => {
                 currentParams.page(1);
                 currentParams.reload();
             };
@@ -131,10 +131,10 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
                 pagination: (this.$attrs.templatePagination ? this.$attrs.templatePagination : 'ng-table/pager.html')
             };
             this.$element.addClass('ng-table');
-            var headerTemplate: IAugmentedJQuery = null;
+            let headerTemplate: IAugmentedJQuery = null;
 
             // $element.find('> thead').length === 0 doesn't work on jqlite
-            var theadFound = false;
+            let theadFound = false;
             ng1.forEach(this.$element.children(), (e) => {
                 if (e.tagName === 'THEAD') {
                     theadFound = true;
@@ -144,7 +144,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
                 headerTemplate = ng1.element('<thead ng-include="templates.header"></thead>', this.$document);
                 this.$element.prepend(headerTemplate);
             }
-            var paginationTemplate = ng1.element(
+            const paginationTemplate = ng1.element(
                 '<div ng-table-pagination="params" template-url="templates.pagination"></div>',
                 this.$document
             );
@@ -158,7 +158,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
 
     loadFilterData($columns: IColumnDef[]) {
         ng1.forEach($columns, ($column) => {
-            var result = $column.filterData(this.$scope);
+            const result = $column.filterData(this.$scope);
             if (!result) {
                 delete $column.filterData;
                 return undefined;
@@ -166,7 +166,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
 
             if (isPromiseLike(result)) {
                 delete $column.filterData;
-                return result.then(function (data) {
+                return result.then(data => {
                     // our deferred can eventually return arrays, functions and objects
                     if (!ng1.isArray(data) && !ng1.isFunction(data) && !ng1.isObject(data)) {
                         // if none of the above was found - we just want an empty array
@@ -188,7 +188,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
 
     buildColumns(columns: TCol[]): IColumnDef[] {
         // todo: use strictNullChecks and remove guard clause
-        var result: IColumnDef[] = [];
+        const result: IColumnDef[] = [];
         (columns || []).forEach(col => {
             result.push(this.ngTableColumn.buildColumn(col, this.$scope, result));
         });
@@ -197,7 +197,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
 
     parseNgTableDynamicExpr(attr: string) {
         if (!attr || attr.indexOf(" with ") > -1) {
-            var parts = attr.split(/\s+with\s+/);
+            const parts = attr.split(/\s+with\s+/);
             return {
                 tableParams: parts[0],
                 columns: parts[1]
@@ -246,7 +246,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
     private setupGroupRowBindingsToInternalScope() {
         this.$scope.$groupRow = { show: false };
         if (this.$attrs.showGroup) {
-            var showGroupGetter = this.$parse(this.$attrs.showGroup);
+            const showGroupGetter = this.$parse(this.$attrs.showGroup);
             this.$scope.$parent.$watch<boolean>(showGroupGetter, (value) => {
                 this.$scope.$groupRow.show = value;
             });
@@ -277,7 +277,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
 
         this.ngTableEventsChannel.onAfterReloadData<TParams>(
             (params, newDatapage) => {
-                var visibleColumns = this.getVisibleColumns();
+                const visibleColumns = this.getVisibleColumns();
                 if (params.hasGroup()) {
                     this.$scope.$groups = (newDatapage || []) as GroupedDataResults<TParams>;
                     this.$scope.$groups.visibleColumnCount = visibleColumns.length;
@@ -300,9 +300,9 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
     }
 
     private some<T>(array: T[], predicate: (item: T) => boolean) {
-        var found = false;
-        for (var i = 0; i < array.length; i++) {
-            var obj = array[i];
+        let found = false;
+        for (let i = 0; i < array.length; i++) {
+            const obj = array[i];
             if (predicate(obj)) {
                 found = true;
                 break;

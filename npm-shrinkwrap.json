@@ -3794,6 +3794,20 @@
       "resolved": "https://registry.npmjs.org/karma-jasmine/-/karma-jasmine-1.0.2.tgz",
       "dev": true
     },
+    "karma-jasmine-diff-reporter": {
+      "version": "0.6.3",
+      "from": "karma-jasmine-diff-reporter@latest",
+      "resolved": "https://registry.npmjs.org/karma-jasmine-diff-reporter/-/karma-jasmine-diff-reporter-0.6.3.tgz",
+      "dev": true,
+      "dependencies": {
+        "diff": {
+          "version": "1.4.0",
+          "from": "diff@>=1.4.0 <2.0.0",
+          "resolved": "https://registry.npmjs.org/diff/-/diff-1.4.0.tgz",
+          "dev": true
+        }
+      }
+    },
     "karma-phantomjs-launcher": {
       "version": "1.0.1",
       "from": "karma-phantomjs-launcher@1.0.1",

@@ -6,7 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-var templateUrl = require('./groupRow.html');
+const templateUrl = require('./groupRow.html');
 
 ngTableGroupRow.$inject = [];
 
@@ -19,7 +19,7 @@ ngTableGroupRow.$inject = [];
  * ```
  */
 export function ngTableGroupRow(){
-    var directive = {
+    const directive = {
         restrict: 'E',
         replace: true,
         templateUrl: templateUrl,

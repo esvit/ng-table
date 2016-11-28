@@ -5,8 +5,8 @@ import { ISortingValues } from './sorting';
  * @private
  */
 export function convertSortToOrderBy(sorting: ISortingValues) {
-    var result: string[] = [];
-    for (var column in sorting) {
+    const result: string[] = [];
+    for (let column in sorting) {
         result.push((sorting[column] === "asc" ? "+" : "-") + column);
     }
     return result;

@@ -41,7 +41,7 @@ export function ngTablePagination<T>($compile: ng1.ICompileService, $document: n
                 if (templateUrl === undefined) {
                     return;
                 }
-                var template = ng1.element('<div ng-include="templateUrl"></div>', $document);
+                const template = ng1.element('<div ng-include="templateUrl"></div>', $document);
                 element.append(template);
                 $compile(template)(scope);
             });
