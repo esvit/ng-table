@@ -19,6 +19,9 @@ describe('ng-table', () => {
 
     interface ICustomizedScope extends IScope {
         $$childHead: INgTableChildScope;
+        model: {
+            exportedCols?: IColumnDef[];
+        };
         ageFilter: IFilterTemplateDefMap;
         ageExpandedFilter: { [name: string]: IFilterTemplateDef };
         ageTitle: string | { (): string };
@@ -66,6 +69,7 @@ describe('ng-table', () => {
     beforeEach(inject(($rootScope: IScope, _$compile_: ICompileService) => {
         scope = $rootScope.$new(true) as ICustomizedScope;
         $compile = _$compile_;
+        scope.model = {};
     }));
 
     function createNgTableParams<T>(initialParams?: IParamValues<T>, settings?: ISettings<T>): NgTableParams<T>;
@@ -399,7 +403,7 @@ describe('ng-table', () => {
             // given
             const { params, tableElm } = createTable(tableWithSortableAgeColumnTpl);
             (params.settings().getData as jasmine.Spy).calls.reset();
-            const columnHeader = 
+            const columnHeader =
                 tableElm[0].querySelector('.ng-table-sort-header > th') as HTMLTableHeaderCellElement;
 
             // when
@@ -809,10 +813,10 @@ describe('ng-table', () => {
 
     describe('$columns', () => {
         let tableElm: IAugmentedJQuery,
-            tp: NgTableParams<IPerson>;
+            params: NgTableParams<IPerson>;
         beforeEach(() => {
             const html = `<div>
-                <table ng-table="tableParams">
+                <table ng-table="tableParams" ng-table-columns-binding="model.exportedCols">
                     <tr ng-repeat="user in $data">
                         <td title="ageTitle" ng-if="isAgeVisible" filter="ageFilter">{{user.age}}</td>
                         <td title="'Name'" groupable="'name'" sortable="'name'">{{user.name}}</td>
@@ -824,12 +828,12 @@ describe('ng-table', () => {
             };
             scope.isAgeVisible = true;
             scope.ageTitle = 'Age';
-            ({ params: tp, tableElm } = createTable(html));
+            ({ params, tableElm } = createTable(html));
         });
 
         it('should make $columns available on the scope created for ng-table', () => {
             // check that the scope is indeed the one created for out NgTableParams
-            expect(scope.$$childHead.params).toBe(tp);
+            expect(scope.$$childHead.params).toBe(params);
 
             expect(scope.$$childHead.$columns).toBeDefined();
         });
@@ -838,12 +842,16 @@ describe('ng-table', () => {
             expect(scope['$columns']).toBeUndefined();
         });
 
+        it('ng-table-columns-binding should make $columns externally available', () => {
+            expect(scope.model.exportedCols).toBeDefined();
+        });
+
         it('$scolumns should contain a column definition for each `td` element', () => {
-            expect(scope.$$childHead.$columns.length).toBe(2);
+            expect(scope.model.exportedCols.length).toBe(2);
         });
 
         it('each column definition should have getters for each column attribute', () => {
-            const ageCol = scope.$$childHead.$columns[0];
+            const ageCol = scope.model.exportedCols[0];
             expect(ageCol.title()).toBe('Age');
             expect(ageCol.show()).toBe(true);
             expect(ageCol.filter()).toBe(scope.ageFilter);
@@ -855,7 +863,7 @@ describe('ng-table', () => {
             expect(ageCol.sortable()).toBe(false);
             expect(ageCol.titleAlt()).toBe('');
 
-            const nameCol = scope.$$childHead.$columns[1];
+            const nameCol = scope.model.exportedCols[1];
             expect(nameCol.title()).toBe('Name');
             expect(nameCol.show()).toBe(true);
             expect(nameCol.filter()).toBe(false);
@@ -869,7 +877,7 @@ describe('ng-table', () => {
         });
 
         it('each column attribute should be assignable', () => {
-            const ageCol = scope.$$childHead.$columns[0];
+            const ageCol = scope.model.exportedCols[0];
 
             ageCol.title.assign(scope.$$childHead, 'Age of person');
             expect(ageCol.title()).toBe('Age of person');
@@ -903,12 +911,56 @@ describe('ng-table', () => {
             expect(ageCol.titleAlt()).toBe('really');
 
 
-            const nameCol = scope.$$childHead.$columns[1];
+            const nameCol = scope.model.exportedCols[1];
 
             nameCol.groupable.assign(scope.$$childHead, false);
             expect(nameCol.groupable()).toBe(false);
 
             nameCol.sortable.assign(scope.$$childHead, false);
+            expect(nameCol.sortable()).toBe(false);
+        });
+
+        it('each column attribute should be settable', () => {
+            const ageCol = scope.model.exportedCols[0];
+
+            ageCol.title('Age of person');
+            expect(ageCol.title()).toBe('Age of person');
+            expect(scope.ageTitle).toBe('Age of person');
+
+            ageCol.show(false);
+            expect(ageCol.show()).toBe(false);
+            expect(scope.isAgeVisible).toBe(false);
+
+            const newFilter: IFilterTemplateDefMap = { age: 'select' };
+            ageCol.filter(newFilter);
+            expect(ageCol.filter()).toBe(newFilter);
+            expect(scope.ageFilter).toBe(newFilter);
+
+            ageCol.class('amazing');
+            expect(ageCol.class()).toBe('amazing');
+
+            ageCol.groupable('age');
+            expect(ageCol.groupable()).toBe('age');
+
+            ageCol.headerTemplateURL('some.html');
+            expect(ageCol.headerTemplateURL()).toBe('some.html');
+
+            ageCol.headerTitle('wow');
+            expect(ageCol.headerTitle()).toBe('wow');
+
+            ageCol.sortable('incredible');
+            expect(ageCol.sortable()).toBe('incredible');
+
+            ageCol.titleAlt('really');
+            expect(ageCol.titleAlt()).toBe('really');
+
+
+            const nameCol = scope.model.exportedCols[1];
+
+            nameCol.groupable(false);
+            expect(nameCol.groupable()).toBe(false);
+
+            nameCol.sortable(false);
             expect(nameCol.sortable()).toBe(false);
         });
     });

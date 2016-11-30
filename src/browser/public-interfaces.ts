@@ -13,6 +13,7 @@ export type ColumnFieldContext = IScope & {
  */
 export interface IColumnField<T> {
     (context?: ColumnFieldContext): T;
+    (value: T): void;
     assign($scope: IScope, value: T): void;
 }
 

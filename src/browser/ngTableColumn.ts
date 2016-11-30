@@ -61,7 +61,7 @@ export class NgTableColumn<TCol extends IColumnDef | IDynamicTableColDef> {
             const getterFn = extendedCol[prop];
             extendedCol[prop] = function () {
                 if (arguments.length === 1 && !isScopeLike(arguments[0])) {
-                    getterFn.assign(null, arguments[0]);
+                    getterFn.assign(defaultScope, arguments[0]);
                 } else {
                     const scope = arguments[0] || defaultScope;
                     const context = Object.create(scope);
@@ -74,6 +74,20 @@ export class NgTableColumn<TCol extends IColumnDef | IDynamicTableColDef> {
             };
             if (getterFn.assign) {
                 extendedCol[prop].assign = getterFn.assign;
+            } else {
+                const wrappedGetterFn = extendedCol[prop];
+                let localValue: any;
+                const getterSetter = function getterSetter(/*[value] || [$scope, locals]*/) {
+                    if (arguments.length === 1 && !isScopeLike(arguments[0])) {
+                        (getterSetter as any).assign(null, arguments[0]);
+                    } else {
+                        return localValue != undefined ? localValue : wrappedGetterFn.apply(extendedCol, arguments);
+                    }
+                };
+                (getterSetter as any).assign = function ($scope: IScope, value: any) {
+                    localValue = value;
+                };
+                extendedCol[prop] = getterSetter;
             }
         }
         return extendedCol as IColumnDef;
