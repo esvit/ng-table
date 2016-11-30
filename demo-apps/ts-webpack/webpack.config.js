@@ -5,9 +5,10 @@ module.exports = (env = { prod: false, debug: false, port: 8080, host: 'localhos
 
     const parts = require('../../scripts/webpack/appParts')(__dirname, env);
 
-    const vendorStyles = {
+    const extactedStyles = {
         entry: {
-            'vendor-styles': path.join(__dirname, 'src', 'shared', 'vendor-styles.scss')
+            'vendor-styles': path.join(__dirname, 'src', 'shared', 'vendor-styles.scss'),
+            'site-styles': path.join(__dirname, 'src', 'shared', 'site.scss')
         }
     };
 
@@ -18,8 +19,8 @@ module.exports = (env = { prod: false, debug: false, port: 8080, host: 'localhos
             }
         },
         parts.asAppBundle(),
-        vendorStyles,
-        parts.isDevServer ? parts.sass() : parts.extractSassChunks(vendorStyles.entry),
+        extactedStyles,
+        parts.isDevServer ? parts.sass() : parts.extractSassChunks(extactedStyles.entry),
         parts.typescript(),
         parts.inlineImages(),
         parts.inlineHtmlTemplates(),

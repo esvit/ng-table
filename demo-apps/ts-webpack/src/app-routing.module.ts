@@ -11,6 +11,7 @@ function defineRoutes($routeProvider: IRouteProvider){
 
     $routeProvider.when('/', { template: '<my-table></my-table>'});
     $routeProvider.when('/grouped', { template: '<grouped-table></grouped-table>'})
+    $routeProvider.when('/column-binding-eg', { template: '<column-binding-eg></column-binding-eg>'})
 }
 
 export { appRoutingModule };

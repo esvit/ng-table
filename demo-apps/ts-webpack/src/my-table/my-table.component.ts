@@ -11,7 +11,6 @@ class MyTableController {
     tableParams = new NgTableParams<Person>({}, {
         dataset: demoData
     });
-    static $inject = ['NgTableParams'];
 }
 
 interface Person {
