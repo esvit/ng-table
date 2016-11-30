@@ -35,7 +35,6 @@ ngTableColumnsBinding.$inject = ["$parse"];
 export function ngTableColumnsBinding<T>($parse: IParseService) : IDirective {
     const directive = {
         restrict: 'A',
-        require: 'ngTable',
         link: linkFn
     };
     return directive;
