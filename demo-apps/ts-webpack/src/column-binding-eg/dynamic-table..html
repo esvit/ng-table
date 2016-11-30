@@ -1,0 +1,7 @@
+<column-picker columns="$ctrl.exportedColumns"></column-picker>
+<table ng-table-dynamic="$ctrl.tableParams with $ctrl.columns" show-filter="true" class="table table-condensed table-bordered table-striped"
+    ng-table-columns-binding="$ctrl.exportedColumns">
+    <tr ng-repeat="row in $data">
+        <td ng-repeat="col in $columns">{{row[col.field]}}</td>
+    </tr>
+</table>

@@ -1,0 +1,5 @@
+<div>
+    <label class="checkbox-inline" ng-repeat="col in $ctrl.columns">
+          <input type="checkbox" ng-model-options="{ getterSetter: true }" ng-model="col.show"/> {{col.title()}}
+        </label>
+</div>
