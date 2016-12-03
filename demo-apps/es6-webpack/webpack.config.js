@@ -10,14 +10,15 @@ module.exports = (env = { prod: false, debug: false, port: 8080, host: 'localhos
             'vendor-styles': path.join(__dirname, 'src', 'shared', 'vendor-styles.scss')
         }
     };
-
     return merge(
         {
             entry: {
                 main: path.join(__dirname, 'src', 'main.js')
             }
         },
-        parts.asAppBundle(),
+        parts.asAppBundle({
+            vendorSelector: parts.isNotAppModuleSelector
+        }),
         vendorStyles,
         parts.isDevServer ? parts.sass() : parts.extractSassChunks(vendorStyles.entry),
         parts.es6(),

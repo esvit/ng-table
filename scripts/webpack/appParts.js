@@ -18,6 +18,11 @@ function createAppParts(rootDir, env = {}) {
     const loadCssWithSourceMaps = ['css-loader?sourceMap', 'resolve-url-loader', 'sass-loader?sourceMap'];
     const loadCss = ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap'];
 
+    const isNodeModuleSelector = (function () {
+        const isNodeModule = new RegExp('node_modules');
+        return (module) => isNodeModule.test(module.resource);
+    })();
+
     return Object.assign({}, commonParts, {
         asAppBundle,
         extractSassChunks,
@@ -25,6 +30,7 @@ function createAppParts(rootDir, env = {}) {
         inlineHtmlTemplates,
         inlineNgTableHtmlTemplates,
         isDevServer,
+        isNotAppModuleSelector,
         sass,
         useHtmlPlugin
     });
@@ -32,8 +38,7 @@ function createAppParts(rootDir, env = {}) {
     /////
 
 
-    function asAppBundle() {
-        const isNodeModule = new RegExp('node_modules');
+    function asAppBundle({ vendorSelector = isNodeModuleSelector } = {}) {
 
         const common = merge(
             {
@@ -47,7 +52,7 @@ function createAppParts(rootDir, env = {}) {
                     // include node_modules requested in a seperate bundle
                     new webpack.optimize.CommonsChunkPlugin({
                         name: 'vendor',
-                        minChunks: module => isNodeModule.test(module.resource)
+                        minChunks: vendorSelector
                     }),
                     // extract webpack manifest file into it's own chunk to ensure vendor hash does not change 
                     // (as per solution discussed here https://github.com/webpack/webpack/issues/1315)
@@ -102,6 +107,9 @@ function createAppParts(rootDir, env = {}) {
         };
     }
 
+    function isNotAppModuleSelector(module) {
+        return !(module.resource && module.resource.startsWith(rootDir));
+    }
 
     function useHtmlPlugin() {
         var HtmlWebpackPlugin = require('html-webpack-plugin');

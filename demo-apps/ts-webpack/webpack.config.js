@@ -18,6 +18,9 @@ module.exports = (env = { prod: false, debug: false, port: 8080, host: 'localhos
                 main: path.join(__dirname, 'src', 'main.ts')
             }
         },
+        parts.asAppBundle({
+            vendorSelector: parts.isNotAppModuleSelector
+        }),
         parts.asAppBundle(),
         extactedStyles,
         parts.isDevServer ? parts.sass() : parts.extractSassChunks(extactedStyles.entry),
