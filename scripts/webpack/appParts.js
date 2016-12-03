@@ -18,22 +18,27 @@ function createAppParts(rootDir, env = {}) {
     const loadCssWithSourceMaps = ['css-loader?sourceMap', 'resolve-url-loader', 'sass-loader?sourceMap'];
     const loadCss = ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap'];
 
+    const isNodeModuleSelector = (function () {
+        const isNodeModule = new RegExp('node_modules');
+        return (module) => isNodeModule.test(module.resource);
+    })();
+
     return Object.assign({}, commonParts, {
         asAppBundle,
+        extractBundle,
         extractSassChunks,
         inlineImages,
         inlineHtmlTemplates,
         inlineNgTableHtmlTemplates,
         isDevServer,
+        isNotAppModuleSelector,
         sass,
         useHtmlPlugin
     });
 
     /////
 
-
     function asAppBundle() {
-        const isNodeModule = new RegExp('node_modules');
 
         const common = merge(
             {
@@ -42,20 +47,7 @@ function createAppParts(rootDir, env = {}) {
                     filename: '[name].[chunkhash].js',
                     // This is used for require.ensure if/when we want to use it
                     chunkFilename: '[chunkhash].js'
-                },
-                plugins: [
-                    // include node_modules requested in a seperate bundle
-                    new webpack.optimize.CommonsChunkPlugin({
-                        name: 'vendor',
-                        minChunks: module => isNodeModule.test(module.resource)
-                    }),
-                    // extract webpack manifest file into it's own chunk to ensure vendor hash does not change 
-                    // (as per solution discussed here https://github.com/webpack/webpack/issues/1315)
-                    new webpack.optimize.CommonsChunkPlugin({
-                        name: 'manifest',
-                        minChunks: Infinity
-                    })
-                ]
+                }
             },
             devServer()
         );
@@ -102,6 +94,27 @@ function createAppParts(rootDir, env = {}) {
         };
     }
 
+    function extractBundle({ vendorSelector = isNodeModuleSelector } = {}) {
+        return {
+            plugins: [
+                // include node_modules requested in a seperate bundle
+                new webpack.optimize.CommonsChunkPlugin({
+                    name: 'vendor',
+                    minChunks: vendorSelector
+                }),
+                // extract webpack manifest file into it's own chunk to ensure vendor hash does not change 
+                // (as per solution discussed here https://github.com/webpack/webpack/issues/1315)
+                new webpack.optimize.CommonsChunkPlugin({
+                    name: 'manifest',
+                    minChunks: Infinity
+                })
+            ]
+        }
+    }
+
+    function isNotAppModuleSelector(module) {
+        return !(module.resource && module.resource.startsWith(rootDir));
+    }
 
     function useHtmlPlugin() {
         var HtmlWebpackPlugin = require('html-webpack-plugin');
