@@ -1651,7 +1651,7 @@ describe('NgTableParams', () => {
 
         describe('general pub/sub mechanics', () => {
 
-            const supportedEvents = ['DatasetChanged', 'AfterReloadData', 'PagesChanged', 'AfterCreated'];
+            const supportedEvents = ['DatasetChanged', 'AfterReloadData', 'PagesChanged', 'AfterCreated', 'AfterDataFiltered', 'AfterDataSorted'];
 
             it('should be safe to publish event when no subscribers', () => {
 
@@ -2160,7 +2160,7 @@ describe('NgTableParams', () => {
         describe('afterDataFiltered', () => {
             it('should fire when a reload completes - no filter', () => {
                 // given
-                ngTableEventsChannel.onAfterDataFiltered((getData, params, newVal) => {
+                ngTableEventsChannel.onAfterDataFiltered((params, newVal) => {
                     actualPublisher = params;
                     actualEventArgs = [newVal];
                 });
@@ -2178,7 +2178,7 @@ describe('NgTableParams', () => {
 
             it('should fire when a reload completes and the data is filtered', () => {
                 // given
-                ngTableEventsChannel.onAfterDataFiltered((getData, params, newVal) => {
+                ngTableEventsChannel.onAfterDataFiltered((params, newVal) => {
                     actualPublisher = params;
                     actualEventArgs = [newVal];
                 });
@@ -2201,7 +2201,7 @@ describe('NgTableParams', () => {
         describe('afterDataSorted', () => {
             it('should fire when a reload completes - no order', () => {
                 // given
-                ngTableEventsChannel.onAfterDataSorted((getData, params, newVal) => {
+                ngTableEventsChannel.onAfterDataSorted((params, newVal) => {
                     actualPublisher = params;
                     actualEventArgs = [newVal];
                 });
@@ -2219,7 +2219,7 @@ describe('NgTableParams', () => {
 
             it('should fire when a reload completes and the data is filtered', () => {
                 // given
-                ngTableEventsChannel.onAfterDataSorted((getData, params, newVal) => {
+                ngTableEventsChannel.onAfterDataSorted((params, newVal) => {
                     actualPublisher = params;
                     actualEventArgs = [newVal];
                 });

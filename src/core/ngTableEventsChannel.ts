@@ -53,13 +53,13 @@ export interface IPagesChangedListener {
 * Signature of the event hander that is registered to receive the *afterDataFiltered* event
 */
 export interface IAfterDataFilteredListener<T> {
-    (publisher: IDefaultGetData<T>, params: NgTableParams<T>, newData: DataResult<T>[] ): any
+    (publisher: NgTableParams<T>, newData: DataResult<T>[] ): any
 }
 /**
 * Signature of the event hander that is registered to receive the *afterDataSorted* event
 */
 export interface IAfterDataSortedListener<T> {
-    (publisher: IDefaultGetData<T>, params: NgTableParams<T>, newData: DataResult<T>[] ): any
+    (publisher: NgTableParams<T>, newData: DataResult<T>[] ): any
 }
 
 /**
@@ -207,8 +207,8 @@ export interface NgTableEventsChannel {
     publishAfterReloadData<T>(publisher: NgTableParams<T>, newData: T[], oldData: T[]): void;
     publishDatasetChanged<T>(publisher: NgTableParams<T>, newDataset: T[], oldDataset: T[]): void;
     publishPagesChanged<T>(publisher: NgTableParams<T>, newPages: IPageButton[], oldPages: IPageButton[]): void;
-    publishAfterDataFiltered<T>(publisher: IDefaultGetData<T>, params: NgTableParams<T>, newData: T[]): void;
-    publishAfterDataSorted<T>(publisher: IDefaultGetData<T>, params: NgTableParams<T>, newData: T[]): void;
+    publishAfterDataFiltered<T>(publisher: NgTableParams<T>, newData: T[]): void;
+    publishAfterDataSorted<T>(params: NgTableParams<T>, newData: T[]): void;
 }
 
 export class NgTableEventsChannel {
