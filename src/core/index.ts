@@ -23,8 +23,8 @@ export * from './ngTableEventsChannel';
 // note: having to export as individual modules rather than `*` to avoid webpack (bug?)
 // causing the final bundle to throw an error `Cannot redefine property: NgTableParams`
 // todo: replace with commented out export below once webpack produces a working bundle
-export { InternalTableParams, NgTableParams, IParamValues } from './ngTableParams';
-// export * from './ngTableParams';
+// export { InternalTableParams, NgTableParams, IParamValues } from './ngTableParams';
+export * from './ngTableParams';
 export { ISettings } from './ngTableSettings';
 export * from './data';
 export * from './filtering';
