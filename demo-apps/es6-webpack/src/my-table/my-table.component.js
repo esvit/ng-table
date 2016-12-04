@@ -1,12 +1,12 @@
 // todo: find out why this causes webpack to create a bundle that throws the error:
 // `Cannot redefine property: NgTableParams`
 
-// import { NgTableParams } from 'ng-table';
+import { NgTableParams } from 'ng-table';
 
 const templateUrl = require('./my-table.component.html');
 
 class MyTableController {
-    constructor(NgTableParams) {
+    constructor() {
         var data = [
             { name: "Moroni", age: 50 },
             { name: "Tiancum", age: 43 },
@@ -33,7 +33,7 @@ class MyTableController {
     }
 }
 
-MyTableController.$inject = ['NgTableParams'];
+MyTableController.$inject = [];
 
 const myTableComponent = {
     templateUrl: templateUrl,
