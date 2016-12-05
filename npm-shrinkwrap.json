@@ -7260,8 +7260,8 @@
     },
     "webpack": {
       "version": "2.1.0-beta.27",
-      "from": "webpack@2.1.0-beta.27",
-      "resolved": "https://registry.npmjs.org/webpack/-/webpack-2.1.0-beta.27.tgz",
+      "from": "git+https://github.com/webpack/webpack.git#fbb8920f2ec8366659bb04de7c2c044a308a0925",
+      "resolved": "git+https://github.com/webpack/webpack.git#fbb8920f2ec8366659bb04de7c2c044a308a0925",
       "dev": true,
       "dependencies": {
         "async": {

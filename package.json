@@ -83,7 +83,7 @@
     "typescript": "2.0.3",
     "url-loader": "^0.5.7",
     "validate-commit-msg": "^2.8.2",
-    "webpack": "^2.1.0-beta.27",
+    "webpack": "git+https://github.com/webpack/webpack.git#fbb8920f2ec8366659bb04de7c2c044a308a0925",
     "webpack-dev-server": "^2.1.0-beta.9",
     "webpack-merge": "^0.14.1",
     "webpack-validator": "^2.2.9"
