@@ -14,7 +14,7 @@ import { IFilterConfigValues, IFilterTemplateDef } from './public-interfaces';
  * The angular provider used to configure the behaviour of the `NgTableFilterConfig` service.
  */
 export class NgTableFilterConfigProvider implements IServiceProvider {
-    static $inject: ['$injector'];
+    static $inject = ['$injector'];
     $get: () => NgTableFilterConfig;
     private config: IFilterConfigValues;
     private defaultConfig: IFilterConfigValues = {
