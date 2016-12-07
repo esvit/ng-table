@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ngTableDefaultGetDataProvider | ng-table</title>
+	<title>NgTableDefaultGetDataProvider | ngTable API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">ng-table</a>
+					<a href="../index.html" class="title">ngTable API Reference</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -57,10 +57,10 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="ngtabledefaultgetdataprovider.html">ngTableDefaultGetDataProvider</a>
+					<a href="ngtabledefaultgetdataprovider.html">NgTableDefaultGetDataProvider</a>
 				</li>
 			</ul>
-			<h1>Class ngTableDefaultGetDataProvider</h1>
+			<h1>Class NgTableDefaultGetDataProvider</h1>
 		</div>
 	</div>
 </header>
@@ -70,33 +70,22 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Allows for the configuration of the ngTableDefaultGetData service.</p>
+						<p>Implementation of the {@link IDefaultGetDataProvider} interface</p>
 					</div>
-					<p>Set filterFilterName to the name of a angular filter that knows how to apply the values returned by
-					<code>NgTableParams.filter()</code> to restrict an array of data.</p>
-					<p>Set sortingFilterName to the name of a angular filter that knows how to apply the values returned by
-					<code>NgTableParams.orderBy()</code> to sort an array of data.</p>
-					<p>Out of the box the <code>ngTableDefaultGetData</code> service will be configured to use the angular <code>filter</code> and <code>orderBy</code>
-					filters respectively</p>
-					<dl class="tsd-comment-tags">
-						<dt>ngdoc</dt>
-						<dd><p>provider</p>
-						</dd>
-					</dl>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ngTableDefaultGetDataProvider</span>
+						<span class="target">NgTableDefaultGetDataProvider</span>
 					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/idefaultgetdataprovider.html" class="tsd-signature-type">IDefaultGetDataProvider</a></li>
+					<li><a href="../interfaces/angular.iserviceprovider.html" class="tsd-signature-type">IServiceProvider</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -126,16 +115,16 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new ng<wbr>Table<wbr>Default<wbr>Get<wbr>Data<wbr>Provider<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ngtabledefaultgetdataprovider.html" class="tsd-signature-type">ngTableDefaultGetDataProvider</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>NgTable<wbr>Default<wbr>Get<wbr>Data<wbr>Provider<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ngtabledefaultgetdataprovider.html" class="tsd-signature-type">NgTableDefaultGetDataProvider</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/core/ngTableDefaultGetData.ts:29</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/data/ngTableDefaultGetData.ts#L59">src/core/data/ngTableDefaultGetData.ts:59</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="ngtabledefaultgetdataprovider.html" class="tsd-signature-type">ngTableDefaultGetDataProvider</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="ngtabledefaultgetdataprovider.html" class="tsd-signature-type">NgTableDefaultGetDataProvider</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -147,8 +136,9 @@
 					<h3>$get</h3>
 					<div class="tsd-signature tsd-kind-icon">$get<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/angular.iserviceprovider.html">IServiceProvider</a>.<a href="../interfaces/angular.iserviceprovider.html#_get">$get</a></p>
 						<ul>
-							<li>Defined in src/core/ngTableDefaultGetData.ts:29</li>
+							<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/data/ngTableDefaultGetData.ts#L59">src/core/data/ngTableDefaultGetData.ts:59</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -156,14 +146,17 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-siganture">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>$filter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ng1.IFilterService</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/idefaultgetdata.html" class="tsd-signature-type">IDefaultGetData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>$filter<span class="tsd-signature-symbol">: </span><a href="../interfaces/angular.ifilterservice.html" class="tsd-signature-type">IFilterService</a>, ngTableEventsChannel<span class="tsd-signature-symbol">: </span><a href="ngtableeventschannel.html" class="tsd-signature-type">NgTableEventsChannel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/idefaultgetdata.html" class="tsd-signature-type">IDefaultGetData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
-												<h5>$filter: <span class="tsd-signature-type">ng1.IFilterService</span></h5>
+												<h5>$filter: <a href="../interfaces/angular.ifilterservice.html" class="tsd-signature-type">IFilterService</a></h5>
+											</li>
+											<li>
+												<h5>ngTableEventsChannel: <a href="ngtableeventschannel.html" class="tsd-signature-type">NgTableEventsChannel</a></h5>
 											</li>
 										</ul>
 										<h4 class="tsd-returns-title">Returns <a href="../interfaces/idefaultgetdata.html" class="tsd-signature-type">IDefaultGetData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -178,22 +171,34 @@
 					<h3>filter<wbr>Filter<wbr>Name</h3>
 					<div class="tsd-signature tsd-kind-icon">filter<wbr>Filter<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;filter&quot;</span></div>
 					<aside class="tsd-sources">
-						<p>Implementation of <a href="../interfaces/idefaultgetdataprovider.html">IDefaultGetDataProvider</a>.<a href="../interfaces/idefaultgetdataprovider.html#filterfiltername">filterFilterName</a></p>
 						<ul>
-							<li>Defined in src/core/ngTableDefaultGetData.ts:27</li>
+							<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/data/ngTableDefaultGetData.ts#L52">src/core/data/ngTableDefaultGetData.ts:52</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The name of a angular filter that knows how to apply the values returned by
+								<code>NgTableParams.filter()</code> to restrict an array of data.
+							(defaults to the angular <code>filter</code> filter service)</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
 					<a name="sortingfiltername" class="tsd-anchor"></a>
 					<h3>sorting<wbr>Filter<wbr>Name</h3>
 					<div class="tsd-signature tsd-kind-icon">sorting<wbr>Filter<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;orderBy&quot;</span></div>
 					<aside class="tsd-sources">
-						<p>Implementation of <a href="../interfaces/idefaultgetdataprovider.html">IDefaultGetDataProvider</a>.<a href="../interfaces/idefaultgetdataprovider.html#sortingfiltername">sortingFilterName</a></p>
 						<ul>
-							<li>Defined in src/core/ngTableDefaultGetData.ts:28</li>
+							<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/data/ngTableDefaultGetData.ts#L58">src/core/data/ngTableDefaultGetData.ts:58</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The name of a angular filter that knows how to apply the values returned by
+								<code>NgTableParams.orderBy()</code> to sort an array of data.
+							(defaults to the angular <code>orderBy</code> filter service)</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -210,7 +215,7 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-is-external">
-						<a href="ngtabledefaultgetdataprovider.html" class="tsd-kind-icon">ng<wbr>Table<wbr>Default<wbr>Get<wbr>Data<wbr>Provider</a>
+						<a href="ngtabledefaultgetdataprovider.html" class="tsd-kind-icon">Ng<wbr>Table<wbr>Default<wbr>Get<wbr>Data<wbr>Provider</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
 								<a href="ngtabledefaultgetdataprovider.html#constructor" class="tsd-kind-icon">constructor</a>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>InternalTableParams | ng-table</title>
+	<title>InternalTableParams | ngTable API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">ng-table</a>
+					<a href="../index.html" class="title">ngTable API Reference</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -83,7 +83,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="../classes/ngtableparams.html" class="tsd-signature-type">NgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">InternalTableParams</span>
@@ -96,11 +96,18 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
+						<section class="tsd-index-section tsd-is-inherited tsd-is-external">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#data" class="tsd-kind-icon">data</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="internaltableparams.html#isnullinstance" class="tsd-kind-icon">is<wbr>Null<wbr>Instance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-external"><a href="internaltableparams.html#isnullinstance" class="tsd-kind-icon">is<wbr>Null<wbr>Instance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#reloadpages" class="tsd-kind-icon">reload<wbr>Pages</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-inherited tsd-is-external">
@@ -120,14 +127,44 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#page" class="tsd-kind-icon">page</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#parameters" class="tsd-kind-icon">parameters</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#reload" class="tsd-kind-icon">reload</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#reloadpages" class="tsd-kind-icon">reload<wbr>Pages</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#settings" class="tsd-kind-icon">settings</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#sorting" class="tsd-kind-icon">sorting</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#total" class="tsd-kind-icon">total</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="internaltableparams.html#url" class="tsd-kind-icon">url</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-static tsd-is-external"><a href="internaltableparams.html#init" class="tsd-kind-icon">init</a></li>
 							</ul>
 						</section>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Internal<wbr>Table<wbr>Params<span class="tsd-signature-symbol">(</span>baseParameters<span class="tsd-signature-symbol">?: </span><a href="iparamvalues.html" class="tsd-signature-type">IParamValues</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span>, baseSettings<span class="tsd-signature-symbol">?: </span><a href="isettings.html" class="tsd-signature-type">ISettings</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="internaltableparams.html" class="tsd-signature-type">InternalTableParams</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#constructor">constructor</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L93">src/core/ngTableParams.ts:93</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> baseParameters: <a href="iparamvalues.html" class="tsd-signature-type">IParamValues</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> baseSettings: <a href="isettings.html" class="tsd-signature-type">ISettings</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="internaltableparams.html" class="tsd-signature-type">InternalTableParams</a></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
@@ -135,11 +172,11 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="data" class="tsd-anchor"></a>
 					<h3>data</h3>
-					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#data">data</a></p>
+						<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#data">data</a></p>
 						<ul>
-							<li>Defined in src/core/public-interfaces.ts:122</li>
+							<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L78">src/core/ngTableParams.ts:78</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -148,15 +185,42 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-external">
 					<a name="isnullinstance" class="tsd-anchor"></a>
 					<h3>is<wbr>Null<wbr>Instance</h3>
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Null<wbr>Instance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
+						<p>Overwrites <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#isnullinstance">isNullInstance</a></p>
 						<ul>
-							<li>Defined in src/core/public-interfaces.ts:112</li>
+							<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L25">src/core/ngTableParams.ts:25</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="reloadpages" class="tsd-anchor"></a>
+					<h3>reload<wbr>Pages</h3>
+					<div class="tsd-signature tsd-kind-icon">reload<wbr>Pages<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#reloadpages">reloadPages</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L79">src/core/ngTableParams.ts:79</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
@@ -166,14 +230,14 @@
 					<h3>count</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">count<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-						<li class="tsd-signature tsd-kind-icon">count<span class="tsd-signature-symbol">(</span>count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">count<span class="tsd-signature-symbol">(</span>count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#count">count</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#count">count</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:127</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L130">src/core/ngTableParams.ts:130</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -185,9 +249,9 @@
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#count">count</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#count">count</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:132</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L135">src/core/ngTableParams.ts:135</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -202,7 +266,6 @@
 									<h5>count: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -211,14 +274,14 @@
 					<h3>filter</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">filter<span class="tsd-signature-symbol">(</span>trim<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ifiltervalues.html" class="tsd-signature-type">IFilterValues</a></li>
-						<li class="tsd-signature tsd-kind-icon">filter<span class="tsd-signature-symbol">(</span>filter<span class="tsd-signature-symbol">: </span><a href="ifiltervalues.html" class="tsd-signature-type">IFilterValues</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">filter<span class="tsd-signature-symbol">(</span>filter<span class="tsd-signature-symbol">: </span><a href="ifiltervalues.html" class="tsd-signature-type">IFilterValues</a><span class="tsd-signature-symbol">)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#filter">filter</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#filter">filter</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:139</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L148">src/core/ngTableParams.ts:148</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -240,9 +303,9 @@
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#filter">filter</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#filter">filter</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:144</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L153">src/core/ngTableParams.ts:153</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -257,7 +320,6 @@
 									<h5>filter: <a href="ifiltervalues.html" class="tsd-signature-type">IFilterValues</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -265,14 +327,14 @@
 					<a name="generatepagesarray" class="tsd-anchor"></a>
 					<h3>generate<wbr>Pages<wbr>Array</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">generate<wbr>Pages<wbr>Array<span class="tsd-signature-symbol">(</span>currentPage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, totalItems<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, pageSize<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, maxBlocks<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ipagebutton.html" class="tsd-signature-type">IPageButton</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">generate<wbr>Pages<wbr>Array<span class="tsd-signature-symbol">(</span>currentPage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, totalItems<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, pageSize<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, maxBlocks<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="ipagebutton.html" class="tsd-signature-type">IPageButton</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#generatepagesarray">generatePagesArray</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#generatepagesarray">generatePagesArray</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:149</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L183">src/core/ngTableParams.ts:183</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -285,18 +347,31 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> currentPage: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Which page must be active</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> totalItems: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Total quantity of items</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> pageSize: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Quantity of items on page</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> maxBlocks: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Quantity of blocks for pagination</p>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ipagebutton.html" class="tsd-signature-type">IPageButton</a><span class="tsd-signature-symbol">[]</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="ipagebutton.html" class="tsd-signature-type">IPageButton</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>Array of pages</p>
 						</li>
 					</ul>
 				</section>
@@ -305,16 +380,16 @@
 					<h3>group</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../index.html#grouping" class="tsd-signature-type">Grouping</a></li>
-						<li class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">(</span>group<span class="tsd-signature-symbol">: </span><a href="igroupvalues.html" class="tsd-signature-type">IGroupValues</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-						<li class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">(</span>field<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, sortDirection<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-						<li class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">(</span>group<span class="tsd-signature-symbol">: </span><a href="igroupingfunc.html" class="tsd-signature-type">IGroupingFunc</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, sortDirection<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">(</span>group<span class="tsd-signature-symbol">: </span><a href="igroupvalues.html" class="tsd-signature-type">IGroupValues</a><span class="tsd-signature-symbol">)</span></li>
+						<li class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">(</span>field<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, sortDirection<span class="tsd-signature-symbol">?: </span><a href="../index.html#groupsort" class="tsd-signature-type">GroupSort</a><span class="tsd-signature-symbol">)</span></li>
+						<li class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">(</span>group<span class="tsd-signature-symbol">: </span><a href="igroupingfunc.html" class="tsd-signature-type">IGroupingFunc</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, sortDirection<span class="tsd-signature-symbol">?: </span><a href="../index.html#groupsort" class="tsd-signature-type">GroupSort</a><span class="tsd-signature-symbol">)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#group">group</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#group">group</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:153</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L245">src/core/ngTableParams.ts:245</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -326,9 +401,9 @@
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#group">group</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#group">group</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:158</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L250">src/core/ngTableParams.ts:250</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -343,13 +418,12 @@
 									<h5>group: <a href="igroupvalues.html" class="tsd-signature-type">IGroupValues</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#group">group</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#group">group</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:163</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L255">src/core/ngTableParams.ts:255</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -364,16 +438,15 @@
 									<h5>field: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> sortDirection: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> sortDirection: <a href="../index.html#groupsort" class="tsd-signature-type">GroupSort</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#group">group</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#group">group</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:169</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L261">src/core/ngTableParams.ts:261</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -389,10 +462,9 @@
 									<h5>group: <a href="igroupingfunc.html" class="tsd-signature-type">IGroupingFunc</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> sortDirection: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> sortDirection: <a href="../index.html#groupsort" class="tsd-signature-type">GroupSort</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -405,9 +477,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#haserrorstate">hasErrorState</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#haserrorstate">hasErrorState</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:175</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L286">src/core/ngTableParams.ts:286</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -430,9 +502,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#hasfilter">hasFilter</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#hasfilter">hasFilter</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:180</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L293">src/core/ngTableParams.ts:293</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -454,9 +526,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#hasfilterchanges">hasFilterChanges</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#hasfilterchanges">hasFilterChanges</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:185</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L300">src/core/ngTableParams.ts:300</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -479,9 +551,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#hasgroup">hasGroup</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#hasgroup">hasGroup</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:189</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L307">src/core/ngTableParams.ts:307</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -493,9 +565,9 @@
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#hasgroup">hasGroup</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#hasgroup">hasGroup</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:193</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L311">src/core/ngTableParams.ts:311</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -525,9 +597,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#isdatareloadrequired">isDataReloadRequired</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#isdatareloadrequired">isDataReloadRequired</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:204</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L341">src/core/ngTableParams.ts:341</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -553,9 +625,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#issortby">isSortBy</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#issortby">isSortBy</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:241</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L350">src/core/ngTableParams.ts:350</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -581,14 +653,14 @@
 					<a name="orderby" class="tsd-anchor"></a>
 					<h3>order<wbr>By</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">order<wbr>By<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">order<wbr>By<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#orderby">orderBy</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#orderby">orderBy</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:208</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L360">src/core/ngTableParams.ts:360</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -596,7 +668,7 @@
 									<p>Returns sorting values in a format that can be consumed by the angular <code>$orderBy</code> filter service</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -605,14 +677,14 @@
 					<h3>page</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">page<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-						<li class="tsd-signature tsd-kind-icon">page<span class="tsd-signature-symbol">(</span>page<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">page<span class="tsd-signature-symbol">(</span>page<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#page">page</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#page">page</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:245</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L366">src/core/ngTableParams.ts:366</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -624,9 +696,9 @@
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#page">page</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#page">page</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:250</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L371">src/core/ngTableParams.ts:371</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -641,7 +713,6 @@
 									<h5>page: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -650,23 +721,23 @@
 					<h3>parameters</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">parameters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="iparamvalues.html" class="tsd-signature-type">IParamValues</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-						<li class="tsd-signature tsd-kind-icon">parameters<span class="tsd-signature-symbol">(</span>newParameters<span class="tsd-signature-symbol">: </span><a href="iparamvalues.html" class="tsd-signature-type">IParamValues</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span>, parseParamsFromUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span></li>
+						<li class="tsd-signature tsd-kind-icon">parameters<span class="tsd-signature-symbol">(</span>newParameters<span class="tsd-signature-symbol">?: </span><a href="iparamvalues.html" class="tsd-signature-type">IParamValues</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span>, parseParamsFromUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#parameters">parameters</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#parameters">parameters</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:251</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L377">src/core/ngTableParams.ts:377</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="iparamvalues.html" class="tsd-signature-type">IParamValues</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#parameters">parameters</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#parameters">parameters</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:255</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L381">src/core/ngTableParams.ts:381</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -677,7 +748,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>newParameters: <a href="iparamvalues.html" class="tsd-signature-type">IParamValues</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> newParameters: <a href="iparamvalues.html" class="tsd-signature-type">IParamValues</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> parseParamsFromUrl: <span class="tsd-signature-type">boolean</span></h5>
@@ -690,14 +761,14 @@
 					<a name="reload" class="tsd-anchor"></a>
 					<h3>reload</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">reload&lt;TResult&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IPromise</span></li>
+						<li class="tsd-signature tsd-kind-icon">reload&lt;TResult&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="angular.ipromise.html" class="tsd-signature-type">IPromise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResult</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#reload">reload</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#reload">reload</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:212</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L418">src/core/ngTableParams.ts:418</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -711,25 +782,7 @@
 									<h4>TResult<span class="tsd-signature-symbol">: </span><a href="../index.html#dataresult" class="tsd-signature-type">DataResult</a></h4>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IPromise</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="reloadpages" class="tsd-anchor"></a>
-					<h3>reload<wbr>Pages</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">reload<wbr>Pages<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#reloadpages">reloadPages</a></p>
-								<ul>
-									<li>Defined in src/core/public-interfaces.ts:256</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="angular.ipromise.html" class="tsd-signature-type">IPromise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResult</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -738,14 +791,14 @@
 					<h3>settings</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="isettings.html" class="tsd-signature-type">ISettings</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-						<li class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">(</span>newSettings<span class="tsd-signature-symbol">: </span><a href="isettings.html" class="tsd-signature-type">ISettings</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">(</span>newSettings<span class="tsd-signature-symbol">: </span><a href="isettings.html" class="tsd-signature-type">ISettings</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#settings">settings</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#settings">settings</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:216</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L456">src/core/ngTableParams.ts:456</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -757,9 +810,9 @@
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#settings">settings</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#settings">settings</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:222</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L462">src/core/ngTableParams.ts:462</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -775,7 +828,6 @@
 									<h5>newSettings: <a href="isettings.html" class="tsd-signature-type">ISettings</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -784,15 +836,15 @@
 					<h3>sorting</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">sorting<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="isortingvalues.html" class="tsd-signature-type">ISortingValues</a></li>
-						<li class="tsd-signature tsd-kind-icon">sorting<span class="tsd-signature-symbol">(</span>sorting<span class="tsd-signature-symbol">: </span><a href="isortingvalues.html" class="tsd-signature-type">ISortingValues</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-						<li class="tsd-signature tsd-kind-icon">sorting<span class="tsd-signature-symbol">(</span>field<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, direction<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">sorting<span class="tsd-signature-symbol">(</span>sorting<span class="tsd-signature-symbol">: </span><a href="isortingvalues.html" class="tsd-signature-type">ISortingValues</a><span class="tsd-signature-symbol">)</span></li>
+						<li class="tsd-signature tsd-kind-icon">sorting<span class="tsd-signature-symbol">(</span>field<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, direction<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#sorting">sorting</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#sorting">sorting</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:227</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L498">src/core/ngTableParams.ts:498</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -805,9 +857,9 @@
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#sorting">sorting</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#sorting">sorting</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:232</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L503">src/core/ngTableParams.ts:503</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -822,13 +874,12 @@
 									<h5>sorting: <a href="isortingvalues.html" class="tsd-signature-type">ISortingValues</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#sorting">sorting</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#sorting">sorting</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:236</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L507">src/core/ngTableParams.ts:507</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -845,7 +896,6 @@
 									<h5>direction: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -854,14 +904,14 @@
 					<h3>total</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">total<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-						<li class="tsd-signature tsd-kind-icon">total<span class="tsd-signature-symbol">(</span>total<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">total<span class="tsd-signature-symbol">(</span>total<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#total">total</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#total">total</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:260</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L522">src/core/ngTableParams.ts:522</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -873,9 +923,9 @@
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#total">total</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#total">total</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:275</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L537">src/core/ngTableParams.ts:537</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -886,9 +936,9 @@
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><pre><code class="lang-js"><span class="hljs-keyword">var</span> tp = <span class="hljs-keyword">new</span> NgTableParams({}, { getData: customGetData })
+									<dd><pre><code class="lang-js"><span class="hljs-keyword">const</span> tp = <span class="hljs-keyword">new</span> NgTableParams({}, { <span class="hljs-attr">getData</span>: customGetData })
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">customGetData</span>(<span class="hljs-params">params</span>) </span>{
-     <span class="hljs-keyword">var</span> queryResult = <span class="hljs-comment">// code to fetch current data rows and total //</span>
+     <span class="hljs-keyword">const</span> queryResult = <span class="hljs-comment">// code to fetch current data rows and total //</span>
      params.total(queryResult.total);
      <span class="hljs-keyword">return</span> queryResult.dataRowsPage;
 }
@@ -902,7 +952,6 @@
 									<h5>total: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ingtableparams.html" class="tsd-signature-type">INgTableParams</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -910,14 +959,14 @@
 					<a name="url" class="tsd-anchor"></a>
 					<h3>url</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">(</span>asString<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">(</span>asString<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="ingtableparams.html">INgTableParams</a>.<a href="ingtableparams.html#url">url</a></p>
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#url">url</a></p>
 								<ul>
-									<li>Defined in src/core/public-interfaces.ts:281</li>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L548">src/core/ngTableParams.ts:548</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -933,10 +982,48 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> asString: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>
-							</h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter-index-signature">
+									<h5><span class="tsd-signature-symbol">[</span>name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-static tsd-is-external">
+					<a name="init" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> init</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">(</span>$q<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ng1.IQService</span>, $log<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ng1.ILogService</span>, ngTableDefaults<span class="tsd-signature-symbol">: </span><a href="idefaults.html" class="tsd-signature-type">IDefaults</a>, ngTableEventsChannel<span class="tsd-signature-symbol">: </span><a href="../classes/ngtableeventschannel.html" class="tsd-signature-type">NgTableEventsChannel</a>, ngTableSettings<span class="tsd-signature-symbol">: </span><a href="../classes/ngtablesettings.html" class="tsd-signature-type">NgTableSettings</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="../classes/ngtableparams.html">NgTableParams</a>.<a href="../classes/ngtableparams.html#init">init</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/core/ngTableParams.ts#L645">src/core/ngTableParams.ts:645</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>$q: <span class="tsd-signature-type">ng1.IQService</span></h5>
+								</li>
+								<li>
+									<h5>$log: <span class="tsd-signature-type">ng1.ILogService</span></h5>
+								</li>
+								<li>
+									<h5>ngTableDefaults: <a href="idefaults.html" class="tsd-signature-type">IDefaults</a></h5>
+								</li>
+								<li>
+									<h5>ngTableEventsChannel: <a href="../classes/ngtableeventschannel.html" class="tsd-signature-type">NgTableEventsChannel</a></h5>
+								</li>
+								<li>
+									<h5>ngTableSettings: <a href="../classes/ngtablesettings.html" class="tsd-signature-type">NgTableSettings</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -957,11 +1044,17 @@
 					<li class="current tsd-kind-interface tsd-has-type-parameter tsd-is-private tsd-is-external">
 						<a href="internaltableparams.html" class="tsd-kind-icon">Internal<wbr>Table<wbr>Params</a>
 						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+								<a href="internaltableparams.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 								<a href="internaltableparams.html#data" class="tsd-kind-icon">data</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-external">
 								<a href="internaltableparams.html#isnullinstance" class="tsd-kind-icon">is<wbr>Null<wbr>Instance</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+								<a href="internaltableparams.html#reloadpages" class="tsd-kind-icon">reload<wbr>Pages</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 								<a href="internaltableparams.html#count" class="tsd-kind-icon">count</a>
@@ -1006,9 +1099,6 @@
 								<a href="internaltableparams.html#reload" class="tsd-kind-icon">reload</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="internaltableparams.html#reloadpages" class="tsd-kind-icon">reload<wbr>Pages</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 								<a href="internaltableparams.html#settings" class="tsd-kind-icon">settings</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
@@ -1019,6 +1109,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 								<a href="internaltableparams.html#url" class="tsd-kind-icon">url</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-static tsd-is-external">
+								<a href="internaltableparams.html#init" class="tsd-kind-icon">init</a>
 							</li>
 						</ul>
 					</li>

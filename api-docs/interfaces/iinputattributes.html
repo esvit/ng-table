@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IInputAttributes | ng-table</title>
+	<title>IInputAttributes | ngTable API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">ng-table</a>
+					<a href="../index.html" class="title">ngTable API Reference</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -75,10 +75,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">unknown</span>
+						<a href="angular.iattributes.html" class="tsd-signature-type">IAttributes</a>
 					</li>
 					<li>
-						<span class="tsd-signature-type">unknown</span>
+						<a href="angular.iattributes.html" class="tsd-signature-type">IAttributes</a>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">IInputAttributes</span>
@@ -87,6 +87,17 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel tsd-kind-interface tsd-is-private tsd-is-external tsd-is-not-exported">
+				<h3 class="tsd-before-signature">Indexable</h3>
+				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></div>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>this is necessary to be able to access the scoped attributes. it&#39;s not very elegant
+							because you have to use attrs[&#39;foo&#39;] instead of attrs.foo but I don&#39;t know of a better way
+						this should really be limited to return string but it creates this problem: <a href="http://stackoverflow.com/q/17201854/165656">http://stackoverflow.com/q/17201854/165656</a></p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -94,8 +105,20 @@
 						<section class="tsd-index-section tsd-is-external tsd-is-not-exported">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported"><a href="iinputattributes.html#_attr" class="tsd-kind-icon">$attr</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external tsd-is-not-exported"><a href="iinputattributes.html#ngtablecolumnsbinding" class="tsd-kind-icon">ng<wbr>Table<wbr>Columns<wbr>Binding</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external tsd-is-not-exported"><a href="iinputattributes.html#ngtableselectfilterds" class="tsd-kind-icon">ng<wbr>Table<wbr>Select<wbr>Filter<wbr>Ds</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-inherited tsd-is-external tsd-is-not-exported">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported"><a href="iinputattributes.html#_addclass" class="tsd-kind-icon">$add<wbr>Class</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported"><a href="iinputattributes.html#_normalize" class="tsd-kind-icon">$normalize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported"><a href="iinputattributes.html#_observe" class="tsd-kind-icon">$observe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported"><a href="iinputattributes.html#_removeclass" class="tsd-kind-icon">$remove<wbr>Class</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported"><a href="iinputattributes.html#_set" class="tsd-kind-icon">$set</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported"><a href="iinputattributes.html#_updateclass" class="tsd-kind-icon">$update<wbr>Class</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,13 +126,31 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-external tsd-is-not-exported">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+					<a name="_attr" class="tsd-anchor"></a>
+					<h3>$attr</h3>
+					<div class="tsd-signature tsd-kind-icon">$attr<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Object</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_attr">$attr</a></p>
+						<p>Overwrites <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_attr">$attr</a></p>
+						<ul>
+							<li>Defined in node_modules/@types/angular/index.d.ts:373</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A map of DOM element attribute names to the normalized name. This is needed
+							to do reverse lookup from normalized name back to actual name.</p>
+						</div>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external tsd-is-not-exported">
 					<a name="ngtablecolumnsbinding" class="tsd-anchor"></a>
 					<h3>ng<wbr>Table<wbr>Columns<wbr>Binding</h3>
 					<div class="tsd-signature tsd-kind-icon">ng<wbr>Table<wbr>Columns<wbr>Binding<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/browser/ngTableColumnsBinding.directive.ts:17</li>
+							<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/browser/ngTableColumnsBinding.directive.ts#L17">src/browser/ngTableColumnsBinding.directive.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -119,9 +160,235 @@
 					<div class="tsd-signature tsd-kind-icon">ng<wbr>Table<wbr>Select<wbr>Filter<wbr>Ds<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/browser/ngTableSelectFilterDs.directive.ts:13</li>
+							<li>Defined in <a href="https://github.com/esvit/ng-table/blob/5317463/src/browser/ngTableSelectFilterDs.directive.ts#L16">src/browser/ngTableSelectFilterDs.directive.ts:16</a></li>
 						</ul>
 					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external tsd-is-not-exported">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+					<a name="_addclass" class="tsd-anchor"></a>
+					<h3>$add<wbr>Class</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">$add<wbr>Class<span class="tsd-signature-symbol">(</span>classVal<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_addclass">$addClass</a></p>
+								<p>Overwrites <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_addclass">$addClass</a></p>
+								<ul>
+									<li>Defined in node_modules/@types/angular/index.d.ts:341</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Adds the CSS class value specified by the classVal parameter to the
+										element. If animations are enabled then an animation will be triggered
+									for the class addition.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>classVal: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+					<a name="_normalize" class="tsd-anchor"></a>
+					<h3>$normalize</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">$normalize<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_normalize">$normalize</a></p>
+								<p>Overwrites <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_normalize">$normalize</a></p>
+								<ul>
+									<li>Defined in node_modules/@types/angular/index.d.ts:334</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Converts an attribute name (e.g. dash/colon/underscore-delimited string, optionally prefixed with x- or data-) to its normalized, camelCase form.</p>
+								</div>
+								<p>Also there is special case for Moz prefix starting with upper case letter.</p>
+								<p>For further information check out the guide on @see <a href="https://docs.angularjs.org/guide/directive#matching-directives">https://docs.angularjs.org/guide/directive#matching-directives</a></p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+					<a name="_observe" class="tsd-anchor"></a>
+					<h3>$observe</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">$observe&lt;T&gt;<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_observe">$observe</a></p>
+								<p>Overwrites <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_observe">$observe</a></p>
+								<ul>
+									<li>Defined in node_modules/@types/angular/index.d.ts:367</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Observes an interpolated attribute.
+										The observer function will be invoked once during the next $digest
+										following compilation. The observer is then invoked whenever the
+									interpolated value changes.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>fn: <span class="tsd-signature-type">function</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5><span class="tsd-flag ts-flagOptional">Optional</span> value: <span class="tsd-signature-type">T</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Function</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+					<a name="_removeclass" class="tsd-anchor"></a>
+					<h3>$remove<wbr>Class</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">$remove<wbr>Class<span class="tsd-signature-symbol">(</span>classVal<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_removeclass">$removeClass</a></p>
+								<p>Overwrites <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_removeclass">$removeClass</a></p>
+								<ul>
+									<li>Defined in node_modules/@types/angular/index.d.ts:348</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Removes the CSS class value specified by the classVal parameter from the
+										element. If animations are enabled then an animation will be triggered for
+									the class removal.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>classVal: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+					<a name="_set" class="tsd-anchor"></a>
+					<h3>$set</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">$set<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_set">$set</a></p>
+								<p>Overwrites <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_set">$set</a></p>
+								<ul>
+									<li>Defined in node_modules/@types/angular/index.d.ts:359</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set DOM element attribute value.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>value: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+					<a name="_updateclass" class="tsd-anchor"></a>
+					<h3>$update<wbr>Class</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">$update<wbr>Class<span class="tsd-signature-symbol">(</span>newClasses<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, oldClasses<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_updateclass">$updateClass</a></p>
+								<p>Overwrites <a href="angular.iattributes.html">IAttributes</a>.<a href="angular.iattributes.html#_updateclass">$updateClass</a></p>
+								<ul>
+									<li>Defined in node_modules/@types/angular/index.d.ts:354</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Adds and removes the appropriate CSS class values to the element based on the difference between
+									the new and old CSS class values (specified as newClasses and oldClasses).</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>newClasses: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>oldClasses: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -140,11 +407,32 @@
 					<li class="current tsd-kind-interface tsd-is-private tsd-is-external tsd-is-not-exported">
 						<a href="iinputattributes.html" class="tsd-kind-icon">IInput<wbr>Attributes</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+								<a href="iinputattributes.html#_attr" class="tsd-kind-icon">$attr</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external tsd-is-not-exported">
 								<a href="iinputattributes.html#ngtablecolumnsbinding" class="tsd-kind-icon">ng<wbr>Table<wbr>Columns<wbr>Binding</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external tsd-is-not-exported">
 								<a href="iinputattributes.html#ngtableselectfilterds" class="tsd-kind-icon">ng<wbr>Table<wbr>Select<wbr>Filter<wbr>Ds</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+								<a href="iinputattributes.html#_addclass" class="tsd-kind-icon">$add<wbr>Class</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+								<a href="iinputattributes.html#_normalize" class="tsd-kind-icon">$normalize</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+								<a href="iinputattributes.html#_observe" class="tsd-kind-icon">$observe</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+								<a href="iinputattributes.html#_removeclass" class="tsd-kind-icon">$remove<wbr>Class</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+								<a href="iinputattributes.html#_set" class="tsd-kind-icon">$set</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external tsd-is-not-exported">
+								<a href="iinputattributes.html#_updateclass" class="tsd-kind-icon">$update<wbr>Class</a>
 							</li>
 						</ul>
 					</li>
