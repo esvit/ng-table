@@ -7,7 +7,7 @@
  */
 
 import { IParamValues } from './ngTableParams';
-import { ISettings } from './ngTableSettings';
+import { SettingsPartial } from './ngTableSettings';
 
 
 /**
@@ -16,7 +16,7 @@ import { ISettings } from './ngTableSettings';
  */
 export interface IDefaults {
     params?: IParamValues<any>;
-    settings?: ISettings<any>
+    settings?: SettingsPartial<any>
 }
 
 /**

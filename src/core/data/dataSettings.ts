@@ -1,5 +1,7 @@
-export interface IDataSettings {
-    applyFilter?: boolean;
-    applyPaging?: boolean;
-    applySort?: boolean;
+export type DataSettingsPartial = Partial<DataSettings>;
+
+export class DataSettings {
+    applyFilter = true;
+    applyPaging = true;
+    applySort = true;
 }

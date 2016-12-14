@@ -67,7 +67,10 @@ function createParts(rootDir, env) {
                 },
                 // note: wanted to use eval-source-map to increase build times, but chrome would not stop on breakpoint
                 // therefore instead using source-map
-                devtool: 'source-map'
+                devtool: 'source-map',
+                performance: {
+                    hints: false
+                }
             };
         } else if (env.test) {
             return {
@@ -91,7 +94,10 @@ function createParts(rootDir, env) {
                             /\.spec\.ts$/,
                             /node_modules/
                         ],
-                        loader: 'istanbul-instrumenter-loader'
+                        loader: 'istanbul-instrumenter-loader',
+                        query: {
+                            esModules: true
+                        }
                     }
                 ]
             }

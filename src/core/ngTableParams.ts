@@ -7,11 +7,11 @@
  */
 
 import * as ng1 from 'angular';
-import { IPromise } from 'angular';
+import { ILogService, IPromise, IQService } from 'angular';
 import { convertSortToOrderBy, isGroupingFun } from './util';
 import { IDefaults } from './ngTableDefaults'
 import { NgTableEventsChannel } from './ngTableEventsChannel'
-import { NgTableSettings, ISettings } from './ngTableSettings'
+import { NgTableSettings, SettingsPartial, Settings } from './ngTableSettings'
 import { DataResult, IDataRowGroup, IGetDataFunc } from './data';
 import { IFilterValues } from './filtering';
 import { IGetGroupFunc, Grouping, IGroupingFunc, GroupSort, IGroupValues } from './grouping';
@@ -77,11 +77,14 @@ export class NgTableParams<T> {
      */
     data: T[] = [];
     reloadPages: () => void;
-    private defaultSettings = NgTableParams.ngTableSettings.createDefaults<T>();
+    private defaultSettings = this.ngTableSettings.createDefaults<T>();
     private errParamsMemento: Memento<T>;
     private isCommittedDataset = false;
     isNullInstance: boolean;
     private initialEvents: Function[] = [];
+    private ngTableDefaults: IDefaults
+    private ngTableEventsChannel: NgTableEventsChannel;
+    private ngTableSettings: NgTableSettings;
     private prevParamsMemento: Memento<T>;
     private _params: IParamValues<T> = {
         page: 1,
@@ -91,7 +94,9 @@ export class NgTableParams<T> {
         group: {}
     };
     private _settings = this.defaultSettings;
-    constructor(baseParameters?: IParamValues<T> | boolean, baseSettings?: ISettings<T>) {
+    private $q: IQService;
+    private $log: ILogService
+    constructor(baseParameters?: IParamValues<T> | boolean, baseSettings?: SettingsPartial<T>) {
 
         // the ngTableController "needs" to create a dummy/null instance and it's important to know whether an instance
         // is one of these
@@ -106,17 +111,17 @@ export class NgTableParams<T> {
                 const newPages = this.generatePagesArray(this.page(), this.total(), this.count());
                 if (!ng1.equals(oldPages, newPages)) {
                     currentPages = newPages;
-                    NgTableParams.ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
+                    this.ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
                 }
             }
         })();
 
-        ng1.extend(this._params, NgTableParams.ngTableDefaults.params);
+        ng1.extend(this._params, this.ngTableDefaults.params);
 
         this.settings(baseSettings);
         this.parameters(baseParameters, true);
 
-        NgTableParams.ngTableEventsChannel.publishAfterCreated(this);
+        this.ngTableEventsChannel.publishAfterCreated(this);
         // run events during construction after the initial create event. That way a consumer
         // can subscribe to all events for a table without "dropping" an event
         ng1.forEach(this.initialEvents, event => {
@@ -424,10 +429,10 @@ export class NgTableParams<T> {
         this.isCommittedDataset = true;
 
         if (this.hasGroup()) {
-            pData = this.runInterceptorPipeline(NgTableParams.$q.when(this._settings.getGroups(this)));
+            pData = this.runInterceptorPipeline(this.$q.when(this._settings.getGroups(this)));
         } else {
             const fn = this._settings.getData as IGetDataFunc<T>;
-            pData = this.runInterceptorPipeline(NgTableParams.$q.when(fn(this)));
+            pData = this.runInterceptorPipeline(this.$q.when(fn(this)));
         }
 
         this.log('ngTable: reload data');
@@ -440,30 +445,30 @@ export class NgTableParams<T> {
             this.data = data;
             // note: I think it makes sense to publish this event even when data === oldData
             // subscribers can always set a filter to only receive the event when data !== oldData
-            NgTableParams.ngTableEventsChannel.publishAfterReloadData(this, data, oldData);
+            this.ngTableEventsChannel.publishAfterReloadData(this, data, oldData);
             this.reloadPages();
 
             return data;
         }).catch(reason => {
             this.errParamsMemento = this.prevParamsMemento;
             // "rethrow"
-            return NgTableParams.$q.reject(reason);
+            return this.$q.reject(reason);
         });
     }
     /**
      * Returns the settings for the table.
      */
-    settings(): ISettings<T>
+    settings(): Settings<T>
     /**
      * Sets the settings for the table; new setting values will be merged with the existing settings.
      * Supplying a new `dataset` will cause `isDataReloadRequired` to return true and the `ngTableEventsChannel`
      * to fire its `datasetChanged` event
      */
-    settings(newSettings: ISettings<T>): this
-    settings(newSettings?: ISettings<T>): this | ISettings<T> {
+    settings(newSettings: SettingsPartial<T>): this
+    settings(newSettings?: SettingsPartial<T>): this | Settings<T> {
         if (ng1.isDefined(newSettings)) {
 
-            const settings = NgTableParams.ngTableSettings.merge(this._settings, newSettings);
+            const settings = this.ngTableSettings.merge(this._settings, newSettings);
 
             const originalDataset = this._settings.dataset;
             this._settings = settings;
@@ -477,7 +482,7 @@ export class NgTableParams<T> {
                 this.isCommittedDataset = false;
 
                 const fireEvent = () => {
-                    NgTableParams.ngTableEventsChannel.publishDatasetChanged(this, newSettings.dataset, originalDataset);
+                    this.ngTableEventsChannel.publishDatasetChanged(this, newSettings.dataset, originalDataset);
                 };
 
                 if (this.initialEvents) {
@@ -597,12 +602,12 @@ export class NgTableParams<T> {
         return !ng1.equals(currentVal, previousVal);
     }
     private log(...args: any[]) {
-        if (this._settings.debugMode && NgTableParams.$log.debug) {
-            NgTableParams.$log.debug(...args);
+        if (this._settings.debugMode && this.$log.debug) {
+            this.$log.debug(...args);
         }
     }
     private parseGroup(group: string | Grouping<T>) {
-        const defaultSort = this._settings.groupOptions && this._settings.groupOptions.defaultSort;
+        const defaultSort = this._settings.groupOptions.defaultSort;
         if (!group) {
             return group;
         } else if (isGroupingFun(group)) {
@@ -623,12 +628,10 @@ export class NgTableParams<T> {
             };
         }
     }
-    private runInterceptorPipeline(fetchedData: ng1.IPromise<any>) {
-        const interceptors = this._settings.interceptors || [];
-
-        return interceptors.reduce((result, interceptor) => {
-            const thenFn = (interceptor.response && interceptor.response.bind(interceptor)) || NgTableParams.$q.when;
-            const rejectFn = (interceptor.responseError && interceptor.responseError.bind(interceptor)) || NgTableParams.$q.reject;
+    private runInterceptorPipeline(fetchedData: IPromise<any>) {
+        return this._settings.interceptors.reduce((result, interceptor) => {
+            const thenFn = (interceptor.response && interceptor.response.bind(interceptor)) || this.$q.when;
+            const rejectFn = (interceptor.responseError && interceptor.responseError.bind(interceptor)) || this.$q.reject;
             return result.then(data => {
                 return thenFn(data, this);
             }, reason => {
@@ -637,22 +640,15 @@ export class NgTableParams<T> {
         }, fetchedData);
     }
 
-    private static $q: ng1.IQService;
-    private static $log: ng1.ILogService;
-    private static ngTableDefaults: IDefaults;
-    private static ngTableEventsChannel: NgTableEventsChannel;
-    private static ngTableSettings: NgTableSettings;
     static init(
-        $q: ng1.IQService,
-        $log: ng1.ILogService,
+        $q: IQService,
+        $log: ILogService,
         ngTableDefaults: IDefaults,
         ngTableEventsChannel: NgTableEventsChannel,
         ngTableSettings: NgTableSettings) {
-        NgTableParams.$q = $q;
-        NgTableParams.$log = $log;
-        NgTableParams.ngTableDefaults = ngTableDefaults;
-        NgTableParams.ngTableEventsChannel = ngTableEventsChannel;
-        NgTableParams.ngTableSettings = ngTableSettings;
+        ng1.extend(NgTableParams.prototype, {
+            $q, $log, ngTableDefaults, ngTableEventsChannel, ngTableSettings
+        });
     }
 }
 

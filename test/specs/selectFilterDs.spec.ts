@@ -1,6 +1,6 @@
 import { ICompileService, IScope, ITimeoutService } from 'angular';
 import * as ng1 from 'angular';
-import { SelectData, ISelectOption, ngTableBrowserModule } from '../src/browser';
+import { SelectData, ISelectOption, ngTableBrowserModule } from '../../src/browser';
 
 describe('ngTableSelectFilterDs directive', () => {
 

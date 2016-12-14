@@ -65,8 +65,6 @@ export class NgTableDefaultGetDataProvider implements IServiceProvider {
 
         function ngTableDefaultGetData<T>($filter: IFilterService, ngTableEventsChannel: NgTableEventsChannel): IDefaultGetData<T> {
 
-            const defaultDataOptions = { applyFilter: true, applySort: true, applyPaging: true };
-
             (getData as IDefaultGetData<T>).applyPaging = applyPaging;
             (getData as IDefaultGetData<T>).getFilterFn = getFilterFn;
             (getData as IDefaultGetData<T>).getOrderByFn = getOrderByFn;
@@ -118,7 +116,7 @@ export class NgTableDefaultGetDataProvider implements IServiceProvider {
                     return [];
                 }
 
-                const options = ng1.extend({}, defaultDataOptions, params.settings().dataOptions);
+                const options = params.settings().dataOptions;
 
                 const fData = options.applyFilter ? applyFilter(data, params) : data;
                 ngTableEventsChannel.publishAfterDataFiltered(params, fData);

@@ -36,7 +36,7 @@ export function ngTableDefaultGetGroups<T>($q: IQService, ngTableDefaultGetData:
 
         const settings = params.settings();
         const originalDataOptions = settings.dataOptions;
-        settings.dataOptions = { applyPaging: false };
+        settings.dataOptions = ng1.extend({}, originalDataOptions, { applyPaging: false });
         const getData: IGetDataFunc<T> = settings.getData;
         const gotData = $q.when(getData(params));
         return gotData.then(data => {

@@ -1,8 +1,6 @@
-import { SortDirection } from '../sorting';
+import { GroupSort } from './groupSettings';
 
 export type Grouping<T> = IGroupValues | IGroupingFunc<T>;
-
-export type GroupSort = SortDirection | '';
 
 /**
  * Signature of a function that should return the name of the group

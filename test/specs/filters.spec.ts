@@ -1,4 +1,4 @@
-import { NgTableFilterConfig, NgTableFilterConfigProvider, ngTableBrowserModule } from '../src/browser';
+import { NgTableFilterConfig, NgTableFilterConfigProvider, ngTableBrowserModule } from '../../src/browser';
 import * as ng1 from 'angular';
 
 describe('ngTableFilterConfig', () => {

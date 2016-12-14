@@ -16,11 +16,12 @@ e2e/**/*.d.ts
 !e2e/protractor*.js
 !demo-apps/es5/index.js
 !demo-apps/es6-systemjs/index.js
-test/**/*.d.ts
-test/**/*.js.map
-test/**/*.js
-!test/index.js
-!test/index.d.ts
+test/specs/**/*.d.ts
+test/specs/**/*.js.map
+test/specs/**/*.js
+test/util/**/*.d.ts
+test/util/**/*.js.map
+test/util/**/*.js
 bundles
 build
 build-stats.json

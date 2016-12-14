@@ -1,8 +1,8 @@
 import { IAugmentedJQuery, ICompileService, IQService, IPromise, IScope, ITimeoutService } from 'angular';
 import * as ng1 from 'angular';
-import { ngTableModule } from '../index';
-import { NgTableParams, IParamValues, ISettings, ISortingValues } from '../src/core';
-import { IColumnDef, IFilterTemplateDef, IFilterTemplateDefMap, ISelectOption } from '../src/browser'
+import { ngTableModule } from '../../index';
+import { NgTableParams, IParamValues, SettingsPartial, ISortingValues } from '../../src/core';
+import { IColumnDef, IFilterTemplateDef, IFilterTemplateDefMap, ISelectOption } from '../../src/browser'
 
 describe('ng-table', () => {
     interface IPerson {
@@ -72,8 +72,8 @@ describe('ng-table', () => {
         scope.model = {};
     }));
 
-    function createNgTableParams<T>(initialParams?: IParamValues<T>, settings?: ISettings<T>): NgTableParams<T>;
-    function createNgTableParams<T>(settings?: ISettings<T>): NgTableParams<T>;
+    function createNgTableParams<T>(initialParams?: IParamValues<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
+    function createNgTableParams<T>(settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: any): NgTableParams<T> {
         let initialParams: IParamValues<T>;
         if (arguments.length === 2) {

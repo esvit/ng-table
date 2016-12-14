@@ -1,8 +1,9 @@
 import { IAugmentedJQuery, ICompileService, IQService, IScope } from 'angular';
 import * as ng1 from 'angular';
-import { ngTableModule } from '../index';
-import { NgTableParams } from '../src/core';
-import { ColumnFieldContext, IColumnDef, DynamicTableColField, IDynamicTableColDef, IFilterTemplateDefMap, ISelectOption } from '../src/browser';
+import * as _ from 'lodash';
+import { ngTableModule } from '../../index';
+import { NgTableParams } from '../../src/core';
+import { ColumnFieldContext, IColumnDef, DynamicTableColField, IDynamicTableColDef, IFilterTemplateDefMap, ISelectOption } from '../../src/browser';
 
 describe('ng-table-dynamic', () => {
 

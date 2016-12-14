@@ -17,7 +17,7 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             // libraries
-            'node_modules/lodash/index.js',
+            'node_modules/lodash/lodash.js',
             'node_modules/angular/angular.js',
             'node_modules/angular-mocks/angular-mocks.js',
             testGlob

@@ -1,9 +1,11 @@
 import { IControllerService, IQService, IScope } from 'angular';
 import * as ng1 from 'angular';
+import * as _ from 'lodash';
 import {
-    IDataRowGroup, IDefaultGetData, IDefaults, NgTableEventsChannel, IGroupingFunc, IGroupValues, InternalTableParams,
-    NgTableParams, IPageButton, IParamValues, ISettings, ngTableCoreModule
-} from '../src/core';
+    IDataRowGroup, DataSettings, IDefaultGetData, IDefaults, NgTableEventsChannel, FilterSettings, 
+    IGroupingFunc, GroupSettings, IGroupValues, InternalTableParams, NgTableParams, IPageButton, IParamValues, SettingsPartial, 
+    ngTableCoreModule
+} from '../../src/core';
 
 describe('NgTableParams', () => {
     interface IScopeWithPrivates extends IScope {
@@ -33,8 +35,8 @@ describe('NgTableParams', () => {
         scope = $rootScope.$new();
     }));
 
-    function createNgTableParams<T>(initialParams?: IParamValues<T>, settings?: ISettings<T>): NgTableParams<T>;
-    function createNgTableParams<T>(settings?: ISettings<T>): NgTableParams<T>;
+    function createNgTableParams<T>(initialParams?: IParamValues<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
+    function createNgTableParams<T>(settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: any): NgTableParams<T> {
         let initialParams: IParamValues<T>;
         if (arguments.length === 2) {
@@ -304,45 +306,6 @@ describe('NgTableParams', () => {
     });
 
     describe('settings', () => {
-
-        it('defaults', () => {
-            let params = new NgTableParams({});
-
-            const expectedSettings: ISettings<any> = {
-                $loading: false,
-                dataset: null,
-                total: 0,
-                defaultSort: 'desc',
-                counts: [10, 25, 50, 100],
-                interceptors: [],
-                paginationMaxBlocks: 11,
-                paginationMinBlocks: 5,
-                sortingIndicator: 'span',
-                filterOptions: {
-                    filterComparator: undefined,
-                    filterDelay: 500,
-                    filterDelayThreshold: 10000,
-                    filterFilterName: undefined,
-                    filterFn: undefined,
-                    filterLayout: 'stack'
-                },
-                groupOptions: { defaultSort: 'asc', isExpanded: true }
-            };
-            expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
-            expect(params.settings().getData).toEqual(jasmine.any(Function));
-            expect(params.settings().getGroups).toEqual(jasmine.any(Function));
-
-            params = new NgTableParams({}, {
-                total: 100,
-                counts: [1, 2],
-                groupOptions: { isExpanded: false }
-            });
-
-            expectedSettings.total = 100;
-            expectedSettings.counts = [1, 2];
-            expectedSettings.groupOptions = { defaultSort: 'asc', isExpanded: false };
-            expect(params.settings()).toEqual(jasmine.objectContaining(expectedSettings));
-        });
 
         it('changing settings().dataset should reset page to 1', () => {
             // given
@@ -2072,7 +2035,7 @@ describe('NgTableParams', () => {
 
                 // then
                 expect(actualPublisher).toBe(params);
-                expect(actualEventArgs).toEqual([initialDs, null]);
+                expect(actualEventArgs).toEqual([initialDs, undefined]);
             });
 
             it('should fire when a new dataset is supplied as a settings value', () => {

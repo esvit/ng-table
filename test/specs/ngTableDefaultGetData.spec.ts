@@ -2,7 +2,7 @@ import * as ng1 from 'angular';
 import {
     NgTableDefaultGetDataProvider, IDefaultGetData, NgTableParams,
     ngTableCoreModule
-} from '../src/core';
+} from '../../src/core';
 
 describe('ngTableDefaultGetData', () => {
 

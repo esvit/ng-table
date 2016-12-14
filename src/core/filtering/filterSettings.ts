@@ -3,7 +3,9 @@ import { IFilterFunc } from './filterFunc';
 
 export type FilterLayout = 'stack' | 'horizontal';
 
-export interface IFilterSettings<T> {
+export type FilterSettingsPartial<T> = Partial<FilterSettings<T>>
+
+export class FilterSettings<T> {
     /**
      * Use this to determine how items are matched against the filter values.
      * This setting is identical to the `comparator` parameter supported by the angular
@@ -13,31 +15,29 @@ export interface IFilterSettings<T> {
      * `IDefaultGetData` service is supplying the implementation for the
      * `ISettings.getData` function
      */
-    filterComparator?: FilterComparator<T>;
+    filterComparator?: FilterComparator<T> = undefined; // look for a substring match in case insensitive way
     /**
      * A duration to wait for the user to stop typing before applying the filter.
-     * - Defaults to 0 for small managed inmemory arrays ie where a `ISettings.dataset` argument is
-     *   supplied to `NgTableParams.settings`.
-     * - Defaults to 500 milliseconds otherwise.
+     * Note: this delay will NOT be applied when *small* managed inmemory arrays are supplied as a 
+     *       `SettingsPartial.dataset` argument to `NgTableParams.settings`.
      */
-    filterDelay?: number;
+    filterDelay = 500;
     /**
-     * The number of elements up to which a managed inmemory array is considered small. Defaults to 10000.
+     * The number of elements up to which a managed inmemory array is considered small
      */
-    filterDelayThreshold?: number;
+    filterDelayThreshold: number | null = 10000;
     /**
      * Overrides `IDefaultGetDataProvider.filterFilterName`.
      * The value supplied should be the name of the angular `$filter` service that will be selected to perform
      * the actual filter logic.
-     * Defaults to 'filter'.
      */
-    filterFilterName?: string;
+    filterFilterName?: string = undefined;
     /**
      * Tells `IDefaultGetData` to use this function supplied to perform the filtering instead of selecting an angular $filter.
      */
-    filterFn?: IFilterFunc<T>;
+    filterFn?: IFilterFunc<T> = undefined;
     /**
      * The layout to use when multiple html templates are to rendered in a single table header column.
      */
-    filterLayout?: FilterLayout
+    filterLayout: FilterLayout = 'stack';
 }
