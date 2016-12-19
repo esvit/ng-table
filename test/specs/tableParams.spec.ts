@@ -2,18 +2,18 @@ import { IControllerService, IQService, IScope } from 'angular';
 import * as ng1 from 'angular';
 import * as _ from 'lodash';
 import {
-    IDataRowGroup, DataSettings, IDefaultGetData, IDefaults, NgTableEventsChannel, FilterSettings, 
-    IGroupingFunc, GroupSettings, IGroupValues, InternalTableParams, NgTableParams, IPageButton, IParamValues, SettingsPartial, 
+    DataRowGroup, DataSettings, DefaultGetData, Defaults, NgTableEventsChannel, FilterSettings, 
+    GroupingFunc, GroupSettings, GroupValues, InternalTableParams, NgTableParams, PageButton, ParamValues, SettingsPartial, 
     ngTableCoreModule
 } from '../../src/core';
 
 describe('NgTableParams', () => {
-    interface IScopeWithPrivates extends IScope {
+    interface ScopeWithPrivates extends IScope {
         $$listenerCount: { [name: string]: number }
     }
 
     let scope: IScope,
-        $rootScope: IScopeWithPrivates;
+        $rootScope: ScopeWithPrivates;
     
     beforeAll(() => expect(ngTableCoreModule).toBeDefined());
 
@@ -24,21 +24,21 @@ describe('NgTableParams', () => {
 
 
             createSpy.$inject = ['$delegate'];
-            function createSpy(ngTableDefaultGetData: IDefaultGetData<any>) {
+            function createSpy(ngTableDefaultGetData: DefaultGetData<any>) {
                 return jasmine.createSpy('ngTableDefaultGetDataSpy', ngTableDefaultGetData).and.callThrough();
             }
         });
     });
 
-    beforeEach(inject(($controller: IControllerService, _$rootScope_: IScopeWithPrivates) => {
+    beforeEach(inject(($controller: IControllerService, _$rootScope_: ScopeWithPrivates) => {
         $rootScope = _$rootScope_;
         scope = $rootScope.$new();
     }));
 
-    function createNgTableParams<T>(initialParams?: IParamValues<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
+    function createNgTableParams<T>(initialParams?: ParamValues<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: any): NgTableParams<T> {
-        let initialParams: IParamValues<T>;
+        let initialParams: ParamValues<T>;
         if (arguments.length === 2) {
             initialParams = arguments[0];
             settings = arguments[1];
@@ -67,14 +67,14 @@ describe('NgTableParams', () => {
                 { type: 'page', number: 2, active: true, current: false },
                 { type: 'last', number: 3, active: true, current: false },
                 { type: 'next', number: 2, active: true }
-            ] as IPageButton[]);
+            ] as PageButton[]);
             expect(params.generatePagesArray(2, 30, 10)).toEqual([
                 { type: 'prev', number: 1, active: true },
                 { type: 'first', number: 1, active: true, current: false },
                 { type: 'page', number: 2, active: false, current: true },
                 { type: 'last', number: 3, active: true, current: false },
                 { type: 'next', number: 3, active: true }
-            ] as IPageButton[]);
+            ] as PageButton[]);
             expect(params.generatePagesArray(2, 100, 10)).toEqual([
                 { type: 'prev', number: 1, active: true },
                 { type: 'first', number: 1, active: true, current: false },
@@ -87,7 +87,7 @@ describe('NgTableParams', () => {
                 { type: 'more', active: false },
                 { type: 'last', number: 10, active: true, current: false },
                 { type: 'next', number: 3, active: true }
-            ] as IPageButton[]);
+            ] as PageButton[]);
         });
 
         it('should use own parameter values to generate pages when no arguments supplied', () => {
@@ -99,7 +99,7 @@ describe('NgTableParams', () => {
                 { type: 'page', number: 2, active: false, current: true },
                 { type: 'last', number: 3, active: true, current: false },
                 { type: 'next', number: 3, active: true }
-            ] as IPageButton[]);
+            ] as PageButton[]);
 
         });
     });
@@ -231,7 +231,7 @@ describe('NgTableParams', () => {
             expect(params.group()).toEqual(ng1.identity);
 
 
-            const fn: IGroupingFunc<any> = () => '';
+            const fn: GroupingFunc<any> = () => '';
             fn.sortDirection = 'desc';
             params.group(fn);
             expect(params.hasGroup(fn)).toBe(true);
@@ -258,7 +258,7 @@ describe('NgTableParams', () => {
                     groupOptions: { defaultSort: 'desc' }
                 });
 
-            const newGroups = _.extend<IGroupValues>({}, params.group(), { age: 'desc' });
+            const newGroups = _.extend<GroupValues>({}, params.group(), { age: 'desc' });
             params.group(newGroups);
             expect(params.hasGroup()).toBe(true);
             expect(params.hasGroup('role')).toBe(true);
@@ -403,12 +403,12 @@ describe('NgTableParams', () => {
 
     describe('getGroups', () => {
 
-        interface IEmployee {
+        interface Employee {
             name: string;
             role: string;
         }
 
-        let dataset: IEmployee[];
+        let dataset: Employee[];
         beforeEach(() => {
             dataset = [
                 { 'name': 'Hanson', 'role': 'Accounting' },
@@ -431,13 +431,13 @@ describe('NgTableParams', () => {
         it('should group data then apply paging to groups', () => {
             const tp = createNgTableParams({ count: 2, group: { role: '' } }, { dataset: dataset });
 
-            let actualRoleGroups: IDataRowGroup<IEmployee>[];
-            tp.reload<IDataRowGroup<IEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<Employee>[];
+            tp.reload<DataRowGroup<Employee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
 
-            const expectedRoleGroups: IDataRowGroup<IEmployee>[] = [
+            const expectedRoleGroups: DataRowGroup<Employee>[] = [
                 {
                     $hideRows: false,
                     value: 'Accounting',
@@ -466,8 +466,8 @@ describe('NgTableParams', () => {
                 group: { role: '' }
             }, { dataset: dataset });
 
-            let actualRoleGroups: IDataRowGroup<IEmployee>[];
-            tp.reload<IDataRowGroup<IEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<Employee>[];
+            tp.reload<DataRowGroup<Employee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
@@ -493,7 +493,7 @@ describe('NgTableParams', () => {
         });
 
         it('should use group function to group data', () => {
-            const grouper: IGroupingFunc<IEmployee> = (item) => item.name[0];
+            const grouper: GroupingFunc<Employee> = (item) => item.name[0];
             grouper.sortDirection = '';
             const tp = createNgTableParams({
                 count: 2,
@@ -501,8 +501,8 @@ describe('NgTableParams', () => {
                 group: grouper
             }, { dataset: dataset });
 
-            let actualRoleGroups: IDataRowGroup<IEmployee>[];
-            tp.reload<IDataRowGroup<IEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<Employee>[];
+            tp.reload<DataRowGroup<Employee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
@@ -538,8 +538,8 @@ describe('NgTableParams', () => {
                     dataset: dataset
                 });
 
-            let actualRoleGroups: IDataRowGroup<IEmployee>[];
-            tp.reload<IDataRowGroup<IEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<Employee>[];
+            tp.reload<DataRowGroup<Employee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
@@ -577,8 +577,8 @@ describe('NgTableParams', () => {
                     }
                 });
 
-            let actualRoleGroups: IDataRowGroup<IEmployee>[];
-            tp.reload<IDataRowGroup<IEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<Employee>[];
+            tp.reload<DataRowGroup<Employee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
@@ -610,7 +610,7 @@ describe('NgTableParams', () => {
         });
 
         it('should use sortDirection defined on group function to sort groups', () => {
-            const groupFn: IGroupingFunc<IEmployee> = item => item.role;
+            const groupFn: GroupingFunc<Employee> = item => item.role;
             groupFn.sortDirection = 'desc';
             const tp = createNgTableParams({
                 count: 3,
@@ -625,8 +625,8 @@ describe('NgTableParams', () => {
                     }
                 });
 
-            let actualRoleGroups: IDataRowGroup<IEmployee>[];
-            tp.reload<IDataRowGroup<IEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<Employee>[];
+            tp.reload<DataRowGroup<Employee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
@@ -660,11 +660,11 @@ describe('NgTableParams', () => {
 
     describe('getGroups with nested property', () => {
 
-        interface IComplexEmployee {
+        interface ComplexEmployee {
             details: { name: string, role: string };
         }
 
-        let dataset: IComplexEmployee[];
+        let dataset: ComplexEmployee[];
         beforeEach(() => {
             dataset = [
                 { 'details': { 'name': 'Hanson', 'role': 'Accounting' } },
@@ -687,13 +687,13 @@ describe('NgTableParams', () => {
         it('should group data then apply paging to groups', () => {
             const tp = createNgTableParams({ count: 2, group: { 'details.role': '' } }, { dataset: dataset });
 
-            let actualRoleGroups: IDataRowGroup<IComplexEmployee>[];
-            tp.reload<IDataRowGroup<IComplexEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<ComplexEmployee>[];
+            tp.reload<DataRowGroup<ComplexEmployee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
 
-            let expectedRoleGroups: IDataRowGroup<IComplexEmployee>[] = [
+            let expectedRoleGroups: DataRowGroup<ComplexEmployee>[] = [
                 {
                     $hideRows: false,
                     value: 'Accounting',
@@ -722,13 +722,13 @@ describe('NgTableParams', () => {
                 group: { 'details.role': '' }
             }, { dataset: dataset });
 
-            let actualRoleGroups: IDataRowGroup<IComplexEmployee>[];
-            tp.reload<IDataRowGroup<IComplexEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<ComplexEmployee>[];
+            tp.reload<DataRowGroup<ComplexEmployee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
 
-            let expectedRoleGroups: IDataRowGroup<IComplexEmployee>[] = [
+            let expectedRoleGroups: DataRowGroup<ComplexEmployee>[] = [
                 {
                     $hideRows: false,
                     value: 'Asset Management',
@@ -750,7 +750,7 @@ describe('NgTableParams', () => {
         });
 
         it('should use group function to group data', () => {
-            const grouper: IGroupingFunc<IComplexEmployee> = item => item.details.name[0];
+            const grouper: GroupingFunc<ComplexEmployee> = item => item.details.name[0];
             grouper.sortDirection = '';
             const tp = createNgTableParams({
                 count: 2,
@@ -758,13 +758,13 @@ describe('NgTableParams', () => {
                 group: grouper
             }, { dataset: dataset });
 
-            let actualRoleGroups: IDataRowGroup<IComplexEmployee>[];
-            tp.reload<IDataRowGroup<IComplexEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<ComplexEmployee>[];
+            tp.reload<DataRowGroup<ComplexEmployee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
 
-            let expectedRoleGroups: IDataRowGroup<IComplexEmployee>[] = [
+            let expectedRoleGroups: DataRowGroup<ComplexEmployee>[] = [
                 {
                     $hideRows: false,
                     value: 'Y',
@@ -796,13 +796,13 @@ describe('NgTableParams', () => {
                     dataset: dataset
                 });
 
-            let actualRoleGroups: IDataRowGroup<IComplexEmployee>[];
-            tp.reload<IDataRowGroup<IComplexEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<ComplexEmployee>[];
+            tp.reload<DataRowGroup<ComplexEmployee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
 
-            let expectedRoleGroups: IDataRowGroup<IComplexEmployee>[] = [
+            let expectedRoleGroups: DataRowGroup<ComplexEmployee>[] = [
                 {
                     $hideRows: false,
                     value: 'Accounting',
@@ -836,13 +836,13 @@ describe('NgTableParams', () => {
                     }
                 });
 
-            let actualRoleGroups: IDataRowGroup<IComplexEmployee>[];
-            tp.reload<IDataRowGroup<IComplexEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<ComplexEmployee>[];
+            tp.reload<DataRowGroup<ComplexEmployee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
 
-            let expectedRoleGroups: IDataRowGroup<IComplexEmployee>[] = [
+            let expectedRoleGroups: DataRowGroup<ComplexEmployee>[] = [
                 {
                     $hideRows: false,
                     value: 'Payroll',
@@ -870,7 +870,7 @@ describe('NgTableParams', () => {
         });
 
         it('should use sortDirection defined on group function to sort groups', () => {
-            const groupFn: IGroupingFunc<IComplexEmployee> = item => item.details.role;
+            const groupFn: GroupingFunc<ComplexEmployee> = item => item.details.role;
             groupFn.sortDirection = 'desc';
             const tp = createNgTableParams({
                 count: 3,
@@ -885,13 +885,13 @@ describe('NgTableParams', () => {
                     }
                 });
 
-            let actualRoleGroups: IDataRowGroup<IComplexEmployee>[];
-            tp.reload<IDataRowGroup<IComplexEmployee>>().then(groups => {
+            let actualRoleGroups: DataRowGroup<ComplexEmployee>[];
+            tp.reload<DataRowGroup<ComplexEmployee>>().then(groups => {
                 actualRoleGroups = groups;
             });
             $rootScope.$digest();
 
-            let expectedRoleGroups: IDataRowGroup<IComplexEmployee>[] = [
+            let expectedRoleGroups: DataRowGroup<ComplexEmployee>[] = [
                 {
                     $hideRows: false,
                     value: 'Payroll',
@@ -919,7 +919,7 @@ describe('NgTableParams', () => {
         });
     });
 
-    it('ngTableParams test defaults', inject(($q: IQService, ngTableDefaults: IDefaults) => {
+    it('ngTableParams test defaults', inject(($q: IQService, ngTableDefaults: Defaults) => {
         ngTableDefaults.params.count = 2;
         ngTableDefaults.settings.counts = [];
         let tp = new NgTableParams({});
@@ -1051,7 +1051,7 @@ describe('NgTableParams', () => {
 
             // when, then...
 
-            const grouper: IGroupingFunc<any> = () => '';
+            const grouper: GroupingFunc<any> = () => '';
             tp.group(grouper);
             expect(tp.isDataReloadRequired()).toBe(true);
 
@@ -1397,14 +1397,14 @@ describe('NgTableParams', () => {
             });
 
             it('should be able to modify reason returned by getData', inject(($q: IQService) => {
-                interface IResponseError {
+                interface ResponseError {
                     description: string;
                     code?: number;
                 }
 
                 // given
                 const interceptor = {
-                    responseError: (reason: IResponseError/*, params*/) => {
+                    responseError: (reason: ResponseError/*, params*/) => {
                         reason.code = 400;
                         return $q.reject(reason);
                     }
@@ -1415,7 +1415,7 @@ describe('NgTableParams', () => {
                 });
 
                 // when
-                let actualReason: IResponseError;
+                let actualReason: ResponseError;
                 tp.reload().catch(reason => {
                     actualReason = reason;
                 });

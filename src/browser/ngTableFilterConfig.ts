@@ -8,7 +8,7 @@
 
 import * as ng1 from 'angular';
 import { IServiceProvider, auto } from 'angular';
-import { IFilterConfigValues, IFilterTemplateDef } from './public-interfaces';
+import { FilterConfigValues, FilterTemplateDef } from './public-interfaces';
 
 /**
  * The angular provider used to configure the behaviour of the `NgTableFilterConfig` service.
@@ -16,8 +16,8 @@ import { IFilterConfigValues, IFilterTemplateDef } from './public-interfaces';
 export class NgTableFilterConfigProvider implements IServiceProvider {
     static $inject = ['$injector'];
     $get: () => NgTableFilterConfig;
-    private config: IFilterConfigValues;
-    private defaultConfig: IFilterConfigValues = {
+    private config: FilterConfigValues;
+    private defaultConfig: FilterConfigValues = {
         defaultBaseUrl: 'ng-table/filters/',
         defaultExt: '.html',
         aliasUrls: {}
@@ -40,7 +40,7 @@ export class NgTableFilterConfigProvider implements IServiceProvider {
     /**
      * Set the config values used by `NgTableFilterConfig` service
      */
-    setConfig(customConfig: IFilterConfigValues) {
+    setConfig(customConfig: FilterConfigValues) {
         const mergeConfig = ng1.extend({}, this.config, customConfig);
         mergeConfig.aliasUrls = ng1.extend({}, this.config.aliasUrls, customConfig.aliasUrls);
         this.config = mergeConfig;
@@ -57,7 +57,7 @@ export class NgTableFilterConfig {
         /**
          * Readonly copy of the final values used to configure the service.
          */
-        public readonly config: IFilterConfigValues
+        public readonly config: FilterConfigValues
     ) { }
 
     /**
@@ -69,9 +69,9 @@ export class NgTableFilterConfig {
     
     /**
      * Return the url of the html filter template for the supplied definition and key.
-     * For more information see the documentation for {@link IFilterTemplateMap}
+     * For more information see the documentation for {@link FilterTemplateMap}
      */
-    getTemplateUrl(filterDef: string | IFilterTemplateDef, filterKey?: string) {
+    getTemplateUrl(filterDef: string | FilterTemplateDef, filterKey?: string) {
         let filterName: string;
         if (typeof filterDef !== 'string') {
             filterName = filterDef.id;

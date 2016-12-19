@@ -7,11 +7,11 @@
  */
 
 import * as ng1 from 'angular';
-import { NgTableEventsChannel, IPageButton } from '../core'
-import { ITableScope } from './ngTableController';
+import { NgTableEventsChannel, PageButton } from '../core'
+import { TableScope } from './ngTableController';
 
-interface IScopeExtensions {
-    pages: IPageButton[]
+interface ScopeExtensions {
+    pages: PageButton[]
 }
 
 ngTablePagination.$inject = ['$compile', '$document', 'ngTableEventsChannel'];
@@ -29,7 +29,7 @@ export function ngTablePagination<T>($compile: ng1.ICompileService, $document: n
             'templateUrl': '='
         },
         replace: false,
-        link: function(scope: ITableScope<T> & IScopeExtensions, element: ng1.IAugmentedJQuery/*, attrs*/) {
+        link: function(scope: TableScope<T> & ScopeExtensions, element: ng1.IAugmentedJQuery/*, attrs*/) {
 
             ngTableEventsChannel.onAfterReloadData<T>(function(pubParams) {
                 scope.pages = pubParams.generatePagesArray();

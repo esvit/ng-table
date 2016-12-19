@@ -1,7 +1,7 @@
 import * as angular from 'angular';
-import { NgTableDefaultGetDataProvider, IDefaultGetData } from './data';
+import { NgTableDefaultGetDataProvider, DefaultGetData } from './data';
 import { GroupSettingsPartial, ngTableDefaultGetGroups } from './grouping';
-import { ngTableDefaults, IDefaults } from './ngTableDefaults';
+import { ngTableDefaults, Defaults } from './ngTableDefaults';
 import { NgTableSettings, SettingsPartial, Settings } from './ngTableSettings';
 import { NgTableParams } from './ngTableParams';
 import { NgTableEventsChannel } from './ngTableEventsChannel';
@@ -21,7 +21,7 @@ ngTableCoreModule.value('NgTableParams', NgTableParams)
 
 export { ngTableCoreModule };
 
-export { IDefaults } from './ngTableDefaults';
+export { Defaults } from './ngTableDefaults';
 export * from './ngTableEventsChannel';
 export { SettingsPartial, Settings };
 export * from './ngTableParams';

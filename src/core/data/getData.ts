@@ -6,16 +6,16 @@ import { NgTableParams } from '../ngTableParams';
  * data rows into the table.
  * @param params the table requesting the data rows
  */
-export interface IGetDataFunc<T> {
+export interface GetDataFunc<T> {
     (params: NgTableParams<T>): T[] | IPromise<T[]>;
 }
 
 /**
- * Variation of the {@link IGetDataFunc} function signature that allows for flexibility for
+ * Variation of the {@link GetDataFunc} function signature that allows for flexibility for
  * the shape of the return value.
  * Typcially you will use this function signature when you want to configure {@link NgTableParams}
  * with interceptors that will return the final data rows array.
  */
-export interface IInterceptableGetDataFunc<T> {
+export interface InterceptableGetDataFunc<T> {
     <TResult>(params: NgTableParams<T>): TResult;
 }

@@ -7,20 +7,20 @@
  */
 
 import * as ng1 from 'angular';
-import { IColumnDef, SelectData, ISelectDataFunc, ISelectOption } from './public-interfaces';
+import { ColumnDef, SelectData, SelectDataFunc, SelectOption } from './public-interfaces';
 
 /**
  * @private
  */
-export interface IInputAttributes extends ng1.IAttributes {
+export interface InputAttributes extends ng1.IAttributes {
     ngTableSelectFilterDs: string;
 }
 
 /**
  * @private
  */
-export interface IScopeExtensions {
-    $selectData: ISelectOption[]
+export interface ScopeExtensions {
+    $selectData: SelectOption[]
 }
 
 ngTableSelectFilterDs.$inject = [];
@@ -49,11 +49,11 @@ function ngTableSelectFilterDs(): ng1.IDirective {
  */
 export class NgTableSelectFilterDsController {
     static $inject = ['$scope', '$parse', '$attrs', '$q'];
-    $column: IColumnDef;
+    $column: ColumnDef;
     constructor(
-        private $scope: ng1.IScope & IScopeExtensions,
+        private $scope: ng1.IScope & ScopeExtensions,
         $parse: ng1.IParseService,
-        private $attrs: IInputAttributes,
+        private $attrs: InputAttributes,
         private $q: ng1.IQService) {
 
         this.$column = $parse($attrs.ngTableSelectFilterDs)($scope);
@@ -71,7 +71,7 @@ export class NgTableSelectFilterDsController {
         });
     }
 
-    private hasEmptyOption(data: ISelectOption[]) {
+    private hasEmptyOption(data: SelectOption[]) {
         let isMatch: boolean;
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
@@ -83,7 +83,7 @@ export class NgTableSelectFilterDsController {
         return isMatch;
     }
 
-    private getSelectListData($column: IColumnDef) {
+    private getSelectListData($column: ColumnDef) {
         const dataInput = $column.data;
         if (dataInput instanceof Array) {
             return this.$q.when(dataInput);

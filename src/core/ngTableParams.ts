@@ -9,14 +9,14 @@
 import * as ng1 from 'angular';
 import { ILogService, IPromise, IQService } from 'angular';
 import { convertSortToOrderBy, isGroupingFun } from './util';
-import { IDefaults } from './ngTableDefaults'
+import { Defaults } from './ngTableDefaults'
 import { NgTableEventsChannel } from './ngTableEventsChannel'
 import { NgTableSettings, SettingsPartial, Settings } from './ngTableSettings'
-import { DataResult, IDataRowGroup, IGetDataFunc } from './data';
-import { IFilterValues } from './filtering';
-import { IGetGroupFunc, Grouping, IGroupingFunc, GroupSort, IGroupValues } from './grouping';
-import { SortDirection, ISortingValues } from './sorting';
-import { IPageButton } from './paging';
+import { DataResult, DataRowGroup, GetDataFunc } from './data';
+import { FilterValues } from './filtering';
+import { GetGroupFunc, Grouping, GroupingFunc, GroupSort, GroupValues } from './grouping';
+import { SortDirection, SortingValues } from './sorting';
+import { PageButton } from './paging';
 
 /**
  * @private
@@ -29,7 +29,7 @@ export interface InternalTableParams<T> extends NgTableParams<T> {
  * The runtime values for {@link NgTableParams} that determine the set of data rows and
  * how they are to be displayed in a table
  */
-export interface IParamValues<T> {
+export interface ParamValues<T> {
     /**
      * The index of the "slice" of data rows, starting at 1, to be displayed by the table.
      */
@@ -41,11 +41,11 @@ export interface IParamValues<T> {
     /**
      * The filter that should be applied to restrict the set of data rows
      */
-    filter?: IFilterValues;
+    filter?: FilterValues;
     /**
      * The sort order that should be applied to the data rows.
      */
-    sorting?: ISortingValues;
+    sorting?: SortingValues;
     /**
      * The grouping that should be applied to the data rows
      */
@@ -64,7 +64,7 @@ function isNumber(n: any) {
  * @private
  */
 type Memento<T> = {
-    params: IParamValues<T>;
+    params: ParamValues<T>;
     groupSortDirection?: string;
 };
 
@@ -82,11 +82,11 @@ export class NgTableParams<T> {
     private isCommittedDataset = false;
     isNullInstance: boolean;
     private initialEvents: Function[] = [];
-    private ngTableDefaults: IDefaults
+    private ngTableDefaults: Defaults
     private ngTableEventsChannel: NgTableEventsChannel;
     private ngTableSettings: NgTableSettings;
     private prevParamsMemento: Memento<T>;
-    private _params: IParamValues<T> = {
+    private _params: ParamValues<T> = {
         page: 1,
         count: 10,
         filter: {},
@@ -96,7 +96,7 @@ export class NgTableParams<T> {
     private _settings = this.defaultSettings;
     private $q: IQService;
     private $log: ILogService
-    constructor(baseParameters?: IParamValues<T> | boolean, baseSettings?: SettingsPartial<T>) {
+    constructor(baseParameters?: ParamValues<T> | boolean, baseSettings?: SettingsPartial<T>) {
 
         // the ngTableController "needs" to create a dummy/null instance and it's important to know whether an instance
         // is one of these
@@ -105,7 +105,7 @@ export class NgTableParams<T> {
         }
 
         this.reloadPages = (() => {
-            let currentPages: IPageButton[];
+            let currentPages: PageButton[];
             return () => {
                 const oldPages = currentPages;
                 const newPages = this.generatePagesArray(this.page(), this.total(), this.count());
@@ -150,13 +150,13 @@ export class NgTableParams<T> {
      * @param trim supply true to return the current filter minus any insignificant values
      * (null,  undefined and empty string)
      */
-    filter(trim?: boolean): IFilterValues
+    filter(trim?: boolean): FilterValues
     /**
      * Sets filter values to the `filter` supplied; any existing filter will be removed
      * Changes to filter will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
      */
-    filter(filter: IFilterValues): this
-    filter(filter?: IFilterValues | boolean) {
+    filter(filter: FilterValues): this
+    filter(filter?: FilterValues | boolean) {
         if (filter != null && typeof filter === 'object') {
             return this.parameters({
                 'filter': filter,
@@ -164,7 +164,7 @@ export class NgTableParams<T> {
             });
         } else if (filter === true) {
             const keys = Object.keys(this._params.filter);
-            const significantFilter: IFilterValues = {};
+            const significantFilter: FilterValues = {};
             for (let i = 0; i < keys.length; i++) {
                 const filterValue = this._params.filter[keys[i]];
                 if (filterValue != null && filterValue !== '') {
@@ -195,7 +195,7 @@ export class NgTableParams<T> {
         let maxPage: number, maxPivotPages: number, minPage: number, numPages: number;
         maxBlocks = maxBlocks && maxBlocks < 6 ? 6 : maxBlocks;
 
-        const pages: IPageButton[] = [];
+        const pages: PageButton[] = [];
         numPages = Math.ceil(totalItems / pageSize);
         if (numPages > 1) {
             pages.push({
@@ -252,7 +252,7 @@ export class NgTableParams<T> {
      * Sets grouping to the `group` supplied; any existing grouping will be removed.
      * Changes to group will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
      */
-    group(group: IGroupValues): this
+    group(group: GroupValues): this
     /**
      * Sets grouping to the `field` and `sortDirection` supplied; any existing grouping will be removed
      * Changes to group will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
@@ -263,13 +263,13 @@ export class NgTableParams<T> {
      * If `sortDirection` is supplied, this will be assigned to the sortDirection property of `group`
      * Changes to group will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
      */
-    group(group: IGroupingFunc<T> | string, sortDirection?: GroupSort): this
+    group(group: GroupingFunc<T> | string, sortDirection?: GroupSort): this
     group(group?: Grouping<T> | string, sortDirection?: GroupSort): string | Grouping<T> | this {
         if (group === undefined) {
             return this._params.group;
         }
 
-        const newParameters: IParamValues<T> = {
+        const newParameters: ParamValues<T> = {
             page: 1
         };
         if (isGroupingFun(group) && sortDirection !== undefined) {
@@ -313,8 +313,8 @@ export class NgTableParams<T> {
     /**
      * Returns true when the `group` and when supplied, the `sortDirection` matches an existing group
      */
-    hasGroup(group: string | IGroupingFunc<T>, sortDirection?: string): boolean
-    hasGroup(group?: string | IGroupingFunc<T>, sortDirection?: string) {
+    hasGroup(group: string | GroupingFunc<T>, sortDirection?: string): boolean
+    hasGroup(group?: string | GroupingFunc<T>, sortDirection?: string) {
         if (group == null) {
             return isGroupingFun(this._params.group) || Object.keys(this._params.group).length > 0
         }
@@ -329,7 +329,7 @@ export class NgTableParams<T> {
             if (sortDirection == null) {
                 return Object.keys(this._params.group).indexOf(group) !== -1;
             } else {
-                return (this._params.group as IGroupValues)[group] === sortDirection;
+                return (this._params.group as GroupValues)[group] === sortDirection;
             }
         }
     }
@@ -379,12 +379,12 @@ export class NgTableParams<T> {
             'page': page
         }) : this._params.page;
     }
-    parameters(): IParamValues<T>
+    parameters(): ParamValues<T>
     /**
      * Set new parameters
      */
-    parameters(newParameters?: IParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): this
-    parameters(newParameters?: IParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): IParamValues<T> | this {
+    parameters(newParameters?: ParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): this
+    parameters(newParameters?: ParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): ParamValues<T> | this {
         parseParamsFromUrl = parseParamsFromUrl || false;
         if (typeof newParameters !== undefined) {
             for (const key in newParameters) {
@@ -431,7 +431,7 @@ export class NgTableParams<T> {
         if (this.hasGroup()) {
             pData = this.runInterceptorPipeline(this.$q.when(this._settings.getGroups(this)));
         } else {
-            const fn = this._settings.getData as IGetDataFunc<T>;
+            const fn = this._settings.getData as GetDataFunc<T>;
             pData = this.runInterceptorPipeline(this.$q.when(fn(this)));
         }
 
@@ -500,17 +500,17 @@ export class NgTableParams<T> {
      * Returns the current sorting used to order the data rows.
      * Changes to sorting will cause `isDataReloadRequired` to return true
      */
-    sorting(): ISortingValues
+    sorting(): SortingValues
     /**
      * Sets sorting values to the `sorting` supplied; any existing sorting will be removed.
      * Changes to sorting will cause `isDataReloadRequired` to return true
      */
-    sorting(sorting: ISortingValues): this
+    sorting(sorting: SortingValues): this
     /**
      * Sets sorting to the `field` and `direction` supplied; any existing sorting will be removed
      */
     sorting(field: string, direction: string): this
-    sorting(sorting?: ISortingValues | string, direction?: SortDirection) {
+    sorting(sorting?: SortingValues | string, direction?: SortDirection) {
         if (typeof sorting === 'string') {
             this.parameters({
                 'sorting': { [sorting]: direction }
@@ -643,7 +643,7 @@ export class NgTableParams<T> {
     static init(
         $q: IQService,
         $log: ILogService,
-        ngTableDefaults: IDefaults,
+        ngTableDefaults: Defaults,
         ngTableEventsChannel: NgTableEventsChannel,
         ngTableSettings: NgTableSettings) {
         ng1.extend(NgTableParams.prototype, {

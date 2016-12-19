@@ -8,7 +8,7 @@
 
 import * as ng1 from 'angular';
 import { IFilterFilter, IFilterOrderBy, IFilterService, IPromise, IServiceProvider} from 'angular';
-import { IFilterFunc } from '../filtering';
+import { FilterFunc } from '../filtering';
 import { NgTableParams } from '../ngTableParams';
 import { NgTableEventsChannel } from '../ngTableEventsChannel';
 
@@ -21,7 +21,7 @@ import { NgTableEventsChannel } from '../ngTableEventsChannel';
  * - return the resulting array
  * - assign the total item count after filtering to the `total` of the `NgTableParams` instance supplied
  */
-export interface IDefaultGetData<T> {
+export interface DefaultGetData<T> {
     (data: T[], params: NgTableParams<T>): T[];
     /**
      * Convenience function that this service will use to apply paging to the data rows.
@@ -33,7 +33,7 @@ export interface IDefaultGetData<T> {
     /**
      * Returns a reference to the function that this service will use to filter data rows
      */
-    getFilterFn(params: NgTableParams<T>): IFilterFunc<T>,
+    getFilterFn(params: NgTableParams<T>): FilterFunc<T>,
     /**
      * Returns a reference to the function that this service will use to sort data rows
      */
@@ -41,7 +41,7 @@ export interface IDefaultGetData<T> {
 }
 
 /**
- * Implementation of the {@link IDefaultGetDataProvider} interface
+ * Implementation of the {@link DefaultGetDataProvider} interface
  */
 export class NgTableDefaultGetDataProvider implements IServiceProvider {
     /**
@@ -56,22 +56,22 @@ export class NgTableDefaultGetDataProvider implements IServiceProvider {
     * (defaults to the angular `orderBy` filter service)
     */
     sortingFilterName = 'orderBy';
-    $get: ($filter: IFilterService, ngTableEventsChannel: NgTableEventsChannel) => IDefaultGetData<any>;
+    $get: ($filter: IFilterService, ngTableEventsChannel: NgTableEventsChannel) => DefaultGetData<any>;
     constructor() {
         const provider = this;
         this.$get = ngTableDefaultGetData;
 
         ngTableDefaultGetData.$inject = ['$filter', 'ngTableEventsChannel'];
 
-        function ngTableDefaultGetData<T>($filter: IFilterService, ngTableEventsChannel: NgTableEventsChannel): IDefaultGetData<T> {
+        function ngTableDefaultGetData<T>($filter: IFilterService, ngTableEventsChannel: NgTableEventsChannel): DefaultGetData<T> {
 
-            (getData as IDefaultGetData<T>).applyPaging = applyPaging;
-            (getData as IDefaultGetData<T>).getFilterFn = getFilterFn;
-            (getData as IDefaultGetData<T>).getOrderByFn = getOrderByFn;
+            (getData as DefaultGetData<T>).applyPaging = applyPaging;
+            (getData as DefaultGetData<T>).getFilterFn = getFilterFn;
+            (getData as DefaultGetData<T>).getOrderByFn = getOrderByFn;
 
-            return getData as IDefaultGetData<T>;
+            return getData as DefaultGetData<T>;
 
-            function getFilterFn(params: NgTableParams<T>): IFilterFunc<T> {
+            function getFilterFn(params: NgTableParams<T>): FilterFunc<T> {
                 const filterOptions = params.settings().filterOptions;
                 if (ng1.isFunction(filterOptions.filterFn)) {
                     return filterOptions.filterFn;

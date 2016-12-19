@@ -3,37 +3,37 @@ import * as ng1 from 'angular';
 import * as _ from 'lodash';
 import { ngTableModule } from '../../index';
 import { NgTableParams } from '../../src/core';
-import { ColumnFieldContext, IColumnDef, DynamicTableColField, IDynamicTableColDef, IFilterTemplateDefMap, ISelectOption } from '../../src/browser';
+import { ColumnFieldContext, ColumnDef, DynamicTableColField, DynamicTableColDef, FilterTemplateDefMap, SelectOption } from '../../src/browser';
 
 describe('ng-table-dynamic', () => {
 
-    interface IPerson {
+    interface Person {
         id?: number;
         name?: string;
         age: number;
         money?: number;
     }
 
-    interface INgTableChildScope extends IScope {
+    interface NgTableChildScope extends IScope {
         params: NgTableParams<any>;
-        $columns: IColumnDef[];
+        $columns: ColumnDef[];
     }
 
-    interface IExtendedDynamicTableColDef extends IDynamicTableColDef {
+    interface ExtendedDynamicTableColDef extends DynamicTableColDef {
         field: DynamicTableColField<string>
     }
 
-    interface ICustomizedScope extends IScope {
-        $$childHead: INgTableChildScope;
-        tableParams: NgTableParams<IPerson>;
-        cols: IExtendedDynamicTableColDef[];
+    interface CustomizedScope extends IScope {
+        $$childHead: NgTableChildScope;
+        tableParams: NgTableParams<Person>;
+        cols: ExtendedDynamicTableColDef[];
         model: {
-            exportedCols?: IColumnDef[]
+            exportedCols?: ColumnDef[]
         };
     }
 
-    function createTable(htmlTemplate: string, params?: NgTableParams<IPerson>) {
-        params = params || new NgTableParams<IPerson>({});
+    function createTable(htmlTemplate: string, params?: NgTableParams<Person>) {
+        params = params || new NgTableParams<Person>({});
 
         const tableElm = ng1.element(htmlTemplate);
         $compile(tableElm)(scope);
@@ -68,10 +68,10 @@ describe('ng-table-dynamic', () => {
     beforeAll(() => expect(ngTableModule).toBeDefined());
     beforeEach(ng1.mock.module('ngTable'));
 
-    let scope: ICustomizedScope;
+    let scope: CustomizedScope;
     let $compile: ICompileService;
     beforeEach(inject(($rootScope: IScope, _$compile_: ICompileService) => {
-        scope = $rootScope.$new(true) as ICustomizedScope;
+        scope = $rootScope.$new(true) as CustomizedScope;
         $compile = _$compile_;
         scope.model = {};
     }));
@@ -295,7 +295,7 @@ describe('ng-table-dynamic', () => {
         }));
 
         it('adding new column should update table header', () => {
-            const newCol: IExtendedDynamicTableColDef = {
+            const newCol: ExtendedDynamicTableColDef = {
                 'class': 'moneyadd',
                 field: 'money',
                 filter: { action: 'select' },
@@ -378,7 +378,7 @@ describe('ng-table-dynamic', () => {
                 { field: 'age', title: 'Age', titleAlt: 'Age' },
                 { field: 'money', title: 'Money', titleAlt: '£' }
             ];
-            const params = new NgTableParams<IPerson>({
+            const params = new NgTableParams<Person>({
                 page: 1, // show first page
                 count: 10 // count per page
             }, {
@@ -515,7 +515,7 @@ describe('ng-table-dynamic', () => {
                 expect((select[0] as HTMLSelectElement).options.length).toBeGreaterThan(0);
                 const $column = (select.scope() as ColumnFieldContext).$column;
                 const plucker = _.partialRight(_.pick, ['id', 'title']);
-                const actual = _.map($column.data as ISelectOption[], plucker);
+                const actual = _.map($column.data as SelectOption[], plucker);
                 expect(actual).toEqual([{
                     'id': '',
                     'title': ''
@@ -534,7 +534,7 @@ describe('ng-table-dynamic', () => {
                 expect((select[0] as HTMLSelectElement).options.length).toBeGreaterThan(0);
                 const $column = (select.scope() as ColumnFieldContext).$column;
                 const plucker = _.partialRight(_.pick, ['id', 'title']);
-                const actual = _.map($column.data as ISelectOption[], plucker);
+                const actual = _.map($column.data as SelectOption[], plucker);
                 expect(actual).toEqual([{
                     'id': '',
                     'title': ''
@@ -579,11 +579,11 @@ describe('ng-table-dynamic', () => {
 
         describe('dynamic filter', () => {
 
-            let ageFilter: IFilterTemplateDefMap;
+            let ageFilter: FilterTemplateDefMap;
             beforeEach(() => {
 
                 ageFilter = { age: 'text' };
-                function getFilter(paramsScope: ColumnFieldContext): IFilterTemplateDefMap {
+                function getFilter(paramsScope: ColumnFieldContext): FilterTemplateDefMap {
                     if (paramsScope.$column.title() === 'Name of user') {
                         return { username: 'text' };
                     } else if (paramsScope.$column.title() === 'Age') {
@@ -639,7 +639,7 @@ describe('ng-table-dynamic', () => {
 
     describe('$columns', () => {
         let tableElm: IAugmentedJQuery,
-            params: NgTableParams<IPerson>;
+            params: NgTableParams<Person>;
         beforeEach(() => {
             const html = `
             <table ng-table-dynamic="tableParams with cols" ng-table-columns-binding="model.exportedCols">
@@ -701,7 +701,7 @@ describe('ng-table-dynamic', () => {
             expect(ageCol.show()).toBe(false);
             expect(scope.cols[0].show).toBe(false);
 
-            const newFilter: IFilterTemplateDefMap = { age: 'select' };
+            const newFilter: FilterTemplateDefMap = { age: 'select' };
             ageCol.filter.assign(scope.$$childHead, newFilter);
             expect(ageCol.filter()).toBe(newFilter);
             expect(scope.cols[0].filter).toBe(newFilter);
@@ -745,7 +745,7 @@ describe('ng-table-dynamic', () => {
             expect(ageCol.show()).toBe(false);
             expect(scope.cols[0].show).toBe(false);
 
-            const newFilter: IFilterTemplateDefMap = { age: 'select' };
+            const newFilter: FilterTemplateDefMap = { age: 'select' };
             ageCol.filter(newFilter);
             expect(ageCol.filter()).toBe(newFilter);
             expect(scope.cols[0].filter).toBe(newFilter);

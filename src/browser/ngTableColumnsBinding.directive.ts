@@ -7,13 +7,13 @@
  */
 
 import { IAugmentedJQuery, IAttributes, IDirective, IParseService } from 'angular';
-import { ITableScope } from './ngTableController';
-import { IColumnDef } from './public-interfaces';
+import { TableScope } from './ngTableController';
+import { ColumnDef } from './public-interfaces';
 
 /**
  * @private
  */
-interface IInputAttributes extends IAttributes {
+interface InputAttributes extends IAttributes {
     ngTableColumnsBinding: string;
 }
 
@@ -39,10 +39,10 @@ export function ngTableColumnsBinding<T>($parse: IParseService) : IDirective {
     };
     return directive;
 
-    function linkFn($scope: ITableScope<T>, $element: IAugmentedJQuery, $attrs: IInputAttributes){
+    function linkFn($scope: TableScope<T>, $element: IAugmentedJQuery, $attrs: InputAttributes){
         const setter = $parse($attrs.ngTableColumnsBinding).assign;
         if (setter){
-            $scope.$watch<IColumnDef[]>('$columns', newColumns => {
+            $scope.$watch<ColumnDef[]>('$columns', newColumns => {
                 const shallowClone = (newColumns || []).slice(0);
                 setter($scope, shallowClone);
             });

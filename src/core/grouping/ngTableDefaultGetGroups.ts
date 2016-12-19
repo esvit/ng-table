@@ -2,25 +2,25 @@ import { IQService } from 'angular';
 import * as ng1 from 'angular';
 import { convertSortToOrderBy, isGroupingFun } from '../util';
 import { NgTableParams,  } from '../ngTableParams';
-import { IDataRowGroup, IDefaultGetData, IGetDataFunc } from '../data';
-import { IGetGroupFunc, Grouping, IGroupingFunc, GroupSort } from './';
-import { ISortingValues } from '../sorting';
+import { DataRowGroup, DefaultGetData, GetDataFunc } from '../data';
+import { GetGroupFunc, Grouping, GroupingFunc, GroupSort } from './';
+import { SortingValues } from '../sorting';
 
 ngTableDefaultGetGroups.$inject = ['$q', 'ngTableDefaultGetData'];
 
 /**
- * Implementation of the {@link IDefaultGetData IDefaultGetData} interface
+ * Implementation of the {@link DefaultGetData} interface
  * 
  * @ngdoc service
  */
-export function ngTableDefaultGetGroups<T>($q: IQService, ngTableDefaultGetData: IDefaultGetData<IDataRowGroup<T>>): IGetGroupFunc<T> {
+export function ngTableDefaultGetGroups<T>($q: IQService, ngTableDefaultGetData: DefaultGetData<DataRowGroup<T>>): GetGroupFunc<T> {
 
     return getGroups;
 
     function getGroups(params: NgTableParams<T>) {
 
         const group = params.group();
-        let groupFn: IGroupingFunc<T>;
+        let groupFn: GroupingFunc<T>;
         let sortDirection: GroupSort = undefined;
         if (isGroupingFun(group)) {
             groupFn = group;
@@ -37,10 +37,10 @@ export function ngTableDefaultGetGroups<T>($q: IQService, ngTableDefaultGetData:
         const settings = params.settings();
         const originalDataOptions = settings.dataOptions;
         settings.dataOptions = ng1.extend({}, originalDataOptions, { applyPaging: false });
-        const getData: IGetDataFunc<T> = settings.getData;
+        const getData: GetDataFunc<T> = settings.getData;
         const gotData = $q.when(getData(params));
         return gotData.then(data => {
-            const groups: { [name: string]: IDataRowGroup<T> } = {};
+            const groups: { [name: string]: DataRowGroup<T> } = {};
             ng1.forEach(data, item => {
                 const groupName = groupFn(item);
                 groups[groupName] = groups[groupName] || {
@@ -50,7 +50,7 @@ export function ngTableDefaultGetGroups<T>($q: IQService, ngTableDefaultGetData:
                 };
                 groups[groupName].data.push(item);
             });
-            let result: IDataRowGroup<T>[] = [];
+            let result: DataRowGroup<T>[] = [];
             for (const i in groups) {
                 result.push(groups[i]);
             }

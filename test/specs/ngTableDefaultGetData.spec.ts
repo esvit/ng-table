@@ -1,6 +1,6 @@
 import * as ng1 from 'angular';
 import {
-    NgTableDefaultGetDataProvider, IDefaultGetData, NgTableParams,
+    NgTableDefaultGetDataProvider, DefaultGetData, NgTableParams,
     ngTableCoreModule
 } from '../../src/core';
 
@@ -31,13 +31,13 @@ describe('ngTableDefaultGetData', () => {
     });
 
     describe('service', () => {
-        let ngTableDefaultGetData: IDefaultGetData<any>,
+        let ngTableDefaultGetData: DefaultGetData<any>,
             tableParams: NgTableParams<any>;
 
         beforeEach(ng1.mock.module('ngTable-core'));
 
         beforeEach(inject((
-            _ngTableDefaultGetData_: IDefaultGetData<any>) => {
+            _ngTableDefaultGetData_: DefaultGetData<any>) => {
             ngTableDefaultGetData = _ngTableDefaultGetData_;
             tableParams = new NgTableParams({ count: 10 }, { counts: [10] });
         }));
@@ -251,7 +251,7 @@ describe('ngTableDefaultGetData', () => {
     });
 
     describe('service, custom filters', () => {
-        var ngTableDefaultGetData: IDefaultGetData<IPerson>,
+        var ngTableDefaultGetData: DefaultGetData<IPerson>,
             tableParams: NgTableParams<IPerson>;
 
         type PersonCriteria = { ages: number[] };
@@ -274,7 +274,7 @@ describe('ngTableDefaultGetData', () => {
         });
 
         beforeEach(inject((
-            _ngTableDefaultGetData_: IDefaultGetData<IPerson>) => {
+            _ngTableDefaultGetData_: DefaultGetData<IPerson>) => {
             ngTableDefaultGetData = _ngTableDefaultGetData_;
             tableParams = new NgTableParams<IPerson>({ count: 10 }, { counts: [10] });
         }));

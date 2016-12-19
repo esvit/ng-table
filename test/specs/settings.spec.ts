@@ -2,7 +2,7 @@ import * as ng1 from 'angular';
 import * as _ from 'lodash';
 import { areFunctions, areFunctionsEqual } from '../util/jasmine-extensions';
 import {
-    DataSettings, FilterSettings, IGetDataFunc, IGetGroupFunc,
+    DataSettings, FilterSettings, GetDataFunc, GetGroupFunc,
     GroupSettings, SettingsPartial, Settings, ngTableCoreModule
 } from '../../src/core';
 import { NgTableSettings } from '../../src/core/ngTableSettings'

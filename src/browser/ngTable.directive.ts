@@ -8,12 +8,12 @@
 import { IAugmentedJQuery, IDirective, IQService, IParseService, IPromise, IScope } from 'angular';
 import * as ng1 from 'angular';
 import { 
-    IColumnDef, ColumnFieldContext, IColumnField, IFilterTemplateDefMap, SelectData, ITableInputAttributes 
+    ColumnDef, ColumnFieldContext, ColumnField, FilterTemplateDefMap, SelectData, TableInputAttributes 
 } from './public-interfaces';
 import { NgTableController } from './ngTableController';
 
-interface IScopeExtensions {
-    $columns: IColumnDef[]
+interface ScopeExtensions {
+    $columns: ColumnDef[]
 }
 
 ngTable.$inject = ['$q', '$parse'];
@@ -45,7 +45,7 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
         scope: true,
         controller: 'ngTableController',
         compile: function(element: IAugmentedJQuery) {
-            let columns: IColumnDef[] = [],
+            let columns: ColumnDef[] = [],
                 i = 0,
                 dataRow: JQuery,
                 groupRow: JQuery
@@ -79,7 +79,7 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
                     }
                 };
 
-                const parsedAttribute = function<T>(attr: string): IColumnField<T> {
+                const parsedAttribute = function<T>(attr: string): ColumnField<T> {
                     const expr = getAttrValue(attr);
                     if (!expr){
                         return undefined;
@@ -102,7 +102,7 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
                             localValue = value;
                         }
                     };
-                    return getter as IColumnField<T>;
+                    return getter as ColumnField<T>;
                 };
                 const titleExpr = getAttrValue('title-alt') || getAttrValue('title');
                 if (titleExpr){
@@ -117,7 +117,7 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
                     headerTitle: parsedAttribute<string>('header-title'),
                     sortable: parsedAttribute<string | boolean>('sortable'),
                     'class': parsedAttribute<string>('header-class'),
-                    filter: parsedAttribute<IFilterTemplateDefMap>('filter'),
+                    filter: parsedAttribute<FilterTemplateDefMap>('filter'),
                     groupable: parsedAttribute<string | boolean>('groupable'),
                     headerTemplateURL: parsedAttribute<string | boolean>('header'),
                     filterData: parsedAttribute<IPromise<SelectData> | SelectData>('filter-data'),
@@ -132,7 +132,7 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
                     setAttrValue('ng-if', '$columns[' + (columns.length - 1) + '].show(this)');
                 }
             });
-            return function(scope: IScope & IScopeExtensions, element: IAugmentedJQuery, attrs: ITableInputAttributes, controller: NgTableController<any, IColumnDef>) {
+            return function(scope: IScope & ScopeExtensions, element: IAugmentedJQuery, attrs: TableInputAttributes, controller: NgTableController<any, ColumnDef>) {
                 scope.$columns = columns = controller.buildColumns(columns);
 
                 controller.setupBindingsToInternalScope(attrs.ngTable);

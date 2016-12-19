@@ -7,14 +7,14 @@
  */
 
 import { IScope } from 'angular';
-import { IFilterTemplateDef, IFilterTemplateDefMap } from './public-interfaces';
+import { FilterTemplateDef, FilterTemplateDefMap } from './public-interfaces';
 import { NgTableFilterConfig } from './ngTableFilterConfig';
 
 /**
  * @private
  */
-export interface IScopeExtensions {
-    getFilterPlaceholderValue(filterDef: string | IFilterTemplateDef, filterKey?: string): string;
+export interface ScopeExtensions {
+    getFilterPlaceholderValue(filterDef: string | FilterTemplateDef, filterKey?: string): string;
 }
 
 /**
@@ -23,7 +23,7 @@ export interface IScopeExtensions {
 export class NgTableFilterRowController {
     static $inject = ['$scope', 'ngTableFilterConfig'];
     config: NgTableFilterConfig;
-    constructor($scope: IScope & IScopeExtensions, ngTableFilterConfig: NgTableFilterConfig) {
+    constructor($scope: IScope & ScopeExtensions, ngTableFilterConfig: NgTableFilterConfig) {
         this.config = ngTableFilterConfig;
 
         // todo: stop doing this. Why?
@@ -33,7 +33,7 @@ export class NgTableFilterRowController {
         $scope.getFilterPlaceholderValue = this.getFilterPlaceholderValue.bind(this);
     }
 
-    getFilterCellCss(filter: IFilterTemplateDefMap, layout: string) {
+    getFilterCellCss(filter: FilterTemplateDefMap, layout: string) {
         if (layout !== 'horizontal') {
             return 's12';
         }
@@ -43,7 +43,7 @@ export class NgTableFilterRowController {
         return 's' + width;
     }
 
-    getFilterPlaceholderValue(filterDef: string | IFilterTemplateDef, filterKey?: string) {
+    getFilterPlaceholderValue(filterDef: string | FilterTemplateDef, filterKey?: string) {
         if (typeof filterDef === 'string') {
             return '';
         } else {

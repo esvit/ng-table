@@ -8,7 +8,7 @@
 
 import { IScope } from 'angular';
 import * as ng1 from 'angular';
-import { IColumnDef, IDynamicTableColDef } from './public-interfaces';
+import { ColumnDef, DynamicTableColDef } from './public-interfaces';
 
 /**
  * @private
@@ -21,7 +21,7 @@ function isScopeLike(object: any) {
  * @private
  * Service to construct a $column definition used by {@link ngTable ngTable} directive
  */
-export class NgTableColumn<TCol extends IColumnDef | IDynamicTableColDef> {
+export class NgTableColumn<TCol extends ColumnDef | DynamicTableColDef> {
     static $inject: string[] = [];
 
     /**
@@ -32,7 +32,7 @@ export class NgTableColumn<TCol extends IColumnDef | IDynamicTableColDef> {
      * @param columns a reference to the $columns array to make available on the context supplied to the
      * $column getter methods
      */
-    buildColumn(column: TCol, defaultScope: IScope, columns: IColumnDef[]): IColumnDef {
+    buildColumn(column: TCol, defaultScope: IScope, columns: ColumnDef[]): ColumnDef {
         // note: we're not modifying the original column object. This helps to avoid unintended side affects
         const extendedCol = Object.create(column);
         const defaults = this.createDefaults();
@@ -90,7 +90,7 @@ export class NgTableColumn<TCol extends IColumnDef | IDynamicTableColDef> {
                 extendedCol[prop] = getterSetter;
             }
         }
-        return extendedCol as IColumnDef;
+        return extendedCol as ColumnDef;
     }
 
     private createDefaults() {

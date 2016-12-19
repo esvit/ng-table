@@ -7,15 +7,15 @@
  */
 
 import { IPromise } from 'angular';
-import { DataResult, IGroupingFunc, Grouping, GroupSort } from '../core';
-import { IColumnDef } from './public-interfaces';
-import { ITableScope } from './ngTableController';
+import { DataResult, GroupingFunc, Grouping, GroupSort } from '../core';
+import { ColumnDef } from './public-interfaces';
+import { TableScope } from './ngTableController';
 
 /**
  * @private
  */
-export interface IScopeExtensions<T> {
-    $selGroup: IGroupingFunc<any> | string;
+export interface ScopeExtensions<T> {
+    $selGroup: GroupingFunc<any> | string;
     $selGroupTitle: string;
 }
 
@@ -25,8 +25,8 @@ export interface IScopeExtensions<T> {
  */
 export class NgTableGroupRowController<T> {
     static $inject = ['$scope'];
-    private groupFns: Array<IGroupingFunc<any> | IColumnDef> = [];
-    constructor(private $scope: ITableScope<T> & IScopeExtensions<T>) {
+    private groupFns: Array<GroupingFunc<any> | ColumnDef> = [];
+    constructor(private $scope: TableScope<T> & ScopeExtensions<T>) {
         $scope.$watch<Grouping<any>>('params.group()', (newGrouping) => {
             this.setGroup(newGrouping);
         }, true);
@@ -37,7 +37,7 @@ export class NgTableGroupRowController<T> {
         return this.groupFns.concat(groupableCols);
     }
 
-    getGroupTitle(group: IGroupingFunc<any> | IColumnDef) {
+    getGroupTitle(group: GroupingFunc<any> | ColumnDef) {
         return this.isGroupingFunc(group) ? group.title : group.title(this.$scope);
     }
 
@@ -46,7 +46,7 @@ export class NgTableGroupRowController<T> {
         return this.$scope.$columns.filter($column => $column.show(this.$scope))
     }
 
-    groupBy(group: IGroupingFunc<any> | IColumnDef) {
+    groupBy(group: GroupingFunc<any> | ColumnDef) {
         if (this.isSelectedGroup(group)) {
             this.changeSortDirection();
         } else {
@@ -61,7 +61,7 @@ export class NgTableGroupRowController<T> {
         }
     }
 
-    isSelectedGroup(group: IGroupingFunc<any> | IColumnDef) {
+    isSelectedGroup(group: GroupingFunc<any> | ColumnDef) {
         if (this.isGroupingFunc(group)) {
             return group === this.$scope.$selGroup;
         } else {
@@ -86,11 +86,11 @@ export class NgTableGroupRowController<T> {
         this.$scope.params.group(this.$scope.$selGroup, newDirection);
     }
 
-    private findGroupColumn(groupKey: IGroupingFunc<any> | string) {
+    private findGroupColumn(groupKey: GroupingFunc<any> | string) {
         return this.$scope.$columns.filter($column => $column.groupable(this.$scope) === groupKey)[0];
     }
 
-    private isGroupingFunc(val: IColumnDef | Grouping<any>): val is IGroupingFunc<any> {
+    private isGroupingFunc(val: ColumnDef | Grouping<any>): val is GroupingFunc<any> {
         return typeof val === 'function';
     }
 

@@ -6,9 +6,9 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 import { IAngularEvent } from 'angular';
-import { SortDirection, ISortingValues } from '../core';
-import { IColumnDef } from './public-interfaces';
-import { ITableScope } from './ngTableController';
+import { SortDirection, SortingValues } from '../core';
+import { ColumnDef } from './public-interfaces';
+import { TableScope } from './ngTableController';
 
 /**
  * @private
@@ -22,9 +22,9 @@ export interface IAugmentedMouseEvent extends IAngularEvent {
  */
 export class NgTableSorterRowController<T> {
     static $inject = ['$scope'];
-    constructor(private $scope: ITableScope<T>) {}
+    constructor(private $scope: TableScope<T>) {}
 
-    sortBy($column: IColumnDef, event: IAugmentedMouseEvent) {
+    sortBy($column: ColumnDef, event: IAugmentedMouseEvent) {
         const parsedSortable = $column.sortable && $column.sortable();
         if (!parsedSortable || typeof parsedSortable !== 'string') {
             return;
@@ -32,7 +32,7 @@ export class NgTableSorterRowController<T> {
             const defaultSort = this.$scope.params.settings().defaultSort;
             const inverseSort: SortDirection = (defaultSort === 'asc' ? 'desc' : 'asc');
             const sorting = this.$scope.params.sorting() && this.$scope.params.sorting()[parsedSortable] && (this.$scope.params.sorting()[parsedSortable] === defaultSort);
-            const sortingParams: ISortingValues = (event.ctrlKey || event.metaKey) ? this.$scope.params.sorting() : {};
+            const sortingParams: SortingValues = (event.ctrlKey || event.metaKey) ? this.$scope.params.sorting() : {};
             sortingParams[parsedSortable] = (sorting ? inverseSort : defaultSort);
             this.$scope.params.parameters({
                 sorting: sortingParams

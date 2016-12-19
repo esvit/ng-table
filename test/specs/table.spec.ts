@@ -1,11 +1,11 @@
 import { IAugmentedJQuery, ICompileService, IQService, IPromise, IScope, ITimeoutService } from 'angular';
 import * as ng1 from 'angular';
 import { ngTableModule } from '../../index';
-import { NgTableParams, IParamValues, SettingsPartial, ISortingValues } from '../../src/core';
-import { IColumnDef, IFilterTemplateDef, IFilterTemplateDefMap, ISelectOption } from '../../src/browser'
+import { NgTableParams, ParamValues, SettingsPartial, SortingValues } from '../../src/core';
+import { ColumnDef, FilterTemplateDef, FilterTemplateDefMap, SelectOption } from '../../src/browser'
 
 describe('ng-table', () => {
-    interface IPerson {
+    interface Person {
         id?: number;
         name?: string;
         age: number;
@@ -14,31 +14,31 @@ describe('ng-table', () => {
 
     interface INgTableChildScope extends IScope {
         params: NgTableParams<any>;
-        $columns: IColumnDef[];
+        $columns: ColumnDef[];
     }
 
-    interface ICustomizedScope extends IScope {
+    interface CustomizedScope extends IScope {
         $$childHead: INgTableChildScope;
         model: {
-            exportedCols?: IColumnDef[];
+            exportedCols?: ColumnDef[];
         };
-        ageFilter: IFilterTemplateDefMap;
-        ageExpandedFilter: { [name: string]: IFilterTemplateDef };
+        ageFilter: FilterTemplateDefMap;
+        ageExpandedFilter: { [name: string]: FilterTemplateDef };
         ageTitle: string | { (): string };
-        captureColumn: ($columnDef: IColumnDef) => any;
-        getCustomClass($column: IColumnDef): string;
-        getFilter($column: IColumnDef): IFilterTemplateDefMap;
+        captureColumn: ($columnDef: ColumnDef) => any;
+        getCustomClass($column: ColumnDef): string;
+        getFilter($column: ColumnDef): FilterTemplateDefMap;
         isAgeVisible: boolean;
         nameTitle(): string;
-        money: () => IPromise<ISelectOption[]>;
+        money: () => IPromise<SelectOption[]>;
         moneyTitle(): string;
         showAge: boolean;
         showFilterRow: boolean;
         showMoney: boolean;
         showName: boolean;
-        tableParams: NgTableParams<IPerson>;
-        usernameFilter: IFilterTemplateDefMap;
-        usernameExpandedFilter: { [name: string]: IFilterTemplateDef };
+        tableParams: NgTableParams<Person>;
+        usernameFilter: FilterTemplateDefMap;
+        usernameExpandedFilter: { [name: string]: FilterTemplateDef };
     }
 
     const dataset = [
@@ -64,18 +64,18 @@ describe('ng-table', () => {
     beforeAll(() => expect(ngTableModule).toBeDefined());
     beforeEach(ng1.mock.module('ngTable'));
 
-    let scope: ICustomizedScope;
+    let scope: CustomizedScope;
     let $compile: ICompileService;
     beforeEach(inject(($rootScope: IScope, _$compile_: ICompileService) => {
-        scope = $rootScope.$new(true) as ICustomizedScope;
+        scope = $rootScope.$new(true) as CustomizedScope;
         $compile = _$compile_;
         scope.model = {};
     }));
 
-    function createNgTableParams<T>(initialParams?: IParamValues<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
+    function createNgTableParams<T>(initialParams?: ParamValues<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: any): NgTableParams<T> {
-        let initialParams: IParamValues<T>;
+        let initialParams: ParamValues<T>;
         if (arguments.length === 2) {
             initialParams = arguments[0];
             settings = arguments[1];
@@ -90,8 +90,8 @@ describe('ng-table', () => {
         return tableParams;
     }
 
-    function createTable(htmlTemplate: string, params?: NgTableParams<IPerson>) {
-        params = params || createNgTableParams<IPerson>();
+    function createTable(htmlTemplate: string, params?: NgTableParams<Person>) {
+        params = params || createNgTableParams<Person>();
 
         const tableElm = ng1.element(htmlTemplate);
         $compile(tableElm)(scope);
@@ -347,7 +347,7 @@ describe('ng-table', () => {
             </table>`
 
         it('should add $column definition to context of sortable expression', () => {
-            let columnDef: IColumnDef;
+            let columnDef: ColumnDef;
             scope.captureColumn = function ($column) {
                 columnDef = $column;
                 return 'age'
@@ -365,13 +365,13 @@ describe('ng-table', () => {
 
         it('should apply initial sort', () => {
 
-            let actualSort: ISortingValues;
-            let params = createNgTableParams<IPerson>({
+            let actualSort: SortingValues;
+            let params = createNgTableParams<Person>({
                 sorting: { age: 'desc' }
             }, {
                     getData: function (params) {
                         actualSort = params.sorting();
-                        let results: IPerson[] = [];
+                        let results: Person[] = [];
                         return results;
                     }
                 });
@@ -435,7 +435,7 @@ describe('ng-table', () => {
         }
 
         it('should use initial NgTableParams constructor value', () => {
-            const params = createNgTableParams<IPerson>({ page: 2 }, null);
+            const params = createNgTableParams<Person>({ page: 2 }, null);
             scope.tableParams = params;
             scope.$digest();
             verifyPageWas(2);
@@ -443,7 +443,7 @@ describe('ng-table', () => {
         });
 
         it('should use initial NgTableParams constructor value combined with filter', () => {
-            const params = createNgTableParams<IPerson>({ page: 2, filter: { age: 5 } }, null);
+            const params = createNgTableParams<Person>({ page: 2, filter: { age: 5 } }, null);
             scope.tableParams = params;
             scope.$digest();
             verifyPageWas(2);
@@ -451,7 +451,7 @@ describe('ng-table', () => {
         });
 
         it('changing page # should trigger reload of data', () => {
-            const params = createNgTableParams<IPerson>({ page: 3 }, null);
+            const params = createNgTableParams<Person>({ page: 3 }, null);
             scope.tableParams = params;
             scope.$digest();
             verifyPageWas(3);
@@ -465,7 +465,7 @@ describe('ng-table', () => {
 
     describe('filters', () => {
 
-        let $capturedColumn: IColumnDef;
+        let $capturedColumn: ColumnDef;
         beforeEach(inject(() => {
             // stash a reference to $column definition so that its available in asserts
             scope.captureColumn = function ($column) {
@@ -476,11 +476,11 @@ describe('ng-table', () => {
         describe('filter specified as alias', () => {
 
             let tableElm: IAugmentedJQuery,
-                tp: NgTableParams<IPerson>;
+                tp: NgTableParams<Person>;
             beforeEach(() => {
                 // 'text' is a shortcut alias for the template ng-table/filters/text
                 scope.usernameFilter = { username: 'text' };
-                const params = createNgTableParams<IPerson>({ filterOptions: { filterDelay: 10 } });
+                const params = createNgTableParams<Person>({ filterOptions: { filterDelay: 10 } });
 
                 const html = `<div>
                     <table ng-table="tableParams">
@@ -630,7 +630,7 @@ describe('ng-table', () => {
         describe('dynamic filter', () => {
 
             let tableElm: IAugmentedJQuery,
-                ageFilter: IFilterTemplateDefMap;
+                ageFilter: FilterTemplateDefMap;
             beforeEach(() => {
 
                 ageFilter = { age: 'text' };
@@ -691,7 +691,7 @@ describe('ng-table', () => {
         describe('filter with placeholder value and alias', () => {
 
             let tableElm: IAugmentedJQuery,
-                tp: NgTableParams<IPerson>;
+                tp: NgTableParams<Person>;
             beforeEach(() => {
                 const html = `<div>
                     <table ng-table="tableParams">
@@ -736,7 +736,7 @@ describe('ng-table', () => {
         describe('filter with placeholder value and url', () => {
 
             let tableElm: IAugmentedJQuery,
-                tp: NgTableParams<IPerson>;
+                tp: NgTableParams<Person>;
             beforeEach(() => {
                 const html = `<div>
                     <table ng-table="tableParams">
@@ -813,7 +813,7 @@ describe('ng-table', () => {
 
     describe('$columns', () => {
         let tableElm: IAugmentedJQuery,
-            params: NgTableParams<IPerson>;
+            params: NgTableParams<Person>;
         beforeEach(() => {
             const html = `<div>
                 <table ng-table="tableParams" ng-table-columns-binding="model.exportedCols">
@@ -887,7 +887,7 @@ describe('ng-table', () => {
             expect(ageCol.show()).toBe(false);
             expect(scope.isAgeVisible).toBe(false);
 
-            const newFilter: IFilterTemplateDefMap = { age: 'select' };
+            const newFilter: FilterTemplateDefMap = { age: 'select' };
             ageCol.filter.assign(scope.$$childHead, newFilter);
             expect(ageCol.filter()).toBe(newFilter);
             expect(scope.ageFilter).toBe(newFilter);
@@ -931,7 +931,7 @@ describe('ng-table', () => {
             expect(ageCol.show()).toBe(false);
             expect(scope.isAgeVisible).toBe(false);
 
-            const newFilter: IFilterTemplateDefMap = { age: 'select' };
+            const newFilter: FilterTemplateDefMap = { age: 'select' };
             ageCol.filter(newFilter);
             expect(ageCol.filter()).toBe(newFilter);
             expect(scope.ageFilter).toBe(newFilter);
@@ -968,7 +968,7 @@ describe('ng-table', () => {
 
     describe('groups', () => {
 
-        let $capturedColumn: IColumnDef;
+        let $capturedColumn: ColumnDef;
         beforeEach(inject(() => {
             // stash a reference to $column definition so that its available in asserts
             scope.captureColumn = function ($column) {
@@ -980,7 +980,7 @@ describe('ng-table', () => {
 
             let tableElm: IAugmentedJQuery,
                 thead: HTMLElement,
-                tp: NgTableParams<IPerson>;
+                tp: NgTableParams<Person>;
             beforeEach(() => {
                 const html = `<div>
                     <table ng-table="tableParams">
@@ -1136,7 +1136,7 @@ describe('ng-table', () => {
         }));
 
         it('should reload when binding a new tableParams to scope', () => {
-            const tp = createNgTableParams<IPerson>();
+            const tp = createNgTableParams<Person>();
             scope.tableParams = tp;
             scope.$digest();
 
@@ -1160,13 +1160,13 @@ describe('ng-table', () => {
         });
 
         it('should reload when binding a new tableParams to scope multiple times', () => {
-            const tp1 = createNgTableParams<IPerson>();
+            const tp1 = createNgTableParams<Person>();
             scope.tableParams = tp1;
             scope.$digest();
 
             expect((tp1.settings().getData as jasmine.Spy).calls.count()).toBe(1);
 
-            const tp2 = createNgTableParams<IPerson>();
+            const tp2 = createNgTableParams<Person>();
             scope.tableParams = tp2;
             scope.$digest();
 
@@ -1208,7 +1208,7 @@ describe('ng-table', () => {
 
         it('should reload 1 time when initial load fails', inject(function ($q: IQService) {
             // given
-            const tp = createNgTableParams<IPerson>({
+            const tp = createNgTableParams<Person>({
                 getData: () => {
                     return $q.reject('BANG!');
                 }
@@ -1245,7 +1245,7 @@ describe('ng-table', () => {
         });
 
         it('changing filter, orderBy, or page and then calling reload should not invoke getData twice', () => {
-            const tp = createNgTableParams<IPerson>();
+            const tp = createNgTableParams<Person>();
             scope.tableParams = tp;
             scope.$digest();
             (tp.settings().getData as jasmine.Spy).calls.reset();
@@ -1261,7 +1261,7 @@ describe('ng-table', () => {
 
         it('change to filter that fails to load should not cause infinite reload loop', inject(function ($q: IQService) {
             const tp = createNgTableParams({
-                getData: function (): IPromise<any> | IPerson[] {
+                getData: function (): IPromise<any> | Person[] {
                     if ((tp.settings().getData as jasmine.Spy).calls.count() > 1) {
                         return $q.reject('BANG!');
                     }
@@ -1284,7 +1284,7 @@ describe('ng-table', () => {
         }));
 
         it('changing filter, orderBy, or page in a callback to reload should re-invoke getData 1 time only', () => {
-            const tp = createNgTableParams<IPerson>();
+            const tp = createNgTableParams<Person>();
             scope.tableParams = tp;
             scope.$digest();
             (tp.settings().getData as jasmine.Spy).calls.reset();
@@ -1307,7 +1307,7 @@ describe('ng-table', () => {
 
             // todo: refactor the watches in ngTableController to handle this case
 
-            const tp = createNgTableParams<IPerson>();
+            const tp = createNgTableParams<Person>();
             scope.tableParams = tp;
             scope.$digest();
             (tp.settings().getData as jasmine.Spy).calls.reset();
@@ -1327,7 +1327,7 @@ describe('ng-table', () => {
 
         it('should not reload when filter value is assigned the same value', () => {
             // given
-            const tp = createNgTableParams<IPerson>({ filter: { age: 10 } }, {});
+            const tp = createNgTableParams<Person>({ filter: { age: 10 } }, {});
             scope.tableParams = tp;
             scope.$digest();
             (tp.settings().getData as jasmine.Spy).calls.reset();
@@ -1341,7 +1341,7 @@ describe('ng-table', () => {
 
         it('should reload when filter value changes', () => {
             // given
-            const tp = createNgTableParams<IPerson>({ filter: { age: 10 } }, {});
+            const tp = createNgTableParams<Person>({ filter: { age: 10 } }, {});
             scope.tableParams = tp;
             scope.$digest();
             (tp.settings().getData as jasmine.Spy).calls.reset();
@@ -1359,7 +1359,7 @@ describe('ng-table', () => {
                 { age: 1 },
                 { age: 2 }
             ];
-            const tp = createNgTableParams<IPerson>();
+            const tp = createNgTableParams<Person>();
             scope.tableParams = tp;
             scope.$digest();
             (tp.settings().getData as jasmine.Spy).calls.reset();

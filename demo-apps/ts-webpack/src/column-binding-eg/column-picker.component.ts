@@ -1,5 +1,5 @@
 import { IComponentOptions } from 'angular';
-import { IColumnDef } from 'ng-table';
+import { ColumnDef } from 'ng-table';
 
 export class ColumnPickerComponent implements IComponentOptions {
     templateUrl = './column-picker.html';
@@ -9,5 +9,5 @@ export class ColumnPickerComponent implements IComponentOptions {
     }
 }
 class ColumnPickerController {
-    columns: IColumnDef[];
+    columns: ColumnDef[];
 }

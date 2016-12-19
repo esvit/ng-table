@@ -1,8 +1,8 @@
 import { IComponentOptions, IComponentController } from 'angular';
-import { IDynamicTableColDef, NgTableParams } from 'ng-table';
+import { DynamicTableColDef, NgTableParams } from 'ng-table';
 import { Person } from '../shared';
 
-interface IExtendedDynamicTableColDef extends IDynamicTableColDef {
+interface ExtendedDynamicTableColDef extends DynamicTableColDef {
     field: string;
 }
 
@@ -14,7 +14,7 @@ export class DynamicTableComponent implements IComponentOptions {
     };
 }
 class DynamicTableController implements IComponentController {
-    columns: IExtendedDynamicTableColDef[] = [
+    columns: ExtendedDynamicTableColDef[] = [
         { field: 'name', title: 'Name', show: true, filter: { name: 'text' }, sortable: 'name' },
         { field: 'age', title: 'Age', show: true, filter: { age: 'number' }, sortable: 'age' },
         { field: 'money', title: 'Money', show: true, filter: { money: 'number' }, sortable: 'money'  }

@@ -4,14 +4,14 @@ import { IAttributes, IPromise, IScope } from 'angular';
  * The scope available to a table column getter
  */
 export type ColumnFieldContext = IScope & {
-    $column?: IColumnDef;
-    $columns: IColumnDef[];
+    $column?: ColumnDef;
+    $columns: ColumnDef[];
 }
 
 /**
  * Signature of a getter/setter on a {@link IColumnDef} instance
  */
-export interface IColumnField<T> {
+export interface ColumnField<T> {
     (context?: ColumnFieldContext): T;
     (value: T): void;
     assign($scope: IScope, value: T): void;
@@ -30,13 +30,13 @@ export interface IColumnField<T> {
  * </tr>
  * ```
  */
-export interface IColumnDef {
+export interface ColumnDef {
     /**
      * Custom CSS class that should be added to the `th` tag(s) of this column in the table header
      *
      * To set this on the `td` tag of a html table use the attribute `header-class` or `data-header-class`
      */
-    class: IColumnField<string>;
+    class: ColumnField<string>;
     /**
      * The `ISelectOption`s that can be used in a html filter template for this colums.
      */
@@ -49,64 +49,64 @@ export interface IColumnDef {
      * The definition of 0 or more html filter templates that should be rendered for this column in
      * the table header
      */
-    filter: IColumnField<IFilterTemplateDefMap>;
+    filter: ColumnField<FilterTemplateDefMap>;
     /**
      * Supplies the `ISelectOption`s that can be used in a html filter template for this colums.
      * At the creation of the `NgTableParams` this field will be called and the result then assigned
      * to the `data` field of this column.
      */
-    filterData: IColumnField<IPromise<SelectData> | SelectData>;
+    filterData: ColumnField<IPromise<SelectData> | SelectData>;
     /**
      * The name of the data row field that will be used to group on, or false when this column
      * does not support grouping
      */
-    groupable: IColumnField<string | boolean>;
+    groupable: ColumnField<string | boolean>;
     /**
      * The url of a custom html template that should be used to render a table header for this column
      *
      * To set this on the `td` tag for a html table use the attribute `header` or `data-header`
      */
-    headerTemplateURL: IColumnField<string | boolean>;
+    headerTemplateURL: ColumnField<string | boolean>;
     /**
      * The text that should be used as a tooltip for this column in the table header
      */
-    headerTitle: IColumnField<string>;
+    headerTitle: ColumnField<string>;
     /**
      * Determines whether this column should be displayed in the table
      *
      * To set this on the `td` tag for a html table use the attribute `ng-if`
      */
-    show: IColumnField<boolean>;
+    show: ColumnField<boolean>;
     /**
      * The name of the data row field that will be used to sort on, or false when this column
      * does not support sorting
      */
-    sortable: IColumnField<string | boolean>;
+    sortable: ColumnField<string | boolean>;
     /**
      * The title of this column that should be displayed in the table header
      */
-    title: IColumnField<string>;
+    title: ColumnField<string>;
     /**
      * An alternate column title. Typically this can be used for responsive table layouts
      * where the titleAlt should be used for small screen sizes
      */
-    titleAlt: IColumnField<string>;
+    titleAlt: ColumnField<string>;
 }
 
-export type DynamicTableColField<T> = IDynamicTableColFieldFunc<T> | T;
+export type DynamicTableColField<T> = DynamicTableColFieldFunc<T> | T;
 
 
 /**
  * Signature of a getter/setter on a {@link IDynamicTableColDef} instance
  */
-export interface IDynamicTableColFieldFunc<T> {
+export interface DynamicTableColFieldFunc<T> {
     (context: ColumnFieldContext): T;
 }
 
 /**
  * The definition of the column supplied to a {@link ngTableDynamic} directive.
  */
-export interface IDynamicTableColDef {
+export interface DynamicTableColDef {
     /**
      * Custom CSS class that should be added to the `th` tag(s) of this column in the table header
      */
@@ -115,7 +115,7 @@ export interface IDynamicTableColDef {
      * The definition of 0 or more html filter templates that should be rendered for this column in
      * the table header
      */
-    filter?: DynamicTableColField<IFilterTemplateDefMap>;
+    filter?: DynamicTableColField<FilterTemplateDefMap>;
     /**
      * Supplies the `ISelectOption`s that can be used in a html filter template for this colums.
      * At the creation of the `NgTableParams` this field will be called and the result then assigned
@@ -158,7 +158,7 @@ export interface IDynamicTableColDef {
 /**
  * Configuration values that determine the behaviour of the `ngTableFilterConfig` service
  */
-export interface IFilterConfigValues {
+export interface FilterConfigValues {
     /**
      * The default base url to use when deriving the url for a filter template given just an alias name
      * Defaults to 'ng-table/filters/'
@@ -194,14 +194,14 @@ export interface IFilterConfigValues {
  * vm.ageFilter = { "age": { id: "number", placeholder: "Age of person"} }
  * ```
  */
-export interface IFilterTemplateDefMap {
-    [name: string]: string | IFilterTemplateDef
+export interface FilterTemplateDefMap {
+    [name: string]: string | FilterTemplateDef
 }
 
 /**
  * A fully qualified template definition for a single filter
  */
-export interface IFilterTemplateDef {
+export interface FilterTemplateDef {
     /**
      * A url to a html template or an alias to a url registered using the {@link ngTableFilterConfigProvider}
      */
@@ -212,12 +212,12 @@ export interface IFilterTemplateDef {
     placeholder: string
 }
 
-export type SelectData = ISelectOption[] | ISelectDataFunc
+export type SelectData = SelectOption[] | SelectDataFunc
 
 /**
  * An object to be rendered as a html select option
  */
-export interface ISelectOption {
+export interface SelectOption {
     id: string | number;
     title: string;
 }
@@ -225,14 +225,14 @@ export interface ISelectOption {
 /**
  * Signature of a function that will return the options that will be rendered by a html select
  */
-export interface ISelectDataFunc {
-    (): ISelectOption[] | IPromise<ISelectOption[]>
+export interface SelectDataFunc {
+    (): SelectOption[] | IPromise<SelectOption[]>
 }
 
 /**
  * The definition of the html attributes accepted by the {@link ngTable ngTable} and {@link ngTableDynamic} directives
  */
-export interface ITableInputAttributes extends IAttributes {
+export interface TableInputAttributes extends IAttributes {
     disableFilter?: string;
     ngTable?: string;
     ngTableDynamic?: string;

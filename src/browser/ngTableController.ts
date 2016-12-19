@@ -12,17 +12,17 @@ import {
 } from 'angular';
 import * as ng1 from 'angular';
 import {
-    DataResult, DataResults, IDataRowGroup, GroupedDataResults, NgTableParams, NgTableEventsChannel,
-    IPageButton
+    DataResult, DataResults, DataRowGroup, GroupedDataResults, NgTableParams, NgTableEventsChannel,
+    PageButton
 } from '../core';
-import { IColumnDef, IDynamicTableColDef, SelectData, ITableInputAttributes } from './public-interfaces';
+import { ColumnDef, DynamicTableColDef, SelectData, TableInputAttributes } from './public-interfaces';
 import { NgTableColumn } from './ngTableColumn';
 
 /**
  * @private
  */
-export interface ITableScope<T> extends IScope {
-    $columns: IColumnDef[];
+export interface TableScope<T> extends IScope {
+    $columns: ColumnDef[];
     $loading: boolean;
     $filterRow: {
         disabled: boolean;
@@ -33,7 +33,7 @@ export interface ITableScope<T> extends IScope {
         show: boolean;
     };
     show_filter: boolean;
-    pages: IPageButton[];
+    pages: PageButton[];
     templates: {
         header: string;
         pagination: string;
@@ -44,7 +44,7 @@ export interface ITableScope<T> extends IScope {
 /**
  * The controller for the {@link ngTable ngTable} and {@link ngTableDynamic ngTableDynamic} directives
  */
-export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableColDef> {
+export class NgTableController<TParams, TCol extends ColumnDef | DynamicTableColDef> {
     static $inject = [
         '$scope', '$timeout', '$parse', '$compile', '$attrs', '$element', '$document', 'ngTableColumn', 'ngTableEventsChannel'
     ];
@@ -57,11 +57,11 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
         });
     }
     constructor(
-        private $scope: ITableScope<TParams>,
+        private $scope: TableScope<TParams>,
         $timeout: ITimeoutService,
         private $parse: IParseService,
         private $compile: ICompileService,
-        private $attrs: IAttributes & ITableInputAttributes,
+        private $attrs: IAttributes & TableInputAttributes,
         private $element: IAugmentedJQuery,
         private $document: IDocumentService,
         private ngTableColumn: NgTableColumn<TCol>,
@@ -156,7 +156,7 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
         }
     }
 
-    loadFilterData($columns: IColumnDef[]) {
+    loadFilterData($columns: ColumnDef[]) {
         ng1.forEach($columns, ($column) => {
             const result = $column.filterData(this.$scope);
             if (!result) {
@@ -186,9 +186,9 @@ export class NgTableController<TParams, TCol extends IColumnDef | IDynamicTableC
         }
     }
 
-    buildColumns(columns: TCol[]): IColumnDef[] {
+    buildColumns(columns: TCol[]): ColumnDef[] {
         // todo: use strictNullChecks and remove guard clause
-        const result: IColumnDef[] = [];
+        const result: ColumnDef[] = [];
         (columns || []).forEach(col => {
             result.push(this.ngTableColumn.buildColumn(col, this.$scope, result));
         });

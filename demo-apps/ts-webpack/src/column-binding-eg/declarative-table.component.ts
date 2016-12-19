@@ -1,5 +1,5 @@
 import { IComponentOptions, IComponentController } from 'angular';
-import { IColumnDef, NgTableParams } from 'ng-table';
+import { ColumnDef, NgTableParams } from 'ng-table';
 import { Person } from '../shared';
 
 export class DeclarativeTableComponent implements IComponentOptions {
@@ -10,7 +10,7 @@ export class DeclarativeTableComponent implements IComponentOptions {
     };
 }
 class DeclarativeTableController implements IComponentController {
-    exportedColumns: IColumnDef[];
+    exportedColumns: ColumnDef[];
     data: Person[];
     tableParams = new NgTableParams<Person>({});
     $onInit(){

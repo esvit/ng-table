@@ -1,10 +1,10 @@
 import * as ng1 from 'angular';
 import { assignPartialDeep } from '../shared';
 import { IPromise } from 'angular';
-import { IDefaults } from './ngTableDefaults';
-import { IDataRowGroup, DataSettingsPartial, DataSettings, IDefaultGetData, IGetDataFunc, IInterceptor, IInterceptableGetDataFunc } from './data';
-import { IFilterValues, FilterSettingsPartial, FilterSettings } from './filtering';
-import { IGetGroupFunc, GroupSettingsPartial, GroupSettings } from './grouping';
+import { Defaults } from './ngTableDefaults';
+import { DataRowGroup, DataSettingsPartial, DataSettings, DefaultGetData, GetDataFunc, Interceptor, InterceptableGetDataFunc } from './data';
+import { FilterValues, FilterSettingsPartial, FilterSettings } from './filtering';
+import { GetGroupFunc, GroupSettingsPartial, GroupSettings } from './grouping';
 import { SortDirection } from './sorting';
 import { NgTableParams } from './ngTableParams';
 
@@ -47,19 +47,19 @@ export class Settings<T> {
      * Typically you will supply a custom function when you need to execute filtering, paging and sorting
      * on the server
      */
-    getData: IGetDataFunc<T> | IInterceptableGetDataFunc<T> = (params: NgTableParams<T>) => {
+    getData: GetDataFunc<T> | InterceptableGetDataFunc<T> = (params: NgTableParams<T>) => {
         return Settings.ngTableDefaultGetData(params.settings().dataset, params) as T[];
     };
     /**
      * The function that will be used group data rows according to the groupings returned by {@link NgTableParams} `group`
     */
-    getGroups: IGetGroupFunc<T> = Settings.ngTableDefaultGetGroups;
+    getGroups: GetGroupFunc<T> = Settings.ngTableDefaultGetGroups;
     groupOptions = new GroupSettings();
     /**
      * The collection of interceptors that should apply to the results of a call to
      * the `getData` function before the data rows are displayed in the table
      */
-    interceptors = new Array<IInterceptor<T>>();
+    interceptors = new Array<Interceptor<T>>();
     /**
      * Configuration for the template that will display the page size buttons
      */
@@ -72,10 +72,10 @@ export class Settings<T> {
      * The html tag that will be used to display the sorting indicator in the table header
      */
     sortingIndicator = 'span'
-    private static ngTableDefaultGetData: IDefaultGetData<any>;
-    private static ngTableDefaultGetGroups: IGetGroupFunc<any>;
-    static init(ngTableDefaultGetData: IDefaultGetData<any>,
-        ngTableDefaultGetGroups: IGetGroupFunc<any>) {
+    private static ngTableDefaultGetData: DefaultGetData<any>;
+    private static ngTableDefaultGetGroups: GetGroupFunc<any>;
+    static init(ngTableDefaultGetData: DefaultGetData<any>,
+        ngTableDefaultGetGroups: GetGroupFunc<any>) {
         Settings.ngTableDefaultGetData = ngTableDefaultGetData;
         Settings.ngTableDefaultGetGroups = ngTableDefaultGetGroups;
     }
@@ -110,7 +110,7 @@ export class NgTableSettings {
     static $inject = ['ngTableDefaults'];
     private defaults = new Settings();
     constructor(
-        private ngTableDefaults: IDefaults) {
+        private ngTableDefaults: Defaults) {
     }
     createDefaults<T>(): Settings<T> {
         return this.merge(this.defaults, this.ngTableDefaults.settings);

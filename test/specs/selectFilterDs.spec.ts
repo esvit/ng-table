@@ -1,26 +1,26 @@
 import { ICompileService, IScope, ITimeoutService } from 'angular';
 import * as ng1 from 'angular';
-import { SelectData, ISelectOption, ngTableBrowserModule } from '../../src/browser';
+import { SelectData, SelectOption, ngTableBrowserModule } from '../../src/browser';
 
 describe('ngTableSelectFilterDs directive', () => {
 
-    interface IColumnScope extends IScope {
+    interface ColumnScope extends IScope {
         $column?: { data?: SelectData };
-        $selectData?: ISelectOption[];
+        $selectData?: SelectOption[];
     }
 
-    interface ITableScope extends IScope {
-        $new(): IColumnScope;
+    interface TableScope extends IScope {
+        $new(): ColumnScope;
     }
 
-    let $scope: IColumnScope,
+    let $scope: ColumnScope,
         elem: string,
         $compile: ICompileService;
 
     beforeAll(() => expect(ngTableBrowserModule).toBeDefined());
     beforeEach(ng1.mock.module('ngTable-browser'));
 
-    beforeEach(inject(($rootScope: ITableScope, _$compile_: ICompileService) => {
+    beforeEach(inject(($rootScope: TableScope, _$compile_: ICompileService) => {
         $scope = $rootScope.$new();
         $compile = _$compile_;
         elem = '<select ng-table-select-filter-ds="$column"></select>';
@@ -92,7 +92,7 @@ describe('ngTableSelectFilterDs directive', () => {
             // allow for the user to select an empty select option thus removing column filter
 
             // given
-            let data: ISelectOption[] = [];
+            let data: SelectOption[] = [];
             $scope.$column = {
                 data: data
             };
@@ -137,7 +137,7 @@ describe('ngTableSelectFilterDs directive', () => {
 
     describe('function datasource', () => {
 
-        let data: ISelectOption[];
+        let data: SelectOption[];
         beforeEach(() => {
             $scope.$column = {
                 data: () => data
@@ -229,7 +229,7 @@ describe('ngTableSelectFilterDs directive', () => {
     });
 
     describe('asyn function datasource', () => {
-        let data: ISelectOption[];
+        let data: SelectOption[];
         let $timeout: ITimeoutService;
         beforeEach(inject((_$timeout_: ITimeoutService) => {
             $timeout = _$timeout_;

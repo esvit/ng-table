@@ -8,11 +8,11 @@
 
 import { IAugmentedJQuery, IDirective, IScope } from 'angular';
 import * as ng1 from 'angular';
-import { IColumnDef, IDynamicTableColDef, ITableInputAttributes } from './public-interfaces';
+import { ColumnDef, DynamicTableColDef, TableInputAttributes } from './public-interfaces';
 import { NgTableController } from './ngTableController';
 
-interface IScopeExtensions {
-    $columns: IColumnDef[]
+interface ScopeExtensions {
+    $columns: ColumnDef[]
 }
 
 ngTableDynamic.$inject = [];
@@ -68,13 +68,13 @@ export function ngTableDynamic () : IDirective{
                     el.attr('ng-if', '$columns[$index].show(this)');
                 }
             });
-            return function (scope: IScope & IScopeExtensions, element: IAugmentedJQuery, attrs: ITableInputAttributes, controller: NgTableController<any, IDynamicTableColDef>) {
+            return function (scope: IScope & ScopeExtensions, element: IAugmentedJQuery, attrs: TableInputAttributes, controller: NgTableController<any, DynamicTableColDef>) {
                 const expr = controller.parseNgTableDynamicExpr(attrs.ngTableDynamic);
 
                 controller.setupBindingsToInternalScope(expr.tableParams);
                 controller.compileDirectiveTemplates();
 
-                scope.$watchCollection<IDynamicTableColDef[]>(expr.columns, (newCols/*, oldCols*/) => {
+                scope.$watchCollection<DynamicTableColDef[]>(expr.columns, (newCols/*, oldCols*/) => {
                     scope.$columns = controller.buildColumns(newCols);
                     controller.loadFilterData(scope.$columns);
                 });

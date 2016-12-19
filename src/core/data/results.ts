@@ -1,6 +1,6 @@
-export type DataResult<T> = T | IDataRowGroup<T>;
+export type DataResult<T> = T | DataRowGroup<T>;
 
-export interface IDataRowGroup<T> {
+export interface DataRowGroup<T> {
     data: T[];
     $hideRows: boolean;
     value: string;
@@ -16,4 +16,4 @@ export type DataResults<T> = T[] & { visibleColumnCount: number };
  * The augmented grouped data row array displayed by the table
  * Note: this array is made available to the table templete as the `$groups` field
  */
-export type GroupedDataResults<T> = IDataRowGroup<T>[] & { visibleColumnCount: number };
+export type GroupedDataResults<T> = DataRowGroup<T>[] & { visibleColumnCount: number };

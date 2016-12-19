@@ -1,10 +1,10 @@
-import { Grouping, IGroupingFunc } from './grouping';
-import { ISortingValues } from './sorting';
+import { Grouping, GroupingFunc } from './grouping';
+import { SortingValues } from './sorting';
 
 /**
  * @private
  */
-export function convertSortToOrderBy(sorting: ISortingValues) {
+export function convertSortToOrderBy(sorting: SortingValues) {
     const result: string[] = [];
     for (let column in sorting) {
         result.push((sorting[column] === "asc" ? "+" : "-") + column);
@@ -15,6 +15,6 @@ export function convertSortToOrderBy(sorting: ISortingValues) {
 /**
  * @private
  */
-export function isGroupingFun(val: string | Grouping<any>): val is IGroupingFunc<any> {
+export function isGroupingFun(val: string | Grouping<any>): val is GroupingFunc<any> {
     return typeof val === 'function'
 }

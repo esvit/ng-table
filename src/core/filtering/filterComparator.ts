@@ -1,8 +1,8 @@
-export type FilterComparator<T> = boolean | IFilterComparatorFunc<T>;
+export type FilterComparator<T> = boolean | FilterComparatorFunc<T>;
 
 /**
  * Signature of a function to compare two data values for equality
  */
-export interface IFilterComparatorFunc<T> {
+export interface FilterComparatorFunc<T> {
     (actual: T, expected: T): boolean;
 }

@@ -1,5 +1,5 @@
 import { FilterComparator } from './filterComparator';
-import { IFilterFunc } from './filterFunc';
+import { FilterFunc } from './filterFunc';
 
 export type FilterLayout = 'stack' | 'horizontal';
 
@@ -12,8 +12,8 @@ export class FilterSettings<T> {
      * `$filter` filter service
      *
      * Defaults to `undefined` which will result in a case insensitive susbstring match when
-     * `IDefaultGetData` service is supplying the implementation for the
-     * `ISettings.getData` function
+     * `DefaultGetData` service is supplying the implementation for the
+     * `Settings.getData` function
      */
     filterComparator?: FilterComparator<T> = undefined; // look for a substring match in case insensitive way
     /**
@@ -27,15 +27,15 @@ export class FilterSettings<T> {
      */
     filterDelayThreshold: number | null = 10000;
     /**
-     * Overrides `IDefaultGetDataProvider.filterFilterName`.
+     * Overrides `DefaultGetDataProvider.filterFilterName`.
      * The value supplied should be the name of the angular `$filter` service that will be selected to perform
      * the actual filter logic.
      */
     filterFilterName?: string = undefined;
     /**
-     * Tells `IDefaultGetData` to use this function supplied to perform the filtering instead of selecting an angular $filter.
+     * Tells `DefaultGetData` to use this function supplied to perform the filtering instead of selecting an angular $filter.
      */
-    filterFn?: IFilterFunc<T> = undefined;
+    filterFn?: FilterFunc<T> = undefined;
     /**
      * The layout to use when multiple html templates are to rendered in a single table header column.
      */
