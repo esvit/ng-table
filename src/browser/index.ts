@@ -37,4 +37,5 @@ const ngTableBrowserModule = angular.module('ngTable-browser', [])
     .controller('ngTableSorterRowController', NgTableSorterRowController);
 
 export * from './public-interfaces';
-export { NgTableController, NgTableFilterConfigProvider, NgTableFilterConfig, ngTableBrowserModule };
+export { NgTableController, ngTableBrowserModule };
+export * from './ngTableFilterConfig';

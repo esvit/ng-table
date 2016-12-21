@@ -8,7 +8,30 @@
 
 import * as ng1 from 'angular';
 import { IServiceProvider, auto } from 'angular';
-import { FilterConfigValues, FilterTemplateDef } from './public-interfaces';
+import { assignPartialDeep } from '../shared';
+import { FilterTemplateDef } from './public-interfaces';
+
+/**
+ * Configuration values that determine the behaviour of the `ngTableFilterConfig` service
+ */
+export class FilterConfigValues {
+    /**
+     * The default base url to use when deriving the url for a filter template given just an alias name
+     */
+    defaultBaseUrl = 'ng-table/filters/';
+    /**
+     * The extension to use when deriving the url of a filter template when given just an alias name
+     */
+    defaultExt = '.html';
+    /**
+     * A map of alias names and their corrosponding urls. A lookup against this map will be used
+     * to find the url matching an alias name.
+     * If no match is found then a url will be derived using the following pattern `${defaultBaseUrl}${aliasName}.${defaultExt}`
+     */
+    aliasUrls: { [name: string]: string } = {};
+}
+
+export type FilterConfigValuesPartial = Partial<FilterConfigValues>
 
 /**
  * The angular provider used to configure the behaviour of the `NgTableFilterConfig` service.
@@ -17,11 +40,6 @@ export class NgTableFilterConfigProvider implements IServiceProvider {
     static $inject = ['$injector'];
     $get: () => NgTableFilterConfig;
     private config: FilterConfigValues;
-    private defaultConfig: FilterConfigValues = {
-        defaultBaseUrl: 'ng-table/filters/',
-        defaultExt: '.html',
-        aliasUrls: {}
-    };
     constructor($injector: auto.IInjectorService) {
         this.$get = () => {
             return $injector.instantiate<NgTableFilterConfig>(NgTableFilterConfig, { config: ng1.copy(this.config) });
@@ -34,16 +52,14 @@ export class NgTableFilterConfigProvider implements IServiceProvider {
      * Reset back to factory defaults the config values that `NgTableFilterConfig` service will use
      */
     resetConfigs() {
-        this.config = this.defaultConfig;
+        this.config = new FilterConfigValues();
     }
 
     /**
      * Set the config values used by `NgTableFilterConfig` service
      */
-    setConfig(customConfig: FilterConfigValues) {
-        const mergeConfig = ng1.extend({}, this.config, customConfig);
-        mergeConfig.aliasUrls = ng1.extend({}, this.config.aliasUrls, customConfig.aliasUrls);
-        this.config = mergeConfig;
+    setConfig(customConfig: FilterConfigValuesPartial) {
+        this.config = assignPartialDeep(ng1.copy(this.config), customConfig);
     }
 }
 

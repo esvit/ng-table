@@ -1,5 +1,6 @@
-import { NgTableFilterConfig, NgTableFilterConfigProvider, ngTableBrowserModule } from '../../src/browser';
 import * as ng1 from 'angular';
+import * as _ from 'lodash';
+import { NgTableFilterConfig, NgTableFilterConfigProvider, FilterConfigValues, ngTableBrowserModule } from '../../src/browser';
 
 describe('ngTableFilterConfig', () => {
     let ngTableFilterConfig: NgTableFilterConfig,
@@ -19,7 +20,23 @@ describe('ngTableFilterConfig', () => {
     }));
 
 
+    it('should return defaults', () => {
+        ngTableFilterConfig = ngTableFilterConfigProvider.$get();
+
+        expect(ngTableFilterConfig.config).toEqualPlainObject({
+            defaultBaseUrl: 'ng-table/filters/',
+            defaultExt: '.html',
+            aliasUrls: {}
+        });
+    })
+
+
     describe('setConfig', () => {
+
+        let allSettings: FilterConfigValues
+        beforeEach(() => {
+            allSettings = new FilterConfigValues();
+        });
 
         it('should set aliasUrls supplied', () => {
 
@@ -48,6 +65,32 @@ describe('ngTableFilterConfig', () => {
             ngTableFilterConfig = ngTableFilterConfigProvider.$get();
             expect(ngTableFilterConfig.config.aliasUrls['text']).toBe('custom/url/text.html');
             expect(ngTableFilterConfig.config.aliasUrls['number']).toBe('custom/url/custom-number.html');
+        });
+
+        it('undefined values in new settings should be ignored', () => {
+            const newSettings = _.mapValues(allSettings, _.constant(undefined));
+            // when
+            ngTableFilterConfigProvider.setConfig(newSettings);
+            // then
+            ngTableFilterConfig = ngTableFilterConfigProvider.$get();
+            expect(ngTableFilterConfig.config).toEqualPlainObject(allSettings);
+        });
+
+        it('undefined nested values in new settings should be ignored', () => {
+            ngTableFilterConfigProvider.setConfig({
+                aliasUrls: {
+                    'text': 'custom/url/text.html'
+                }
+            });
+
+            ngTableFilterConfigProvider.setConfig({
+                aliasUrls: {
+                    'text': undefined
+                }
+            });
+
+            ngTableFilterConfig = ngTableFilterConfigProvider.$get();
+            expect(ngTableFilterConfig.config.aliasUrls['text']).toBe('custom/url/text.html');
         });
     });
 

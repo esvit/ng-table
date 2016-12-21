@@ -15,6 +15,10 @@ interface ScopeExtensions {
     $columns: ColumnDef[]
 }
 
+function toArray<T>(arr: ArrayLike<T>) {
+    return Array.prototype.slice.call(arr) as T[];
+}
+
 ngTableDynamic.$inject = [];
 
 /**
@@ -31,40 +35,35 @@ ngTableDynamic.$inject = [];
  * </table>
  * ```
  */
-export function ngTableDynamic () : IDirective{
+export function ngTableDynamic(): IDirective {
 
     return {
         restrict: 'A',
         priority: 1001,
         scope: true,
         controller: 'ngTableController',
-        compile: function(tElement: IAugmentedJQuery) {
-            let row: IAugmentedJQuery;
+        compile: function (tElement: IAugmentedJQuery) {
 
-            // IE 8 fix :not(.ng-table-group) selector
-            ng1.forEach(tElement.find('tr'), (tr: JQuery) => {
-                tr = ng1.element(tr);
-                if (!tr.hasClass('ng-table-group') && !row) {
-                    row = tr;
-                }
-            });
-            if (!row) {
+            const tRows = toArray(tElement[0].getElementsByTagName('tr'));
+            const tRow = tRows.filter(tr => !ng1.element(tr).hasClass('ng-table-group'))[0];
+
+            if (!tRow) {
                 return undefined;
             }
 
-            ng1.forEach(row.find('td'), (item: JQuery) => {
-                const el = ng1.element(item);
+            toArray(tRow.getElementsByTagName('td')).forEach(tCell => {
+                const el = ng1.element(tCell);
                 const getAttrValue = (attr: string) => {
                     return el.attr('x-data-' + attr) || el.attr('data-' + attr) || el.attr(attr);
                 };
 
                 // this used in responsive table
                 const titleExpr = getAttrValue('title');
-                if (!titleExpr){
+                if (!titleExpr) {
                     el.attr('data-title-text', '{{$columns[$index].titleAlt(this) || $columns[$index].title(this)}}');
                 }
                 const showExpr = el.attr('ng-if');
-                if (!showExpr){
+                if (!showExpr) {
                     el.attr('ng-if', '$columns[$index].show(this)');
                 }
             });

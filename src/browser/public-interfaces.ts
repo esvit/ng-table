@@ -158,27 +158,6 @@ export interface DynamicTableColDef {
 }
 
 /**
- * Configuration values that determine the behaviour of the `ngTableFilterConfig` service
- */
-export interface FilterConfigValues {
-    /**
-     * The default base url to use when deriving the url for a filter template given just an alias name
-     * Defaults to 'ng-table/filters/'
-     */
-    defaultBaseUrl?: string;
-    /**
-     * The extension to use when deriving the url of a filter template when given just an alias name
-     */
-    defaultExt?: string;
-    /**
-     * A map of alias names and their corrosponding urls. A lookup against this map will be used
-     * to find the url matching an alias name.
-     * If no match is found then a url will be derived using the following pattern `${defaultBaseUrl}${aliasName}.${defaultExt}`
-     */
-    aliasUrls?: { [name: string]: string };
-}
-
-/**
  * A key value-pair map where the key is the name of a field in a data row and the value is the definition
  * for the template used to render a filter cell in the header of a html table.
  * Where the value is supplied as a string this should either be url to a html template or an alias to a url registered
