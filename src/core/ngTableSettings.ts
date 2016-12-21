@@ -1,5 +1,5 @@
 import * as ng1 from 'angular';
-import { assignPartialDeep } from '../shared';
+import { assignPartialDeep, checkClassInit } from '../shared';
 import { IPromise } from 'angular';
 import { Defaults } from './ngTableDefaults';
 import { DataRowGroup, DataSettingsPartial, DataSettings, DefaultGetData, GetDataFunc, Interceptor, InterceptableGetDataFunc } from './data';
@@ -12,6 +12,9 @@ import { NgTableParams } from './ngTableParams';
  * Configuration settings for {@link NgTableParams}
  */
 export class Settings<T> {
+    constructor() {
+        checkClassInit(Settings);
+    }
     /**
      * Returns true whenever a call to `getData` is in progress
      */
@@ -47,13 +50,11 @@ export class Settings<T> {
      * Typically you will supply a custom function when you need to execute filtering, paging and sorting
      * on the server
      */
-    getData: GetDataFunc<T> | InterceptableGetDataFunc<T> = (params: NgTableParams<T>) => {
-        return Settings.ngTableDefaultGetData(params.settings().dataset, params) as T[];
-    };
+    getData: GetDataFunc<T> | InterceptableGetDataFunc<T> = Settings.defaultGetData;
     /**
      * The function that will be used group data rows according to the groupings returned by {@link NgTableParams} `group`
     */
-    getGroups: GetGroupFunc<T> = Settings.ngTableDefaultGetGroups;
+    getGroups: GetGroupFunc<T> = Settings.defaultGetGroups;
     groupOptions = new GroupSettings();
     /**
      * The collection of interceptors that should apply to the results of a call to
@@ -72,16 +73,54 @@ export class Settings<T> {
      * The html tag that will be used to display the sorting indicator in the table header
      */
     sortingIndicator = 'span'
-    private static ngTableDefaultGetData: DefaultGetData<any>;
-    private static ngTableDefaultGetGroups: GetGroupFunc<any>;
+    static isInitialized = false;
+    private static defaultGetData: GetDataFunc<any>;
+    private static defaultGetGroups: GetGroupFunc<any>;
+    private static ngTableDefaults: Defaults
+    private static instance: Settings<any>;
+    static createWithOverrides<T>(): Settings<T> {
+        checkClassInit(Settings);
+        return Settings.merge(Settings.instance, Settings.ngTableDefaults.settings);
+    }
+    static merge<T>(existing: Settings<T>, newSettings: SettingsPartial<T>): Settings<T> {
+        checkClassInit(Settings);
+
+        const results = assignPartialDeep(ng1.copy(existing), newSettings, (destValue: any, srcValue: any, key: keyof Settings<T>) => {
+            // copy *reference* to dataset
+            if (key === 'dataset') {
+                return srcValue;
+            }
+            return undefined;
+        });
+
+        if (newSettings.dataset) {
+            results.total = newSettings.dataset.length;
+            Settings.optimizeFilterDelay(results);
+        }
+        return results;
+    }
+    private static optimizeFilterDelay<T>(settings: Settings<T>) {
+        // don't debounce by default filter input when working with small synchronous datasets
+        if (settings.filterOptions.filterDelay === Settings.instance.filterOptions.filterDelay &&
+            settings.total <= settings.filterOptions.filterDelayThreshold &&
+            settings.getData === Settings.instance.getData) {
+            settings.filterOptions.filterDelay = 0;
+        }
+    }
     static init(ngTableDefaultGetData: DefaultGetData<any>,
-        ngTableDefaultGetGroups: GetGroupFunc<any>) {
-        Settings.ngTableDefaultGetData = ngTableDefaultGetData;
-        Settings.ngTableDefaultGetGroups = ngTableDefaultGetGroups;
+        ngTableDefaultGetGroups: GetGroupFunc<any>,
+        ngTableDefaults: Defaults) {
+        Settings.defaultGetData = (params: NgTableParams<any>) => {
+            return ngTableDefaultGetData(params.settings().dataset, params) as any[];
+        };
+        Settings.defaultGetGroups = ngTableDefaultGetGroups;
+        Settings.ngTableDefaults = ngTableDefaults;
+        Settings.isInitialized = true;
+        Settings.instance = new Settings();
     }
 }
 
-Settings.init.$inject = ['ngTableDefaultGetData', 'ngTableDefaultGetGroups'];
+Settings.init.$inject = ['ngTableDefaultGetData', 'ngTableDefaultGetGroups', 'ngTableDefaults'];
 
 export type SettingsPartial<T> =
     Partial<Pick<Settings<T>,
@@ -102,41 +141,3 @@ export type SettingsPartial<T> =
         filterOptions?: FilterSettingsPartial<T>;
         groupOptions?: GroupSettingsPartial;
     }
-
-/**
- * @private
- */
-export class NgTableSettings {
-    static $inject = ['ngTableDefaults'];
-    private defaults = new Settings();
-    constructor(
-        private ngTableDefaults: Defaults) {
-    }
-    createDefaults<T>(): Settings<T> {
-        return this.merge(this.defaults, this.ngTableDefaults.settings);
-    }
-    merge<T>(existing: Settings<T>, newSettings: SettingsPartial<T>): Settings<T> {
-
-        const results = assignPartialDeep(ng1.copy(existing), newSettings, (destValue: any, srcValue: any, key: keyof Settings<T>) => {
-            // copy *reference* to dataset
-            if (key === 'dataset'){
-                return srcValue;
-            }
-            return undefined;
-        });
-
-        if (newSettings.dataset) {
-            results.total = newSettings.dataset.length;
-            this.optimizeFilterDelay(results);
-        }
-        return results;
-    }
-    private optimizeFilterDelay<T>(settings: Settings<T>) {
-        // don't debounce by default filter input when working with small synchronous datasets
-        if (settings.filterOptions.filterDelay === this.defaults.filterOptions.filterDelay &&
-            settings.total <= settings.filterOptions.filterDelayThreshold &&
-            settings.getData === this.defaults.getData) {
-            settings.filterOptions.filterDelay = 0;
-        }
-    }
-}

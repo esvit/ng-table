@@ -5,19 +5,16 @@ import {
     DataSettings, FilterSettings, GetDataFunc, GetGroupFunc,
     GroupSettings, SettingsPartial, Settings, ngTableCoreModule
 } from '../../src/core';
-import { NgTableSettings } from '../../src/core/ngTableSettings'
 
 
-describe('NgTableSettings', () => {
-
-    let ngTableSettings: NgTableSettings
+describe('Settings', () => {
 
     beforeAll(() => expect(ngTableCoreModule).toBeDefined());
 
     let defaultOverrides: SettingsPartial<any>;
     let standardSettings: SettingsPartial<any>;
 
-    beforeEach(ng1.mock.module("ngTable-core"));
+    beforeEach(ng1.mock.module('ngTable-core'));
 
     beforeEach(() => {
 
@@ -30,6 +27,10 @@ describe('NgTableSettings', () => {
                 settings: defaultOverrides
             })
         });
+
+        // causes the run blocks defined by 'ngTable-core' to run
+        // this is required to ensure the Settings class is initialized before it's first used
+        inject();
 
         const fakeGetData = () => { };
         const fakeGetGroups = () => { };
@@ -66,18 +67,10 @@ describe('NgTableSettings', () => {
         };
     });
 
-    beforeEach(inject((_ngTableSettings_: NgTableSettings) => {
-        ngTableSettings = _ngTableSettings_;
-    }));
-
-    it('should be injectable', () => {
-        expect(ngTableSettings).toBeDefined();
-    });
-
     describe('createDefaults', () => {
 
         it('should return standard defaults', () => {
-            const actual = ngTableSettings.createDefaults();
+            const actual = Settings.createWithOverrides();
             expect(actual).toEqualPlainObject(standardSettings);
         });
 
@@ -86,7 +79,7 @@ describe('NgTableSettings', () => {
             expected.defaultSort = defaultOverrides.defaultSort = 'asc';
             expected.counts = defaultOverrides.counts = [50];
 
-            const actual = ngTableSettings.createDefaults();
+            const actual = Settings.createWithOverrides();
             expect(actual).toEqualPlainObject(expected);
         });
     });
@@ -112,7 +105,7 @@ describe('NgTableSettings', () => {
             };
             const originalNewSettings = { ...newSettings, filterOptions: { ... newSettings.filterOptions } };
 
-            const actual = ngTableSettings.merge(allSettings, newSettings);
+            const actual = Settings.merge(allSettings, newSettings);
             expect(actual).not.toBe(allSettings);
             expect(allSettings.filterOptions.filterDelay).not.toEqual(20);
             expect(newSettings).toEqual(originalNewSettings);
@@ -125,14 +118,14 @@ describe('NgTableSettings', () => {
             const expected = new Settings();
             expected.filterOptions.filterDelay = newSettings.filterOptions.filterDelay = 20;
 
-            const actual = ngTableSettings.merge(allSettings, newSettings);
+            const actual = Settings.merge(allSettings, newSettings);
             expect(actual).toEqualPlainObject(expected);
         });
 
         it('undefined values in new settings should be ignored', () => {
             const newSettings = _.mapValues(allSettings, _.constant(undefined));
 
-            const actual = ngTableSettings.merge(allSettings, newSettings);
+            const actual = Settings.merge(allSettings, newSettings);
             expect(actual).toEqualPlainObject(allSettings);
         });
 
@@ -143,7 +136,7 @@ describe('NgTableSettings', () => {
                 groupOptions: _.mapValues(allSettings.groupOptions, _.constant(undefined))
             };
 
-            const actual = ngTableSettings.merge(allSettings, newSettings);
+            const actual = Settings.merge(allSettings, newSettings);
             expect(actual).toEqualPlainObject(allSettings);
         });
 
@@ -153,7 +146,7 @@ describe('NgTableSettings', () => {
                 interceptors: [interceptor]
             };
 
-            const actual = ngTableSettings.merge(allSettings, newSettings);
+            const actual = Settings.merge(allSettings, newSettings);
             assertShallowClonedArray(actual.interceptors, newSettings.interceptors);
         });
 
@@ -162,7 +155,7 @@ describe('NgTableSettings', () => {
                 counts: [10, 15]
             };
 
-            const actual = ngTableSettings.merge(allSettings, newSettings);
+            const actual = Settings.merge(allSettings, newSettings);
             assertShallowClonedArray(actual.counts, newSettings.counts);
         });
 
@@ -173,7 +166,7 @@ describe('NgTableSettings', () => {
                 dataset: dataset
             };
 
-            const actual = ngTableSettings.merge(allSettings, newSettings);
+            const actual = Settings.merge(allSettings, newSettings);
             expect(actual.dataset).toBe(dataset);
             expect(actual.dataset[0]).toBe(item);
         });
@@ -192,10 +185,45 @@ describe('NgTableSettings', () => {
                 }
             };
 
-            const actual = ngTableSettings.merge(allSettings, newSettings);
+            const actual = Settings.merge(allSettings, newSettings);
             expect(actual.getData).toBe(fakeGetData);
             expect(actual.filterOptions.filterComparator).toBe(fakeComparator);
             expect(actual.filterOptions.filterFn).toBe(fakeFilterFn);
+        });
+
+        it('should remove filterDelay when working with synchronous dataset', () => {
+            const newSettings = { dataset: [1, 2, 3] };
+            const actual = Settings.merge(allSettings, newSettings);
+            expect(actual.filterOptions.filterDelay).toBe(0);
+        });
+
+        it('should remove filterDelay when working with synchronous dataset (empty dataset)', () => {
+            const newSettings: SettingsPartial<any> = { dataset: [] };
+            const actual = Settings.merge(allSettings, newSettings);
+            expect(actual.filterOptions.filterDelay).toBe(0);
+        });
+
+        it('should not remove filterDelay when not certain whether working with synchronous dataset', () => {
+            const newSettings = {
+                dataset: [1, 2], getData: () => {
+                    // am I sync or async?
+                    return [1];
+                }
+            };
+            const actual = Settings.merge(allSettings, newSettings);
+            expect(actual.filterOptions.filterDelay).toBe(allSettings.filterOptions.filterDelay);
+        });
+
+        it('should not remove filterDelay when dataset exceeds filterDelayThreshold', () => {
+            const newSettings = { filterOptions: { filterDelayThreshold: 5 }, dataset: [, 2, 3, 4, 5, 6] };
+            const actual = Settings.merge(allSettings, newSettings);
+            expect(actual.filterOptions.filterDelay).toBe(allSettings.filterOptions.filterDelay);
+        });
+
+        it('should allow filterDelay to be set explicitly', () => {
+            const newSettings = { filterOptions: { filterDelay: 100 }, dataset: [1, 2] };
+            const actual = Settings.merge(allSettings, newSettings);
+            expect(actual.filterOptions.filterDelay).toBe(newSettings.filterOptions.filterDelay);
         });
     })
 });

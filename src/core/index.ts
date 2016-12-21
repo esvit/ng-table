@@ -2,7 +2,7 @@ import * as angular from 'angular';
 import { NgTableDefaultGetDataProvider, DefaultGetData } from './data';
 import { GroupSettingsPartial, ngTableDefaultGetGroups } from './grouping';
 import { ngTableDefaults, Defaults } from './ngTableDefaults';
-import { NgTableSettings, SettingsPartial, Settings } from './ngTableSettings';
+import { SettingsPartial, Settings } from './ngTableSettings';
 import { NgTableParams } from './ngTableParams';
 import { NgTableEventsChannel } from './ngTableEventsChannel';
 
@@ -11,7 +11,6 @@ const ngTableCoreModule = angular.module('ngTable-core', [])
     .factory('ngTableDefaultGetGroups', ngTableDefaultGetGroups)
     .value('ngTableDefaults',ngTableDefaults)
     .service('ngTableEventsChannel', NgTableEventsChannel)
-    .service('ngTableSettings', NgTableSettings)
     .run(Settings.init)
     .run(NgTableParams.init);
 

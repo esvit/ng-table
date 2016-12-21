@@ -11,7 +11,7 @@ import { ILogService, IPromise, IQService } from 'angular';
 import { convertSortToOrderBy, isGroupingFun } from './util';
 import { Defaults } from './ngTableDefaults'
 import { NgTableEventsChannel } from './ngTableEventsChannel'
-import { NgTableSettings, SettingsPartial, Settings } from './ngTableSettings'
+import { SettingsPartial, Settings } from './ngTableSettings'
 import { DataResult, DataRowGroup, GetDataFunc } from './data';
 import { FilterValues } from './filtering';
 import { GetGroupFunc, Grouping, GroupingFunc, GroupSort, GroupValues } from './grouping';
@@ -77,14 +77,13 @@ export class NgTableParams<T> {
      */
     data: T[] = [];
     reloadPages: () => void;
-    private defaultSettings = this.ngTableSettings.createDefaults<T>();
+    private defaultSettings = Settings.createWithOverrides<T>();
     private errParamsMemento: Memento<T>;
     private isCommittedDataset = false;
     isNullInstance: boolean;
     private initialEvents: Function[] = [];
     private ngTableDefaults: Defaults
     private ngTableEventsChannel: NgTableEventsChannel;
-    private ngTableSettings: NgTableSettings;
     private prevParamsMemento: Memento<T>;
     private _params: ParamValues<T> = {
         page: 1,
@@ -468,7 +467,7 @@ export class NgTableParams<T> {
     settings(newSettings?: SettingsPartial<T>): this | Settings<T> {
         if (ng1.isDefined(newSettings)) {
 
-            const settings = this.ngTableSettings.merge(this._settings, newSettings);
+            const settings = Settings.merge(this._settings, newSettings);
 
             const originalDataset = this._settings.dataset;
             this._settings = settings;
@@ -644,12 +643,11 @@ export class NgTableParams<T> {
         $q: IQService,
         $log: ILogService,
         ngTableDefaults: Defaults,
-        ngTableEventsChannel: NgTableEventsChannel,
-        ngTableSettings: NgTableSettings) {
+        ngTableEventsChannel: NgTableEventsChannel) {
         ng1.extend(NgTableParams.prototype, {
-            $q, $log, ngTableDefaults, ngTableEventsChannel, ngTableSettings
+            $q, $log, ngTableDefaults, ngTableEventsChannel
         });
     }
 }
 
-NgTableParams.init.$inject = ['$q', '$log', 'ngTableDefaults', 'ngTableEventsChannel', 'ngTableSettings'];
+NgTableParams.init.$inject = ['$q', '$log', 'ngTableDefaults', 'ngTableEventsChannel'];

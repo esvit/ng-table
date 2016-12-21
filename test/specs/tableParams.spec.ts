@@ -320,41 +320,6 @@ describe('NgTableParams', () => {
             // then
             expect(tableParams.page()).toBe(1);
         });
-
-        it('should not set filterDelay when working with synchronous dataset', () => {
-            // given
-            const tableParams = new NgTableParams({}, { dataset: [1, 2, 3] });
-            expect(tableParams.settings().filterOptions.filterDelay).toBe(0);
-        });
-
-        it('should not set filterDelay when working with synchronous dataset (empty dataset)', () => {
-            // given
-            const tableParams = new NgTableParams({}, { dataset: [] });
-            expect(tableParams.settings().filterOptions.filterDelay).toBe(0);
-        });
-
-        it('should set filterDelay when not certain working with synchronous dataset', () => {
-            // given
-            const tableParams = new NgTableParams({}, {
-                dataset: [1, 2], getData: () => {
-                    // am I sync or async?
-                    return [1];
-                }
-            });
-            expect(tableParams.settings().filterOptions.filterDelay).toBe(500);
-        });
-
-        it('should set filterDelay when dataset exceeds filterDelayThreshold', () => {
-            // given
-            const tableParams = new NgTableParams({}, { filterOptions: { filterDelayThreshold: 5 }, dataset: [, 2, 3, 4, 5, 6] });
-            expect(tableParams.settings().filterOptions.filterDelay).toBe(500);
-        });
-
-        it('should allow filterDelay to be set explicitly', () => {
-            // given
-            const tableParams = new NgTableParams({}, { filterOptions: { filterDelay: 100 }, dataset: [1, 2] });
-            expect(tableParams.settings().filterOptions.filterDelay).toBe(100);
-        });
     });
 
     describe('reload', () => {
