@@ -8,7 +8,8 @@
 import { IAugmentedJQuery, IDirective, IQService, IParseService, IPromise, IScope } from 'angular';
 import * as ng1 from 'angular';
 import { 
-    ColumnDef, ColumnFieldContext, ColumnField, FilterTemplateDefMap, SelectData, TableInputAttributes 
+    ColumnDef, ColumnDefPartial, ColumnFieldContext, ColumnField, DeclarativeTableHtmlAttributes, 
+    FilterTemplateDefMap, SelectData 
 } from './public-interfaces';
 import { NgTableController } from './ngTableController';
 
@@ -45,7 +46,7 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
         scope: true,
         controller: 'ngTableController',
         compile: function(element: IAugmentedJQuery) {
-            let columns: ColumnDef[] = [],
+            let compiledColumns: ColumnDefPartial[] = [],
                 i = 0,
                 dataRow: JQuery,
                 groupRow: JQuery
@@ -79,7 +80,7 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
                     }
                 };
 
-                const parsedAttribute = function<T>(attr: string): ColumnField<T> {
+                const parsedAttribute = function<T>(attr: string): ColumnField<T> | undefined {
                     const expr = getAttrValue(attr);
                     if (!expr){
                         return undefined;
@@ -110,7 +111,7 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
                 }
                 // NOTE TO MAINTAINERS: if you add extra fields to a $column be sure to extend ngTableColumn with
                 // a corresponding "safe" default
-                columns.push({
+                compiledColumns.push({
                     id: i++,
                     title: parsedAttribute<string>('title'),
                     titleAlt: parsedAttribute<string>('title-alt'),
@@ -129,11 +130,11 @@ export function ngTable($q: IQService, $parse: IParseService) : IDirective {
                     // because this will potentially increase the $watch count, only do so if we already have an
                     // ng-if or when we definitely need to change visibility of the columns.
                     // currently only ngTableGroupRow directive needs to change visibility
-                    setAttrValue('ng-if', '$columns[' + (columns.length - 1) + '].show(this)');
+                    setAttrValue('ng-if', '$columns[' + (compiledColumns.length - 1) + '].show(this)');
                 }
             });
-            return function(scope: IScope & ScopeExtensions, element: IAugmentedJQuery, attrs: TableInputAttributes, controller: NgTableController<any, ColumnDef>) {
-                scope.$columns = columns = controller.buildColumns(columns);
+            return function(scope: IScope & ScopeExtensions, element: IAugmentedJQuery, attrs: DeclarativeTableHtmlAttributes, controller: NgTableController<any, ColumnDefPartial>) {
+                const columns = scope.$columns = controller.buildColumns(compiledColumns);
 
                 controller.setupBindingsToInternalScope(attrs.ngTable);
                 controller.loadFilterData(columns);

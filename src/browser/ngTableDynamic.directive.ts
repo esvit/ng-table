@@ -8,7 +8,7 @@
 
 import { IAugmentedJQuery, IDirective, IScope } from 'angular';
 import * as ng1 from 'angular';
-import { ColumnDef, DynamicTableColDef, TableInputAttributes } from './public-interfaces';
+import { ColumnDef, DynamicTableColDef, DynamicTableHtmlAttributes } from './public-interfaces';
 import { NgTableController } from './ngTableController';
 
 interface ScopeExtensions {
@@ -68,7 +68,7 @@ export function ngTableDynamic () : IDirective{
                     el.attr('ng-if', '$columns[$index].show(this)');
                 }
             });
-            return function (scope: IScope & ScopeExtensions, element: IAugmentedJQuery, attrs: TableInputAttributes, controller: NgTableController<any, DynamicTableColDef>) {
+            return function (scope: IScope & ScopeExtensions, element: IAugmentedJQuery, attrs: DynamicTableHtmlAttributes, controller: NgTableController<any, DynamicTableColDef>) {
                 const expr = controller.parseNgTableDynamicExpr(attrs.ngTableDynamic);
 
                 controller.setupBindingsToInternalScope(expr.tableParams);

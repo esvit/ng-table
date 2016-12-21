@@ -15,7 +15,7 @@ import {
     DataResult, DataResults, DataRowGroup, GroupedDataResults, NgTableParams, NgTableEventsChannel,
     PageButton
 } from '../core';
-import { ColumnDef, DynamicTableColDef, SelectData, TableInputAttributes } from './public-interfaces';
+import { ColumnDef, ColumnDefPartial, DynamicTableColDef, SelectData, TableHtmlAttributes } from './public-interfaces';
 import { NgTableColumn } from './ngTableColumn';
 
 /**
@@ -44,7 +44,7 @@ export interface TableScope<T> extends IScope {
 /**
  * The controller for the {@link ngTable ngTable} and {@link ngTableDynamic ngTableDynamic} directives
  */
-export class NgTableController<TParams, TCol extends ColumnDef | DynamicTableColDef> {
+export class NgTableController<TParams, TCol extends ColumnDefPartial | DynamicTableColDef> {
     static $inject = [
         '$scope', '$timeout', '$parse', '$compile', '$attrs', '$element', '$document', 'ngTableColumn', 'ngTableEventsChannel'
     ];
@@ -61,7 +61,7 @@ export class NgTableController<TParams, TCol extends ColumnDef | DynamicTableCol
         $timeout: ITimeoutService,
         private $parse: IParseService,
         private $compile: ICompileService,
-        private $attrs: IAttributes & TableInputAttributes,
+        private $attrs: IAttributes & TableHtmlAttributes,
         private $element: IAugmentedJQuery,
         private $document: IDocumentService,
         private ngTableColumn: NgTableColumn<TCol>,

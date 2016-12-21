@@ -8,7 +8,7 @@
 
 import { IScope } from 'angular';
 import * as ng1 from 'angular';
-import { ColumnDef, DynamicTableColDef } from './public-interfaces';
+import { ColumnDef, ColumnDefPartial, DynamicTableColDef } from './public-interfaces';
 
 /**
  * @private
@@ -21,7 +21,7 @@ function isScopeLike(object: any) {
  * @private
  * Service to construct a $column definition used by {@link ngTable ngTable} directive
  */
-export class NgTableColumn<TCol extends ColumnDef | DynamicTableColDef> {
+export class NgTableColumn<TCol extends ColumnDefPartial | DynamicTableColDef> {
     static $inject: string[] = [];
 
     /**

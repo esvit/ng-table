@@ -93,6 +93,8 @@ export interface ColumnDef {
     titleAlt: ColumnField<string>;
 }
 
+export type ColumnDefPartial = Partial<ColumnDef>;
+
 export type DynamicTableColField<T> = DynamicTableColFieldFunc<T> | T;
 
 
@@ -230,14 +232,26 @@ export interface SelectDataFunc {
 }
 
 /**
- * The definition of the html attributes accepted by the {@link ngTable ngTable} and {@link ngTableDynamic} directives
+ * The definition of the html attributes accepted by both the {@link ngTable ngTable} and {@link ngTableDynamic} directives
  */
-export interface TableInputAttributes extends IAttributes {
+export interface TableHtmlAttributes extends IAttributes {
     disableFilter?: string;
-    ngTable?: string;
-    ngTableDynamic?: string;
     showFilter?: string;
     showGroup?: string;
     templateHeader?: string;
     templatePagination?: string;
+}
+
+/**
+ * The definition of the html attributes accepted by the {@link ngTable} directive
+ */
+export interface DeclarativeTableHtmlAttributes extends TableHtmlAttributes {
+    ngTable: string;
+}
+
+/**
+ * The definition of the html attributes accepted by the {@link ngTableDynamic} directive
+ */
+export interface DynamicTableHtmlAttributes extends TableHtmlAttributes {
+    ngTableDynamic: string;
 }
