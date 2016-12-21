@@ -2,8 +2,8 @@ import { IControllerService, IQService, IScope } from 'angular';
 import * as ng1 from 'angular';
 import * as _ from 'lodash';
 import {
-    DataRowGroup, DataSettings, DefaultGetData, Defaults, NgTableEventsChannel, FilterSettings, 
-    GroupingFunc, GroupSettings, GroupValues, InternalTableParams, NgTableParams, PageButton, ParamValues, SettingsPartial, 
+    DataRowGroup, DataSettings, DefaultGetData, Defaults, NgTableEventsChannel, FilterSettings,
+    GroupingFunc, GroupSettings, GroupValues, InternalTableParams, NgTableParams, PageButton, ParamValues, ParamValuesPartial, SettingsPartial,
     ngTableCoreModule
 } from '../../src/core';
 
@@ -14,7 +14,7 @@ describe('NgTableParams', () => {
 
     let scope: IScope,
         $rootScope: ScopeWithPrivates;
-    
+
     beforeAll(() => expect(ngTableCoreModule).toBeDefined());
 
     beforeEach(ng1.mock.module("ngTable-core"));
@@ -35,10 +35,10 @@ describe('NgTableParams', () => {
         scope = $rootScope.$new();
     }));
 
-    function createNgTableParams<T>(initialParams?: ParamValues<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
+    function createNgTableParams<T>(initialParams?: ParamValuesPartial<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: any): NgTableParams<T> {
-        let initialParams: ParamValues<T>;
+        let initialParams: ParamValuesPartial<T>;
         if (arguments.length === 2) {
             initialParams = arguments[0];
             settings = arguments[1];
@@ -115,22 +115,6 @@ describe('NgTableParams', () => {
             page: 3
         });
         expect(params.page()).toBe(3);
-    });
-
-    it('NgTableParams parse url parameters', () => {
-        const params = new NgTableParams({
-            'sorting[name]': 'asc',
-            'sorting[age]': 'desc',
-            'filter[name]': 'test',
-            'filter[age]': '20',
-            'group[name]': 'asc',
-            'group[age]': 'desc',
-            'group[surname]': undefined
-        } as any);
-
-        expect(params.filter()).toEqual({ 'name': 'test', 'age': 20 });
-        expect(params.sorting()).toEqual({ 'age': 'desc' }); // sorting only by one column - todo: remove restriction
-        expect(params.group()).toEqual({ 'name': 'asc', 'age': 'desc', 'surname': undefined });
     });
 
     it('NgTableParams return url parameters', () => {
@@ -884,23 +868,203 @@ describe('NgTableParams', () => {
         });
     });
 
-    it('ngTableParams test defaults', inject(($q: IQService, ngTableDefaults: Defaults) => {
-        ngTableDefaults.params.count = 2;
-        ngTableDefaults.settings.counts = [];
-        let tp = new NgTableParams({});
+    describe('parameters', () => {
+        let tp: NgTableParams<any>;
+        let defaultParamValues: ParamValues<any>;
 
-        expect(tp.count()).toEqual(2);
-        expect(tp.page()).toEqual(1);
+        beforeEach(() => {
+            defaultParamValues = {
+                count: 10,
+                filter: {},
+                page: 1,
+                sorting: {},
+                group: {}
+            };
+        });
 
-        const settings = tp.settings();
-        expect(settings.counts.length).toEqual(0);
-        expect(settings.interceptors.length).toEqual(0);
-        expect(settings.filterOptions.filterDelay).toEqual(500);
+        it('should be assigned default values when not supplied', () => {
+            tp = new NgTableParams();
+            expect(tp.parameters()).toEqualPlainObject(defaultParamValues);
+        });
 
-        ngTableDefaults.settings.interceptors = [{ response: ng1.identity }];
-        tp = new NgTableParams({});
-        expect(tp.settings().interceptors.length).toEqual(1);
-    }));
+        it('missing values should be assigned default values', () => {
+            tp = new NgTableParams();
+            expect(tp.parameters()).toEqualPlainObject(defaultParamValues);
+        });
+
+        it('ngTableDefaults should override default values', inject((ngTableDefaults: Defaults) => {
+            try {
+                ngTableDefaults.params.filter = { age: 10 };
+                tp = new NgTableParams();
+
+                const expected = defaultParamValues;
+                expected.filter = ngTableDefaults.params.filter;
+
+                expect(tp.parameters()).toEqualPlainObject(expected);
+            } finally {
+                // reset
+                ngTableDefaults.params = {};
+            }
+        }));
+
+        it('should replace existing filter with new filter supplied', () => {
+            // given
+            tp = new NgTableParams({
+                filter: {
+                    name: 'stuff'
+                }
+            });
+            const newParams = {
+                filter: {
+                    age: 20
+                }
+            };
+
+            // when
+            tp.parameters(newParams);
+
+            // then
+            const expected = new ParamValues();
+            expected.filter = newParams.filter;
+            const actual = tp.parameters();
+            expect(actual).toEqualPlainObject(expected);
+
+            // note: below we're testing the existing behaviour which is actually not a good one
+            // instead of assigning a reference params.filter we should be taking a copy
+            expect(actual.filter).toBe(newParams.filter);
+        });
+
+        it('should replace existing group with new group supplied', () => {
+            // given
+            tp = new NgTableParams({
+                group: {
+                    name: 'asc'
+                }
+            });
+            const newParams: ParamValuesPartial<any> = {
+                group: {
+                    age: 'asc'
+                }
+            };
+
+            // when
+            tp.parameters(newParams);
+
+            // then
+            const expected = new ParamValues();
+            expected.group = newParams.group;
+            const actual = tp.parameters();
+            expect(actual).toEqualPlainObject(expected);
+
+            // note: below we're testing the existing behaviour which is actually not a good one
+            // instead of assigning a reference params.group we should be taking a copy
+            expect(actual.group).toBe(newParams.group);
+        });
+
+        it('should replace existing sorting with new sorting supplied', () => {
+            // given
+            tp = new NgTableParams({
+                sorting: {
+                    name: 'asc'
+                }
+            });
+            const newParams: ParamValuesPartial<any> = {
+                sorting: {
+                    age: 'asc'
+                }
+            };
+
+            // when
+            tp.parameters(newParams);
+
+            // then
+            const expected = new ParamValues();
+            expected.sorting = newParams.sorting;
+            const actual = tp.parameters();
+            expect(actual).toEqualPlainObject(expected);
+
+            // note: below we're testing the existing behaviour which is actually not a good one
+            // instead of assigning a reference params.sorting we should be taking a copy
+            expect(actual.sorting).toBe(newParams.sorting);
+        });
+
+        it('undefined values in new params should be ignored', () => {
+            const newParams = _.mapValues(defaultParamValues, _.constant(undefined));
+            tp = new NgTableParams();
+
+            tp.parameters(newParams);
+
+            const actual = tp.parameters();
+            expect(actual).toEqualPlainObject(defaultParamValues);
+        });
+
+        it('undefined values in ngTableDefaults should by ignored', inject((ngTableDefaults: Defaults) => {
+            try {
+                ngTableDefaults.params = _.mapValues(defaultParamValues, _.constant(undefined));
+                tp = new NgTableParams();
+
+                expect(tp.parameters()).toEqualPlainObject(defaultParamValues);
+            } finally {
+                // reset
+                ngTableDefaults.params = {};
+            }
+        }));
+
+        it('should parse from url like parameters', () => {
+            const tp = new NgTableParams({
+                'sorting[name]': 'asc',
+                'sorting[age]': 'desc',
+                'filter[name]': 'test',
+                'filter[age]': '20',
+                'group[name]': 'asc',
+                'group[age]': 'desc',
+                'group[surname]': undefined
+            } as any);
+
+            const expected = defaultParamValues;
+            expected.filter = { 'name': 'test', 'age': 20 };
+            // sorting only by one column - todo: remove restriction
+            expected.sorting = { 'age': 'desc' };
+            expected.group = { 'name': 'asc', 'age': 'desc', 'surname': undefined };
+
+            expect(tp.parameters()).toEqualPlainObject(defaultParamValues);
+        });
+
+        it('url like parameters are merged with existing values (badly!)', () => {
+
+            // note: this test is here to show what the current behaviour IS
+            // and NOT what is necessarily correct
+            // There are at least 2 problems:
+            // 1. for consistency existing filtering, sorting, grouping should be replaced, not merged
+            // 2. there are bugs (see expected result below)
+
+            // given
+            const tp = new NgTableParams({
+                filter: {
+                    name: 'test'
+                },
+                sorting: {
+                    name: 'asc'
+                }
+            });
+            const newParams = {
+                'filter[age]': '20',
+                'sorting[age]': 'desc'
+            };
+
+            // when
+            tp.parameters(newParams);
+
+            // then
+            const expected = defaultParamValues;
+            // this is buggy - age is not being included in the filter, sorting object
+            expected.filter = { name: 'test' };
+            expected.sorting = { name: 'asc' };
+            expected['filter[age]'] = 20;
+            expected['sorting[age]'] = 'desc';
+            expect(tp.parameters()).toEqualPlainObject(defaultParamValues);
+        });
+    });
 
     describe('hasFilter', () => {
         let tp: NgTableParams<any>;
@@ -2092,7 +2256,7 @@ describe('NgTableParams', () => {
                     actualPublisher = params;
                     actualEventArgs = [newVal];
                 });
-                var data = [1,2,3];
+                var data = [1, 2, 3];
                 var params = createNgTableParams({ count: 5 }, { counts: [5, 10], dataset: data });
 
                 // when
@@ -2111,11 +2275,11 @@ describe('NgTableParams', () => {
                     actualEventArgs = [newVal];
                 });
 
-                var initialDs  = [10, 10, 101, 5];
+                var initialDs = [10, 10, 101, 5];
                 var expectedDs = [10, 10, 101];  // when filtered with "10"
                 var params = createNgTableParams({ dataset: initialDs });
                 params.filter({ $: "10" });
-                
+
                 // when
                 params.reload();
                 scope.$digest();
@@ -2133,7 +2297,7 @@ describe('NgTableParams', () => {
                     actualPublisher = params;
                     actualEventArgs = [newVal];
                 });
-                var data = [1,2,3];
+                var data = [1, 2, 3];
                 var params = createNgTableParams({ count: 5 }, { counts: [5, 10], dataset: data });
 
                 // when
@@ -2152,11 +2316,11 @@ describe('NgTableParams', () => {
                     actualEventArgs = [newVal];
                 });
 
-                var initialDs  = [10, 10, 101, 5];
+                var initialDs = [10, 10, 101, 5];
                 var expectedDs = [10, 10, 101];  // when filtered with "10"
                 var params = createNgTableParams({ dataset: initialDs });
                 params.filter({ $: "10" });
-                
+
                 // when
                 params.reload();
                 scope.$digest();

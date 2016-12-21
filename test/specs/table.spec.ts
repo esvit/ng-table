@@ -1,7 +1,7 @@
 import { IAugmentedJQuery, ICompileService, IQService, IPromise, IScope, ITimeoutService } from 'angular';
 import * as ng1 from 'angular';
 import { ngTableModule } from '../../index';
-import { NgTableParams, ParamValues, SettingsPartial, SortingValues } from '../../src/core';
+import { NgTableParams, ParamValuesPartial, SettingsPartial, SortingValues } from '../../src/core';
 import { ColumnDef, FilterTemplateDef, FilterTemplateDefMap, SelectOption } from '../../src/browser'
 
 describe('ng-table', () => {
@@ -72,10 +72,10 @@ describe('ng-table', () => {
         scope.model = {};
     }));
 
-    function createNgTableParams<T>(initialParams?: ParamValues<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
+    function createNgTableParams<T>(initialParams?: ParamValuesPartial<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: any): NgTableParams<T> {
-        let initialParams: ParamValues<T>;
+        let initialParams: ParamValuesPartial<T>;
         if (arguments.length === 2) {
             initialParams = arguments[0];
             settings = arguments[1];

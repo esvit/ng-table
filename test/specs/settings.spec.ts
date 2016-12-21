@@ -12,7 +12,7 @@ describe('Settings', () => {
     beforeAll(() => expect(ngTableCoreModule).toBeDefined());
 
     let defaultOverrides: SettingsPartial<any>;
-    let standardSettings: SettingsPartial<any>;
+    let standardSettings: Settings<any>;
 
     beforeEach(ng1.mock.module('ngTable-core'));
 
@@ -103,7 +103,7 @@ describe('Settings', () => {
                     filterDelay: 20
                 }
             };
-            const originalNewSettings = { ...newSettings, filterOptions: { ... newSettings.filterOptions } };
+            const originalNewSettings = { ...newSettings, filterOptions: { ...newSettings.filterOptions } };
 
             const actual = Settings.merge(allSettings, newSettings);
             expect(actual).not.toBe(allSettings);

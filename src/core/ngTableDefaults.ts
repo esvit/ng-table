@@ -6,7 +6,7 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-import { ParamValues } from './ngTableParams';
+import { ParamValuesPartial } from './ngTableParams';
 import { SettingsPartial } from './ngTableSettings';
 
 
@@ -15,7 +15,7 @@ import { SettingsPartial } from './ngTableSettings';
  * an instance of `NgTableParams`
  */
 export interface Defaults {
-    params?: ParamValues<any>;
+    params?: ParamValuesPartial<any>;
     settings?: SettingsPartial<any>
 }
 

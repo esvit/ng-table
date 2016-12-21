@@ -9,6 +9,7 @@
 import * as ng1 from 'angular';
 import { ILogService, IPromise, IQService } from 'angular';
 import { convertSortToOrderBy, isGroupingFun } from './util';
+import { assignPartialDeep } from '../shared';
 import { Defaults } from './ngTableDefaults'
 import { NgTableEventsChannel } from './ngTableEventsChannel'
 import { SettingsPartial, Settings } from './ngTableSettings'
@@ -25,31 +26,34 @@ export interface InternalTableParams<T> extends NgTableParams<T> {
     isNullInstance: boolean
 }
 
+
+export type ParamValuesPartial<T> = Partial<ParamValues<T>>;
+
 /**
  * The runtime values for {@link NgTableParams} that determine the set of data rows and
  * how they are to be displayed in a table
  */
-export interface ParamValues<T> {
+export class ParamValues<T> {
     /**
      * The index of the "slice" of data rows, starting at 1, to be displayed by the table.
      */
-    page?: number;
+    page = 1;
     /**
      * The number of data rows per page
      */
-    count?: number;
+    count = 10;
     /**
      * The filter that should be applied to restrict the set of data rows
      */
-    filter?: FilterValues;
+    filter: FilterValues = {};
     /**
      * The sort order that should be applied to the data rows.
      */
-    sorting?: SortingValues;
+    sorting: SortingValues = {};
     /**
      * The grouping that should be applied to the data rows
      */
-    group?: string | Grouping<T>;
+    group: string | Grouping<T> = {};
 }
 
 
@@ -85,17 +89,11 @@ export class NgTableParams<T> {
     private ngTableDefaults: Defaults
     private ngTableEventsChannel: NgTableEventsChannel;
     private prevParamsMemento: Memento<T>;
-    private _params: ParamValues<T> = {
-        page: 1,
-        count: 10,
-        filter: {},
-        sorting: {},
-        group: {}
-    };
+    private _params = new ParamValues();
     private _settings = this.defaultSettings;
     private $q: IQService;
     private $log: ILogService
-    constructor(baseParameters?: ParamValues<T> | boolean, baseSettings?: SettingsPartial<T>) {
+    constructor(baseParameters?: ParamValuesPartial<T> | boolean, baseSettings?: SettingsPartial<T>) {
 
         // the ngTableController "needs" to create a dummy/null instance and it's important to know whether an instance
         // is one of these
@@ -115,7 +113,7 @@ export class NgTableParams<T> {
             }
         })();
 
-        ng1.extend(this._params, this.ngTableDefaults.params);
+        assignPartialDeep(this._params, this.ngTableDefaults.params);
 
         this.settings(baseSettings);
         this.parameters(baseParameters, true);
@@ -268,7 +266,7 @@ export class NgTableParams<T> {
             return this._params.group;
         }
 
-        const newParameters: ParamValues<T> = {
+        const newParameters: ParamValuesPartial<T> = {
             page: 1
         };
         if (isGroupingFun(group) && sortDirection !== undefined) {
@@ -382,39 +380,45 @@ export class NgTableParams<T> {
     /**
      * Set new parameters
      */
-    parameters(newParameters?: ParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): this
-    parameters(newParameters?: ParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): ParamValues<T> | this {
+    parameters(newParameters?: ParamValuesPartial<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): this
+    parameters(newParameters?: ParamValuesPartial<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): ParamValues<T> | this {
+        if (newParameters === undefined) {
+            return this._params;
+        }
+
+        // todo: move parsing of url like parameters into a seperate method
+        
         parseParamsFromUrl = parseParamsFromUrl || false;
-        if (newParameters !== undefined) {
-            for (const key in newParameters) {
-                let value = newParameters[key];
-                if (parseParamsFromUrl && key.indexOf('[') >= 0) {
-                    const keys = key.split(/\[(.*)\]/).reverse()
-                    let lastKey = '';
-                    for (let i = 0, len = keys.length; i < len; i++) {
-                        const name = keys[i];
-                        if (name !== '') {
-                            const v = value;
-                            value = {};
-                            value[lastKey = name] = (isNumber(v) ? parseFloat(v) : v);
-                        }
-                    }
-                    if (lastKey === 'sorting') {
-                        this._params[lastKey] = {};
-                    }
-                    this._params[lastKey] = ng1.extend(this._params[lastKey] || {}, value[lastKey]);
-                } else {
-                    if (key === 'group') {
-                        this._params[key] = this.parseGroup(newParameters[key]);
-                    } else {
-                        this._params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
+        for (const key in newParameters) {
+            let value = newParameters[key];
+            if (parseParamsFromUrl && key.indexOf('[') >= 0) {
+                const keys = key.split(/\[(.*)\]/).reverse()
+                let lastKey = '';
+                for (let i = 0, len = keys.length; i < len; i++) {
+                    const name = keys[i];
+                    if (name !== '') {
+                        const v = value;
+                        value = {};
+                        value[lastKey = name] = (isNumber(v) ? parseFloat(v) : v);
                     }
                 }
+                if (lastKey === 'sorting') {
+                    this._params[lastKey] = {};
+                }
+                this._params[lastKey] = ng1.extend(this._params[lastKey] || {}, value[lastKey]);
+            } else {
+                if (newParameters[key] === undefined) {
+                    // skip
+                }
+                else if (key === 'group') {
+                    this._params[key] = this.parseGroup(newParameters[key]);
+                } else {
+                    this._params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
+                }
             }
-            this.log('ngTable: set parameters', this._params);
-            return this;
         }
-        return this._params;
+        this.log('ngTable: set parameters', this._params);
+        return this;
     }
     /**
      * Trigger a reload of the data rows
