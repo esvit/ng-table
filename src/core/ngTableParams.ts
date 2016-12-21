@@ -385,7 +385,7 @@ export class NgTableParams<T> {
     parameters(newParameters?: ParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): this
     parameters(newParameters?: ParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): ParamValues<T> | this {
         parseParamsFromUrl = parseParamsFromUrl || false;
-        if (typeof newParameters !== undefined) {
+        if (newParameters !== undefined) {
             for (const key in newParameters) {
                 let value = newParameters[key];
                 if (parseParamsFromUrl && key.indexOf('[') >= 0) {
