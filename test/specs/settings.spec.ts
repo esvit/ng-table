@@ -122,11 +122,23 @@ describe('Settings', () => {
             expect(actual).toEqualPlainObject(expected);
         });
 
-        it('undefined values in new settings should be ignored', () => {
+        it('undefined values for mandatory properties in new settings should be ignored', () => {
             const newSettings = _.mapValues(allSettings, _.constant(undefined));
 
             const actual = Settings.merge(allSettings, newSettings);
             expect(actual).toEqualPlainObject(allSettings);
+        });
+
+        it('undefined dataset (optional property) value in new settings should NOT be ignored', () => {
+            const existingSettings = allSettings;
+            existingSettings.dataset = [1, 2];
+
+            const newSettings: SettingsPartial<number> = {
+                dataset: undefined
+            }
+
+            const actual = Settings.merge(existingSettings, newSettings);
+            expect(actual.dataset).not.toBeDefined();
         });
 
         it('undefined nested values in new settings should be ignored', () => {

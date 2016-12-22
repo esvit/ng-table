@@ -85,13 +85,18 @@ export class Settings<T> {
     static merge<T>(existing: Settings<T>, newSettings: SettingsPartial<T>): Settings<T> {
         checkClassInit(Settings);
 
-        const results = assignPartialDeep(ng1.copy(existing), newSettings, (destValue: any, srcValue: any, key: keyof Settings<T>) => {
-            // copy *reference* to dataset
-            if (key === 'dataset') {
-                return srcValue;
-            }
-            return undefined;
-        });
+        const optionalPropNames: (keyof Settings<T>)[] = ['dataset'];
+        const results = assignPartialDeep(
+            ng1.copy(existing),
+            newSettings,
+            (key: keyof Settings<T>) => optionalPropNames.indexOf(key) !== -1,
+            (destValue: any, srcValue: any, key: keyof Settings<T>) => {
+                // copy *reference* to dataset
+                if (key === 'dataset') {
+                    return srcValue;
+                }
+                return undefined;
+            });
 
         if (newSettings.dataset) {
             results.total = newSettings.dataset.length;
