@@ -4,6 +4,11 @@ import { IAttributes, IPromise, IScope } from 'angular';
  * The scope available to a table column getter
  */
 export type ColumnFieldContext = IScope & {
+    $column: ColumnDef;
+    $columns: ColumnDef[];
+}
+
+export type ColumnFieldContextPartial = IScope & {
     $column?: ColumnDef;
     $columns: ColumnDef[];
 }
@@ -12,7 +17,7 @@ export type ColumnFieldContext = IScope & {
  * Signature of a getter/setter on a {@link IColumnDef} instance
  */
 export interface ColumnField<T> {
-    (context?: ColumnFieldContext): T;
+    (context?: ColumnFieldContextPartial): T;
     (value: T): void;
     assign($scope: IScope, value: T): void;
 }
@@ -102,7 +107,7 @@ export type DynamicTableColField<T> = DynamicTableColFieldFunc<T> | T;
  * Signature of a getter/setter on a {@link IDynamicTableColDef} instance
  */
 export interface DynamicTableColFieldFunc<T> {
-    (context: ColumnFieldContext): T;
+    (context: ColumnFieldContextPartial): T;
 }
 
 /**
@@ -207,7 +212,7 @@ export interface SelectOption {
  * Signature of a function that will return the options that will be rendered by a html select
  */
 export interface SelectDataFunc {
-    (): SelectOption[] | IPromise<SelectOption[]>
+    (): SelectOption[] | IPromise<SelectOption[]> | undefined
 }
 
 /**

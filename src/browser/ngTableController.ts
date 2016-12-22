@@ -131,7 +131,7 @@ export class NgTableController<TParams, TCol extends ColumnDefPartial | DynamicT
                 pagination: (this.$attrs.templatePagination ? this.$attrs.templatePagination : 'ng-table/pager.html')
             };
             this.$element.addClass('ng-table');
-            let headerTemplate: IAugmentedJQuery = null;
+            let headerTemplate: IAugmentedJQuery | undefined;
 
             // $element.find('> thead').length === 0 doesn't work on jqlite
             let theadFound = false;

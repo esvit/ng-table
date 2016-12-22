@@ -21,7 +21,7 @@ export function ngTableDefaultGetGroups<T>($q: IQService, ngTableDefaultGetData:
 
         const group = params.group();
         let groupFn: GroupingFunc<T>;
-        let sortDirection: GroupSort = undefined;
+        let sortDirection: GroupSort | undefined;
         if (isGroupingFun(group)) {
             groupFn = group;
             sortDirection = group.sortDirection;

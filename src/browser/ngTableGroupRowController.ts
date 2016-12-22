@@ -102,7 +102,7 @@ export class NgTableGroupRowController<T> {
         if (this.isGroupingFunc(grouping)) {
             this.groupFns = [grouping];
             this.$scope.$selGroup = grouping;
-            this.$scope.$selGroupTitle = grouping.title;
+            this.$scope.$selGroupTitle = grouping.title || '';
         } else {
             // note: currently only one group is implemented
             const groupKey = Object.keys(grouping || {})[0];

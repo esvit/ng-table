@@ -15,7 +15,7 @@ import { NgTableEventsChannel } from './ngTableEventsChannel'
 import { SettingsPartial, Settings } from './ngTableSettings'
 import { DataResult, DataRowGroup, GetDataFunc } from './data';
 import { FilterValues } from './filtering';
-import { GetGroupFunc, Grouping, GroupingFunc, GroupSort, GroupValues } from './grouping';
+import { GetGroupFunc, Grouping, GroupingPartial, GroupValuesPartial, GroupingFunc, GroupSort, GroupValues } from './grouping';
 import { SortDirection, SortingValues } from './sorting';
 import { PageButton } from './paging';
 
@@ -27,7 +27,11 @@ export interface InternalTableParams<T> extends NgTableParams<T> {
 }
 
 
-export type ParamValuesPartial<T> = Partial<ParamValues<T>>;
+export type ParamValuesPartial<T> =
+    Partial<Pick<ParamValues<T>, 'page' | 'count' | 'filter' | 'sorting'>>
+    & {
+        group?: string | GroupingPartial<T>
+    };
 
 /**
  * The runtime values for {@link NgTableParams} that determine the set of data rows and
@@ -82,18 +86,18 @@ export class NgTableParams<T> {
     data: T[] = [];
     reloadPages: () => void;
     private defaultSettings = Settings.createWithOverrides<T>();
-    private errParamsMemento: Memento<T>;
+    private errParamsMemento: Memento<T> | null;
     private isCommittedDataset = false;
     isNullInstance: boolean;
-    private initialEvents: Function[] = [];
+    private initialEvents: Function[] | null = [];
     private ngTableDefaults: Defaults
     private ngTableEventsChannel: NgTableEventsChannel;
     private prevParamsMemento: Memento<T>;
-    private _params = new ParamValues();
+    private _params = new ParamValues<T>();
     private _settings = this.defaultSettings;
     private $q: IQService;
     private $log: ILogService
-    constructor(baseParameters?: ParamValuesPartial<T> | boolean, baseSettings?: SettingsPartial<T>) {
+    constructor(baseParameters: ParamValuesPartial<T> | boolean = {}, baseSettings: SettingsPartial<T> = {}) {
 
         // the ngTableController "needs" to create a dummy/null instance and it's important to know whether an instance
         // is one of these
@@ -249,7 +253,7 @@ export class NgTableParams<T> {
      * Sets grouping to the `group` supplied; any existing grouping will be removed.
      * Changes to group will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
      */
-    group(group: GroupValues): this
+    group(group: GroupValuesPartial): this
     /**
      * Sets grouping to the `field` and `sortDirection` supplied; any existing grouping will be removed
      * Changes to group will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
@@ -261,7 +265,7 @@ export class NgTableParams<T> {
      * Changes to group will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
      */
     group(group: GroupingFunc<T> | string, sortDirection?: GroupSort): this
-    group(group?: Grouping<T> | string, sortDirection?: GroupSort): string | Grouping<T> | this {
+    group(group?: GroupingPartial<T> | string, sortDirection?: GroupSort): string | Grouping<T> | this {
         if (group === undefined) {
             return this._params.group;
         }
@@ -387,7 +391,7 @@ export class NgTableParams<T> {
         }
 
         // todo: move parsing of url like parameters into a seperate method
-        
+
         parseParamsFromUrl = parseParamsFromUrl || false;
         for (const key in newParameters) {
             let value = newParameters[key];
@@ -424,7 +428,7 @@ export class NgTableParams<T> {
      * Trigger a reload of the data rows
      */
     reload<TResult extends DataResult<T>>(): IPromise<TResult[]> {
-        let pData: ng1.IPromise<any> = null;
+        let pData: ng1.IPromise<any>;
 
         this._settings.$loading = true;
 
@@ -469,35 +473,35 @@ export class NgTableParams<T> {
      */
     settings(newSettings: SettingsPartial<T>): this
     settings(newSettings?: SettingsPartial<T>): this | Settings<T> {
-        if (ng1.isDefined(newSettings)) {
-
-            const settings = Settings.merge(this._settings, newSettings);
-
-            const originalDataset = this._settings.dataset;
-            this._settings = settings;
-
-            // note: using != as want null and undefined to be treated the same
-            const hasDatasetChanged = newSettings.hasOwnProperty('dataset') && (newSettings.dataset != originalDataset);
-            if (hasDatasetChanged) {
-                if (this.isCommittedDataset) {
-                    this.page(1); // reset page as a new dataset has been supplied
-                }
-                this.isCommittedDataset = false;
-
-                const fireEvent = () => {
-                    this.ngTableEventsChannel.publishDatasetChanged(this, newSettings.dataset, originalDataset);
-                };
-
-                if (this.initialEvents) {
-                    this.initialEvents.push(fireEvent);
-                } else {
-                    fireEvent();
-                }
-            }
-            this.log('ngTable: set settings', this._settings);
-            return this;
+        if (newSettings === undefined) {
+            return this._settings;
         }
-        return this._settings;
+
+        const settings = Settings.merge(this._settings, newSettings);
+
+        const originalDataset = this._settings.dataset;
+        this._settings = settings;
+
+        // note: using != as want null and undefined to be treated the same
+        const hasDatasetChanged = newSettings.hasOwnProperty('dataset') && (newSettings.dataset != originalDataset);
+        if (hasDatasetChanged) {
+            if (this.isCommittedDataset) {
+                this.page(1); // reset page as a new dataset has been supplied
+            }
+            this.isCommittedDataset = false;
+
+            const fireEvent = () => {
+                this.ngTableEventsChannel.publishDatasetChanged(this, newSettings.dataset, originalDataset);
+            };
+
+            if (this.initialEvents) {
+                this.initialEvents.push(fireEvent);
+            } else {
+                fireEvent();
+            }
+        }
+        this.log('ngTable: set settings', this._settings);
+        return this;
     }
     /**
      * Returns the current sorting used to order the data rows.
@@ -512,11 +516,11 @@ export class NgTableParams<T> {
     /**
      * Sets sorting to the `field` and `direction` supplied; any existing sorting will be removed
      */
-    sorting(field: string, direction: string): this
+    sorting(field: string, direction?: string): this
     sorting(sorting?: SortingValues | string, direction?: SortDirection) {
         if (typeof sorting === 'string') {
             this.parameters({
-                'sorting': { [sorting]: direction }
+                'sorting': { [sorting]: direction || this.settings().defaultSort }
             });
             return this;
         }
@@ -553,9 +557,7 @@ export class NgTableParams<T> {
      * true for the parameters to be returned as an array of strings of the form 'paramName=value'
      * otherwise parameters returned as a key-value object
      */
-    url(asString?: boolean) {
-        // this function is an example of Typescript gone bad!!
-        asString = asString || false;
+    url(asString = false) {
         const pairs: any[] | { [name: string]: string } = (asString ? [] : {});
         for (const key in this._params) {
             if (this._params.hasOwnProperty(key)) {

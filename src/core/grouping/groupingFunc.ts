@@ -1,6 +1,7 @@
 import { GroupSort } from './groupSettings';
 
 export type Grouping<T> = GroupValues | GroupingFunc<T>;
+export type GroupingPartial<T> = GroupValuesPartial | GroupingFunc<T>;
 
 /**
  * Signature of a function that should return the name of the group
@@ -19,3 +20,5 @@ export interface GroupingFunc<T> {
  * Map of the names of fields on a data row and the corrosponding sort direction
  */
 export interface GroupValues { [name: string]: GroupSort }
+
+export type GroupValuesPartial = Partial<GroupValues>;

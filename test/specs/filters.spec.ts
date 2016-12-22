@@ -83,9 +83,11 @@ describe('ngTableFilterConfig', () => {
                 }
             });
 
+            // cheating the compiler here and allowing an undefined value
+            // to be supplied (oridinarily this would be disallowed by the compiler)
             ngTableFilterConfigProvider.setConfig({
                 aliasUrls: {
-                    'text': undefined
+                    'text': undefined as any
                 }
             });
 

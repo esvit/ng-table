@@ -116,7 +116,7 @@ describe('Settings', () => {
                 filterOptions: {}
             };
             const expected = new Settings();
-            expected.filterOptions.filterDelay = newSettings.filterOptions.filterDelay = 20;
+            newSettings.filterOptions!.filterDelay = expected.filterOptions.filterDelay = 20;
 
             const actual = Settings.merge(allSettings, newSettings);
             expect(actual).toEqualPlainObject(expected);
@@ -159,7 +159,7 @@ describe('Settings', () => {
             };
 
             const actual = Settings.merge(allSettings, newSettings);
-            assertShallowClonedArray(actual.interceptors, newSettings.interceptors);
+            assertShallowClonedArray(actual.interceptors, newSettings.interceptors!);
         });
 
         it('counts array should be shallow cloned', () => {
@@ -168,7 +168,7 @@ describe('Settings', () => {
             };
 
             const actual = Settings.merge(allSettings, newSettings);
-            assertShallowClonedArray(actual.counts, newSettings.counts);
+            assertShallowClonedArray(actual.counts, newSettings.counts!);
         });
 
         it('dataset array reference should be copied', () => {
@@ -180,7 +180,7 @@ describe('Settings', () => {
 
             const actual = Settings.merge(allSettings, newSettings);
             expect(actual.dataset).toBe(dataset);
-            expect(actual.dataset[0]).toBe(item);
+            expect(actual.dataset![0]).toBe(item);
         });
 
         it('functions references should be copied', () => {

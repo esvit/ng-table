@@ -6,13 +6,13 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-import * as ng1 from 'angular';
+import { IAttributes, IDirective, IParseService, IQService, IPromise, IScope } from 'angular';
 import { ColumnDef, SelectData, SelectDataFunc, SelectOption } from './public-interfaces';
 
 /**
  * @private
  */
-export interface InputAttributes extends ng1.IAttributes {
+export interface InputAttributes extends IAttributes {
     ngTableSelectFilterDs: string;
 }
 
@@ -33,7 +33,7 @@ ngTableSelectFilterDs.$inject = [];
  *
  * This directive is is focused on providing a datasource to an `ngOptions` directive
  */
-function ngTableSelectFilterDs(): ng1.IDirective {
+function ngTableSelectFilterDs(): IDirective {
     // note: not using isolated or child scope "by design"
     // this is to allow this directive to be combined with other directives that do
 
@@ -51,13 +51,13 @@ export class NgTableSelectFilterDsController {
     static $inject = ['$scope', '$parse', '$attrs', '$q'];
     $column: ColumnDef;
     constructor(
-        private $scope: ng1.IScope & ScopeExtensions,
-        $parse: ng1.IParseService,
+        private $scope: IScope & ScopeExtensions,
+        $parse: IParseService,
         private $attrs: InputAttributes,
-        private $q: ng1.IQService) {
+        private $q: IQService) {
 
         this.$column = $parse($attrs.ngTableSelectFilterDs)($scope);
-        $scope.$watch<SelectData>(
+        $scope.$watch<SelectData | undefined>(
             () => this.$column && this.$column.data,
             () => { this.bindDataSource(); });
     }
@@ -72,7 +72,7 @@ export class NgTableSelectFilterDsController {
     }
 
     private hasEmptyOption(data: SelectOption[]) {
-        let isMatch: boolean;
+        let isMatch = false;
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
             if (item && item.id === '') {
@@ -85,11 +85,13 @@ export class NgTableSelectFilterDsController {
 
     private getSelectListData($column: ColumnDef) {
         const dataInput = $column.data;
-        if (dataInput instanceof Array) {
-            return this.$q.when(dataInput);
+        let result: IPromise<SelectOption[]> | SelectOption[] | undefined;
+        if (typeof dataInput === 'function') {
+            result = dataInput();
         } else {
-            return this.$q.when(dataInput && dataInput());
+            result = dataInput;
         }
+        return this.$q.when<SelectOption[] | undefined>(result);
     }
 }
 export { ngTableSelectFilterDs };

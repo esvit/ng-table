@@ -205,7 +205,7 @@ export interface NgTableEventsChannel {
 
     publishAfterCreated<T>(publisher: NgTableParams<T>): void;
     publishAfterReloadData<T>(publisher: NgTableParams<T>, newData: T[], oldData: T[]): void;
-    publishDatasetChanged<T>(publisher: NgTableParams<T>, newDataset: T[], oldDataset: T[]): void;
+    publishDatasetChanged<T>(publisher: NgTableParams<T>, newDataset: T[] | undefined, oldDataset: T[] | undefined): void;
     publishPagesChanged<T>(publisher: NgTableParams<T>, newPages: PageButton[], oldPages: PageButton[]): void;
     publishAfterDataFiltered<T>(publisher: NgTableParams<T>, newData: T[]): void;
     publishAfterDataSorted<T>(params: NgTableParams<T>, newData: T[]): void;
@@ -263,10 +263,8 @@ export class NgTableEventsChannel {
             });
         }
 
-        function createEventSelectorFn<T>(eventSelector: EventSelector<T>): (publisher: NgTableParams<any>) => boolean {
-            if (!eventSelector) {
-                return (publisher: NgTableParams<any>) => true;
-            } else if (isEventSelectorFunc(eventSelector)) {
+        function createEventSelectorFn<T>(eventSelector: EventSelector<T> = () => true): EventSelectorFunc {
+            if (isEventSelectorFunc(eventSelector)) {
                 return eventSelector
             } else {
                 // shorthand for subscriber to only receive events from a specific publisher instance

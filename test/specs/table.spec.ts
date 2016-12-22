@@ -72,10 +72,10 @@ describe('ng-table', () => {
         scope.model = {};
     }));
 
-    function createNgTableParams<T>(initialParams?: ParamValuesPartial<T>, settings?: SettingsPartial<T>): NgTableParams<T>;
+    function createNgTableParams<T>(initialParams?: ParamValuesPartial<T>, settings?: SettingsPartial<T> | null): NgTableParams<T>;
     function createNgTableParams<T>(settings?: SettingsPartial<T>): NgTableParams<T>;
     function createNgTableParams<T>(settings?: any): NgTableParams<T> {
-        let initialParams: ParamValuesPartial<T>;
+        let initialParams: ParamValuesPartial<T> | undefined;
         if (arguments.length === 2) {
             initialParams = arguments[0];
             settings = arguments[1];
@@ -347,7 +347,7 @@ describe('ng-table', () => {
             </table>`
 
         it('should add $column definition to context of sortable expression', () => {
-            let columnDef: ColumnDef;
+            let columnDef: ColumnDef | undefined;
             scope.captureColumn = function ($column) {
                 columnDef = $column;
                 return 'age'
@@ -365,7 +365,7 @@ describe('ng-table', () => {
 
         it('should apply initial sort', () => {
 
-            let actualSort: SortingValues;
+            let actualSort: SortingValues = {};
             let params = createNgTableParams<Person>({
                 sorting: { age: 'desc' }
             }, {
@@ -640,7 +640,7 @@ describe('ng-table', () => {
                     } else if (colDef.id === 1) {
                         return ageFilter;
                     } else {
-                        return undefined;
+                        return {};
                     }
                 };
                 const html = `<div>
@@ -847,11 +847,11 @@ describe('ng-table', () => {
         });
 
         it('$scolumns should contain a column definition for each `td` element', () => {
-            expect(scope.model.exportedCols.length).toBe(2);
+            expect(scope.model.exportedCols!.length).toBe(2);
         });
 
         it('each column definition should have getters for each column attribute', () => {
-            const ageCol = scope.model.exportedCols[0];
+            const ageCol = scope.model.exportedCols![0];
             expect(ageCol.title()).toBe('Age');
             expect(ageCol.show()).toBe(true);
             expect(ageCol.filter()).toBe(scope.ageFilter);
@@ -863,7 +863,7 @@ describe('ng-table', () => {
             expect(ageCol.sortable()).toBe(false);
             expect(ageCol.titleAlt()).toBe('');
 
-            const nameCol = scope.model.exportedCols[1];
+            const nameCol = scope.model.exportedCols![1];
             expect(nameCol.title()).toBe('Name');
             expect(nameCol.show()).toBe(true);
             expect(nameCol.filter()).toBe(false);
@@ -877,7 +877,7 @@ describe('ng-table', () => {
         });
 
         it('each column attribute should be assignable', () => {
-            const ageCol = scope.model.exportedCols[0];
+            const ageCol = scope.model.exportedCols![0];
 
             ageCol.title.assign(scope.$$childHead, 'Age of person');
             expect(ageCol.title()).toBe('Age of person');
@@ -911,7 +911,7 @@ describe('ng-table', () => {
             expect(ageCol.titleAlt()).toBe('really');
 
 
-            const nameCol = scope.model.exportedCols[1];
+            const nameCol = scope.model.exportedCols![1];
 
             nameCol.groupable.assign(scope.$$childHead, false);
             expect(nameCol.groupable()).toBe(false);
@@ -921,7 +921,7 @@ describe('ng-table', () => {
         });
 
         it('each column attribute should be settable', () => {
-            const ageCol = scope.model.exportedCols[0];
+            const ageCol = scope.model.exportedCols![0];
 
             ageCol.title('Age of person');
             expect(ageCol.title()).toBe('Age of person');
@@ -955,7 +955,7 @@ describe('ng-table', () => {
             expect(ageCol.titleAlt()).toBe('really');
 
 
-            const nameCol = scope.model.exportedCols[1];
+            const nameCol = scope.model.exportedCols![1];
 
             nameCol.groupable(false);
             expect(nameCol.groupable()).toBe(false);
@@ -1013,20 +1013,20 @@ describe('ng-table', () => {
                 beforeEach(() => {
                     tp.group('name');
                     scope.$digest();
-                    groupRow = thead.querySelector('.ng-table-group-header');
+                    groupRow = thead.querySelector('.ng-table-group-header')!;
                 });
 
                 it('group row should span the width of the visible columns', () => {
-                    expect(groupRow.querySelector('th').getAttribute('colspan')).toBe('2');
+                    expect(groupRow.querySelector('th')!.getAttribute('colspan')).toBe('2');
                 });
 
                 it('should display column name of assigned group', () => {
-                    expect(groupRow.querySelector('a > strong').textContent).toBe('Name');
+                    expect(groupRow.querySelector('a > strong')!.textContent).toBe('Name');
                 });
 
                 it('clicking on group row should open group list selector', () => {
                     // when
-                    groupRow.querySelector('a').click();
+                    groupRow.querySelector('a')!.click();
 
                     // then
                     const groupSelectorList = groupRow.querySelector('.list-group');
@@ -1035,21 +1035,21 @@ describe('ng-table', () => {
 
                 it('group list selector should include an item for each groupable column', () => {
                     // when
-                    groupRow.querySelector('a').click();
+                    groupRow.querySelector('a')!.click();
 
                     // then
-                    const items = groupRow.querySelector('.list-group').querySelectorAll('a');
+                    const items = groupRow.querySelector('.list-group')!.querySelectorAll('a');
                     expect(items.length).toBe(2);
-                    expect(items.item(0).querySelector('strong').textContent).toBe('Name');
-                    expect(items.item(1).querySelector('strong').textContent).toBe('Age');
+                    expect(items.item(0).querySelector('strong')!.textContent).toBe('Name');
+                    expect(items.item(1).querySelector('strong')!.textContent).toBe('Age');
                 });
 
                 it('assigned group should be marked as selected', () => {
                     // when
-                    groupRow.querySelector('a').click();
+                    groupRow.querySelector('a')!.click();
 
                     // then
-                    const nameGroup = groupRow.querySelector('.list-group').querySelector('a');
+                    const nameGroup = groupRow.querySelector('.list-group')!.querySelector('a')!;
                     expect(nameGroup).not.toBeNull();
                     expect(nameGroup.querySelector('.sort-indicator')).not.toBeNull();
                 });
@@ -1060,13 +1060,13 @@ describe('ng-table', () => {
                     scope.$digest();
 
                     // then
-                    expect(groupRow.querySelector('a > strong').textContent).toBe('Age');
+                    expect(groupRow.querySelector('a > strong')!.textContent).toBe('Age');
                 });
 
                 it('tapping item in group list selector should change assigned group', () => {
                     // when
-                    groupRow.querySelector('a').click();
-                    groupRow.querySelector('.list-group').querySelectorAll('a')[1].click();
+                    groupRow.querySelector('a')!.click();
+                    groupRow.querySelector('.list-group')!.querySelectorAll('a')[1].click();
 
                     // then
                     const assignedGroup = tp.group();
@@ -1078,8 +1078,8 @@ describe('ng-table', () => {
                     expect(tp.group()['name']).toBe('asc');
 
                     // when
-                    groupRow.querySelector('a').click();
-                    groupRow.querySelector('.list-group').querySelectorAll('a')[0].click();
+                    groupRow.querySelector('a')!.click();
+                    groupRow.querySelector('.list-group')!.querySelectorAll('a')[0].click();
 
                     // then
                     const assignedGroup = tp.group();
@@ -1088,7 +1088,7 @@ describe('ng-table', () => {
 
                 it('tapping close button should hide the group row', () => {
                     // when
-                    groupRow.querySelector('a').querySelector('button').click();
+                    groupRow.querySelector('a')!.querySelector('button')!.click();
 
                     // then
                     expect(groupRow.classList.contains('ng-hide')).toBe(true);
@@ -1097,7 +1097,7 @@ describe('ng-table', () => {
                 describe('tapping close button', () => {
                     let toggleButton: HTMLButtonElement;
                     beforeEach(() => {
-                        toggleButton = groupRow.querySelector('a').querySelectorAll('button')[1];
+                        toggleButton = groupRow.querySelector('a')!.querySelectorAll('button')[1];
                     });
 
                     it('should toggle isExpanded group option', () => {

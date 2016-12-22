@@ -1,4 +1,4 @@
-import { Grouping, GroupingFunc } from './grouping';
+import { GroupingPartial, GroupingFunc } from './grouping';
 import { SortingValues } from './sorting';
 
 /**
@@ -15,6 +15,6 @@ export function convertSortToOrderBy(sorting: SortingValues) {
 /**
  * @private
  */
-export function isGroupingFun(val: string | Grouping<any>): val is GroupingFunc<any> {
+export function isGroupingFun(val: string | GroupingPartial<any>): val is GroupingFunc<any> {
     return typeof val === 'function'
 }

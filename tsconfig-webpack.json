@@ -10,7 +10,8 @@
     "removeComments": false,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "strictNullChecks": true
   },
   "include": [
     "src/**/*",

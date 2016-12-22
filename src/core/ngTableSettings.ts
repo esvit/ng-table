@@ -80,7 +80,7 @@ export class Settings<T> {
     private static instance: Settings<any>;
     static createWithOverrides<T>(): Settings<T> {
         checkClassInit(Settings);
-        return Settings.merge(Settings.instance, Settings.ngTableDefaults.settings);
+        return Settings.merge(Settings.instance, Settings.ngTableDefaults.settings || {});
     }
     static merge<T>(existing: Settings<T>, newSettings: SettingsPartial<T>): Settings<T> {
         checkClassInit(Settings);

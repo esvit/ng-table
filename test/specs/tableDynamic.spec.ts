@@ -346,7 +346,8 @@ describe('ng-table-dynamic', () => {
         });
 
         it('setting columns to null should remove all table columns from header', () => {
-            scope.cols = null;
+            // note: using 'any' to trick compiler into allowing null (don't do this in production code!)
+            scope.cols = null as any;
             scope.$digest();
             const thead = tableElm.find('thead');
             expect(thead.length).toBe(1);
@@ -589,7 +590,7 @@ describe('ng-table-dynamic', () => {
                     } else if (paramsScope.$column.title() === 'Age') {
                         return ageFilter;
                     } else {
-                        return undefined;
+                        return {};
                     }
                 }
 
@@ -661,11 +662,11 @@ describe('ng-table-dynamic', () => {
         });
 
         it('$scolumns should contain a column definition for each `td` element', () => {
-            expect(scope.model.exportedCols.length).toBe(2);
+            expect(scope.model.exportedCols!.length).toBe(2);
         });
 
         it('each column definition should have getters for each column attribute', () => {
-            const ageCol = scope.model.exportedCols[0];
+            const ageCol = scope.model.exportedCols![0];
             expect(ageCol.title()).toBe('Age');
             expect(ageCol.show()).toBe(true);
             expect(ageCol.filter()).toBe(scope.cols[0].filter);
@@ -677,7 +678,7 @@ describe('ng-table-dynamic', () => {
             expect(ageCol.sortable()).toBe(false);
             expect(ageCol.titleAlt()).toBe('');
 
-            const nameCol = scope.model.exportedCols[1];
+            const nameCol = scope.model.exportedCols![1];
             expect(nameCol.title()).toBe('Name');
             expect(nameCol.show()).toBe(true);
             expect(nameCol.filter()).toBe(false);
@@ -691,7 +692,7 @@ describe('ng-table-dynamic', () => {
         });
 
         it('each column attribute should be assignable', () => {
-            const ageCol = scope.model.exportedCols[0];
+            const ageCol = scope.model.exportedCols![0];
 
             ageCol.title.assign(scope.$$childHead, 'Age of person');
             expect(ageCol.title()).toBe('Age of person');
@@ -725,7 +726,7 @@ describe('ng-table-dynamic', () => {
             expect(ageCol.titleAlt()).toBe('really');
 
 
-            const nameCol = scope.model.exportedCols[1];
+            const nameCol = scope.model.exportedCols![1];
 
             nameCol.groupable.assign(scope.$$childHead, false);
             expect(nameCol.groupable()).toBe(false);
@@ -735,7 +736,7 @@ describe('ng-table-dynamic', () => {
         });
 
         it('each column attribute should be settable', () => {
-            const ageCol = scope.model.exportedCols[0];
+            const ageCol = scope.model.exportedCols![0];
 
             ageCol.title('Age of person');
             expect(ageCol.title()).toBe('Age of person');
@@ -769,7 +770,7 @@ describe('ng-table-dynamic', () => {
             expect(ageCol.titleAlt()).toBe('really');
 
 
-            const nameCol = scope.model.exportedCols[1];
+            const nameCol = scope.model.exportedCols![1];
 
             nameCol.groupable(false);
             expect(nameCol.groupable()).toBe(false);

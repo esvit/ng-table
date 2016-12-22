@@ -22,7 +22,7 @@ import { NgTableEventsChannel } from '../ngTableEventsChannel';
  * - assign the total item count after filtering to the `total` of the `NgTableParams` instance supplied
  */
 export interface DefaultGetData<T> {
-    (data: T[], params: NgTableParams<T>): T[];
+    (data: T[] | undefined, params: NgTableParams<T>): T[];
     /**
      * Convenience function that this service will use to apply paging to the data rows.
      *
