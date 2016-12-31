@@ -111,3 +111,4 @@ See the [contributing](CONTRIBUTING.md) guidelines.
 ---
 
 This project is part of [Bazalt CMS](http://bazalt-cms.com/).
+
