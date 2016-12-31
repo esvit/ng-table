@@ -17,7 +17,7 @@
     }
   },
   "publishConfig": {
-    "tag": "latest"
+    "tag": "next"
   },
   "devDependencies": {
     "@types/angular-mocks": "^1.5.4",
