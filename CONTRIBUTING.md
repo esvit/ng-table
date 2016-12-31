@@ -43,3 +43,8 @@ To help you to follow these conventions this project uses [Commitizen](https://g
 Commitizen provides a command line tool that will help you create a commit message that matches these conventions.
 
 To lauch this tool we use `npm run cm`.
+
+
+## Releasing
+
+See the [releasing](RELEASING.md) guidelines.

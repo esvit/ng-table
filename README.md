@@ -26,6 +26,8 @@ npm install ng-table@next --save
 
 You can download the distribution files directly from [unpkg](https://unpkg.com/ng-table/bundles/)
 
+**Bower**: NO LONGER SUPPORTED
+
 
 ## Getting started
 
