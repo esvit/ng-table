@@ -22,6 +22,8 @@ Or install the latest beta release:
 npm install ng-table@next --save
 ```
 
+**note: when to use `next`?** see this [issue-comment](https://github.com/esvit/ng-table/issues/953#issuecomment-270905068)
+
 **CDN**
 
 You can download the distribution files directly from [unpkg](https://unpkg.com/ng-table/bundles/)
