@@ -24,6 +24,7 @@ Implications:
 3. Login: `npm adduser`
 4. Add dist-tag: `npm dist-tag add ng-table@n.n.n latest`
     * where `n.n.n` is the version of the package that you now want to make the latest
+5. Remove the pre-release tag from the github release of this version
 
 
 ## Documentation
