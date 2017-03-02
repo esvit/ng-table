@@ -20,6 +20,7 @@
     "tag": "next"
   },
   "devDependencies": {
+    "@types/angular": "^1.5.13",
     "@types/angular-mocks": "^1.5.4",
     "@types/angular-route": "^1.3.2",
     "@types/jasmine": "^2.2.33",
@@ -128,10 +129,7 @@
     "update-webdriver": "webdriver-manager update",
     "validate-webpack": "webpack-validator webpack.config.js --env.dev --env.test --env.prod",
     "webpack": "webpack"
-  },
-  "dependencies": {
-    "@types/angular": "^1.5.13"
-  },
+  }, 
   "peerDependencies": {
     "angular": "^1.2"
   },
