@@ -14,7 +14,7 @@ describe('NgTableParams', () => {
     var scope: IScope,
         NgTableParams: ITableParamsConstructor<any>,
         $rootScope: IScopeWithPrivates;
-    
+
     beforeAll(() => expect(coreModule).toBeDefined());
 
     beforeEach(ng1.mock.module("ngTable-core"));
@@ -152,7 +152,11 @@ describe('NgTableParams', () => {
             'sorting[age]': 'desc',  // sorting only by one column - todo: remove restriction
             'group[name]': 'asc',
             'group[age]': 'desc',
-            'group[surname]': ''
+            'group[surname]': '',
+            'accessibilityOptions[current]': 'Current',
+            'accessibilityOptions[more]': 'More',
+            'accessibilityOptions[next]': 'Next',
+            'accessibilityOptions[prev]': 'Previous'
         });
         expect(params.url(true)).toEqual([
             'page=1',
@@ -162,7 +166,11 @@ describe('NgTableParams', () => {
             'sorting[age]=desc',  // sorting only by one column - todo: remove restriction
             'group[name]=asc',
             'group[age]=desc',
-            'group[surname]='
+            'group[surname]=',
+            'accessibilityOptions[current]=Current',
+            'accessibilityOptions[more]=More',
+            'accessibilityOptions[next]=Next',
+            'accessibilityOptions[prev]=Previous'
         ]);
     });
 

@@ -9,14 +9,16 @@
         <span ng-bind="$column.title(this)" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'span'}"></span>
       </div>
       <div ng-if="template" ng-include="template"></div>
-      <button class="asc-desc-container" tabindex="-1">
-        <span class="glyphicon glyphicon-triangle-top">
-          <span class="sr-only">Asc</span>
-        </span>
-        <span class="glyphicon glyphicon-triangle-bottom">
-          <span class="sr-only">Desc</span>
-        </span>
-      </button>
+      <div ng-if="$column.sortable(this)">
+        <button class="asc-desc-container" tabindex="-1">
+          <span class="glyphicon glyphicon-triangle-top">
+            <span class="sr-only">Asc</span>
+          </span>
+          <span class="glyphicon glyphicon-triangle-bottom">
+            <span class="sr-only">Desc</span>
+          </span>
+        </button>
+      </div>
     </div>
   </th>
 </tr>

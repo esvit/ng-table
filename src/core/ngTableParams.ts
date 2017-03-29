@@ -665,10 +665,10 @@ export function ngTableParamsFactory<T>(
             group: {},
             accessibilityOptions: {
                 pagerTitle: '',
-                prev: 'Previous', // default values
-                next: 'Next', // default values
                 current: 'Current', // default values
-                more: 'more' // default values
+                more: 'More', // default values
+                next: 'Next', // default values 
+                prev: 'Previous' // default values
             }
         };
         ng1.extend(_params, ngTableDefaults.params);

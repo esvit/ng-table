@@ -17,7 +17,7 @@ describe('ng-table-dynamic', () => {
 
     interface IExtendedDynamicTableColDef extends IDynamicTableColDef {
         field: DynamicTableColField<string>
-}
+    }
 
     interface ICustomizedScope extends IScope {
         tableParams: INgTableParams<IPerson>;
@@ -124,9 +124,9 @@ describe('ng-table-dynamic', () => {
             var titles = ng1.element(rows[0]).find('th');
 
             expect(titles.length).toBe(3);
-            expect(ng1.element(titles[0]).text().trim()).toBe('Name of person');
-            expect(ng1.element(titles[1]).text().trim()).toBe('Age');
-            expect(ng1.element(titles[2]).text().trim()).toBe('Money');
+            expect(ng1.element(titles[0]).text().trim()).toContain('Name of person');
+            expect(ng1.element(titles[1]).text().trim()).toContain('Age');
+            expect(ng1.element(titles[2]).text().trim()).toContain('Money');
 
             expect(ng1.element(rows[1]).hasClass('ng-table-filters')).toBeTruthy();
             var filters = ng1.element(rows[1]).find('th');
@@ -179,15 +179,15 @@ describe('ng-table-dynamic', () => {
 
             var filterRow = ng1.element(elm.find('thead').find('tr')[1]);
             var filterCells = filterRow.find('th');
-            expect(ng1.element(filterCells[0]).attr('data-title-text').trim()).toBe('Name of person');
-            expect(ng1.element(filterCells[1]).attr('data-title-text').trim()).toBe('Age');
-            expect(ng1.element(filterCells[2]).attr('data-title-text').trim()).toBe('Money');
+            expect(ng1.element(filterCells[0]).attr('data-title-text').trim()).toContain('Name of person');
+            expect(ng1.element(filterCells[1]).attr('data-title-text').trim()).toContain('Age');
+            expect(ng1.element(filterCells[2]).attr('data-title-text').trim()).toContain('Money');
 
             var dataRows = elm.find('tbody').find('tr');
             var dataCells = ng1.element(dataRows[0]).find('td');
-            expect(ng1.element(dataCells[0]).attr('data-title-text').trim()).toBe('Name of person');
-            expect(ng1.element(dataCells[1]).attr('data-title-text').trim()).toBe('Age');
-            expect(ng1.element(dataCells[2]).attr('data-title-text').trim()).toBe('Money');
+            expect(ng1.element(dataCells[0]).attr('data-title-text').trim()).toContain('Name of person');
+            expect(ng1.element(dataCells[1]).attr('data-title-text').trim()).toContain('Age');
+            expect(ng1.element(dataCells[2]).attr('data-title-text').trim()).toContain('Money');
         }));
 
         it('should show/hide columns', inject(function (NgTableParams: ITableParamsConstructor<IPerson>) {
@@ -215,8 +215,8 @@ describe('ng-table-dynamic', () => {
             expect(headerRow.find('th').length).toBe(2);
             expect(filterRow.find('th').length).toBe(2);
             expect(dataRow.find('td').length).toBe(2);
-            expect(ng1.element(headerRow.find('th')[0]).text().trim()).toBe('Age');
-            expect(ng1.element(headerRow.find('th')[1]).text().trim()).toBe('Money');
+            expect(ng1.element(headerRow.find('th')[0]).text().trim()).toContain('Age');
+            expect(ng1.element(headerRow.find('th')[1]).text().trim()).toContain('Money');
             expect(ng1.element(filterRow.find('th')[0]).find('input').length).toBe(0);
             expect(ng1.element(filterRow.find('th')[1]).find('select').length).toBe(1);
         }));
@@ -295,9 +295,9 @@ describe('ng-table-dynamic', () => {
             var titles = ng1.element(rows[0]).find('th');
 
             expect(titles.length).toBe(3);
-            expect(ng1.element(titles[0]).text().trim()).toBe('Name of person');
-            expect(ng1.element(titles[1]).text().trim()).toBe('Age');
-            expect(ng1.element(titles[2]).text().trim()).toBe('Money');
+            expect(ng1.element(titles[0]).text().trim()).toContain('Name of person');
+            expect(ng1.element(titles[1]).text().trim()).toContain('Age');
+            expect(ng1.element(titles[2]).text().trim()).toContain('Money');
 
             var filterRow = ng1.element(rows[1]);
             expect(filterRow.hasClass('ng-table-filters')).toBeTruthy();
@@ -320,7 +320,7 @@ describe('ng-table-dynamic', () => {
             var rows = thead.find('tr');
             var titles = ng1.element(rows[0]).find('th');
             expect(titles.length).toBe(1);
-            expect(ng1.element(titles[0]).text().trim()).toBe('Age');
+            expect(ng1.element(titles[0]).text().trim()).toContain('Age');
 
             var filterRow = ng1.element(rows[1]);
             expect(filterRow.hasClass("ng-hide")).toBe(true);
@@ -374,15 +374,15 @@ describe('ng-table-dynamic', () => {
             var filterRow = ng1.element(elm.find('thead').find('tr')[1]);
             var filterCells = filterRow.find('th');
 
-            expect(ng1.element(filterCells[0]).attr('data-title-text').trim()).toBe('Name');
-            expect(ng1.element(filterCells[1]).attr('data-title-text').trim()).toBe('Age');
-            expect(ng1.element(filterCells[2]).attr('data-title-text').trim()).toBe('£');
+            expect(ng1.element(filterCells[0]).attr('data-title-text').trim()).toContain('Name');
+            expect(ng1.element(filterCells[1]).attr('data-title-text').trim()).toContain('Age');
+            expect(ng1.element(filterCells[2]).attr('data-title-text').trim()).toContain('£');
 
             var dataRows = elm.find('tbody').find('tr');
             var dataCells = ng1.element(dataRows[0]).find('td');
-            expect(ng1.element(dataCells[0]).attr('data-title-text').trim()).toBe('Name');
-            expect(ng1.element(dataCells[1]).attr('data-title-text').trim()).toBe('Age');
-            expect(ng1.element(dataCells[2]).attr('data-title-text').trim()).toBe('£');
+            expect(ng1.element(dataCells[0]).attr('data-title-text').trim()).toContain('Name');
+            expect(ng1.element(dataCells[1]).attr('data-title-text').trim()).toContain('Age');
+            expect(ng1.element(dataCells[2]).attr('data-title-text').trim()).toContain('£');
         }));
     });
 
@@ -442,14 +442,14 @@ describe('ng-table-dynamic', () => {
                     filter: { username: 'select' },
                     filterData: getNamesAsDefer
                 }, {
-                        field: 'names2',
-                        filter: { username2: 'select' },
-                        filterData: getNamesAsPromise
-                    }, {
-                        field: 'names3',
-                        filter: { username3: 'select' },
-                        filterData: getNamesAsArray
-                    }];
+                    field: 'names2',
+                    filter: { username2: 'select' },
+                    filterData: getNamesAsPromise
+                }, {
+                    field: 'names3',
+                    filter: { username3: 'select' },
+                    filterData: getNamesAsArray
+                }];
                 scope.tableParams = new NgTableParams({}, {});
                 $compile(elm)(scope);
                 scope.$digest();
@@ -459,9 +459,9 @@ describe('ng-table-dynamic', () => {
                         'id': 10,
                         'title': 'Christian'
                     }, {
-                            'id': 11,
-                            'title': 'Simon'
-                        }]);
+                        'id': 11,
+                        'title': 'Simon'
+                    }]);
                 }
 
                 function getNamesAsPromise(/*$column*/) {
@@ -469,9 +469,9 @@ describe('ng-table-dynamic', () => {
                         'id': 20,
                         'title': 'Christian'
                     }, {
-                            'id': 21,
-                            'title': 'Simon'
-                        }]);
+                        'id': 21,
+                        'title': 'Simon'
+                    }]);
                 }
 
                 function getNamesAsArray(/*$column*/) {
@@ -479,9 +479,9 @@ describe('ng-table-dynamic', () => {
                         'id': 20,
                         'title': 'Christian'
                     }, {
-                            'id': 21,
-                            'title': 'Simon'
-                        }];
+                        'id': 21,
+                        'title': 'Simon'
+                    }];
                 }
 
             }));
@@ -508,12 +508,12 @@ describe('ng-table-dynamic', () => {
                     'id': '',
                     'title': ''
                 }, {
-                        'id': 20,
-                        'title': 'Christian'
-                    }, {
-                        'id': 21,
-                        'title': 'Simon'
-                    }]);
+                    'id': 20,
+                    'title': 'Christian'
+                }, {
+                    'id': 21,
+                    'title': 'Simon'
+                }]);
             });
 
             it('should render select list return as an array', () => {
@@ -527,12 +527,12 @@ describe('ng-table-dynamic', () => {
                     'id': '',
                     'title': ''
                 }, {
-                        'id': 20,
-                        'title': 'Christian'
-                    }, {
-                        'id': 21,
-                        'title': 'Simon'
-                    }]);
+                    'id': 20,
+                    'title': 'Christian'
+                }, {
+                    'id': 21,
+                    'title': 'Simon'
+                }]);
             });
         });
 

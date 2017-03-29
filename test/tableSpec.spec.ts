@@ -150,9 +150,15 @@ describe('ng-table', () => {
             var titles = ng1.element(rows[0]).find('th');
 
             expect(titles.length).toBe(3);
-            expect(ng1.element(titles[0]).text().trim()).toBe('Name of person');
-            expect(ng1.element(titles[1]).text().trim()).toBe('Age');
-            expect(ng1.element(titles[2]).text().trim()).toBe('Money');
+            expect(ng1.element(titles[0]).text().trim()).toContain('Name of person');
+            expect(ng1.element(titles[0]).text().trim()).toContain('Asc');
+            expect(ng1.element(titles[0]).text().trim()).toContain('Desc');
+            expect(ng1.element(titles[1]).text().trim()).toContain('Age');
+            expect(ng1.element(titles[1]).text().trim()).toContain('Asc');
+            expect(ng1.element(titles[1]).text().trim()).toContain('Desc');
+            expect(ng1.element(titles[2]).text().trim()).toContain('Money');
+            expect(ng1.element(titles[2]).text().trim()).not.toContain('Asc');
+            expect(ng1.element(titles[2]).text().trim()).not.toContain('Desc');
 
             expect(ng1.element(rows[1]).hasClass('ng-table-filters')).toBeTruthy();
             var filters = ng1.element(rows[1]).find('th');
@@ -247,15 +253,15 @@ describe('ng-table', () => {
 
             var filterRow = ng1.element(elm.find('thead').find('tr')[1]);
             var filterCells = filterRow.find('th');
-            expect(ng1.element(filterCells[0]).attr('data-title-text').trim()).toBe('Name of person');
-            expect(ng1.element(filterCells[1]).attr('data-title-text').trim()).toBe('Age');
-            expect(ng1.element(filterCells[2]).attr('data-title-text').trim()).toBe('Money');
+            expect(ng1.element(filterCells[0]).attr('data-title-text').trim()).toContain('Name of person');
+            expect(ng1.element(filterCells[1]).attr('data-title-text').trim()).toContain('Age');
+            expect(ng1.element(filterCells[2]).attr('data-title-text').trim()).toContain('Money');
 
             var dataRows = elm.find('tbody').find('tr');
             var dataCells = ng1.element(dataRows[0]).find('td');
-            expect(ng1.element(dataCells[0]).attr('data-title-text').trim()).toBe('Name of person');
-            expect(ng1.element(dataCells[1]).attr('data-title-text').trim()).toBe('Age');
-            expect(ng1.element(dataCells[2]).attr('data-title-text').trim()).toBe('Money');
+            expect(ng1.element(dataCells[0]).attr('data-title-text').trim()).toContain('Name of person');
+            expect(ng1.element(dataCells[1]).attr('data-title-text').trim()).toContain('Age');
+            expect(ng1.element(dataCells[2]).attr('data-title-text').trim()).toContain('Money');
         });
 
 
@@ -281,8 +287,8 @@ describe('ng-table', () => {
             expect(headerRow.find('th').length).toBe(2);
             expect(filterRow.find('th').length).toBe(2);
             expect(dataRow.find('td').length).toBe(2);
-            expect(ng1.element(headerRow.find('th')[0]).text().trim()).toBe('Age');
-            expect(ng1.element(headerRow.find('th')[1]).text().trim()).toBe('Money');
+            expect(ng1.element(headerRow.find('th')[0]).text().trim()).toContain('Age');
+            expect(ng1.element(headerRow.find('th')[1]).text().trim()).toContain('Money');
             expect(ng1.element(filterRow.find('th')[0]).find('input').length).toBe(0);
             expect(ng1.element(filterRow.find('th')[1]).find('select').length).toBe(1);
         });
@@ -315,15 +321,15 @@ describe('ng-table', () => {
             var filterRow = ng1.element(elm.find('thead').find('tr')[1]);
             var filterCells = filterRow.find('th');
 
-            expect(ng1.element(filterCells[0]).attr('data-title-text').trim()).toBe('Name');
-            expect(ng1.element(filterCells[1]).attr('data-title-text').trim()).toBe('Age');
-            expect(ng1.element(filterCells[2]).attr('data-title-text').trim()).toBe('£');
+            expect(ng1.element(filterCells[0]).attr('data-title-text').trim()).toContain('Name');
+            expect(ng1.element(filterCells[1]).attr('data-title-text').trim()).toContain('Age');
+            expect(ng1.element(filterCells[2]).attr('data-title-text').trim()).toContain('£');
 
             var dataRows = elm.find('tbody').find('tr');
             var dataCells = ng1.element(dataRows[0]).find('td');
-            expect(ng1.element(dataCells[0]).attr('data-title-text').trim()).toBe('Name');
-            expect(ng1.element(dataCells[1]).attr('data-title-text').trim()).toBe('Age');
-            expect(ng1.element(dataCells[2]).attr('data-title-text').trim()).toBe('£');
+            expect(ng1.element(dataCells[0]).attr('data-title-text').trim()).toContain('Name');
+            expect(ng1.element(dataCells[1]).attr('data-title-text').trim()).toContain('Age');
+            expect(ng1.element(dataCells[2]).attr('data-title-text').trim()).toContain('£');
         }));
     });
 
