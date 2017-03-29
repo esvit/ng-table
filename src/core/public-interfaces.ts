@@ -65,9 +65,9 @@ export interface IDefaultGetDataProvider extends IServiceProvider {
     filterFilterName: string,
     /**
      * The name of a angular filter that knows how to apply the values returned by
-    * `NgTableParams.orderBy()` to sort an array of data.
-    * (defaults to the angular `orderBy` filter service)
-    */
+     * `NgTableParams.orderBy()` to sort an array of data.
+     * (defaults to the angular `orderBy` filter service)
+     */
     sortingFilterName: string
 }
 
@@ -428,6 +428,20 @@ export interface IParamValues<T> {
      * The grouping that should be applied to the data rows
      */
     group?: string | Grouping<T>;
+    /**
+     * The strings used to replace text for 508 compliance
+     */
+    accessibilityOptions?: IAccessibilityValues
+}
+/**
+ * Map of attribute names for accessibility and the corresponding values;
+ * This should enable the accessibility strings to accept user defined strings
+ * and translated strings
+ * @export
+ * @interface IAccessibilityValues
+ */
+export interface IAccessibilityValues {
+    [name: string]: string
 }
 
 
@@ -497,7 +511,7 @@ export interface ISettings<T> {
     getData?: IGetDataFunc<T> | IInterceptableGetDataFunc<T>;
     /**
      * The function that will be used group data rows according to the groupings returned by {@link INgTableParams} `group`
-    */
+     */
     getGroups?: IGetGroupFunc<T>;
 }
 

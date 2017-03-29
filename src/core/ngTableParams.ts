@@ -7,10 +7,11 @@
  */
 
 import * as ng1 from 'angular';
-import { 
-    IDataRowGroup, IDefaults, IDefaultGetData, IEventsChannel, IFilterSettings, IFilterValues, IGetDataFunc, Grouping, 
-    IGroupValues, IGroupingFunc, IGroupSettings, IPageButton, IParamValues, ISettings, ISortingValues, INgTableParams, 
-    ITableParamsConstructor } from './public-interfaces'
+import {
+    IDataRowGroup, IDefaults, IDefaultGetData, IEventsChannel, IFilterSettings, IFilterValues, IGetDataFunc, Grouping,
+    IGroupValues, IGroupingFunc, IGroupSettings, IPageButton, IParamValues, ISettings, ISortingValues, INgTableParams,
+    ITableParamsConstructor
+} from './public-interfaces'
 
 ngTableParamsFactory.$inject = [
     '$q', '$log', '$filter', 'ngTableDefaults', 'ngTableDefaultGetData', 'ngTableEventsChannel'
@@ -21,11 +22,11 @@ ngTableParamsFactory.$inject = [
  * @ngdoc service
  */
 export function ngTableParamsFactory<T>(
-    $q: ng1.IQService, $log: ng1.ILogService, $filter: ng1.IFilterService, ngTableDefaults: IDefaults, 
+    $q: ng1.IQService, $log: ng1.ILogService, $filter: ng1.IFilterService, ngTableDefaults: IDefaults,
     ngTableDefaultGetData: IDefaultGetData<any>, ngTableEventsChannel: IEventsChannel) {
 
     return NgTableParams;
-    
+
 
     function NgTableParams<T>(baseParameters: IParamValues<T> | boolean, baseSettings: ISettings<T>): INgTableParams<T> {
 
@@ -40,7 +41,7 @@ export function ngTableParamsFactory<T>(
 
         // the ngTableController "needs" to create a dummy/null instance and it's important to know whether an instance
         // is one of these
-        if (typeof baseParameters === "boolean"){
+        if (typeof baseParameters === "boolean") {
             this.isNullInstance = true;
         }
 
@@ -49,7 +50,7 @@ export function ngTableParamsFactory<T>(
             errParamsMemento: Memento,
             isCommittedDataset = false,
             initialEvents: Function[] = [],
-            log = function(...args: any[]) {
+            log = function (...args: any[]) {
                 if (_settings.debugMode && $log.debug) {
                     $log.debug(...args);
                 }
@@ -70,7 +71,7 @@ export function ngTableParamsFactory<T>(
 
         this.data = [];
 
-        this.parameters = function(newParameters?: IParamValues<T>| { [name: string]: string }, parseParamsFromUrl?: boolean) {
+        this.parameters = function (newParameters?: IParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean) {
             parseParamsFromUrl = parseParamsFromUrl || false;
             if (typeof newParameters !== undefined) {
                 for (var key in newParameters) {
@@ -91,7 +92,7 @@ export function ngTableParamsFactory<T>(
                         }
                         _params[lastKey] = ng1.extend(_params[lastKey] || {}, value[lastKey]);
                     } else {
-                        if (key === 'group'){
+                        if (key === 'group') {
                             _params[key] = parseGroup(newParameters[key]);
                         } else {
                             _params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
@@ -104,18 +105,18 @@ export function ngTableParamsFactory<T>(
             return _params;
         };
 
-        function parseGroup(group: string | Grouping<T>){
+        function parseGroup(group: string | Grouping<T>) {
             var defaultSort = _settings.groupOptions && _settings.groupOptions.defaultSort;
             if (!group) {
                 return group;
             } else if (isGroupingFun(group)) {
-                if (group.sortDirection == null){
+                if (group.sortDirection == null) {
                     group.sortDirection = defaultSort;
                 }
                 return group;
             } else if (typeof group === 'object') {
                 for (var key in group) {
-                    if (group[key] == null){
+                    if (group[key] == null) {
                         group[key] = defaultSort;
                     }
                 }
@@ -135,16 +136,16 @@ export function ngTableParamsFactory<T>(
          * @param {string} newSettings New settings or undefined
          * @returns {Object} Current settings or `this`
          */
-        this.settings = function(newSettings?: ISettings<T>) {
+        this.settings = function (newSettings?: ISettings<T>) {
             if (ng1.isDefined(newSettings)) {
 
                 // todo: don't modify newSettings object: this introduces unexpected side effects;
                 // instead take a copy of newSettings
 
-                if (newSettings.filterOptions){
+                if (newSettings.filterOptions) {
                     newSettings.filterOptions = ng1.extend({}, _settings.filterOptions, newSettings.filterOptions);
                 }
-                if (newSettings.groupOptions){
+                if (newSettings.groupOptions) {
                     newSettings.groupOptions = ng1.extend({}, _settings.groupOptions, newSettings.groupOptions);
                 }
 
@@ -163,7 +164,7 @@ export function ngTableParamsFactory<T>(
                 // note: using != as want null and undefined to be treated the same
                 var hasDatasetChanged = newSettings.hasOwnProperty('dataset') && (newSettings.dataset != originalDataset);
                 if (hasDatasetChanged) {
-                    if (isCommittedDataset){
+                    if (isCommittedDataset) {
                         this.page(1); // reset page as a new dataset has been supplied
                     }
                     isCommittedDataset = false;
@@ -172,7 +173,7 @@ export function ngTableParamsFactory<T>(
                         ngTableEventsChannel.publishDatasetChanged(self, newSettings.dataset, originalDataset);
                     };
 
-                    if (initialEvents){
+                    if (initialEvents) {
                         initialEvents.push(fireEvent);
                     } else {
                         fireEvent();
@@ -184,19 +185,19 @@ export function ngTableParamsFactory<T>(
             return _settings;
         };
 
-        this.page = function(page?: number) {
+        this.page = function (page?: number) {
             return page !== undefined ? this.parameters({
                 'page': page
             }) : _params.page;
         };
 
-        this.total = function(total?: number) {
+        this.total = function (total?: number) {
             return total !== undefined ? this.settings({
                 'total': total
             }) : _settings.total;
         };
 
-        this.count = function(count?: number) {
+        this.count = function (count?: number) {
             // reset to first page because can be blank page
             return count !== undefined ? this.parameters({
                 'count': count,
@@ -204,16 +205,16 @@ export function ngTableParamsFactory<T>(
             }) : _params.count;
         };
 
-        this.filter = function(filter?: IFilterValues | boolean) {
+        this.filter = function (filter?: IFilterValues | boolean) {
             if (filter != null && typeof filter === 'object') {
                 return this.parameters({
                     'filter': filter,
                     'page': 1
                 });
-            } else if (filter === true){
+            } else if (filter === true) {
                 var keys = Object.keys(_params.filter);
                 var significantFilter: IFilterValues = {};
-                for (var i=0; i < keys.length; i++){
+                for (var i = 0; i < keys.length; i++) {
                     var filterValue = _params.filter[keys[i]];
                     if (filterValue != null && filterValue !== '') {
                         significantFilter[keys[i]] = filterValue;
@@ -225,15 +226,15 @@ export function ngTableParamsFactory<T>(
             }
         };
 
-        this.group = function(group?: Grouping<T> | string, sortDirection?: string) {
-            if (group === undefined){
+        this.group = function (group?: Grouping<T> | string, sortDirection?: string) {
+            if (group === undefined) {
                 return _params.group;
             }
 
             var newParameters: IParamValues<T> = {
                 page: 1
             };
-            if (isGroupingFun(group) && sortDirection !== undefined){
+            if (isGroupingFun(group) && sortDirection !== undefined) {
                 group.sortDirection = sortDirection;
                 newParameters.group = group;
             } else if (typeof group === 'string' && sortDirection !== undefined) {
@@ -253,7 +254,7 @@ export function ngTableParamsFactory<T>(
          * @param {string} sorting New sorting
          * @returns {Object} Current sorting or `this`
          */
-        this.sorting = function(sorting?: ISortingValues | string, direction?: string) {
+        this.sorting = function (sorting?: ISortingValues | string, direction?: string) {
             if (typeof sorting === 'string' && direction !== undefined) {
                 this.parameters({
                     'sorting': { [sorting]: direction }
@@ -265,8 +266,8 @@ export function ngTableParamsFactory<T>(
             }) : _params.sorting;
         };
 
-        this.isSortBy = function(field: string, direction?: string) {
-            if(direction !== undefined) {
+        this.isSortBy = function (field: string, direction?: string) {
+            if (direction !== undefined) {
                 return _params.sorting[field] !== undefined && _params.sorting[field] == direction;
             } else {
                 return _params.sorting[field] !== undefined;
@@ -280,11 +281,11 @@ export function ngTableParamsFactory<T>(
          *
          * @returns {Array} Array like: [ '-name', '+age' ]
          */
-        this.orderBy = function() {
+        this.orderBy = function () {
             return convertSortToOrderBy(_params.sorting);
         };
 
-        function convertSortToOrderBy(sorting: ISortingValues){
+        function convertSortToOrderBy(sorting: ISortingValues) {
             var result: string[] = [];
             for (var column in sorting) {
                 result.push((sorting[column] === "asc" ? "+" : "-") + column);
@@ -305,8 +306,8 @@ export function ngTableParamsFactory<T>(
          * @param {number} maxBlocks    Quantity of blocks for pagination
          * @returns {Array} Array of pages
          */
-        this.generatePagesArray = function(currentPage?: number, totalItems?: number, pageSize?: number, maxBlocks?: number) {
-            if (!arguments.length){
+        this.generatePagesArray = function (currentPage?: number, totalItems?: number, pageSize?: number, maxBlocks?: number) {
+            if (!arguments.length) {
                 currentPage = this.page();
                 totalItems = this.total();
                 pageSize = this.count();
@@ -374,7 +375,7 @@ export function ngTableParamsFactory<T>(
          * Note that this method will return false when the reload method has run but fails. In this case
          * `hasErrorState` will return true.
          */
-        this.isDataReloadRequired = function(){
+        this.isDataReloadRequired = function () {
             // note: using != as want to treat null and undefined the same
             return !isCommittedDataset || !ng1.equals(createComparableParams(), prevParamsMemento)
                 || hasGlobalSearchFieldChanges();
@@ -388,7 +389,7 @@ export function ngTableParamsFactory<T>(
             };
         }
         function isGroupingFun(val: string | Grouping<T>): val is IGroupingFunc<T> {
-                return typeof val === 'function'
+            return typeof val === 'function'
         }
         /**
          * @ngdoc method
@@ -397,11 +398,11 @@ export function ngTableParamsFactory<T>(
          * (any value except null, undefined, or empty string)
          * @returns {Boolean} true when NgTableParams#filter has at least one significant field value
          */
-        this.hasFilter = function(){
+        this.hasFilter = function () {
             return Object.keys(this.filter(true)).length > 0;
         };
 
-        this.hasGroup = function(group?: IGroupingFunc<T> | string, sortDirection?: string){
+        this.hasGroup = function (group?: IGroupingFunc<T> | string, sortDirection?: string) {
             if (group == null) {
                 return isGroupingFun(_params.group) || Object.keys(_params.group).length > 0
             }
@@ -416,24 +417,24 @@ export function ngTableParamsFactory<T>(
                 if (sortDirection == null) {
                     return Object.keys(_params.group).indexOf(group) !== -1;
                 } else {
-                    return( _params.group as IGroupValues)[group] === sortDirection;
+                    return (_params.group as IGroupValues)[group] === sortDirection;
                 }
             }
         };
 
-        this.hasFilterChanges = function(){
+        this.hasFilterChanges = function () {
             var previousFilter = (prevParamsMemento && prevParamsMemento.params.filter);
             return !ng1.equals((_params.filter), previousFilter) || hasGlobalSearchFieldChanges();
         };
 
-        function hasGlobalSearchFieldChanges(){
+        function hasGlobalSearchFieldChanges() {
             var currentVal = (_params.filter && _params.filter['$']);
             var previousVal =
                 (prevParamsMemento && prevParamsMemento.params.filter && prevParamsMemento.params.filter['$']);
             return !ng1.equals(currentVal, previousVal);
         }
 
-        this.url = function(asString?: boolean) {
+        this.url = function (asString?: boolean) {
             // this function is an example of Typescript gone bad!!
             asString = asString || false;
             var pairs: any[] | { [name: string]: string } = (asString ? [] : {});
@@ -455,7 +456,7 @@ export function ngTableParamsFactory<T>(
             }
             return pairs;
 
-            function collectValue(value: any, key: string){
+            function collectValue(value: any, key: string) {
                 if (isArray(pairs)) {
                     pairs.push(key + "=" + encodeURIComponent(value));
                 } else {
@@ -467,12 +468,12 @@ export function ngTableParamsFactory<T>(
                 return asString;
             }
 
-            function isSignificantValue(value: any, key: string){
+            function isSignificantValue(value: any, key: string) {
                 return key === "group" ? true : typeof value !== undefined && value !== "";
             }
         };
 
-        this.reload = function() {
+        this.reload = function () {
             var self: INgTableParams<T> = this,
                 pData: ng1.IPromise<any> = null;
 
@@ -491,7 +492,7 @@ export function ngTableParamsFactory<T>(
             log('ngTable: reload data');
 
             var oldData = self.data;
-            return pData.then(function(data) {
+            return pData.then(function (data) {
                 _settings.$loading = false;
                 errParamsMemento = null;
 
@@ -502,53 +503,53 @@ export function ngTableParamsFactory<T>(
                 self.reloadPages();
 
                 return data;
-            }).catch(function(reason){
+            }).catch(function (reason) {
                 errParamsMemento = prevParamsMemento;
                 // "rethrow"
                 return $q.reject(reason);
             });
         };
 
-        this.hasErrorState = function(){
+        this.hasErrorState = function () {
             return !!(errParamsMemento && ng1.equals(errParamsMemento, createComparableParams()));
         };
 
-        function optimizeFilterDelay(){
+        function optimizeFilterDelay() {
             // don't debounce by default filter input when working with small synchronous datasets
             if (_settings.filterOptions.filterDelay === defaultFilterOptions.filterDelay &&
                 _settings.total <= _settings.filterOptions.filterDelayThreshold &&
-                _settings.getData === defaultSettingsFns.getData){
+                _settings.getData === defaultSettingsFns.getData) {
                 _settings.filterOptions.filterDelay = 0;
             }
         }
 
-        this.reloadPages = (function() {
+        this.reloadPages = (function () {
             var currentPages: IPageButton[];
-            return function(){
+            return function () {
                 var oldPages = currentPages;
                 var newPages = self.generatePagesArray(self.page(), self.total(), self.count());
-                if (!ng1.equals(oldPages, newPages)){
+                if (!ng1.equals(oldPages, newPages)) {
                     currentPages = newPages;
                     ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
                 }
             }
         })();
 
-        function runInterceptorPipeline(fetchedData: ng1.IPromise<any>){
+        function runInterceptorPipeline(fetchedData: ng1.IPromise<any>) {
             var interceptors = _settings.interceptors || [];
 
-            return interceptors.reduce(function(result, interceptor){
+            return interceptors.reduce(function (result, interceptor) {
                 var thenFn = (interceptor.response && interceptor.response.bind(interceptor)) || $q.when;
                 var rejectFn = (interceptor.responseError && interceptor.responseError.bind(interceptor)) || $q.reject;
-                return result.then(function(data){
+                return result.then(function (data) {
                     return thenFn(data, self);
-                }, function(reason){
+                }, function (reason) {
                     return rejectFn(reason, self);
                 });
             }, fetchedData);
         }
 
-        function getDefaultSettingFns(){
+        function getDefaultSettingFns() {
 
             return {
                 getData: getData,
@@ -590,7 +591,7 @@ export function ngTableParamsFactory<T>(
                     // currently support for only one group implemented
                     var groupField = Object.keys(group)[0];
                     sortDirection = group[groupField];
-                    groupFn = function(item){
+                    groupFn = function (item) {
                         return getPath(item, groupField);
                     };
                 }
@@ -600,15 +601,15 @@ export function ngTableParamsFactory<T>(
                 settings.dataOptions = { applyPaging: false };
                 const getData: IGetDataFunc<T> = settings.getData;
                 var gotData = $q.when(getData(params));
-                return gotData.then(function(data) {
+                return gotData.then(function (data) {
                     var groups: { [name: string]: IDataRowGroup<T> } = {};
-                    ng1.forEach(data, function(item) {
+                    ng1.forEach(data, function (item) {
                         var groupName = groupFn(item);
                         groups[groupName] = groups[groupName] || {
-                                data: [],
-                                $hideRows: !settings.groupOptions.isExpanded,
-                                value: groupName
-                            };
+                            data: [],
+                            $hideRows: !settings.groupOptions.isExpanded,
+                            value: groupName
+                        };
                         groups[groupName].data.push(item);
                     });
                     var result: IDataRowGroup<T>[] = [];
@@ -624,17 +625,17 @@ export function ngTableParamsFactory<T>(
                     }
 
                     return ngTableDefaultGetData.applyPaging(result, params);
-                }).finally(function(){
+                }).finally(function () {
                     // restore the real options
                     settings.dataOptions = originalDataOptions;
                 });
             }
 
-            function getPath (obj: { [name: string]: any}, ks: string | string[]): any {
+            function getPath(obj: { [name: string]: any }, ks: string | string[]): any {
                 // origianl source https://github.com/documentcloud/underscore-contrib
 
                 let keys: string[];
-                if (typeof ks === "string"){
+                if (typeof ks === "string") {
                     keys = ks.split(".");
                 } else {
                     keys = ks;
@@ -661,7 +662,14 @@ export function ngTableParamsFactory<T>(
             count: 10,
             filter: {},
             sorting: {},
-            group: {}
+            group: {},
+            accessibilityOptions: {
+                pagerTitle: '',
+                prev: 'Previous', // default values
+                next: 'Next', // default values
+                current: 'Current', // default values
+                more: 'more' // default values
+            }
         };
         ng1.extend(_params, ngTableDefaults.params);
 
@@ -693,7 +701,7 @@ export function ngTableParamsFactory<T>(
         ngTableEventsChannel.publishAfterCreated(this);
         // run events during construction after the initial create event. That way a consumer
         // can subscribe to all events for a table without "dropping" an event
-        ng1.forEach(initialEvents, function(event){
+        ng1.forEach(initialEvents, function (event) {
             event();
         });
         initialEvents = null;

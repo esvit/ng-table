@@ -1,5 +1,5 @@
 <tr class="ng-table-sort-header">
-  <th title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{
+  <th scope="col" title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{
                     'sortable': $column.sortable(this),
                     'sort-asc': params.sorting()[$column.sortable(this)]=='asc',
                     'sort-desc': params.sorting()[$column.sortable(this)]=='desc'
