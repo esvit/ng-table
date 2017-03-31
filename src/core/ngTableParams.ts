@@ -191,6 +191,13 @@ export function ngTableParamsFactory<T>(
             }) : _params.page;
         };
 
+        this.accessibilityOptions = function (field: string) {
+            if (field != null && field !== undefined) {
+                return _params.accessibilityOptions[field] ? _params.accessibilityOptions[field] : '';
+            }
+            return '';
+        }
+
         this.total = function (total?: number) {
             return total !== undefined ? this.settings({
                 'total': total

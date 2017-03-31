@@ -117,6 +117,10 @@ export interface InternalTableParams<T> extends INgTableParams<T> {
  */
 export interface INgTableParams<T> {
     /**
+     * Returns a string value for the accessibility label
+     */
+    accessibilityOptions(field: string): string
+    /**
      * The page of data rows currently being displayed in the table
      */
     data: T[];
