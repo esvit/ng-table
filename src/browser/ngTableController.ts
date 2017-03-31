@@ -17,6 +17,8 @@ import {
 } from '../core';
 import { ColumnDef, ColumnDefPartial, DynamicTableColDef, SelectData, TableHtmlAttributes } from './public-interfaces';
 import { NgTableColumn } from './ngTableColumn';
+const defaultHeaderUrl = require('./header.html')
+const defaultPagerUrl = require('./pager.html')
 
 /**
  * @private
@@ -127,8 +129,8 @@ export class NgTableController<TParams, TCol extends ColumnDefPartial | DynamicT
     compileDirectiveTemplates() {
         if (!this.$element.hasClass('ng-table')) {
             this.$scope.templates = {
-                header: (this.$attrs.templateHeader ? this.$attrs.templateHeader : 'ng-table/header.html'),
-                pagination: (this.$attrs.templatePagination ? this.$attrs.templatePagination : 'ng-table/pager.html')
+                header: (this.$attrs.templateHeader ? this.$attrs.templateHeader : defaultHeaderUrl),
+                pagination: (this.$attrs.templatePagination ? this.$attrs.templatePagination : defaultPagerUrl)
             };
             this.$element.addClass('ng-table');
             let headerTemplate: IAugmentedJQuery | undefined;
