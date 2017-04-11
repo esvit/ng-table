@@ -6,16 +6,16 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
-  .ng-table th button.asc-desc-container {
+  .ng-table th .asc-desc-container {
     display: none; }
   .ng-table th.sortable {
     cursor: pointer; }
     .ng-table th.sortable .sort-indicator {
       padding-right: 18px;
       position: relative; }
-    .ng-table th.sortable:hover button span {
+    .ng-table th.sortable:hover #sortInd span {
       opacity: 1; }
-    .ng-table th.sortable button {
+    .ng-table th.sortable #sortInd {
       border: none;
       background: none;
       position: absolute;
@@ -23,17 +23,17 @@
       right: 0;
       bottom: 0;
       font-size: .75em; }
-      .ng-table th.sortable button:hover span {
+      .ng-table th.sortable #sortInd:hover span {
         opacity: 1; }
-      .ng-table th.sortable button span {
+      .ng-table th.sortable #sortInd span {
         opacity: .3; }
-    .ng-table th.sortable.sort-desc button span, .ng-table th.sortable.sort-asc button span {
+    .ng-table th.sortable.sort-desc #sortInd span, .ng-table th.sortable.sort-asc #sortInd span {
       opacity: 1; }
-    .ng-table th.sortable.sort-desc button span.glyphicon-triangle-top {
+    .ng-table th.sortable.sort-desc #sortInd span.glyphicon-triangle-top {
       display: none; }
-    .ng-table th.sortable.sort-desc button span.glyphicon-triangle-bottom {
+    .ng-table th.sortable.sort-desc #sortInd span.glyphicon-triangle-bottom {
       right: 0; }
-    .ng-table th.sortable.sort-asc button span.glyphicon-triangle-bottom {
+    .ng-table th.sortable.sort-asc #sortInd span.glyphicon-triangle-bottom {
       display: none; }
     .ng-table th.sortable.sort-desc, .ng-table th.sortable.sort-asc {
       background-color: rgba(141, 192, 219, 0.25);

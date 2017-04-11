@@ -38,7 +38,10 @@
                 current: 'This is a current label',
                 more: 'This is a more label',
                 next: 'This is a next label',
-                prev: 'This is a prev label'
+                prev: 'This is a prev label',
+                sortAsc: 'Testing Ascending',
+                sortDesc: 'Testing Descending',
+                pageNumPrefix: 'This is a Page'
             }
         }, {
                 // for server-side data load

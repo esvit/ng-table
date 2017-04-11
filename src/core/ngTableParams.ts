@@ -675,7 +675,10 @@ export function ngTableParamsFactory<T>(
                 current: 'Current', // default values
                 more: 'More', // default values
                 next: 'Next', // default values 
-                prev: 'Previous' // default values
+                prev: 'Previous', // default values
+                sortAsc: 'Ascending',
+                sortDesc: 'Descending',
+                pageNumPrefix: 'Page'
             }
         };
         ng1.extend(_params, ngTableDefaults.params);

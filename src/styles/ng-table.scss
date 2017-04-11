@@ -9,7 +9,7 @@ $cell-border-color: #eee;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    button.asc-desc-container {
+    .asc-desc-container {
       display: none;
     }
     &.sortable {
@@ -18,10 +18,10 @@ $cell-border-color: #eee;
         padding-right: 18px;
         position: relative;
       }
-      &:hover button span {
+      &:hover #sortInd span {
         opacity: 1;
       }
-      button {
+      #sortInd {
         border: none;
         background: none;
         position: absolute;
@@ -38,11 +38,11 @@ $cell-border-color: #eee;
       }
       &.sort-desc,
       &.sort-asc {
-        button span {
+        #sortInd span {
           opacity: 1;
         }
       }
-      &.sort-desc button {
+      &.sort-desc #sortInd {
         span.glyphicon-triangle-top {
           display: none;
         }
@@ -50,7 +50,7 @@ $cell-border-color: #eee;
           right: 0;
         }
       }
-      &.sort-asc button span.glyphicon-triangle-bottom {
+      &.sort-asc #sortInd span.glyphicon-triangle-bottom {
         display: none;
       }
       &.sort-desc,

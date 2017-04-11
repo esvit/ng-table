@@ -4,21 +4,31 @@
                     'sort-asc': params.sorting()[$column.sortable(this)]=='asc',
                     'sort-desc': params.sorting()[$column.sortable(this)]=='desc'
                   }" ng-if="$column.show(this)" ng-init="template = $column.headerTemplateURL(this)" class="header {{$column.class(this)}}">
-    <div ng-if="template || $column.title(this)" ng-click="sortBy($column, $event)">
-      <div ng-if="!template" class="ng-table-header" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'div'}">
-        <span ng-bind="$column.title(this)" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'span'}"></span>
-      </div>
-      <div ng-if="template" ng-include="template"></div>
-      <div ng-if="$column.sortable(this)">
-        <button class="asc-desc-container" tabindex="-1">
-          <span class="glyphicon glyphicon-triangle-top">
-            <span class="sr-only">Asc</span>
+    <div ng-if="$column.sortable(this)">
+      <div ng-if="template || $column.title(this)" role="button" ng-click="sortBy($column, $event)">
+        <div ng-if="!template" class="ng-table-header" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'div'}">
+          <span ng-bind="$column.title(this)" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'span'}"></span>
+        </div>
+        <div ng-if="template" ng-include="template"></div>
+        <div id="sortInd" class="asc-desc-container">
+          <span ng-hide="params.sorting()[$column.sortable(this)]=='asc'" class="glyphicon glyphicon-triangle-top">
+            <span class="sr-only">{{params.accessibilityOptions('sortAsc')}}</span>
           </span>
-          <span class="glyphicon glyphicon-triangle-bottom">
-            <span class="sr-only">Desc</span>
+          <span ng-hide="params.sorting()[$column.sortable(this)]=='desc'" class="glyphicon glyphicon-triangle-bottom">
+            <span class="sr-only">{{params.accessibilityOptions('sortDesc')}}</span>
           </span>
-        </button>
+        </div>
       </div>
     </div>
+
+    <div ng-if="!$column.sortable(this)">
+      <div ng-if="template || $column.title(this)">
+        <div ng-if="!template" class="ng-table-header">
+          <span ng-bind="$column.title(this)"></span>
+        </div>
+        <div ng-if="template" ng-include="template"></div>
+      </div>
+    </div>
+
   </th>
 </tr>
