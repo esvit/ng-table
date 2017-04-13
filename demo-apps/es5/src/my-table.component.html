@@ -1,9 +1,11 @@
-<table ng-table="$ctrl.tableParams" show-filter="true" class="table table-condensed table-bordered">
-    <tr ng-repeat="user in $data">
-        <td data-title="'Name'" header-class="'text-left'" sortable="'name'" filter="{ 'name': 'text' }">
+<table ng-table="$ctrl.tableParams" show-filter="true" class="table table-condensed table-bordered" role="grid" aria-labelledby="sample-caption"
+    aria-readonly="true">
+    <caption id="sample-caption">This is a sample NG table</caption>
+    <tr ng-repeat="user in $data" role="row">
+        <td role="gridcell" data-title="'Name'" header-class="'text-left'" sortable="'name'" filter="{ 'name': 'text' }">
             {{user.name}}
         </td>
-        <td data-title="'Age'" header-class="'text-right'" sortable="'age'" filter="{ 'age': 'text' }">
+        <td role="gridcell" data-title="'Age'" header-class="'text-right'" sortable="'age'" filter="{ 'age': 'text' }">
             {{user.age}}
         </td>
     </tr>

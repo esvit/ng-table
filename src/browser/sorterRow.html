@@ -1,34 +1,33 @@
-<tr class="ng-table-sort-header">
-  <th scope="col" title="{{$column.headerTitle(this)}}" ng-repeat="$column in $columns" ng-class="{
+<tr class="ng-table-sort-header" role="row">
+  <!--
+     In an effort to provide accessible tables, if a column is sortable it should be given the aria-sort attribute 
+     with a value of 'none', 'ascending', or 'descending'. The child element should have its role set to 'button'
+  -->
+  <th scope="col" title="{{$column.headerTitle(this)}}" role="columnheader" aria-sort="{{params.sorting()[$column.sortable(this)]=='asc' ? 'ascending' : params.sorting()[$column.sortable(this)]=='desc' ? 'descending' : 'none'}}"
+    ng-repeat="$column in $columns" ng-class="{ 
                     'sortable': $column.sortable(this),
                     'sort-asc': params.sorting()[$column.sortable(this)]=='asc',
                     'sort-desc': params.sorting()[$column.sortable(this)]=='desc'
-                  }" ng-if="$column.show(this)" ng-init="template = $column.headerTemplateURL(this)" class="header {{$column.class(this)}}">
-    <div ng-if="$column.sortable(this)">
-      <div ng-if="template || $column.title(this)" role="button" ng-click="sortBy($column, $event)">
-        <div ng-if="!template" class="ng-table-header" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'div'}">
-          <span ng-bind="$column.title(this)" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'span'}"></span>
-        </div>
-        <div ng-if="template" ng-include="template"></div>
-        <div id="sortInd" class="asc-desc-container">
-          <span ng-hide="params.sorting()[$column.sortable(this)]=='asc'" class="glyphicon glyphicon-triangle-top">
-            <span class="sr-only">{{params.accessibilityOptions('sortAsc')}}</span>
-          </span>
-          <span ng-hide="params.sorting()[$column.sortable(this)]=='desc'" class="glyphicon glyphicon-triangle-bottom">
-            <span class="sr-only">{{params.accessibilityOptions('sortDesc')}}</span>
-          </span>
-        </div>
+                  }" ng-if="$column.show(this) && $column.sortable(this)" ng-init="template = $column.headerTemplateURL(this)"
+    class="header {{$column.class(this)}}">
+    <span role="button" ng-if="template || $column.title(this)" ng-click="sortBy($column, $event)">
+      <div ng-if="!template" class="ng-table-header" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'div'}">
+        <span ng-bind="$column.title(this)" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'span'}"></span>
       </div>
-    </div>
+      <div ng-if="template" ng-include="template"></div>
+    </span>
+  </th>
 
-    <div ng-if="!$column.sortable(this)">
-      <div ng-if="template || $column.title(this)">
-        <div ng-if="!template" class="ng-table-header">
-          <span ng-bind="$column.title(this)"></span>
-        </div>
-        <div ng-if="template" ng-include="template"></div>
+  <!--
+  This header column is used for non-sortable columns.
+-->
+  <th scope="col" title="{{$column.headerTitle(this)}}" role="columnheader" ng-repeat="$column in $columns" ng-class="{ 'sortable': $column.sortable(this) }"
+    ng-if="$column.show(this) && !$column.sortable(this)" ng-init="template = $column.headerTemplateURL(this)" class="header {{$column.class(this)}}">
+    <div ng-if="template || $column.title(this)">
+      <div ng-if="!template" class="ng-table-header">
+        <span ng-bind="$column.title(this)"></span>
       </div>
+      <div ng-if="template" ng-include="template"></div>
     </div>
-
   </th>
 </tr>
