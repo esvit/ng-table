@@ -31,18 +31,8 @@
 
         this.tableParams = new NgTableParams({
             page: 1,
-            count: 8,
-            sort: { name: 'asc' },
-            accessibilityOptions: {
-                pagerTitle: 'This is a paging title',
-                current: 'This is a current label',
-                more: 'This is a more label',
-                next: 'This is a next label',
-                prev: 'This is a prev label',
-                sortAsc: 'Testing Ascending',
-                sortDesc: 'Testing Descending',
-                pageNumPrefix: 'This is a Page'
-            }
+            count: 7,
+            sort: { name: 'asc' }
         }, {
                 // for server-side data load
                 // getData: function (params) {

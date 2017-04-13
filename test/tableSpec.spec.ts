@@ -151,14 +151,8 @@ describe('ng-table', () => {
 
             expect(titles.length).toBe(3);
             expect(ng1.element(titles[0]).text().trim()).toContain('Name of person');
-            expect(ng1.element(titles[0]).text().trim()).toContain('Asc');
-            expect(ng1.element(titles[0]).text().trim()).toContain('Desc');
             expect(ng1.element(titles[1]).text().trim()).toContain('Age');
-            expect(ng1.element(titles[1]).text().trim()).toContain('Asc');
-            expect(ng1.element(titles[1]).text().trim()).toContain('Desc');
             expect(ng1.element(titles[2]).text().trim()).toContain('Money');
-            expect(ng1.element(titles[2]).text().trim()).not.toContain('Asc');
-            expect(ng1.element(titles[2]).text().trim()).not.toContain('Desc');
 
             expect(ng1.element(rows[1]).hasClass('ng-table-filters')).toBeTruthy();
             var filters = ng1.element(rows[1]).find('th');

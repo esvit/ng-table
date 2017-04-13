@@ -6,38 +6,18 @@
         </button>
     </div>
     <ul ng-if="pages.length " class="pagination ng-table-pagination ">
-        <li ng-class="{ 'disabled': !page.active && !page.current, 'active': page.current} " ng-repeat="page in pages" ng-switch="page.type ">
-            <span ng-switch-when="prev ">
-                <a ng-if="page.active || page.current" ng-click="params.page(page.number) " href=" " aria-label="{{params.accessibilityOptions('prev')}} ">&laquo;</a>
-                <span ng-if="!page.active && !page.current" aria-label="{{params.accessibilityOptions('prev')}} " aria-disabled="true">&laquo;</span>
-            </span>
-
-            <span ng-switch-when="first">
-                <span ng-if="page.current " aria-label="{{params.accessibilityOptions('current')}}" aria-disabled="true">{{page.number}}</span>
-                <a ng-click="params.page(page.number) " href=" " ng-if="!page.current" aria-label="{{params.accessibilityOptions('pageNumPrefix')}} {{page.number}}">{{page.number}}</a>
-            </span>
-
-            <span ng-switch-when="page">
-                <span ng-if="page.current " aria-label="{{params.accessibilityOptions('current')}}" aria-disabled="true">{{page.number}}</span>
-                <a ng-click="params.page(page.number) " href=" " ng-if="!page.current" aria-label="{{params.accessibilityOptions('pageNumPrefix')}} {{page.number}}">{{page.number}}</a>
-            </span>
-
-            <span ng-switch-when="more">
-                <a ng-click="params.page(page.number) " href=" " aria-label="{{params.accessibilityOptions('more')}} ">&#8230;</a>
-            </span>
-
-            <span ng-switch-when="last ">
-                <span ng-if="page.current " aria-label="{{params.accessibilityOptions('current')}}" aria-disabled="true">{{page.number}}</span>
-                <a href=" " ng-if="!page.current" ng-click="params.page(page.number) " aria-label="{{params.accessibilityOptions('pageNumPrefix')}} {{page.number}}">{{page.number}}</a>
-            </span>
-
-            <span ng-switch-when="next">
-                <a ng-if="page.active || page.current" ng-click="params.page(page.number) " href=" " aria-label="{{params.accessibilityOptions('next')}} ">
-                    &raquo;
-                </a>
-                <span ng-if="!page.active && !page.current" aria-label="{{params.accessibilityOptions('next')}} " aria-disabled="true">&raquo;</span>
-            </span>
-
+        <!--
+                The page that is the current page needs to have aria-current set to 'page'. If the page
+                is not current, the aria-current attribute should not even be on the element.
+            -->
+        <li ng-class="{ 'disabled': !page.active && !page.current, 'active': page.current}" aria-disabled="{{!page.active && !page.current}}"
+            ng-repeat="page in pages" ng-attr-aria-current="{{page.current ? 'page' : undefined}}" ng-switch="page.type">            
+            <a ng-switch-when="prev" ng-click="params.page(page.number) " href="#" aria-label="{{params.accessibilityOptions('prev')}} ">&laquo;</a>                
+            <a ng-switch-when="first" ng-click="params.page(page.number) " href="#" aria-label="{{params.accessibilityOptions('pageNumPrefix')}} {{page.number}}">{{page.number}}</a>            
+            <a ng-switch-when="page" ng-click="params.page(page.number) " href="#" aria-label="{{params.accessibilityOptions('pageNumPrefix')}} {{page.number}}">{{page.number}}</a>            
+            <a ng-switch-when="more" ng-click="params.page(page.number) " href="#" aria-label="{{params.accessibilityOptions('more')}} ">&#8230;</a>            
+            <a ng-switch-when="last" ng-click="params.page(page.number) " href="#" aria-label="{{params.accessibilityOptions('pageNumPrefix')}} {{page.number}}">{{page.number}}</a>           
+            <a ng-switch-when="next" ng-click="params.page(page.number) " href="#" aria-label="{{params.accessibilityOptions('next')}} ">&raquo;</a>   
         </li>
     </ul>
 </nav>

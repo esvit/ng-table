@@ -153,10 +153,11 @@ describe('NgTableParams', () => {
             'group[name]': 'asc',
             'group[age]': 'desc',
             'group[surname]': '',
-            'accessibilityOptions[current]': 'Current',
-            'accessibilityOptions[more]': 'More',
-            'accessibilityOptions[next]': 'Next',
-            'accessibilityOptions[prev]': 'Previous'
+            'accessibilityOptions[current]': 'Current%20Page',
+            'accessibilityOptions[more]': 'More%20Pages',
+            'accessibilityOptions[next]': 'Next%20Page',
+            'accessibilityOptions[prev]': 'Previous%20Page',
+            'accessibilityOptions[pageNumPrefix]': 'Page'
         });
         expect(params.url(true)).toEqual([
             'page=1',
@@ -167,10 +168,11 @@ describe('NgTableParams', () => {
             'group[name]=asc',
             'group[age]=desc',
             'group[surname]=',
-            'accessibilityOptions[current]=Current',
-            'accessibilityOptions[more]=More',
-            'accessibilityOptions[next]=Next',
-            'accessibilityOptions[prev]=Previous'
+            'accessibilityOptions[current]=Current%20Page',
+            'accessibilityOptions[more]=More%20Pages',
+            'accessibilityOptions[next]=Next%20Page',
+            'accessibilityOptions[prev]=Previous%20Page',
+            'accessibilityOptions[pageNumPrefix]=Page'
         ]);
     });
 

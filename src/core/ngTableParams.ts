@@ -672,12 +672,10 @@ export function ngTableParamsFactory<T>(
             group: {},
             accessibilityOptions: {
                 pagerTitle: '',
-                current: 'Current', // default values
-                more: 'More', // default values
-                next: 'Next', // default values 
-                prev: 'Previous', // default values
-                sortAsc: 'Ascending',
-                sortDesc: 'Descending',
+                current: 'Current Page', // default values
+                more: 'More Pages', // default values
+                next: 'Next Page', // default values 
+                prev: 'Previous Page', // default values
                 pageNumPrefix: 'Page'
             }
         };
