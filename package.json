@@ -82,6 +82,7 @@
   "scripts": {
     "build:all": "npm-run-all --parallel build:full tsc --serial build:demo-apps",
     "build:demo-apps": "shx ls -d demo-apps/*/ | bulk -c \"npm run build\"",
+    "build:demo-es5": "npm run build:full && cd demo-apps/es5 && npm run linklocal && npm install",
     "build": "webpack --progress --profile --env.debug",
     "build:prod": "webpack  --progress --profile --env.prod",
     "build:full": "webpack  --progress --profile --env.prod --env.debug",

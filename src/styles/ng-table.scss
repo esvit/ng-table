@@ -14,47 +14,6 @@ $cell-border-color: #eee;
       .sort-indicator {
         padding-right: 18px;
         position: relative;
-      // }
-      // &:hover #sortInd span {
-      //   opacity: 1;
-      // }
-      // #sortInd {
-      //   border: none;
-      //   background: none;
-      //   position: absolute;
-      //   top: 0;
-      //   right: 0;
-      //   bottom: 0;
-      //   font-size: .75em;
-      //   &:hover span {
-      //     opacity: 1;
-      //   }
-      //   span {
-      //     opacity: .3;
-      //   }
-      // }
-      // &.sort-desc,
-      // &.sort-asc {
-      //   #sortInd span {
-      //     opacity: 1;
-      //   }
-      // }
-      // &.sort-desc #sortInd {
-      //   span.glyphicon-triangle-top {
-      //     display: none;
-      //   }
-      //   span.glyphicon-triangle-bottom {
-      //     right: 0;
-      //   }
-      // }
-      // &.sort-asc #sortInd span.glyphicon-triangle-bottom {
-      //   display: none;
-      // }
-      // &.sort-desc,
-      // &.sort-asc {
-      //   background-color: rgba(141, 192, 219, 0.25);
-      //   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-      // } // this was the old css styles
           &:after, &:before {
               content: "";
               border-width: 0 4px 4px;
@@ -200,6 +159,53 @@ $cell-border-color: #eee;
 .ng-table-pagination {
   margin-top: 0;
 }
+
+// Bootstrap overrides
+.ng-table-pagination > li > button {
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #337ab7;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+.ng-table-pagination > li:first-child > button {
+  margin-left: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.ng-table-pagination > li:last-child > button {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.ng-table-pagination > li > button:hover,
+.ng-table-pagination > li > button:focus {
+  z-index: 2;
+  color: #23527c;
+  background-color: #eee;
+  border-color: #ddd;
+}
+.ng-table-pagination > .active > button,
+.ng-table-pagination > .active > button:hover,
+.ng-table-pagination > .active > button:focus {
+  z-index: 3;
+  color: #fff;
+  cursor: default;
+  background-color: #337ab7;
+  border-color: #337ab7;
+}
+.ng-table-pagination > .disabled > button,
+.ng-table-pagination > .disabled > button:hover,
+.ng-table-pagination > .disabled > button:focus  {
+  color: #777;
+  cursor: not-allowed;
+  background-color: #fff;
+  border-color: #ddd;
+}
+// End Bootstrap overrides
 
 .ng-table-group-selector:before,
 .ng-table-group-selector:after,
