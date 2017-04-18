@@ -3,20 +3,20 @@
      In an effort to provide accessible tables, if a column is sortable it should be given the aria-sort attribute 
      with a value of 'none', 'ascending', or 'descending'. The child element should have its role set to 'button'
   -->
-  <th scope="col" title="{{$column.headerTitle(this)}}" role="columnheader" aria-sort="{{params.sorting()[$column.sortable(this)]=='asc' ? 'ascending' : params.sorting()[$column.sortable(this)]=='desc' ? 'descending' : 'none'}}"
-    ng-repeat="$column in $columns" ng-class="{ 
+  <th scope="col" title="{{$column.headerTitle(this)}}" role="columnheader" 
+      ng-attr-aria-sort="{{!$column.sortable(this) ? undefined : params.sorting()[$column.sortable(this)]=='asc' ? 'ascending' : params.sorting()[$column.sortable(this)]=='desc' ? 'descending' : 'none'}}"
+      ng-repeat="$column in $columns" ng-class="{ 
                     'sortable': $column.sortable(this),
                     'sort-asc': params.sorting()[$column.sortable(this)]=='asc',
                     'sort-desc': params.sorting()[$column.sortable(this)]=='desc'
-                  }" ng-init="template = $column.headerTemplateURL(this)"
-    class="header {{$column.class(this)}}" ng-if="$column.show(this)">
+                  }" ng-init="template = $column.headerTemplateURL(this)" class="header {{$column.class(this)}}" ng-if="$column.show(this)">
     <span role="button" ng-if="$column.sortable(this) && (template || $column.title(this))" ng-click="sortBy($column, $event)">
       <div ng-if="!template" class="ng-table-header" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'div'}">
         <span ng-bind="$column.title(this)" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'span'}"></span>
-      </div>
-      <div ng-if="template" ng-include="template"></div>
+    </div>
+    <div ng-if="template" ng-include="template"></div>
     </span>
-      <!--This header column is used for non-sortable columns.-->
+    <!--This header column is used for non-sortable columns.-->
     <div ng-if="!$column.sortable(this) && (template || $column.title(this))">
       <div ng-if="!template" class="ng-table-header">
         <span ng-bind="$column.title(this)"></span>
