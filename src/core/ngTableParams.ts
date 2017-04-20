@@ -191,6 +191,13 @@ export function ngTableParamsFactory<T>(
             }) : _params.page;
         };
 
+        // wrapper for page() function so that focus can be
+        // retained on the button that initiated the page change
+        this.pageFocus = function (page: number, event: Event) {
+            this.pageButtonToRefocus = event.target;
+            return this.page(page);
+        }
+
         this.accessibilityOptions = function (field: string) {
             if (field != null && field !== undefined) {
                 return _params.accessibilityOptions[field] ? _params.accessibilityOptions[field] : '';
