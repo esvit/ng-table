@@ -1,7 +1,7 @@
-<nav class="ng-cloak ng-table-pager" ng-if="params.data.length" role="navigation" aria-label="{{::params.accessibilityOptions('pagerTitle')}}">
+<nav class="ng-cloak ng-table-pager" ng-if="params.data.length" role="navigation" aria-label="{{params.accessibilityOptions('pagerTitle')}}">
     <div ng-if=" params.settings().counts.length " class="ng-table-counts btn-group pull-right ">
-        <button ng-repeat="count in params.settings().counts | limitTo: params.settings().counts.length" type="button " ng-class="{ 'active':params.count()==count} "
-            ng-click="params.count(count) " class="btn btn-default ">
+        <button ng-repeat="count in params.settings().counts" type="button " ng-class="{ 'active':params.count()==count} " ng-click="params.count(count) "
+            class="btn btn-default ">
             <span ng-bind="count "></span>
         </button>
     </div>
