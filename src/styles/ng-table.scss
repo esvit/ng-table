@@ -11,6 +11,9 @@ $cell-border-color: #eee;
     user-select: none;
     &.sortable {
       cursor: pointer;
+      &.sort-button {
+        display: inline-block;
+      }
       .sort-indicator {
         padding-right: 18px;
         position: relative;

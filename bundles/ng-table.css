@@ -8,6 +8,8 @@
   user-select: none; }
   .ng-table th.sortable {
     cursor: pointer; }
+    .ng-table th.sortable.sort-button {
+      display: inline-block; }
     .ng-table th.sortable .sort-indicator {
       padding-right: 18px;
       position: relative; }
