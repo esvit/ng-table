@@ -10,7 +10,7 @@
                     'sort-desc': params.sorting()[$column.sortable(this)]=='desc'
                   }" ng-init="template = $column.headerTemplateURL(this)" class="header {{$column.class(this)}}" ng-if="$column.show(this)">
     <a role="button" tabindex="0" ng-if="$column.sortable(this) && (template || $column.title(this))" ng-click="sortBy($column, $event)"
-      ng-keypress="sortBy($column, $event)" class="sort-button">
+      class="sort-button">
       <div ng-if="!template" class="ng-table-header" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'div'}">
         <span ng-bind="$column.title(this)" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'span'}"></span>
       </div>
