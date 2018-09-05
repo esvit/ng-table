@@ -65,7 +65,7 @@
     "linklocal": "git+https://github.com/theoy/linklocal.git#3f939171c3c925f2af831d78a3f2fbf9caa3002e",
     "lodash": "^4.17.2",
     "ngtemplate-loader": "git+https://github.com/wearymonkey/ngtemplate-loader.git#63e3461d8b1298de913e3528766068260915ae1f",
-    "node-sass": "^3.8.0",
+    "node-sass": "^4.9.3",
     "npm-run-all": "^2.3.0",
     "open": "0.0.5",
     "phantomjs-prebuilt": "2.1.10",
