@@ -1,11 +1,11 @@
 {
   "name": "ng-table",
-  "version": "0.0.0-semantic-release",
+  "version": "0.0.1",
   "author": "Vitalii Savchuk <esvit666@gmail.com>",
   "license": "BSD",
   "repository": {
     "type": "git",
-    "url": "git://github.com/esvit/ng-table.git"
+    "url": "git@github.com:PetroCloud/ng-table.git"
   },
   "main": "bundles/ng-table.js",
   "module": "index.js",
