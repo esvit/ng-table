@@ -1,0 +1,19 @@
+{
+  "name": "ng-table",
+  "description": "",
+  "main": "bundles/ng-table.js",
+  "authors": [
+    "Vitalii Savchuk <esvit666@gmail.com>",
+    "Bin Ury <1146921+teddy-error@users.noreply.github.com>"
+  ],
+  "license": "BSD",
+  "homepage": "https://github.com/PetroCloud/ng-table",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
