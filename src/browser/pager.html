@@ -12,12 +12,12 @@
             -->
         <li ng-class="{ 'disabled': !page.active && !page.current, 'active': page.current}" aria-disabled="{{!page.active && !page.current}}"
             ng-repeat="page in pages" ng-attr-aria-current="{{page.current ? 'page' : undefined}}" ng-switch="page.type">            
-            <button id="page_prev" ng-switch-when="prev" ng-click="params.pageFocus(page.number, $event) " aria-label="{{params.accessibilityOptions('prev')}} ">&laquo;</button>                
-            <button id="page_{{page.number}}" ng-switch-when="first" ng-click="params.pageFocus(page.number, $event) " aria-label="{{params.accessibilityOptions('pageNumPrefix')}} {{page.number}}">{{page.number}}</button>            
-            <button id="page_{{page.number}}" ng-switch-when="page" ng-click="params.pageFocus(page.number, $event) " aria-label="{{params.accessibilityOptions('pageNumPrefix')}} {{page.number}}">{{page.number}}</button>            
-            <button id="page_more" ng-switch-when="more" ng-click="params.pageFocus(page.number, $event) " aria-label="{{params.accessibilityOptions('more')}} ">&#8230;</button>            
-            <button id="page_{{page.number}}" ng-switch-when="last" ng-click="params.pageFocus(page.number, $event) "  aria-label="{{params.accessibilityOptions('pageNumPrefix')}} {{page.number}}">{{page.number}}</button>           
-            <button id="page_next" ng-switch-when="next" ng-click="params.pageFocus(page.number, $event) " aria-label="{{params.accessibilityOptions('next')}} ">&raquo;</button>   
+            <button id="page_prev" aria-disabled="{{!page.active && !page.current}}" ng-switch-when="prev" ng-click="params.pageFocus(page.number, $event) " aria-label="{{'NG_TABLE_PREVIOUS_PAGE' | translate}} ">&laquo;</button>                
+            <button id="page_{{page.number}}" ng-switch-when="first" ng-click="params.pageFocus(page.number, $event) " aria-label="{{(page.current ? 'NG_TABLE_SELECTED_PAGE ':'NG_TABLE_PAGENUM_PREFIX') | translate}} {{page.number}}">{{page.number}}</button>            
+            <button id="page_{{page.number}}" ng-switch-when="page" ng-click="params.pageFocus(page.number, $event) " aria-label="{{(page.current ? 'NG_TABLE_SELECTED_PAGE ':'NG_TABLE_PAGENUM_PREFIX') | translate}} {{page.number}}">{{page.number}}</button>            
+            <button id="page_more" ng-switch-when="more" ng-click="params.pageFocus(page.number, $event) " aria-label="{{'NG_TABLE_MORE_PAGES' | translate}} ">&#8230;</button>            
+            <button id="page_{{page.number}}" ng-switch-when="last" ng-click="params.pageFocus(page.number, $event) "  aria-label="{{(page.current ? 'NG_TABLE_SELECTED_PAGE ':'NG_TABLE_PAGENUM_PREFIX') | translate}} {{page.number}}">{{page.number}}</button>           
+            <button id="page_next" aria-disabled="{{!page.active && !page.current}}" ng-switch-when="next" ng-click="params.pageFocus(page.number, $event) " aria-label="{{'NG_TABLE_NEXT_PAGE' | translate}} ">&raquo;</button>   
         </li>
     </ul>
 </nav>
