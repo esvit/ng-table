@@ -9,10 +9,12 @@
                     'sort-asc': params.sorting()[$column.sortable(this)]=='asc',
                     'sort-desc': params.sorting()[$column.sortable(this)]=='desc'
                   }" ng-init="template = $column.headerTemplateURL(this)" class="header {{$column.class(this)}}" ng-if="$column.show(this)">
-    <a role="button" tabindex="0" ng-if="$column.sortable(this) && (template || $column.title(this))" ng-click="sortBy($column, $event)"
+    <a role="button" aria-describeby="sortDescription" tabindex="0" ng-if="$column.sortable(this) && (template || $column.title(this))" ng-click="sortBy($column, $event)"
       ng-keydown="($event.key === 'Enter' || $event.key === ' ') && sortBy($column, $event)" class="sort-button">
       <div ng-if="!template" class="ng-table-header" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'div'}">
         <span ng-bind="$column.title(this)" ng-class="{'sort-indicator': params.settings().sortingIndicator == 'span'}"></span>
+		<!-- Visually hidden element to be used for aria-describeby for sorting button -->
+		<span id="sortDescription" class="hidden">Sort <span ng-if="params.sorting()[$column.sortable(this)]=='asc'">in ascending </span><span ng-if="params.sorting()[$column.sortable(this)]=='desc'">in descending </span>order</span>
       </div>
       <div ng-if="template" ng-include="template"></div>
     </a>
